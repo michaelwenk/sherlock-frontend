@@ -1,25 +1,26 @@
 /** @jsxImportSource @emotion/react */
-// import { css } from "@emotion/react";
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 import CheckBox from '../elements/CheckBox';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 const QueryPanel = ({ data }) => {
-  const [queryFile, setQueryFile] = useState();
   const [dereplicate, setDereplicate] = useState(true);
   const [allowHeteroHeteroBonds, setAllowHeteroHeteroBonds] = useState(false);
-
-  const handleOnChange = useCallback((e) => {
-    e.stopPropagation();
-    setQueryFile(e.target.files[0]);
-  }, []);
 
   const handleOnClick = useCallback(
     async (e) => {
       e.stopPropagation();
 
-      // const blob = new Blob([queryFile]);
-      // const json = await blob.text().then((res) => res);
+      const _data = lodashCloneDeep(data);
+      _data.correlations.values = _data.correlations.values.map(
+        (correlation) => ({
+          ...correlation,
+          equivalence: correlation.equivalence + 1,
+        }),
+      );
+      console.log(_data);
+
       const result = await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
@@ -27,7 +28,7 @@ const QueryPanel = ({ data }) => {
           dereplicate,
           allowHeteroHeteroBonds,
         },
-        data, //: json,
+        data: _data,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,22 +51,19 @@ const QueryPanel = ({ data }) => {
   return (
     <div>
       <p>QueryPanel!!!</p>
-      <form>
-        <CheckBox
-          isChecked={dereplicate}
-          handleOnChange={onChangeDereplicate}
-          title="Dereplication"
-        />
-        <CheckBox
-          isChecked={allowHeteroHeteroBonds}
-          handleOnChange={onChangeAllowHeteroHeteroBonds}
-          title="Allow Hetero-Hetero Bonds"
-        />
-        <input type="file" onChange={handleOnChange} />
-        <button type="submit" onClick={handleOnClick}>
-          Submit
-        </button>
-      </form>
+      <CheckBox
+        isChecked={dereplicate}
+        handleOnChange={onChangeDereplicate}
+        title="Dereplication"
+      />
+      <CheckBox
+        isChecked={allowHeteroHeteroBonds}
+        handleOnChange={onChangeAllowHeteroHeteroBonds}
+        title="Allow Hetero-Hetero Bonds"
+      />
+      <button type="button" onClick={handleOnClick}>
+        Submit
+      </button>
     </div>
   );
 };
