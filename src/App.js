@@ -4,6 +4,17 @@ import NMRDisplayer from 'nmr-displayer';
 import { useCallback, useState } from 'react';
 
 const preferences = {};
+const initData = {
+  correlations: {
+    options: {
+      tolerance: {
+        C: 0.25,
+        H: 0.02,
+        N: 0.25,
+      },
+    },
+  },
+};
 
 function App() {
   const [data, setData] = useState();
@@ -14,14 +25,20 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <p>Welcome to WebCASE !!!</p>
-      <NMRDisplayer
-        preferences={preferences}
-        onDataChange={handleOnDataChange}
-      />
-      <p>-----</p>
-      <QueryPanel data={data} />
+    <div className="app">
+      <div className="app-header">
+        <p>Welcome to WebCASE !!!</p>
+      </div>
+      <div className="app-body">
+        <div className="nmr-displayer">
+          <NMRDisplayer
+            preferences={preferences}
+            onDataChange={handleOnDataChange}
+            data={initData}
+          />
+        </div>
+        <QueryPanel data={data} />
+      </div>
     </div>
   );
 }
