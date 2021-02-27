@@ -3,8 +3,9 @@ import axios from 'axios';
 import { useCallback, useState } from 'react';
 import CheckBox from '../elements/CheckBox';
 import lodashCloneDeep from 'lodash/cloneDeep';
+import './QueryPanel.css';
 
-const QueryPanel = ({ data }) => {
+function QueryPanel({ data, onSetResults }) {
   const [dereplicate, setDereplicate] = useState(true);
   const [allowHeteroHeteroBonds, setAllowHeteroHeteroBonds] = useState(false);
 
@@ -21,7 +22,7 @@ const QueryPanel = ({ data }) => {
       );
       console.log(_data);
 
-      const result = await axios({
+      const results = await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
         params: {
@@ -33,9 +34,10 @@ const QueryPanel = ({ data }) => {
           'Content-Type': 'application/json',
         },
       });
-      console.log(result);
+      console.log(JSON.stringify(results.data));
+      onSetResults(results.data);
     },
-    [allowHeteroHeteroBonds, data, dereplicate],
+    [allowHeteroHeteroBonds, data, dereplicate, onSetResults],
   );
 
   const onChangeDereplicate = useCallback((e) => {
@@ -49,7 +51,7 @@ const QueryPanel = ({ data }) => {
   }, []);
 
   return (
-    <div>
+    <div className="query-panel">
       <p>QueryPanel!!!</p>
       <CheckBox
         isChecked={dereplicate}
@@ -66,6 +68,6 @@ const QueryPanel = ({ data }) => {
       </button>
     </div>
   );
-};
+}
 
 export default QueryPanel;

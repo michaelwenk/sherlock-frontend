@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
-// import { css } from "@emotion/react";
 
-const CheckBox = ({ isChecked, handleOnChange, title, css }) => {
+function CheckBox({ isChecked, handleOnChange, title, css }) {
   return (
     <div css={css}>
       <label>
@@ -10,6 +9,6 @@ const CheckBox = ({ isChecked, handleOnChange, title, css }) => {
       </label>
     </div>
   );
-};
+}
 
 export default CheckBox;

@@ -2,6 +2,11 @@ import './App.css';
 import QueryPanel from './component/panels/QueryPanel';
 import NMRDisplayer from 'nmr-displayer';
 import { useCallback, useState } from 'react';
+import ResultsPanel from './component/panels/ResultsPanel';
+import OCL from 'openchemlib/full';
+import { initOCL } from 'react-ocl-nmr';
+
+initOCL(OCL);
 
 const preferences = {};
 const initData = {
@@ -18,10 +23,14 @@ const initData = {
 
 function App() {
   const [data, setData] = useState();
+  const [results, setResults] = useState();
 
-  const handleOnDataChange = useCallback((data) => {
-    console.log(data);
-    setData(data);
+  const handleOnDataChange = useCallback((_data) => {
+    setData(_data);
+  }, []);
+
+  const handleOnSetResults = useCallback((results) => {
+    setResults(results);
   }, []);
 
   return (
@@ -37,7 +46,8 @@ function App() {
             data={initData}
           />
         </div>
-        <QueryPanel data={data} />
+        <QueryPanel data={data} onSetResults={handleOnSetResults} />
+        <ResultsPanel results={results} />
       </div>
     </div>
   );
