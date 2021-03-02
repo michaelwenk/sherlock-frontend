@@ -24,7 +24,9 @@ function ResultCard({ id, molecule, styles }) {
         />
         {/* <Card.Title>{`#${i + j + 1}`}</Card.Title> */}
         <Card.Text>
-          {molecule.mf} <br /> {molecule.mw}
+          {/* {molecule.meta.smiles} <br />  */}
+          {molecule.meta.mf} <br /> {molecule.meta.mw} <br />{' '}
+          {molecule.meta.avgDev ? Number(molecule.meta.avgDev).toFixed(3) : ''}
         </Card.Text>
       </Card.Body>
     </Card>

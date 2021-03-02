@@ -17,7 +17,23 @@ function QueryPanel({ data, onSetResults }) {
       _data.correlations.values = _data.correlations.values.map(
         (correlation) => ({
           ...correlation,
-          equivalence: correlation.equivalence + 1,
+          equivalence:
+            correlation.atomType !== 'H'
+              ? correlation.equivalence + 1
+              : correlation.attachment &&
+                Object.keys(correlation.attachment).length > 0
+              ? (_data.correlations.values[
+                  correlation.attachment[
+                    Object.keys(correlation.attachment)[0]
+                  ][0]
+                ].equivalence +
+                  1) *
+                _data.correlations.values[
+                  correlation.attachment[
+                    Object.keys(correlation.attachment)[0]
+                  ][0]
+                ].protonsCount[0]
+              : correlation.equivalence + 1,
         }),
       );
       console.log(_data);
@@ -34,7 +50,7 @@ function QueryPanel({ data, onSetResults }) {
           'Content-Type': 'application/json',
         },
       });
-      console.log(JSON.stringify(results.data));
+      console.log(results.data);
       onSetResults(results.data);
     },
     [allowHeteroHeteroBonds, data, dereplicate, onSetResults],

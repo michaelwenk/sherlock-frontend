@@ -17,8 +17,7 @@ function ResultsPanel({ results }) {
           const { formula, relativeWeight } = molecule.getMolecularFormula();
           return {
             molfile: molecule.toMolfileV3(),
-            mf: formula,
-            mw: relativeWeight,
+            meta: { ...dataSet.meta, mf: formula, mw: relativeWeight },
           };
         })
       : [];
