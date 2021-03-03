@@ -46,8 +46,10 @@ function App() {
             data={initData}
           />
         </div>
-        <QueryPanel data={data} onSetResults={handleOnSetResults} />
-        <ResultsPanel results={results} />
+        <div className="panels">
+          <QueryPanel data={data} onSetResults={handleOnSetResults} />
+          <ResultsPanel results={results} />
+        </div>
       </div>
     </div>
   );

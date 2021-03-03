@@ -26,7 +26,9 @@ function ResultsPanel({ results }) {
   return (
     <div className="results-panel">
       <p>ResultsPanel!!!</p>
-      <ResultsContainer molecules={molecules} nCols={nCols} />
+      <div className="results-container">
+        <ResultsContainer molecules={molecules} nCols={nCols} />
+      </div>
     </div>
   );
 }

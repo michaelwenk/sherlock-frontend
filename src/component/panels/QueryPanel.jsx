@@ -4,15 +4,25 @@ import { useCallback, useState } from 'react';
 import CheckBox from '../elements/CheckBox';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import './QueryPanel.css';
+import Tolerances from '../elements/Tolerances';
+
+const defaultTolerance = {
+  C: 1.0,
+  H: 0.1,
+  N: 2.0,
+};
 
 function QueryPanel({ data, onSetResults }) {
   const [dereplicate, setDereplicate] = useState(true);
+  const [useMF, setUseMF] = useState(true);
   const [allowHeteroHeteroBonds, setAllowHeteroHeteroBonds] = useState(false);
+  const [tolerance, setTolerance] = useState(defaultTolerance);
 
   const handleOnClick = useCallback(
     async (e) => {
       e.stopPropagation();
 
+      // data manipulation only for now until the new nmr-displayer version is released
       const _data = lodashCloneDeep(data);
       _data.correlations.values = _data.correlations.values.map(
         (correlation) => ({
@@ -36,6 +46,10 @@ function QueryPanel({ data, onSetResults }) {
               : correlation.equivalence + 1,
         }),
       );
+      _data.correlations.options.tolerance = tolerance;
+      if (useMF === false) {
+        delete _data.correlations.options.mf;
+      }
       console.log(_data);
 
       const results = await axios({
@@ -53,7 +67,7 @@ function QueryPanel({ data, onSetResults }) {
       console.log(results.data);
       onSetResults(results.data);
     },
-    [allowHeteroHeteroBonds, data, dereplicate, onSetResults],
+    [allowHeteroHeteroBonds, data, dereplicate, onSetResults, tolerance, useMF],
   );
 
   const onChangeDereplicate = useCallback((e) => {
@@ -61,9 +75,18 @@ function QueryPanel({ data, onSetResults }) {
     setDereplicate(e.target.checked);
   }, []);
 
+  const onChangeUseMF = useCallback((e) => {
+    e.stopPropagation();
+    setUseMF(e.target.checked);
+  }, []);
+
   const onChangeAllowHeteroHeteroBonds = useCallback((e) => {
     e.stopPropagation();
     setAllowHeteroHeteroBonds(e.target.checked);
+  }, []);
+
+  const onChangeToleranceHandler = useCallback((_tolerance) => {
+    setTolerance(_tolerance);
   }, []);
 
   return (
@@ -75,9 +98,18 @@ function QueryPanel({ data, onSetResults }) {
         title="Dereplication"
       />
       <CheckBox
+        isChecked={useMF}
+        handleOnChange={onChangeUseMF}
+        title="use MF"
+      />
+      <CheckBox
         isChecked={allowHeteroHeteroBonds}
         handleOnChange={onChangeAllowHeteroHeteroBonds}
         title="Allow Hetero-Hetero Bonds"
+      />
+      <Tolerances
+        tolerance={tolerance}
+        onChangeTolerance={onChangeToleranceHandler}
       />
       <button type="button" onClick={handleOnClick}>
         Submit

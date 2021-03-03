@@ -13,7 +13,7 @@ function ResultsContainer({ molecules, nCols }) {
             key={`resultCard${index}`}
             id={index + 1}
             molecule={molecule}
-            styles={{ minWidth: '12rem', maxWidth: '12rem' }}
+            styles={{ minWidth: '11rem', maxWidth: '12rem' }}
           />
         ))}
       </CardDeck>
