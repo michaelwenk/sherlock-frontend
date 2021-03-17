@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.6.2",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "nmr-displayer": "^0.6.3",
     "openchemlib": "^7.3.0",

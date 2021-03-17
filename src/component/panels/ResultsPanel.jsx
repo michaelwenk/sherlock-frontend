@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
 import { Molecule } from 'openchemlib/full';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { saveAs } from 'file-saver';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultsPanel.css';
@@ -21,11 +22,26 @@ function ResultsPanel({ results }) {
       : [];
   }, [results]);
 
+  const handleOnClickDownload = useCallback(() => {
+    const fileData = JSON.stringify(molecules, undefined, 2);
+    const blob = new Blob([fileData], { type: 'text/plain' });
+    saveAs(blob, `results.json`);
+  }, [molecules]);
+
   return (
     <div className="results-panel">
       <p>ResultsPanel!!!</p>
       <div className="results-container">
         <ResultsContainer molecules={molecules} />
+      </div>
+      <div className="download-container">
+        <button
+          type="button"
+          onClick={handleOnClickDownload}
+          disabled={molecules.length > 0 ? false : true}
+        >
+          Download Results
+        </button>
       </div>
     </div>
   );
