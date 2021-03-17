@@ -107,10 +107,12 @@ function QueryPanel({ data, onSetResults }) {
         handleOnChange={onChangeAllowHeteroHeteroBonds}
         title="Allow Hetero-Hetero Bonds"
       />
-      <Tolerances
-        tolerance={tolerance}
-        onChangeTolerance={onChangeToleranceHandler}
-      />
+      {dereplicate && (
+        <Tolerances
+          tolerance={tolerance}
+          onChangeTolerance={onChangeToleranceHandler}
+        />
+      )}
       <button type="button" onClick={handleOnClick}>
         Submit
       </button>

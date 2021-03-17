@@ -5,10 +5,13 @@ import { useCallback, useState } from 'react';
 import ResultsPanel from './component/panels/ResultsPanel';
 import OCL from 'openchemlib/full';
 import { initOCL } from 'react-ocl-nmr';
+import SplitPane from 'react-split-pane';
+import { Fragment } from 'react';
 
 initOCL(OCL);
 
 const preferences = {};
+
 const initData = {
   correlations: {
     options: {
@@ -21,9 +24,16 @@ const initData = {
   },
 };
 
+const minWidth = {
+  leftPanel: '10%',
+  rightPanel: '20%',
+  resizer: '15px',
+};
+
 function App() {
   const [data, setData] = useState();
   const [results, setResults] = useState();
+  const [hideRightPanel, setHideRightPanel] = useState(false);
 
   const handleOnDataChange = useCallback((_data) => {
     setData(_data);
@@ -39,17 +49,53 @@ function App() {
         <p>Welcome to WebCASE !!!</p>
       </div>
       <div className="app-body">
-        <div className="nmr-displayer">
+        <SplitPane
+          split="vertical"
+          defaultSize="80%"
+          minSize="50%"
+          pane1Style={
+            hideRightPanel
+              ? {
+                  maxWidth: '100%',
+                  width: 'calc(100% - 15px)',
+                }
+              : {
+                  height: '100%',
+                  maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
+                  minWidth: minWidth.leftPanel,
+                }
+          }
+          pane2Style={
+            hideRightPanel
+              ? { display: 'none' }
+              : {
+                  height: '100%',
+                  minWidth: minWidth.rightPanel,
+                  maxWidth: `calc(100% - ${minWidth.leftPanel})`,
+                }
+          }
+          onResizerDoubleClick={(e) => {
+            console.log('onDoubleClick');
+            e.stopPropagation();
+            setHideRightPanel(!hideRightPanel);
+          }}
+          // onDragStarted={() => {
+          //   console.log('onDragStarted');
+          // }}
+          // onDragFinished={(width) => {
+          //   console.log('onDragFinished');
+          // }}
+        >
           <NMRDisplayer
             preferences={preferences}
             onDataChange={handleOnDataChange}
             data={initData}
           />
-        </div>
-        <div className="panels">
-          <QueryPanel data={data} onSetResults={handleOnSetResults} />
-          <ResultsPanel results={results} />
-        </div>
+          <Fragment>
+            <QueryPanel data={data} onSetResults={handleOnSetResults} />
+            <ResultsPanel results={results} />
+          </Fragment>
+        </SplitPane>
       </div>
     </div>
   );

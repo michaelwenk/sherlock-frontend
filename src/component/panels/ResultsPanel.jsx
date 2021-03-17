@@ -1,15 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
 import { Molecule } from 'openchemlib/full';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultsPanel.css';
 import ResultsContainer from '../elements/ResultsContainer';
 
 function ResultsPanel({ results }) {
-  const [nCols, setNCols] = useState(4);
-
   const molecules = useMemo(() => {
     return results && results.dataSetList
       ? results.dataSetList.map((dataSet, i) => {
@@ -27,7 +25,7 @@ function ResultsPanel({ results }) {
     <div className="results-panel">
       <p>ResultsPanel!!!</p>
       <div className="results-container">
-        <ResultsContainer molecules={molecules} nCols={nCols} />
+        <ResultsContainer molecules={molecules} />
       </div>
     </div>
   );

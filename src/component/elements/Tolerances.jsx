@@ -15,7 +15,6 @@ function Tolerances({ tolerance, onChangeTolerance }) {
 
   const inputFields = useMemo(() => {
     return Object.keys(tolerance).map((atomType) => {
-      console.log(tolerance[atomType]);
       return (
         <div key={`toleranceInputField_${atomType}`}>
           <span>{atomType}: </span>
