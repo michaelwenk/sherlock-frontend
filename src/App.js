@@ -27,7 +27,7 @@ const initData = {
 };
 
 const minWidth = {
-  leftPanel: '10%',
+  leftPanel: '20%',
   rightPanel: '20%',
   resizer: '15px',
 };
@@ -35,6 +35,8 @@ const minWidth = {
 function App() {
   const [data, setData] = useState();
   const [results, setResults] = useState();
+  const [leftPanelWidth, setLeftPanelWidth] = useState();
+  const [hideLeftPanel, setHideLeftPanel] = useState(false);
   const [hideRightPanel, setHideRightPanel] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
@@ -95,6 +97,29 @@ function App() {
     [data],
   );
 
+  const handleOnDragFinished = useCallback((width) => {
+    setLeftPanelWidth(width);
+  }, []);
+
+  const handleOnDoubleClickResizer = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (!hideLeftPanel && !hideRightPanel) {
+        if (leftPanelWidth && leftPanelWidth < 0.5 * window.innerWidth) {
+          setHideLeftPanel(true);
+          setHideRightPanel(false);
+        } else {
+          setHideLeftPanel(false);
+          setHideRightPanel(true);
+        }
+      } else {
+        setHideLeftPanel(false);
+        setHideRightPanel(false);
+      }
+    },
+    [hideLeftPanel, hideRightPanel, leftPanelWidth],
+  );
+
   return (
     <div className="app">
       <div className="app-header">
@@ -104,9 +129,10 @@ function App() {
         <SplitPane
           split="vertical"
           defaultSize="80%"
-          minSize="50%"
           pane1Style={
-            hideRightPanel
+            hideLeftPanel
+              ? { display: 'none' }
+              : hideRightPanel
               ? {
                   maxWidth: '100%',
                   width: 'calc(100% - 15px)',
@@ -120,29 +146,30 @@ function App() {
           pane2Style={
             hideRightPanel
               ? { display: 'none' }
+              : hideLeftPanel
+              ? {
+                  maxWidth: '100%',
+                  width: 'calc(100% - 15px)',
+                }
               : {
                   height: '100%',
                   minWidth: minWidth.rightPanel,
                   maxWidth: `calc(100% - ${minWidth.leftPanel})`,
                 }
           }
-          onResizerDoubleClick={(e) => {
-            console.log('onDoubleClick');
-            e.stopPropagation();
-            setHideRightPanel(!hideRightPanel);
-          }}
+          onResizerDoubleClick={handleOnDoubleClickResizer}
           // onDragStarted={() => {
           //   console.log('onDragStarted');
           // }}
-          // onDragFinished={(width) => {
-          //   console.log('onDragFinished');
-          // }}
+          onDragFinished={handleOnDragFinished}
         >
-          <NMRDisplayer
-            preferences={preferences}
-            onDataChange={handleOnDataChange}
-            data={initData}
-          />
+          <div className="nmr-displayer-container">
+            <NMRDisplayer
+              preferences={preferences}
+              onDataChange={handleOnDataChange}
+              data={initData}
+            />
+          </div>
           <Fragment>
             <QueryPanel
               data={data}

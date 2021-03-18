@@ -1,19 +1,28 @@
 .results-panel {
   width: 100%;
-  height: 70%;
+  height: 75%;
   display: flex;
   flex-direction: column;
 }
 
+.info-container {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .results-container {
   width: 100%;
-  height: 90%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
 }
 
-.download-container {
-  width: 100%;
-  height: 10%;
+.loader-container {
+  top: calc(50% + 50px);
+  left: calc(50% - 50px);
+  position: absolute; 
 }

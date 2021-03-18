@@ -50,35 +50,46 @@ function QueryPanel({ onSubmit, isRequesting }) {
 
   return (
     <div className="query-panel">
-      <Tabs onSelect={onSelectTab}>
-        <TabList>
-          <Tab>Dereplication</Tab>
-          <Tab>Elucidation</Tab>
-          <Tab>Retrieval</Tab>
-        </TabList>
-        <TabPanel>
-          {queryType && (
-            <Tolerances
-              tolerance={tolerance}
-              onChangeTolerance={onChangeToleranceHandler}
+      <div className="tabs-container">
+        <Tabs onSelect={onSelectTab}>
+          <TabList>
+            <Tab>Dereplication</Tab>
+            <Tab>Elucidation</Tab>
+            <Tab>Retrieval</Tab>
+          </TabList>
+          <TabPanel>
+            {queryType && (
+              <Tolerances
+                tolerance={tolerance}
+                onChangeTolerance={onChangeToleranceHandler}
+              />
+            )}
+          </TabPanel>
+          <TabPanel>
+            <CheckBox
+              isChecked={allowHeteroHeteroBonds}
+              handleOnChange={onChangeAllowHeteroHeteroBonds}
+              title="Allow Hetero-Hetero Bonds"
             />
-          )}
-        </TabPanel>
-        <TabPanel>
-          <CheckBox
-            isChecked={allowHeteroHeteroBonds}
-            handleOnChange={onChangeAllowHeteroHeteroBonds}
-            title="Allow Hetero-Hetero Bonds"
-          />
-        </TabPanel>
-        <TabPanel>
-          <input type="text" onChange={(e) => setRetrievalID(e.target.value)} />
-        </TabPanel>
-      </Tabs>
-
-      <button type="button" onClick={handleOnSubmit} disabled={isRequesting}>
-        {queryType}
-      </button>
+          </TabPanel>
+          <TabPanel>
+            <input
+              type="text"
+              onChange={(e) => setRetrievalID(e.target.value)}
+            />
+          </TabPanel>
+        </Tabs>
+      </div>
+      <div className="submit-button-container">
+        <button
+          className="submit-button"
+          type="button"
+          onClick={handleOnSubmit}
+          disabled={isRequesting}
+        >
+          {queryType}
+        </button>
+      </div>
     </div>
   );
 }
