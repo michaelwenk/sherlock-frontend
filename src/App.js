@@ -1,12 +1,14 @@
 import './App.css';
-import QueryPanel from './component/panels/QueryPanel';
 import NMRDisplayer from 'nmr-displayer';
 import { useCallback, useState } from 'react';
-import ResultsPanel from './component/panels/ResultsPanel';
 import OCL from 'openchemlib/full';
 import { initOCL } from 'react-ocl-nmr';
 import SplitPane from 'react-split-pane';
 import { Fragment } from 'react';
+import QueryPanel from './component/panels/queryPanel/QueryPanel';
+import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
+import axios from 'axios';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 initOCL(OCL);
 
@@ -34,14 +36,64 @@ function App() {
   const [data, setData] = useState();
   const [results, setResults] = useState();
   const [hideRightPanel, setHideRightPanel] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   const handleOnDataChange = useCallback((_data) => {
     setData(_data);
   }, []);
 
-  const handleOnSetResults = useCallback((results) => {
-    setResults(results);
-  }, []);
+  const handleOnSubmit = useCallback(
+    async (queryType, tolerance, allowHeteroHeteroBonds, retrievalID) => {
+      setIsRequesting(true);
+
+      // data manipulation only for now until the new nmr-displayer version is released
+      const _data = lodashCloneDeep(data);
+      _data.correlations.values = _data.correlations.values.map(
+        (correlation) => ({
+          ...correlation,
+          equivalence:
+            correlation.atomType !== 'H'
+              ? correlation.equivalence + 1
+              : correlation.attachment &&
+                Object.keys(correlation.attachment).length > 0
+              ? (_data.correlations.values[
+                  correlation.attachment[
+                    Object.keys(correlation.attachment)[0]
+                  ][0]
+                ].equivalence +
+                  1) *
+                _data.correlations.values[
+                  correlation.attachment[
+                    Object.keys(correlation.attachment)[0]
+                  ][0]
+                ].protonsCount[0]
+              : correlation.equivalence + 1,
+        }),
+      );
+      _data.correlations.options.tolerance = tolerance;
+      console.log(_data);
+
+      const t0 = performance.now();
+      const results = await axios({
+        method: 'POST',
+        url: 'http://localhost:8081/webcase-core/core',
+        params: {
+          queryType,
+          allowHeteroHeteroBonds,
+          retrievalID,
+        },
+        data: { data: _data, queryType, allowHeteroHeteroBonds, retrievalID },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setIsRequesting(false);
+      const t1 = performance.now();
+      console.log(results.data);
+      setResults({ data: results.data, time: (t1 - t0) / 1000 });
+    },
+    [data],
+  );
 
   return (
     <div className="app">
@@ -92,8 +144,12 @@ function App() {
             data={initData}
           />
           <Fragment>
-            <QueryPanel data={data} onSetResults={handleOnSetResults} />
-            <ResultsPanel results={results} />
+            <QueryPanel
+              data={data}
+              onSubmit={handleOnSubmit}
+              isRequesting={isRequesting}
+            />
+            <ResultsPanel results={results} isRequesting={isRequesting} />
           </Fragment>
         </SplitPane>
       </div>

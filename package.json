@@ -18,6 +18,7 @@
     "react-dom": "^17.0.1",
     "react-ocl-nmr": "^0.2.2",
     "react-split-pane": "^0.1.92",
+    "react-tabs": "^3.2.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

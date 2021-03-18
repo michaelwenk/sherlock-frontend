@@ -6,12 +6,12 @@ import { saveAs } from 'file-saver';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultsPanel.css';
-import ResultsContainer from '../elements/ResultsContainer';
+import ResultsContainer from './ResultsContainer';
 
-function ResultsPanel({ results }) {
+function ResultsPanel({ results, isRequesting }) {
   const molecules = useMemo(() => {
-    return results && results.dataSetList
-      ? results.dataSetList.map((dataSet, i) => {
+    return !isRequesting && results && results.data && results.data.dataSetList
+      ? results.data.dataSetList.map((dataSet, i) => {
           const molecule = Molecule.fromSmiles(dataSet.meta.smiles);
           const { formula, relativeWeight } = molecule.getMolecularFormula();
           return {
@@ -20,17 +20,33 @@ function ResultsPanel({ results }) {
           };
         })
       : [];
-  }, [results]);
+  }, [isRequesting, results]);
 
   const handleOnClickDownload = useCallback(() => {
     const fileData = JSON.stringify(molecules, undefined, 2);
     const blob = new Blob([fileData], { type: 'text/plain' });
-    saveAs(blob, `results.json`);
-  }, [molecules]);
+    saveAs(
+      blob,
+      `${
+        results && results.data.requestID ? results.data.requestID : 'results'
+      }.json`,
+    );
+  }, [molecules, results]);
 
   return (
     <div className="results-panel">
       <p>ResultsPanel!!!</p>
+      <p>
+        {isRequesting
+          ? 'Requesting...'
+          : molecules.length > 0
+          ? results.data.dataSetList.length +
+            ' result(s) in ' +
+            results.time.toFixed(2) +
+            's'
+          : 'No results'}
+      </p>
+      <p>{!isRequesting && results && results.data.requestID}</p>
       <div className="results-container">
         <ResultsContainer molecules={molecules} />
       </div>
