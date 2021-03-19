@@ -6,7 +6,6 @@ import { saveAs } from 'file-saver';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultsPanel.css';
 import ResultsContainer from './ResultsContainer';
 import { Fragment } from 'react';
@@ -72,7 +71,7 @@ function ResultsPanel({ results, isRequesting }) {
             </button>
           </div>
           <div className="results-container">
-            <ResultsContainer molecules={molecules} />
+            <ResultsContainer molecules={molecules} limit={50} />
           </div>
         </Fragment>
       )}
