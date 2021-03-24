@@ -8,7 +8,6 @@ import { Fragment } from 'react';
 import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios from 'axios';
-import lodashCloneDeep from 'lodash/cloneDeep';
 
 initOCL(OCL);
 
@@ -41,39 +40,65 @@ function App() {
   const [isRequesting, setIsRequesting] = useState(false);
 
   const handleOnDataChange = useCallback((_data) => {
-    setData(_data);
+    const _spectra =
+      _data && _data.data
+        ? _data.data.reduce((acc, spectrum) => {
+            if (spectrum.info.isFid === false) {
+              const _spectrum = {
+                id: spectrum.id,
+                info: spectrum.info,
+              };
+              if (spectrum.info.dimension === 1) {
+                _spectrum.ranges = spectrum.ranges;
+                acc.push(_spectrum);
+                // } else if (spectrum.info.dimension === 2) {
+                //   _spectrum.zones = spectrum.zones;
+                //   acc.push(_spectrum);
+              }
+            }
+            return acc;
+          }, [])
+        : [];
+    console.log(_spectra);
+    setData({ spectra: _spectra, correlations: _data.correlations });
   }, []);
 
   const handleOnSubmit = useCallback(
     async (queryType, tolerance, allowHeteroHeteroBonds, retrievalID) => {
       setIsRequesting(true);
 
-      // data manipulation only for now until the new nmr-displayer version is released
-      const _data = lodashCloneDeep(data);
-      _data.correlations.values = _data.correlations.values.map(
-        (correlation) => ({
-          ...correlation,
-          equivalence:
-            correlation.atomType !== 'H'
-              ? correlation.equivalence + 1
-              : correlation.attachment &&
-                Object.keys(correlation.attachment).length > 0
-              ? (_data.correlations.values[
-                  correlation.attachment[
-                    Object.keys(correlation.attachment)[0]
-                  ][0]
-                ].equivalence +
-                  1) *
-                _data.correlations.values[
-                  correlation.attachment[
-                    Object.keys(correlation.attachment)[0]
-                  ][0]
-                ].protonsCount[0]
-              : correlation.equivalence + 1,
-        }),
-      );
-      _data.correlations.options.tolerance = tolerance;
-      console.log(_data);
+      // // data manipulation only for now until the new nmr-displayer version is released
+      // const _data = lodashCloneDeep(data);
+      // _data.correlations.values = _data.correlations.values.map(
+      //   (correlation) => ({
+      //     ...correlation,
+      //     equivalence:
+      //       correlation.atomType !== 'H'
+      //         ? correlation.equivalence + 1
+      //         : correlation.attachment &&
+      //           Object.keys(correlation.attachment).length > 0
+      //         ? (_data.correlations.values[
+      //             correlation.attachment[
+      //               Object.keys(correlation.attachment)[0]
+      //             ][0]
+      //           ].equivalence +
+      //             1) *
+      //           _data.correlations.values[
+      //             correlation.attachment[
+      //               Object.keys(correlation.attachment)[0]
+      //             ][0]
+      //           ].protonsCount[0]
+      //         : correlation.equivalence + 1,
+      //   }),
+      // );
+      // _data.correlations.options.tolerance = tolerance;
+
+      // Object.keys(_data.correlations.state).forEach((atomType) => {
+      //   delete _data.correlations.state[atomType].error;
+      // });
+
+      // console.log(_data);
+      console.log(data);
 
       const t0 = performance.now();
       const results = await axios({
@@ -84,7 +109,7 @@ function App() {
           allowHeteroHeteroBonds,
           retrievalID,
         },
-        data: { data: _data, queryType, allowHeteroHeteroBonds, retrievalID },
+        data: { data, queryType, allowHeteroHeteroBonds, retrievalID },
         headers: {
           'Content-Type': 'application/json',
         },
