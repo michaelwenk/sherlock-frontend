@@ -1,0 +1,24 @@
+.results-container {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-sort-options {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+
+  border: 2px solid blue;
+}
+
+.results-view-full {
+  width: 100%;
+  height: 90%;
+
+  border: 2px solid green;
+}

@@ -1,86 +1,47 @@
+import './QueryPanel.css';
+
 /** @jsxImportSource @emotion/react */
 import { useCallback, useState } from 'react';
-import CheckBox from '../../elements/CheckBox';
-import './QueryPanel.css';
-import Tolerances from './Tolerances';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-import { DefaultTolerance, QueryTypes } from './Constants';
+import { DefaultTolerance, QueryTypes } from './constants';
+import QueryOptionsTabs from './tabs/QueryOptionsTabs';
 
 function QueryPanel({ onSubmit, isRequesting }) {
   const [queryType, setQueryType] = useState(QueryTypes.dereplication);
-  const [allowHeteroHeteroBonds, setAllowHeteroHeteroBonds] = useState(false);
-  const [tolerance, setTolerance] = useState(DefaultTolerance);
+  const [dereplicationOptions, setDereplicationOptions] = useState({
+    shiftTolerances: DefaultTolerance,
+  });
+  const [elucidationOptions, setElucidationOptions] = useState({
+    allowHeteroHeteroBonds: true,
+  });
   const [retrievalID, setRetrievalID] = useState('');
 
   const handleOnSubmit = useCallback(
     async (e) => {
       e.stopPropagation();
-      onSubmit(queryType, tolerance, allowHeteroHeteroBonds, retrievalID);
+      onSubmit(
+        queryType,
+        dereplicationOptions,
+        elucidationOptions,
+        retrievalID,
+      );
     },
-    [onSubmit, queryType, tolerance, allowHeteroHeteroBonds, retrievalID],
+    [
+      onSubmit,
+      queryType,
+      dereplicationOptions,
+      elucidationOptions,
+      retrievalID,
+    ],
   );
 
-  const onChangeAllowHeteroHeteroBonds = useCallback((e) => {
-    e.stopPropagation();
-    setAllowHeteroHeteroBonds(e.target.checked);
-  }, []);
-
-  const onChangeToleranceHandler = useCallback((_tolerance) => {
-    setTolerance(_tolerance);
-  }, []);
-
-  const onSelectTab = useCallback((index) => {
-    switch (index) {
-      case 0:
-        setQueryType(QueryTypes.dereplication);
-        break;
-      case 1:
-        setQueryType(QueryTypes.elucidation);
-        break;
-      case 2:
-        setQueryType(QueryTypes.retrieval);
-        break;
-
-      default:
-        setQueryType(QueryTypes.unknown);
-        break;
-    }
+  const handleOnSelectTab = useCallback((_queryType) => {
+    setQueryType(_queryType);
   }, []);
 
   return (
     <div className="query-panel">
-      <div className="tabs-container">
-        <Tabs onSelect={onSelectTab}>
-          <TabList>
-            <Tab>Dereplication</Tab>
-            <Tab>Elucidation</Tab>
-            <Tab>Retrieval</Tab>
-          </TabList>
-          <TabPanel>
-            {queryType && (
-              <Tolerances
-                tolerance={tolerance}
-                onChangeTolerance={onChangeToleranceHandler}
-              />
-            )}
-          </TabPanel>
-          <TabPanel>
-            <CheckBox
-              isChecked={allowHeteroHeteroBonds}
-              handleOnChange={onChangeAllowHeteroHeteroBonds}
-              title="Allow Hetero-Hetero Bonds"
-            />
-          </TabPanel>
-          <TabPanel>
-            <input
-              type="text"
-              onChange={(e) => setRetrievalID(e.target.value)}
-            />
-          </TabPanel>
-        </Tabs>
-      </div>
       <div className="submit-button-container">
+        <QueryOptionsTabs onSelectTab={handleOnSelectTab} />
         <button
           className="submit-button"
           type="button"

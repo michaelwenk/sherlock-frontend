@@ -1,16 +1,18 @@
-/** @jsxImportSource @emotion/react */
-
-import { Molecule } from 'openchemlib/full';
-import { useCallback, useMemo } from 'react';
-import { saveAs } from 'file-saver';
-import Loader from 'react-loader-spinner';
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-
 import './ResultsPanel.css';
-import ResultsContainer from './ResultsContainer';
-import { Fragment } from 'react';
+
+/** @jsxImportSource @emotion/react */
+import { Molecule } from 'openchemlib/full';
+import { Fragment, useCallback, useMemo } from 'react';
+import { saveAs } from 'file-saver';
+import ResultsContainer from './resultsContainer/ResultsContainer';
+import ResultsInfo from './resultsInfo/ResultsInfo';
+import Spinner from '../../elements/Spinner';
 
 function ResultsPanel({ results, isRequesting }) {
+  const queryType = useMemo(() => {
+    return results ? results.data.queryType : '';
+  }, [results]);
+
   const molecules = useMemo(() => {
     return !isRequesting && results && results.data && results.data.dataSetList
       ? results.data.dataSetList.map((dataSet, i) => {
@@ -38,41 +40,20 @@ function ResultsPanel({ results, isRequesting }) {
   return (
     <div className="results-panel">
       {isRequesting ? (
-        <div className="loader-container">
-          <Loader
-            type="TailSpin"
-            color="#00BFFF"
-            height="100px"
-            width="100px"
-          />
+        <div className="loader">
+          <Spinner />
         </div>
       ) : (
         <Fragment>
-          <div className="info-container">
-            <p>
-              {molecules.length > 0
-                ? results.data.dataSetList.length +
-                  ' result(s) in ' +
-                  results.time.toFixed(2) +
-                  's'
-                : 'No results'}
-            </p>
-            <p>
-              {!isRequesting && results
-                ? results.data.requestID
-                : 'No request id'}
-            </p>
-            <button
-              type="button"
-              onClick={handleOnClickDownload}
-              disabled={molecules.length > 0 ? false : true}
-            >
-              Download Results
-            </button>
-          </div>
-          <div className="results-container">
-            <ResultsContainer molecules={molecules} limit={50} />
-          </div>
+          <ResultsInfo
+            results={results}
+            onClickDownload={handleOnClickDownload}
+          />
+          <ResultsContainer
+            molecules={molecules}
+            limit={50}
+            queryType={queryType}
+          />
         </Fragment>
       )}
     </div>

@@ -5,24 +5,8 @@
   flex-direction: column;
 }
 
-.info-container {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-
-.results-container {
-  width: 100%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  overflow: scroll;
-}
-
-.loader-container {
+.loader {
   top: calc(50% + 50px);
   left: calc(50% - 50px);
-  position: absolute; 
+  position: absolute;
 }

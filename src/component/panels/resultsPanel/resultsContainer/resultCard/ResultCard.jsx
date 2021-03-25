@@ -1,10 +1,12 @@
-/** @jsxImportSource @emotion/react */
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+/** @jsxImportSource @emotion/react */
 import Card from 'react-bootstrap/Card';
 import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
+import ResultCardText from './ResultCardText';
 
-function ResultCard({ id, molecule, styles }) {
+function ResultCard({ id, molecule, styles, queryType }) {
   return (
     <Card style={styles}>
       <Card.Header>{`#${id}`}</Card.Header>
@@ -22,12 +24,10 @@ function ResultCard({ id, molecule, styles }) {
           setHoverAtom={() => {}}
           setMolfile={() => {}}
         />
-        {/* <Card.Title>{`#${i + j + 1}`}</Card.Title> */}
-        <Card.Text>
-          {/* {molecule.meta.smiles} <br />  */}
-          {molecule.meta.mf} <br /> {molecule.meta.mw.toFixed(5)} <br />{' '}
-          {molecule.meta.avgDev ? Number(molecule.meta.avgDev).toFixed(3) : ''}
-        </Card.Text>
+        {/* <Card.Title>
+          {molecule.meta.rmsd ? Number(molecule.meta.rmsd).toFixed(3) : ''}
+        </Card.Title> */}
+        <ResultCardText molecule={molecule} queryType={queryType} />
       </Card.Body>
     </Card>
   );

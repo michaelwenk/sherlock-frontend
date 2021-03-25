@@ -1,4 +1,5 @@
 import './App.css';
+
 import NMRDisplayer from 'nmr-displayer';
 import { useCallback, useState } from 'react';
 import OCL from 'openchemlib/full';
@@ -65,7 +66,12 @@ function App() {
   }, []);
 
   const handleOnSubmit = useCallback(
-    async (queryType, tolerance, allowHeteroHeteroBonds, retrievalID) => {
+    async (
+      queryType,
+      dereplicationOptions,
+      elucidationOptions,
+      retrievalID,
+    ) => {
       setIsRequesting(true);
 
       // // data manipulation only for now until the new nmr-displayer version is released
@@ -100,9 +106,6 @@ function App() {
 
       // console.log(_data);
 
-      const dereplicationOptions = { shiftTolerances: tolerance };
-      const elucidationOptions = { allowHeteroHeteroBonds };
-
       const requestData = {
         data,
         queryType,
@@ -116,11 +119,7 @@ function App() {
       const results = await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
-        params: {
-          queryType,
-          allowHeteroHeteroBonds,
-          retrievalID,
-        },
+        // params: {},
         data: requestData,
         headers: {
           'Content-Type': 'application/json',
@@ -208,11 +207,7 @@ function App() {
             />
           </div>
           <Fragment>
-            <QueryPanel
-              data={data}
-              onSubmit={handleOnSubmit}
-              isRequesting={isRequesting}
-            />
+            <QueryPanel onSubmit={handleOnSubmit} isRequesting={isRequesting} />
             <ResultsPanel results={results} isRequesting={isRequesting} />
           </Fragment>
         </SplitPane>
