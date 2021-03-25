@@ -39,10 +39,11 @@ function App() {
   const [hideRightPanel, setHideRightPanel] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  const handleOnDataChange = useCallback((_data) => {
+  const handleOnDataChange = useCallback((nmrDisplayerData) => {
+    // console.log(nmrDisplayerData);
     const _spectra =
-      _data && _data.data
-        ? _data.data.reduce((acc, spectrum) => {
+      nmrDisplayerData && nmrDisplayerData.data
+        ? nmrDisplayerData.data.reduce((acc, spectrum) => {
             if (spectrum.info.isFid === false) {
               const _spectrum = {
                 id: spectrum.id,
@@ -59,8 +60,8 @@ function App() {
             return acc;
           }, [])
         : [];
-    console.log(_spectra);
-    setData({ spectra: _spectra, correlations: _data.correlations });
+    // console.log(_spectra);
+    setData({ spectra: _spectra, correlations: nmrDisplayerData.correlations });
   }, []);
 
   const handleOnSubmit = useCallback(
@@ -98,7 +99,18 @@ function App() {
       // });
 
       // console.log(_data);
-      console.log(data);
+
+      const dereplicationOptions = { shiftTolerances: tolerance };
+      const elucidationOptions = { allowHeteroHeteroBonds };
+
+      const requestData = {
+        data,
+        queryType,
+        dereplicationOptions,
+        elucidationOptions,
+        retrievalID,
+      };
+      console.log(requestData);
 
       const t0 = performance.now();
       const results = await axios({
@@ -109,7 +121,7 @@ function App() {
           allowHeteroHeteroBonds,
           retrievalID,
         },
-        data: { data, queryType, allowHeteroHeteroBonds, retrievalID },
+        data: requestData,
         headers: {
           'Content-Type': 'application/json',
         },
