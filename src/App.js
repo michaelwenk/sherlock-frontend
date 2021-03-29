@@ -66,12 +66,7 @@ function App() {
   }, []);
 
   const handleOnSubmit = useCallback(
-    async (
-      queryType,
-      dereplicationOptions,
-      elucidationOptions,
-      retrievalID,
-    ) => {
+    async (queryType, dereplicationOptions, elucidationOptions, resultID) => {
       setIsRequesting(true);
 
       // // data manipulation only for now until the new nmr-displayer version is released
@@ -111,7 +106,7 @@ function App() {
         queryType,
         dereplicationOptions,
         elucidationOptions,
-        retrievalID,
+        resultID,
       };
       console.log(requestData);
 

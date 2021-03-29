@@ -11,27 +11,16 @@ function QueryPanel({ onSubmit, isRequesting }) {
     shiftTolerances: DefaultTolerance,
   });
   const [elucidationOptions, setElucidationOptions] = useState({
-    allowHeteroHeteroBonds: true,
+    allowHeteroHeteroBonds: false,
   });
-  const [retrievalID, setRetrievalID] = useState('');
+  const [resultID, setResultID] = useState('');
 
   const handleOnSubmit = useCallback(
     async (e) => {
       e.stopPropagation();
-      onSubmit(
-        queryType,
-        dereplicationOptions,
-        elucidationOptions,
-        retrievalID,
-      );
+      onSubmit(queryType, dereplicationOptions, elucidationOptions, resultID);
     },
-    [
-      onSubmit,
-      queryType,
-      dereplicationOptions,
-      elucidationOptions,
-      retrievalID,
-    ],
+    [onSubmit, queryType, dereplicationOptions, elucidationOptions, resultID],
   );
 
   const handleOnSelectTab = useCallback((_queryType) => {

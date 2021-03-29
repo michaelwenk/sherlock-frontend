@@ -20,7 +20,7 @@ function ResultsInfo({ results, onClickDownload }) {
             's'
           : 'No results'}
       </p>
-      <p>{results.data.requestID}</p>
+      <p>{results.data.resultID}</p>
       <button
         type="button"
         onClick={handleOnClickDownload}

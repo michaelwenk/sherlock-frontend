@@ -4,7 +4,7 @@ import CheckBox from '../../../elements/CheckBox';
 function QueryTabElucidation() {
   return (
     <CheckBox
-      isChecked={true}
+      isChecked={false}
       handleOnChange={() => {}} //onChangeAllowHeteroHeteroBonds
       title="Allow Hetero-Hetero Bonds"
     />

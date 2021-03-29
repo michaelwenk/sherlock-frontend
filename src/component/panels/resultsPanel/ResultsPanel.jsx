@@ -32,7 +32,7 @@ function ResultsPanel({ results, isRequesting }) {
     saveAs(
       blob,
       `${
-        results && results.data.requestID ? results.data.requestID : 'results'
+        results && results.data.resultID ? results.data.resultID : 'results'
       }.json`,
     );
   }, [molecules, results]);
