@@ -42,7 +42,6 @@ function ResultsContainer({ molecules, limit }) {
 
       return 0;
     });
-    console.log(_sortedMolecules);
 
     return _sortedMolecules;
   }, [molecules, selectedSortByValue]);
