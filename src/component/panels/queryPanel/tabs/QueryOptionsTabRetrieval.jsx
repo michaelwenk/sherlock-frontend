@@ -1,7 +1,17 @@
 /** @jsxImportSource @emotion/react */
+import { useFormikContext } from 'formik';
 
 function QueryOptionsTabRetrieval() {
-  return <input type="text" onChange={(e) => console.log(e.target.value)} />;
+  const { setFieldValue } = useFormikContext();
+
+  return (
+    <input
+      type="text"
+      onChange={(e) =>
+        setFieldValue('retrievalOptions.resultID', e.target.value)
+      }
+    />
+  );
 }
 
 export default QueryOptionsTabRetrieval;

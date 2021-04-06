@@ -40,11 +40,11 @@ function App() {
   const [hideRightPanel, setHideRightPanel] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  const handleOnDataChange = useCallback((nmrDisplayerData) => {
-    // console.log(nmrDisplayerData);
+  const handleOnDataChange = useCallback((nmriumData) => {
+    // console.log(nmriumData);
     const _spectra =
-      nmrDisplayerData && nmrDisplayerData.data
-        ? nmrDisplayerData.data.reduce((acc, spectrum) => {
+      nmriumData && nmriumData.data
+        ? nmriumData.data.reduce((acc, spectrum) => {
             if (spectrum.info.isFid === false) {
               const _spectrum = {
                 id: spectrum.id,
@@ -62,11 +62,16 @@ function App() {
           }, [])
         : [];
     // console.log(_spectra);
-    setData({ spectra: _spectra, correlations: nmrDisplayerData.correlations });
+    setData({ spectra: _spectra, correlations: nmriumData.correlations });
   }, []);
 
   const handleOnSubmit = useCallback(
-    async (queryType, dereplicationOptions, elucidationOptions, resultID) => {
+    async (
+      queryType,
+      dereplicationOptions,
+      elucidationOptions,
+      retrievalOptions,
+    ) => {
       setIsRequesting(true);
 
       const requestData = {
@@ -74,7 +79,7 @@ function App() {
         queryType,
         dereplicationOptions,
         elucidationOptions,
-        resultID,
+        resultID: retrievalOptions.resultID,
       };
       console.log(requestData);
 

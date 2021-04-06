@@ -4,27 +4,10 @@ import './QueryPanel.css';
 import { useCallback, useState } from 'react';
 import { DefaultTolerance, QueryTypes } from './constants';
 import QueryOptionsTabs from './tabs/QueryOptionsTabs';
+import { Formik, Form } from 'formik';
 
 function QueryPanel({ onSubmit, isRequesting }) {
   const [queryType, setQueryType] = useState(QueryTypes.dereplication);
-  const [dereplicationOptions, setDereplicationOptions] = useState({
-    shiftTolerances: DefaultTolerance,
-    checkMultiplicity: true,
-    checkEquivalencesCount: true,
-    useMF: true,
-  });
-  const [elucidationOptions, setElucidationOptions] = useState({
-    allowHeteroHeteroBonds: false,
-  });
-  const [resultID, setResultID] = useState('');
-
-  const handleOnSubmit = useCallback(
-    async (e) => {
-      e.stopPropagation();
-      onSubmit(queryType, dereplicationOptions, elucidationOptions, resultID);
-    },
-    [onSubmit, queryType, dereplicationOptions, elucidationOptions, resultID],
-  );
 
   const handleOnSelectTab = useCallback((_queryType) => {
     setQueryType(_queryType);
@@ -32,17 +15,48 @@ function QueryPanel({ onSubmit, isRequesting }) {
 
   return (
     <div className="query-panel">
-      <div className="submit-button-container">
-        <QueryOptionsTabs onSelectTab={handleOnSelectTab} />
-        <button
-          className="submit-button"
-          type="button"
-          onClick={handleOnSubmit}
-          disabled={isRequesting}
-        >
-          {queryType}
-        </button>
-      </div>
+      <Formik
+        initialValues={{
+          dereplicationOptions: {
+            shiftTolerances: DefaultTolerance,
+            checkMultiplicity: true,
+            checkEquivalencesCount: true,
+            useMF: true,
+          },
+          elucidationOptions: {
+            allowHeteroHeteroBonds: false,
+          },
+          retrievalOptions: { resultID: '606849e41a589c0d33805527' },
+        }}
+        // validate={(values) => {
+        //   const errors = {};
+        //   return errors;
+        // }}
+        onSubmit={async (values, { setSubmitting }) => {
+          await onSubmit(
+            queryType,
+            values.dereplicationOptions,
+            values.elucidationOptions,
+            values.retrievalOptions,
+          );
+          setSubmitting(false);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <QueryOptionsTabs onSelectTab={handleOnSelectTab} />
+            <div className="submit-button-container">
+              <button
+                className="submit-button"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {queryType}
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }

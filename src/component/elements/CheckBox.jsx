@@ -1,6 +1,14 @@
 /** @jsxImportSource @emotion/react */
+import { useCallback, useState } from 'react';
 
-function CheckBox({ isChecked, handleOnChange, title, css }) {
+function CheckBox({ defaultValue, onChange, title, css }) {
+  const [isChecked, setIsChecked] = useState(defaultValue);
+
+  const handleOnChange = useCallback(() => {
+    setIsChecked(!isChecked);
+    onChange(!isChecked);
+  }, [isChecked, onChange]);
+
   return (
     <div css={css}>
       <label>
