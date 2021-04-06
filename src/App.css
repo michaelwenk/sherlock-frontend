@@ -24,8 +24,8 @@
 }
 
 .SplitPane {
-  height: "100%";
-  width: "100%";
+  height: '100%';
+  width: '100%';
 }
 
 .Resizer.vertical {
@@ -42,10 +42,10 @@
 }
 
 .Resizer.vertical:after {
-  content: "\22EE";
+  content: '\22EE';
   top: 50%;
   color: black;
-  position: absolute;  
+  position: absolute;
   font-size: 15px;
   font-weight: bold;
 }
@@ -60,5 +60,4 @@
 .nmr-displayer-container {
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
