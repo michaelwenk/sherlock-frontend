@@ -6,7 +6,7 @@ import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 
-function ResultCard({ id, molecule, styles, queryType }) {
+function ResultCard({ id, molecule, styles }) {
   return (
     <Card style={styles}>
       <Card.Header>{`#${id}`}</Card.Header>
@@ -27,7 +27,7 @@ function ResultCard({ id, molecule, styles, queryType }) {
         {/* <Card.Title>
           {molecule.meta.rmsd ? Number(molecule.meta.rmsd).toFixed(3) : ''}
         </Card.Title> */}
-        <ResultCardText molecule={molecule} queryType={queryType} />
+        <ResultCardText molecule={molecule} />
       </Card.Body>
     </Card>
   );

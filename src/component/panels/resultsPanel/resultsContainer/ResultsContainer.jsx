@@ -5,10 +5,9 @@ import ResultCard from './resultCard/ResultCard';
 import { useCallback, useMemo, useState } from 'react';
 import SelectBox from '../../../elements/SelectBox';
 import { SortOptions } from '../constants';
-import { QueryTypes } from '../../queryPanel/constants';
 import ResultsView from './resultsView/ResultsView';
 
-function ResultsContainer({ molecules, limit, queryType }) {
+function ResultsContainer({ molecules, limit }) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
     SortOptions[0],
   );
@@ -63,7 +62,6 @@ function ResultsContainer({ molecules, limit, queryType }) {
           id={i + 1}
           molecule={sortedMolecules[i]}
           styles={{ minWidth: '12rem', maxWidth: '12rem' }}
-          queryType={queryType}
         />
       );
       if (counter < limit) {
@@ -80,19 +78,17 @@ function ResultsContainer({ molecules, limit, queryType }) {
     }
 
     return _cardDeckData;
-  }, [limit, queryType, sortedMolecules]);
+  }, [limit, sortedMolecules]);
 
   return (
     cardDeckData.length > 0 && (
       <div className="results-container">
         <div className="results-sort-options">
-          {queryType === QueryTypes.dereplication && (
-            <SelectBox
-              selectionOptions={SortOptions}
-              defaultValue={SortOptions[0]}
-              onChange={handleOnChangeSortByValue}
-            />
-          )}
+          <SelectBox
+            selectionOptions={SortOptions}
+            defaultValue={SortOptions[0]}
+            onChange={handleOnChangeSortByValue}
+          />
         </div>
         <div className="results-view-full">
           <ResultsView cardDeckData={cardDeckData} />

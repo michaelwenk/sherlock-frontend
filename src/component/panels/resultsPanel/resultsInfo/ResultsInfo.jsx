@@ -13,18 +13,22 @@ function ResultsInfo({ results, onClickDownload }) {
   return results ? (
     <div className="info-container">
       <p>
-        {results.data.dataSetList.length > 0
+        {results.data.dataSetList && results.data.dataSetList.length > 0
           ? results.data.dataSetList.length +
             ' result(s) in ' +
             results.time.toFixed(2) +
             's'
           : 'No results'}
       </p>
-      <p>{results.data.resultID}</p>
+      <p>{results.data && results.data.resultID}</p>
       <button
         type="button"
         onClick={handleOnClickDownload}
-        disabled={results.data.dataSetList.length > 0 ? false : true}
+        disabled={
+          results.data.dataSetList && results.data.dataSetList.length > 0
+            ? false
+            : true
+        }
       >
         Download Results
       </button>

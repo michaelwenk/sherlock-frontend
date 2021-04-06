@@ -9,10 +9,6 @@ import ResultsInfo from './resultsInfo/ResultsInfo';
 import Spinner from '../../elements/Spinner';
 
 function ResultsPanel({ results, isRequesting }) {
-  const queryType = useMemo(() => {
-    return results ? results.data.queryType : '';
-  }, [results]);
-
   const molecules = useMemo(() => {
     return !isRequesting && results && results.data && results.data.dataSetList
       ? results.data.dataSetList.map((dataSet, i) => {
@@ -49,11 +45,7 @@ function ResultsPanel({ results, isRequesting }) {
             results={results}
             onClickDownload={handleOnClickDownload}
           />
-          <ResultsContainer
-            molecules={molecules}
-            limit={50}
-            queryType={queryType}
-          />
+          <ResultsContainer molecules={molecules} limit={50} />
         </Fragment>
       )}
     </div>
