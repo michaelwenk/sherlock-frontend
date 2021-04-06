@@ -1,6 +1,6 @@
 import './App.css';
 
-import NMRDisplayer from 'nmr-displayer';
+import NMRium from 'nmrium';
 import { useCallback, useState } from 'react';
 import OCL from 'openchemlib/full';
 import { initOCL } from 'react-ocl-nmr';
@@ -68,38 +68,6 @@ function App() {
   const handleOnSubmit = useCallback(
     async (queryType, dereplicationOptions, elucidationOptions, resultID) => {
       setIsRequesting(true);
-
-      // // data manipulation only for now until the new nmr-displayer version is released
-      // const _data = lodashCloneDeep(data);
-      // _data.correlations.values = _data.correlations.values.map(
-      //   (correlation) => ({
-      //     ...correlation,
-      //     equivalence:
-      //       correlation.atomType !== 'H'
-      //         ? correlation.equivalence + 1
-      //         : correlation.attachment &&
-      //           Object.keys(correlation.attachment).length > 0
-      //         ? (_data.correlations.values[
-      //             correlation.attachment[
-      //               Object.keys(correlation.attachment)[0]
-      //             ][0]
-      //           ].equivalence +
-      //             1) *
-      //           _data.correlations.values[
-      //             correlation.attachment[
-      //               Object.keys(correlation.attachment)[0]
-      //             ][0]
-      //           ].protonsCount[0]
-      //         : correlation.equivalence + 1,
-      //   }),
-      // );
-      // _data.correlations.options.tolerance = tolerance;
-
-      // Object.keys(_data.correlations.state).forEach((atomType) => {
-      //   delete _data.correlations.state[atomType].error;
-      // });
-
-      // console.log(_data);
 
       const requestData = {
         data,
@@ -195,7 +163,7 @@ function App() {
           onDragFinished={handleOnDragFinished}
         >
           <div className="nmr-displayer-container">
-            <NMRDisplayer
+            <NMRium
               preferences={preferences}
               onDataChange={handleOnDataChange}
               data={initData}
