@@ -1,3 +1,3 @@
-const SortOptions = ['RMSD', 'Tanimoto'];
+const sortOptions = { rmsd: 'RMSD', tanimoto: 'Tanimoto' };
 
-export { SortOptions };
+export { sortOptions };

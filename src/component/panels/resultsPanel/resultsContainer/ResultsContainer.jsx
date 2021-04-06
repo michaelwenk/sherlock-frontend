@@ -4,12 +4,12 @@ import './ResultsContainer.css';
 import ResultCard from './resultCard/ResultCard';
 import { useCallback, useMemo, useState } from 'react';
 import SelectBox from '../../../elements/SelectBox';
-import { SortOptions } from '../constants';
+import { sortOptions } from '../constants';
 import ResultsView from './resultsView/ResultsView';
 
 function ResultsContainer({ molecules, limit }) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
-    SortOptions[0],
+    sortOptions.rmsd,
   );
 
   const sortedMolecules = useMemo(() => {
@@ -24,14 +24,14 @@ function ResultsContainer({ molecules, limit }) {
       };
     });
     _sortedMolecules.sort((molecule1, molecule2) => {
-      if (selectedSortByValue === SortOptions[0]) {
+      if (selectedSortByValue === sortOptions.rmsd) {
         if (molecule1.meta.rmsd < molecule2.meta.rmsd) {
           return -1;
         } else if (molecule1.meta.rmsd > molecule2.meta.rmsd) {
           return 1;
         }
         return 0;
-      } else if (selectedSortByValue === SortOptions[1]) {
+      } else if (selectedSortByValue === sortOptions.tanimoto) {
         if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
           return -1;
         } else if (molecule1.meta.tanimoto < molecule2.meta.tanimoto) {
@@ -69,8 +69,8 @@ function ResultsContainer({ molecules, limit }) {
         resultCards.push(resultCard);
       } else {
         _cardDeckData.push(resultCards);
-        counter = 0;
         resultCards = [resultCard];
+        counter = 1;
       }
     }
     if (resultCards.length > 0) {
@@ -85,8 +85,10 @@ function ResultsContainer({ molecules, limit }) {
       <div className="results-container">
         <div className="results-sort-options">
           <SelectBox
-            selectionOptions={SortOptions}
-            defaultValue={SortOptions[0]}
+            selectionOptions={Object.keys(sortOptions).map(
+              (sortOptionKey) => sortOptions[sortOptionKey],
+            )}
+            defaultValue={sortOptions.rmsd}
             onChange={handleOnChangeSortByValue}
           />
         </div>
