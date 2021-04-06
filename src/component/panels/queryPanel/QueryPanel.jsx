@@ -9,6 +9,9 @@ function QueryPanel({ onSubmit, isRequesting }) {
   const [queryType, setQueryType] = useState(QueryTypes.dereplication);
   const [dereplicationOptions, setDereplicationOptions] = useState({
     shiftTolerances: DefaultTolerance,
+    checkMultiplicity: true,
+    checkEquivalencesCount: true,
+    useMF: true,
   });
   const [elucidationOptions, setElucidationOptions] = useState({
     allowHeteroHeteroBonds: false,
