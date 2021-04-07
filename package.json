@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "file-saver": "^2.0.5",
+    "formik": "^2.2.6",
     "lodash": "^4.17.21",
     "nmrium": "^0.9.0",
     "openchemlib": "^7.3.0",
