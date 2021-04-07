@@ -31,24 +31,22 @@ function QueryOptionsTabs({ onSelectTab }) {
   );
 
   return (
-    <div className="query-tabs">
-      <Tabs onSelect={handleOnSelectTab}>
-        <TabList>
-          <Tab>Dereplication</Tab>
-          <Tab>Elucidation</Tab>
-          <Tab>Retrieval</Tab>
-        </TabList>
-        <TabPanel>
-          <QueryTabDereplication />
-        </TabPanel>
-        <TabPanel>
-          <QueryTabElucidation />
-        </TabPanel>
-        <TabPanel>
-          <QueryOptionsTabRetrieval />
-        </TabPanel>
-      </Tabs>
-    </div>
+    <Tabs onSelect={handleOnSelectTab}>
+      <TabList>
+        <Tab>Dereplication</Tab>
+        <Tab>Elucidation</Tab>
+        <Tab>Retrieval</Tab>
+      </TabList>
+      <TabPanel>
+        <QueryTabDereplication />
+      </TabPanel>
+      <TabPanel>
+        <QueryTabElucidation />
+      </TabPanel>
+      <TabPanel>
+        <QueryOptionsTabRetrieval />
+      </TabPanel>
+    </Tabs>
   );
 }
 
