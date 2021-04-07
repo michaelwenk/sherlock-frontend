@@ -24,8 +24,10 @@ function QueryPanel({ onSubmit, isRequesting }) {
         },
         elucidationOptions: {
           allowHeteroHeteroBonds: false,
+          elimP1: 1,
+          elimP2: 4,
         },
-        retrievalOptions: { resultID: '606849e41a589c0d33805527' },
+        retrievalOptions: { resultID: '' },
       }}
       // validate={(values) => {
       //   const errors = {};
