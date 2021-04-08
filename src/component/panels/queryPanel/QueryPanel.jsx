@@ -29,6 +29,7 @@ function QueryPanel({ onSubmit, isRequesting }) {
           elimP2: 4,
           useFilterLsdRing3: true,
           useFilterLsdRing4: true,
+          hybridizationDetectionThreshold: 0.1,
         },
         retrievalOptions: { resultID: '' },
       }}
