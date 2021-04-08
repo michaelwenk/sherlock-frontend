@@ -1,3 +1,3 @@
 const sortOptions = { rmsd: 'RMSD', tanimoto: 'Tanimoto' };
 
-export { sortOptions };
+export default sortOptions;

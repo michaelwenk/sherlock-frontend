@@ -4,26 +4,27 @@ import 'react-tabs/style/react-tabs.css';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import QueryTabDereplication from './QueryOptionsTabDereplication';
 import { useCallback } from 'react';
-import { QueryTypes } from '../constants';
+
 import QueryTabElucidation from './QueryOptionsTabElucidation';
 import QueryOptionsTabRetrieval from './QueryOptionsTabRetrieval';
+import queryTypes from '../../../../constants/queryTypes';
 
 function QueryOptionsTabs({ onSelectTab }) {
   const handleOnSelectTab = useCallback(
     (index) => {
       switch (index) {
         case 0:
-          onSelectTab(QueryTypes.dereplication);
+          onSelectTab(queryTypes.dereplication);
           break;
         case 1:
-          onSelectTab(QueryTypes.elucidation);
+          onSelectTab(queryTypes.elucidation);
           break;
         case 2:
-          onSelectTab(QueryTypes.retrieval);
+          onSelectTab(queryTypes.retrieval);
           break;
 
         default:
-          onSelectTab(QueryTypes.unknown);
+          onSelectTab(queryTypes.unknown);
           break;
       }
     },

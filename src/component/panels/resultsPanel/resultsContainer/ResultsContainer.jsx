@@ -4,7 +4,7 @@ import './ResultsContainer.css';
 import ResultCard from './resultCard/ResultCard';
 import { useCallback, useMemo, useState } from 'react';
 import SelectBox from '../../../elements/SelectBox';
-import { sortOptions } from '../constants';
+import sortOptions from '../../../../constants/sortOptions';
 import ResultsView from './resultsView/ResultsView';
 
 function ResultsContainer({ molecules, limit }) {
