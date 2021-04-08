@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { DefaultTolerance, QueryTypes } from './constants';
 import QueryOptionsTabs from './tabs/QueryOptionsTabs';
 import { Formik, Form } from 'formik';
+import validateQueryOptions from '../../../utils/queryOptionsValidation';
 
 function QueryPanel({ onSubmit, isRequesting }) {
   const [queryType, setQueryType] = useState(QueryTypes.dereplication);
@@ -25,18 +26,19 @@ function QueryPanel({ onSubmit, isRequesting }) {
         elucidationOptions: {
           allowHeteroHeteroBonds: false,
           useElim: false,
-          elimP1: 1,
-          elimP2: 4,
+          elimP1: 1, // number of correlations (HMBC/COSY) to eliminate
+          elimP2: 4, // number of bonds between the atoms
+          hmbcP3: 2, // minimal coupling path length HMBC
+          hmbcP4: 4, // maximal coupling path length HMBC
+          cosyP3: 3, // minimal coupling path length COSY
+          cosyP4: 4, // maximal coupling path length COSY
           useFilterLsdRing3: true,
           useFilterLsdRing4: true,
           hybridizationDetectionThreshold: 0.1,
         },
         retrievalOptions: { resultID: '' },
       }}
-      // validate={(values) => {
-      //   const errors = {};
-      //   return errors;
-      // }}
+      validate={validateQueryOptions}
       onSubmit={async (values, { setSubmitting }) => {
         await onSubmit(
           queryType,
