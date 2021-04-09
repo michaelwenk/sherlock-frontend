@@ -19,8 +19,8 @@ function QueryPanel({ onSubmit, isRequesting }) {
     <Formik
       initialValues={defaultQueryOptions}
       validate={validateQueryOptions}
-      onSubmit={async (values, { setSubmitting }) => {
-        await onSubmit(
+      onSubmit={(values, { setSubmitting }) => {
+        onSubmit(
           queryType,
           values.dereplicationOptions,
           values.elucidationOptions,
@@ -29,7 +29,7 @@ function QueryPanel({ onSubmit, isRequesting }) {
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting }) => (
+      {() => (
         <Form>
           <div className="query-panel">
             <div className="tabs-container">
@@ -39,7 +39,7 @@ function QueryPanel({ onSubmit, isRequesting }) {
               <button
                 className="submit-button"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isRequesting}
               >
                 {queryType}
               </button>
