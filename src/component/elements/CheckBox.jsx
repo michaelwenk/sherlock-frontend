@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useCallback, useState } from 'react';
 
-function CheckBox({ defaultValue, onChange, title, css }) {
+function CheckBox({ defaultValue, onChange, title, styles }) {
   const [isChecked, setIsChecked] = useState(defaultValue);
 
   const handleOnChange = useCallback(() => {
@@ -10,7 +10,7 @@ function CheckBox({ defaultValue, onChange, title, css }) {
   }, [isChecked, onChange]);
 
   return (
-    <div css={css}>
+    <div style={styles}>
       <label>
         <input type="checkbox" checked={isChecked} onChange={handleOnChange} />
         <span>{title}</span>

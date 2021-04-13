@@ -1,13 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
 import { useCallback, useMemo } from 'react';
+import Input from './Input';
 
 function Tolerances({ tolerance, onChangeTolerance }) {
   const onChangeToleranceHandler = useCallback(
-    (e, atomType) => {
-      e.stopPropagation();
+    (value, atomType) => {
       const _tolerance = { ...tolerance };
-      _tolerance[atomType] = Number(e.target.value);
+      _tolerance[atomType] = Number(value);
       onChangeTolerance(_tolerance);
     },
     [onChangeTolerance, tolerance],
@@ -18,9 +18,11 @@ function Tolerances({ tolerance, onChangeTolerance }) {
       return (
         <div key={`toleranceInputField_${atomType}`}>
           <span>{atomType}: </span>
-          <input
+          <Input
             type="number"
-            onChange={(e) => onChangeToleranceHandler(e, atomType, tolerance)}
+            onChange={(value) =>
+              onChangeToleranceHandler(value, atomType, tolerance)
+            }
             defaultValue={tolerance[atomType]}
           />
         </div>

@@ -44,6 +44,7 @@ function validateQueryOptions(values) {
       'Invalid value for COSY P4: Must be equal to COSY P3 or greater';
   }
 
+  console.log(values);
   console.log(errors);
 
   return errors;

@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useCallback } from 'react';
 
 function SelectBox({ selectionOptions, onChange, defaultValue }) {
