@@ -12,7 +12,7 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.6",
     "lodash": "^4.17.21",
-    "nmrium": "^0.9.0",
+    "nmrium": "^0.11.0",
     "openchemlib": "^7.3.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
