@@ -12,41 +12,7 @@ import axios from 'axios';
 
 initOCL(OCL);
 
-const preferences = {
-  // general: {
-  //   disableMultipletAnalysis: true,
-  //   hideSetSumFromMolecule: false,
-  // },
-  // panels: {
-  //   hideSpectraPanel: false,
-  //   hideInformationPanel: true,
-  //   hidePeaksPanel: true,
-  //   hideIntegralsPanel: true,
-  //   hideRangesPanel: false,
-  //   hideStructuresPanel: true,
-  //   hideFiltersPanel: false,
-  //   hideZonesPanel: false,
-  //   hideSummaryPanel: false,
-  //   hideMultipleSpectraAnalysisPanel: true,
-  // },
-  // toolBarButtons: {
-  //   hideZoomTool: false,
-  //   hideZoomOutTool: false,
-  //   hideImport: false,
-  //   hideExportAs: false,
-  //   hideSpectraStackAlignments: false,
-  //   hideSpectraCenterAlignments: false,
-  //   hideRealImaginary: false,
-  //   hidePeakTool: false,
-  //   hideIntegralTool: true,
-  //   hideAutoRangesTool: false,
-  //   hideZeroFillingTool: false,
-  //   hidePhaseCorrectionTool: false,
-  //   hideBaseLineCorrectionTool: false,
-  //   hideFFTTool: false,
-  //   hideMultipleSpectraAnalysisTool: true,
-  // },
-};
+const preferences = {};
 
 const initData = {
   correlations: {
