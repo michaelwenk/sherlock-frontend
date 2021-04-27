@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-/** @jsxImportSource @emotion/react */
 import Card from 'react-bootstrap/Card';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
@@ -10,9 +9,9 @@ function ResultCardText({ molecule }) {
       Formula: {molecule.meta.mf}
       <br />
       RMSD: {molecule.meta.rmsd ? Number(molecule.meta.rmsd).toFixed(3) : ''}
-      <br />
-      Tanimoto:{' '}
-      {molecule.meta.tanimoto ? Number(molecule.meta.tanimoto).toFixed(5) : ''}
+      {/* <br /> */}
+      {/* Tanimoto:{' '}
+      {molecule.meta.tanimoto ? Number(molecule.meta.tanimoto).toFixed(5) : ''} */}
       {molecule.meta.id ? <br /> : null}
       {molecule.meta.id ? (
         <a

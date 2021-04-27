@@ -1,5 +1,3 @@
-/** @jsxImportSource @emotion/react */
-
 import Tolerances from '../../../elements/Tolerances';
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';

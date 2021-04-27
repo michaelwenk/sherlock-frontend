@@ -1,0 +1,85 @@
+.app {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-header {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-body {
+  width: 100%;
+  height: 90%;
+  position: relative;
+}
+
+.SplitPane {
+  height: '100%';
+  width: '100%';
+
+  .Resizer.vertical {
+    width: 15px;
+    background-color: '#f7f7f7';
+    cursor: col-resize;
+    padding: 2px;
+    border: 0.55px solid lightgrey;
+
+    &:hover {
+      background-color: lavender !important;
+    }
+
+    &:after {
+      content: '\22EE';
+      top: 50%;
+      color: black;
+      position: absolute;
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+}
+
+.nmrium-container {
+  width: 100%;
+  height: 100%;
+}
+
+.panels {
+  height: 100%;
+  width: 100%;
+
+  .collapsible {
+    height: 5%;
+    background-color: #eee;
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #ccc;
+    }
+
+    &:after {
+      content: var(--sign);
+      float: right;
+      margin-left: 5px;
+    }
+  }
+
+  .spinner {
+    top: calc(50% + 50px);
+    left: calc(50% - 50px);
+    position: absolute;
+  }
+}

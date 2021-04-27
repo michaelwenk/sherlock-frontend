@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useFormikContext } from 'formik';
 
 function QueryOptionsTabRetrieval() {

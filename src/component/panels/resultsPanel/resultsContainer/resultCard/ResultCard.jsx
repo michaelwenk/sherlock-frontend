@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-/** @jsxImportSource @emotion/react */
 import Card from 'react-bootstrap/Card';
 import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';

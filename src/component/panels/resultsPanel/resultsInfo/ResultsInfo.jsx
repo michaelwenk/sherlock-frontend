@@ -1,7 +1,15 @@
-/** @jsxImportSource @emotion/react */
-import { useCallback } from 'react';
+import './ResultsInfo.scss';
 
-function ResultsInfo({ results, onClickDownload }) {
+import { useCallback } from 'react';
+import SelectBox from '../../../elements/SelectBox';
+import sortOptions from '../../../../constants/sortOptions';
+
+function ResultsInfo({
+  result,
+  onClickDownload,
+  onChangeSortByValue,
+  onClickClear,
+}) {
   const handleOnClickDownload = useCallback(
     (e) => {
       e.stopPropagation();
@@ -10,28 +18,49 @@ function ResultsInfo({ results, onClickDownload }) {
     [onClickDownload],
   );
 
-  return results ? (
+  const handleOnChangeSortByValue = useCallback(
+    (value) => {
+      onChangeSortByValue(value);
+    },
+    [onChangeSortByValue],
+  );
+
+  const handleOnClickClear = useCallback(
+    (e) => {
+      e.stopPropagation();
+      onClickClear();
+    },
+    [onClickClear],
+  );
+
+  return result ? (
     <div className="info-container">
-      <p>
-        {results.data.dataSetList && results.data.dataSetList.length > 0
-          ? results.data.dataSetList.length +
-            ' result(s) in ' +
-            results.time.toFixed(2) +
-            's'
-          : 'No results'}
-      </p>
-      <p>{results.data && results.data.resultID}</p>
+      <p>{result.resultID}</p>
       <button
         type="button"
         onClick={handleOnClickDownload}
         disabled={
-          results.data.dataSetList && results.data.dataSetList.length > 0
-            ? false
-            : true
+          result.molecules && result.molecules.length > 0 ? false : true
         }
       >
-        Download Results
+        Download
       </button>
+      <button
+        type="button"
+        onClick={handleOnClickClear}
+        disabled={
+          result.molecules && result.molecules.length > 0 ? false : true
+        }
+      >
+        Clear
+      </button>
+      {/* <SelectBox
+        selectionOptions={Object.keys(sortOptions).map(
+          (sortOptionKey) => sortOptions[sortOptionKey],
+        )}
+        defaultValue={sortOptions.rmsd}
+        onChange={handleOnChangeSortByValue}
+      /> */}
     </div>
   ) : null;
 }

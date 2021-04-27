@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-function Input({ type, defaultValue, onChange, styles }) {
+function Input({ type, defaultValue, onChange, className = 'Input' }) {
   const handleOnChange = useCallback(
     (e) => {
       e.stopPropagation();
@@ -10,7 +10,7 @@ function Input({ type, defaultValue, onChange, styles }) {
   );
 
   return (
-    <div style={styles}>
+    <div className={className}>
       <input
         type={type}
         onChange={handleOnChange}

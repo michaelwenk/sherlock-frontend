@@ -1,6 +1,5 @@
 import 'react-tabs/style/react-tabs.css';
 
-/** @jsxImportSource @emotion/react */
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import QueryTabDereplication from './QueryOptionsTabDereplication';
 import { useCallback } from 'react';

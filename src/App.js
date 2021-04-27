@@ -1,18 +1,52 @@
-import './App.css';
+import './App.scss';
 
 import NMRium from 'nmrium';
 import { useCallback, useState } from 'react';
-import OCL from 'openchemlib/full';
+import OCL, { Molecule } from 'openchemlib/full';
 import { initOCL } from 'react-ocl-nmr';
+import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
-import { Fragment } from 'react';
 import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios from 'axios';
 
 initOCL(OCL);
 
-const preferences = {};
+const preferences = {
+  // general: {
+  //   disableMultipletAnalysis: true,
+  //   hideSetSumFromMolecule: false,
+  // },
+  // panels: {
+  //   hideSpectraPanel: false,
+  //   hideInformationPanel: true,
+  //   hidePeaksPanel: true,
+  //   hideIntegralsPanel: true,
+  //   hideRangesPanel: false,
+  //   hideStructuresPanel: true,
+  //   hideFiltersPanel: false,
+  //   hideZonesPanel: false,
+  //   hideSummaryPanel: false,
+  //   hideMultipleSpectraAnalysisPanel: true,
+  // },
+  // toolBarButtons: {
+  //   hideZoomTool: false,
+  //   hideZoomOutTool: false,
+  //   hideImport: false,
+  //   hideExportAs: false,
+  //   hideSpectraStackAlignments: false,
+  //   hideSpectraCenterAlignments: false,
+  //   hideRealImaginary: false,
+  //   hidePeakTool: false,
+  //   hideIntegralTool: true,
+  //   hideAutoRangesTool: false,
+  //   hideZeroFillingTool: false,
+  //   hidePhaseCorrectionTool: false,
+  //   hideBaseLineCorrectionTool: false,
+  //   hideFFTTool: false,
+  //   hideMultipleSpectraAnalysisTool: true,
+  // },
+};
 
 const initData = {
   correlations: {
@@ -27,18 +61,19 @@ const initData = {
 };
 
 const minWidth = {
-  leftPanel: '20%',
-  rightPanel: '20%',
+  leftPanel: '25%',
+  rightPanel: '25%',
   resizer: '15px',
 };
 
 function App() {
   const [data, setData] = useState();
-  const [results, setResults] = useState();
+  const [result, setResult] = useState({});
   const [leftPanelWidth, setLeftPanelWidth] = useState();
   const [hideLeftPanel, setHideLeftPanel] = useState(false);
   const [hideRightPanel, setHideRightPanel] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [showQueryPanel, setShowQueryPanel] = useState(true);
 
   const handleOnDataChange = useCallback((nmriumData) => {
     // console.log(nmriumData);
@@ -73,6 +108,7 @@ function App() {
       retrievalOptions,
     ) => {
       setIsRequesting(true);
+      setShowQueryPanel(false);
 
       const requestData = {
         data,
@@ -84,7 +120,7 @@ function App() {
       console.log(requestData);
 
       const t0 = performance.now();
-      const results = await axios({
+      const _result = await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
         // params: {},
@@ -95,8 +131,29 @@ function App() {
       });
       setIsRequesting(false);
       const t1 = performance.now();
-      console.log(results.data);
-      setResults({ data: results.data, time: (t1 - t0) / 1000 });
+      console.log('time need: ' + (t1 - t0) / 1000);
+      console.log(_result.data);
+
+      const molecules =
+        _result && _result.data && _result.data.dataSetList
+          ? _result.data.dataSetList.map((dataSet) => {
+              const molecule = Molecule.fromSmiles(dataSet.meta.smiles);
+              const {
+                formula,
+                relativeWeight,
+              } = molecule.getMolecularFormula();
+              return {
+                molfile: molecule.toMolfileV3(),
+                meta: { ...dataSet.meta, mf: formula, mw: relativeWeight },
+              };
+            })
+          : [];
+
+      setResult({
+        molecules,
+        resultID: _result.data.resultID,
+        time: (t1 - t0) / 1000,
+      });
     },
     [data],
   );
@@ -139,7 +196,7 @@ function App() {
               : hideRightPanel
               ? {
                   maxWidth: '100%',
-                  width: 'calc(100% - 15px)',
+                  width: `calc(100% - ${minWidth.resizer})`,
                 }
               : {
                   height: '100%',
@@ -153,7 +210,7 @@ function App() {
               : hideLeftPanel
               ? {
                   maxWidth: '100%',
-                  width: 'calc(100% - 15px)',
+                  width: `calc(100% - ${minWidth.resizer})`,
                 }
               : {
                   height: '100%',
@@ -167,17 +224,43 @@ function App() {
           // }}
           onDragFinished={handleOnDragFinished}
         >
-          <div className="nmr-displayer-container">
+          <div className="nmrium-container">
             <NMRium
               preferences={preferences}
               onDataChange={handleOnDataChange}
               data={initData}
             />
           </div>
-          <Fragment>
-            <QueryPanel onSubmit={handleOnSubmit} isRequesting={isRequesting} />
-            <ResultsPanel results={results} isRequesting={isRequesting} />
-          </Fragment>
+          <div className="panels">
+            <button
+              type="button"
+              className="collapsible"
+              style={{ '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowQueryPanel(!showQueryPanel);
+              }}
+            >
+              {showQueryPanel ? 'Hide query options' : 'Show query options'}
+            </button>
+
+            <QueryPanel
+              onSubmit={handleOnSubmit}
+              isRequesting={isRequesting}
+              show={showQueryPanel}
+            />
+            {isRequesting && !showQueryPanel ? (
+              <div className="spinner">
+                <Spinner />
+              </div>
+            ) : (
+              <ResultsPanel
+                result={result}
+                isRequesting={isRequesting}
+                onClickClear={() => setResult({})}
+              />
+            )}
+          </div>
         </SplitPane>
       </div>
     </div>

@@ -1,9 +1,11 @@
-/** @jsxImportSource @emotion/react */
-
 import { useCallback, useMemo } from 'react';
 import Input from './Input';
 
-function Tolerances({ tolerance, onChangeTolerance }) {
+function Tolerances({
+  tolerance,
+  onChangeTolerance,
+  className = 'Tolerances',
+}) {
   const onChangeToleranceHandler = useCallback(
     (value, atomType) => {
       const _tolerance = { ...tolerance };
@@ -30,7 +32,7 @@ function Tolerances({ tolerance, onChangeTolerance }) {
     });
   }, [tolerance, onChangeToleranceHandler]);
 
-  return <div>{inputFields}</div>;
+  return <div className={className}>{inputFields}</div>;
 }
 
 export default Tolerances;

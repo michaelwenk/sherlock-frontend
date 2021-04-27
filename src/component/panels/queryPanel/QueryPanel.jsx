@@ -1,6 +1,5 @@
-import './QueryPanel.css';
+import './QueryPanel.scss';
 
-/** @jsxImportSource @emotion/react */
 import { useCallback, useState } from 'react';
 import QueryOptionsTabs from './tabs/QueryOptionsTabs';
 import { Formik, Form } from 'formik';
@@ -8,7 +7,7 @@ import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import queryTypes from '../../../constants/queryTypes';
 
-function QueryPanel({ onSubmit, isRequesting }) {
+function QueryPanel({ onSubmit, isRequesting, show }) {
   const [queryType, setQueryType] = useState(queryTypes.dereplication);
 
   const handleOnSelectTab = useCallback((_queryType) => {
@@ -16,38 +15,37 @@ function QueryPanel({ onSubmit, isRequesting }) {
   }, []);
 
   return (
-    <Formik
-      initialValues={defaultQueryOptions}
-      validate={validateQueryOptions}
-      onSubmit={(values, { setSubmitting }) => {
-        onSubmit(
-          queryType,
-          values.dereplicationOptions,
-          values.elucidationOptions,
-          values.retrievalOptions,
-        );
-        setSubmitting(false);
+    <div
+      className="query-panel"
+      style={{
+        '--show': show ? 'flex' : 'none',
       }}
     >
-      {() => (
-        <Form>
-          <div className="query-panel">
-            <div className="tabs-container">
+      <Formik
+        initialValues={defaultQueryOptions}
+        validate={validateQueryOptions}
+        onSubmit={(values, { setSubmitting }) => {
+          onSubmit(
+            queryType,
+            values.dereplicationOptions,
+            values.elucidationOptions,
+            values.retrievalOptions,
+          );
+          setSubmitting(false);
+        }}
+      >
+        {() => (
+          <Form>
+            <div className="form-tabs-container">
               <QueryOptionsTabs onSelectTab={handleOnSelectTab} />
-            </div>
-            <div className="submit-button-container">
-              <button
-                className="submit-button"
-                type="submit"
-                disabled={isRequesting}
-              >
+              <button type="submit" disabled={isRequesting}>
                 {queryType}
               </button>
             </div>
-          </div>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }
 
