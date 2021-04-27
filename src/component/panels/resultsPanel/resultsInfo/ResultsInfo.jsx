@@ -1,8 +1,6 @@
 import './ResultsInfo.scss';
 
 import { useCallback } from 'react';
-import SelectBox from '../../../elements/SelectBox';
-import sortOptions from '../../../../constants/sortOptions';
 
 function ResultsInfo({
   result,
@@ -18,12 +16,12 @@ function ResultsInfo({
     [onClickDownload],
   );
 
-  const handleOnChangeSortByValue = useCallback(
-    (value) => {
-      onChangeSortByValue(value);
-    },
-    [onChangeSortByValue],
-  );
+  // const handleOnChangeSortByValue = useCallback(
+  //   (value) => {
+  //     onChangeSortByValue(value);
+  //   },
+  //   [onChangeSortByValue],
+  // );
 
   const handleOnClickClear = useCallback(
     (e) => {
