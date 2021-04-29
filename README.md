@@ -14,11 +14,9 @@ To build the container image use the following command:
 
 #### Start
 
-To start this service (in detached mode) use
+To start this service (in detached mode) use:
 
     docker run -d -p 3001:3000 --name webcase-frontend webcase-frontend
-
-which outputs a conatiner
 
 #### Stop
 
