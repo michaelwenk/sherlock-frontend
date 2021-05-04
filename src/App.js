@@ -40,6 +40,7 @@ function App() {
   const [hideRightPanel, setHideRightPanel] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [showQueryPanel, setShowQueryPanel] = useState(true);
+  const [requestWasSuccessful, setRequestWasSuccessful] = useState();
 
   const handleOnDataChange = useCallback((nmriumData) => {
     // console.log(nmriumData);
@@ -86,7 +87,8 @@ function App() {
       console.log(requestData);
 
       const t0 = performance.now();
-      const _result = await axios({
+      let _result;
+      await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
         // params: {},
@@ -94,11 +96,18 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
-      setIsRequesting(false);
+      })
+        .then((res) => {
+          setRequestWasSuccessful(true);
+          _result = res;
+        })
+        .catch((e) => {
+          setRequestWasSuccessful(false);
+        })
+        .finally(() => setIsRequesting(false));
       const t1 = performance.now();
       console.log('time need: ' + (t1 - t0) / 1000);
-      console.log(_result.data);
+      console.log(_result);
 
       const molecules =
         _result && _result.data && _result.data.dataSetList
@@ -117,7 +126,7 @@ function App() {
 
       setResult({
         molecules,
-        resultID: _result.data.resultID,
+        resultID: _result ? _result.data.resultID : undefined,
         time: (t1 - t0) / 1000,
       });
     },
@@ -215,17 +224,22 @@ function App() {
               isRequesting={isRequesting}
               show={showQueryPanel}
             />
-            {isRequesting && !showQueryPanel ? (
-              <div className="spinner">
-                <Spinner />
-              </div>
-            ) : (
-              <ResultsPanel
-                result={result}
-                isRequesting={isRequesting}
-                onClickClear={() => setResult({})}
-              />
-            )}
+            {!showQueryPanel &&
+              (isRequesting === true ? (
+                <div className="spinner">
+                  <Spinner />
+                </div>
+              ) : requestWasSuccessful === false ? (
+                <div className="requestError">
+                  <p>Request failed</p>
+                </div>
+              ) : (
+                <ResultsPanel
+                  result={result}
+                  isRequesting={isRequesting}
+                  onClickClear={() => setResult({})}
+                />
+              ))}
           </div>
         </SplitPane>
       </div>

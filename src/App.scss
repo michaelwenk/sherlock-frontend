@@ -82,4 +82,14 @@
     left: calc(50% - 50px);
     position: absolute;
   }
+
+  .requestError {
+    top: calc(50%);
+    left: calc(50% - 50px);
+    position: absolute;
+
+    p {
+      color: red;
+    }
+  }
 }
