@@ -6,7 +6,7 @@ Frontend service for WebCASE (https://github.com/michaelwenk/webcase).
 
 This project uses Docker (https://www.docker.com). Make sure that docker is installed.
 
-### Use pre-build Container Image
+### Use pre-built Container Image
 
 Use this command to download the pre-built image from Docker Hub:
 
