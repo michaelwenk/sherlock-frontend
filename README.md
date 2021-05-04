@@ -31,6 +31,10 @@ To start this service (in detached mode) use:
 
 As configured above, the backend service does allow requests from port 3001 only.
 
+The web service is now accessible via:
+
+    http://localhost:3001/
+
 ### Stop
 
 To stop this application use
