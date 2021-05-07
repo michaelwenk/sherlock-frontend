@@ -2,29 +2,16 @@ import './App.scss';
 
 import NMRium from 'nmrium';
 import { useCallback, useState } from 'react';
-import OCL, { Molecule } from 'openchemlib/full';
-import { initOCL } from 'react-ocl-nmr';
+import { Molecule } from 'openchemlib/full';
 import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
 import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios from 'axios';
 
-initOCL(OCL);
-
 const preferences = {};
 
-const initData = {
-  correlations: {
-    options: {
-      tolerance: {
-        C: 0.25,
-        H: 0.02,
-        N: 0.25,
-      },
-    },
-  },
-};
+const initData = {};
 
 const minWidth = {
   leftPanel: '25%',

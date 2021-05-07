@@ -3,25 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^13.0.10",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.8",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "file-saver": "^2.0.5",
     "formik": "^2.2.6",
     "lodash": "^4.17.21",
-    "nmrium": "^0.11.0",
-    "openchemlib": "^7.3.0",
+    "nmrium": "^0.12.0",
+    "openchemlib": "^7.4.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
     "react-loader-spinner": "^4.0.0",
-    "react-ocl-nmr": "^0.4.0",
+    "react-ocl-nmr": "^1.0.0",
     "react-split-pane": "^0.1.92",
-    "react-tabs": "^3.2.1",
-    "web-vitals": "^1.1.1"
+    "react-tabs": "^3.2.2",
+    "web-vitals": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -48,16 +48,16 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.13.10",
-    "@babel/preset-env": "^7.13.12",
+    "@babel/core": "^7.13.8",
+    "@babel/preset-env": "^7.13.8",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.23.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
     "react-scripts": "^4.0.3",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.7.0"
   },
   "volta": {
     "node": "15.14.0"
