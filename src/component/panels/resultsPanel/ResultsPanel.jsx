@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver';
 import ResultsInfo from './resultsInfo/ResultsInfo';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import sortOptions from '../../../constants/sortOptions';
+import buildSDFileContent from '../../../utils/buildSDFileContent';
 
 function ResultsPanel({ result, onClickClear }) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
@@ -12,11 +13,11 @@ function ResultsPanel({ result, onClickClear }) {
   );
 
   const handleOnClickDownload = useCallback(() => {
-    const fileData = JSON.stringify(result.molecules, undefined, 2);
+    const fileData = buildSDFileContent(result.molecules);
     const blob = new Blob([fileData], { type: 'text/plain' });
     saveAs(
       blob,
-      `${result && result.resultID ? result.resultID : 'results'}.json`,
+      `${result && result.resultID ? result.resultID : 'results'}.sdf`,
     );
   }, [result]);
 
