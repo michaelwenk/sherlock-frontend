@@ -33,7 +33,7 @@ function ResultsInfo({
 
   return result ? (
     <div className="info-container">
-      <p>{result.resultID}</p>
+      <p>Result ID: {result.resultID}</p>
       <button
         type="button"
         onClick={handleOnClickDownload}

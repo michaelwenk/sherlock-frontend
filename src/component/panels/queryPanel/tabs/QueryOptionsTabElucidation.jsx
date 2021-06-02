@@ -9,7 +9,9 @@ function QueryTabElucidation() {
   return (
     <div className="query-options-tab-elucidation-container">
       <div className="elimination-container">
-        <p>Elimination: </p>
+        <p style={{ fontWeight: 'bold' }}>
+          Elimination of invalid correlations:{' '}
+        </p>
         <CheckBox
           defaultValue={values.elucidationOptions.useElim}
           onChange={(isChecked) =>
@@ -24,6 +26,7 @@ function QueryTabElucidation() {
               setFieldValue('elucidationOptions.elimP1', Number(value));
             }}
             defaultValue={values.elucidationOptions.elimP1}
+            label="number of eliminations"
           />
           <Input
             type="number"
@@ -31,9 +34,11 @@ function QueryTabElucidation() {
               setFieldValue('elucidationOptions.elimP2', Number(value));
             }}
             defaultValue={values.elucidationOptions.elimP2}
+            label="maximal path length"
           />
         </div>
       </div>
+      <p style={{ fontWeight: 'bold' }}>General allowed path lengths: </p>
       <div className="hmbc-container">
         <p>HMBC</p>
         <Input
@@ -42,6 +47,7 @@ function QueryTabElucidation() {
             setFieldValue('elucidationOptions.hmbcP3', Number(value));
           }}
           defaultValue={values.elucidationOptions.hmbcP3}
+          label="min"
         />
         <Input
           type="number"
@@ -49,6 +55,7 @@ function QueryTabElucidation() {
             setFieldValue('elucidationOptions.hmbcP4', Number(value));
           }}
           defaultValue={values.elucidationOptions.hmbcP4}
+          label="max"
         />
       </div>
       <div className="cosy-container">
@@ -59,6 +66,7 @@ function QueryTabElucidation() {
             setFieldValue('elucidationOptions.cosyP3', Number(value));
           }}
           defaultValue={values.elucidationOptions.cosyP3}
+          label="min"
         />
         <Input
           type="number"
@@ -66,8 +74,10 @@ function QueryTabElucidation() {
             setFieldValue('elucidationOptions.cosyP4', Number(value));
           }}
           defaultValue={values.elucidationOptions.cosyP4}
+          label="max"
         />
       </div>
+      <p style={{ fontWeight: 'bold' }}>Further settings:</p>
       <div className="checkbox-container">
         <CheckBox
           defaultValue={values.elucidationOptions.allowHeteroHeteroBonds}
@@ -95,7 +105,7 @@ function QueryTabElucidation() {
         />
       </div>
       <div>
-        <p>Hybridization </p>
+        <p style={{ fontWeight: 'bold' }}>Automatic hybridization detection:</p>
         <Input
           type="number"
           onChange={(value) => {
@@ -107,6 +117,7 @@ function QueryTabElucidation() {
           defaultValue={
             values.elucidationOptions.hybridizationDetectionThreshold
           }
+          label="Allowed minimal occurrence"
         />
       </div>
     </div>

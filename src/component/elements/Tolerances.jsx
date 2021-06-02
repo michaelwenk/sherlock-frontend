@@ -19,14 +19,17 @@ function Tolerances({
     return Object.keys(tolerance).map((atomType) => {
       return (
         <div key={`toleranceInputField_${atomType}`}>
-          <span>{atomType}: </span>
-          <Input
-            type="number"
-            onChange={(value) =>
-              onChangeToleranceHandler(value, atomType, tolerance)
-            }
-            defaultValue={tolerance[atomType]}
-          />
+          <span>
+            <label>Tolerance value [ppm]: </label>
+            <Input
+              type="number"
+              onChange={(value) =>
+                onChangeToleranceHandler(value, atomType, tolerance)
+              }
+              defaultValue={tolerance[atomType]}
+              label={atomType}
+            />
+          </span>
         </div>
       );
     });

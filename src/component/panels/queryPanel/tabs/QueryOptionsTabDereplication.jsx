@@ -34,7 +34,7 @@ function QueryTabDereplication() {
         onChange={(isChecked) =>
           setFieldValue('dereplicationOptions.useMF', isChecked)
         }
-        title="use MF"
+        title="Check Molecular Formula"
       />
     </div>
   );
