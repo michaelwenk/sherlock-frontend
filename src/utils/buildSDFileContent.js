@@ -2,7 +2,7 @@ const buildSDFileContent = (resultData) => {
   let content = '';
   resultData.forEach((res, i) => {
     content += res.molfile;
-    content += '> <rank> \n';
+    content += '\n> <rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
     content += `${res.meta.rmsd}\n\n`;
