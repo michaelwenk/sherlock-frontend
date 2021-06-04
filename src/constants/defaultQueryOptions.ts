@@ -1,4 +1,4 @@
-import defaultTolerance from '../constants/defaultTolerance';
+import defaultTolerance from './defaultTolerance';
 
 const defaultQueryOptions = {
   dereplicationOptions: {

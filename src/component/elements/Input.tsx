@@ -1,4 +1,12 @@
-import { useCallback } from 'react';
+import { ChangeEvent, useCallback } from 'react';
+
+type InputProps = {
+  type: string,
+  defaultValue: string | number,
+  onChange: Function,
+  label?: string,
+  className?: string,
+}
 
 function Input({
   type,
@@ -6,9 +14,9 @@ function Input({
   onChange,
   label = '',
   className = 'Input',
-}) {
+} : InputProps) {
   const handleOnChange = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       e.stopPropagation();
       onChange(e.target.value);
     },

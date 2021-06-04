@@ -1,14 +1,16 @@
 import Tolerances from '../../../elements/Tolerances';
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';
+import { QueryOptions } from '../QueryPanel';
+import { Tolerance } from '../../../../constants/defaultTolerance';
 
 function QueryTabDereplication() {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<QueryOptions>();
   return (
     <div>
       <Tolerances
         tolerance={values.dereplicationOptions.shiftTolerances}
-        onChangeTolerance={(tolerance) =>
+        onChangeTolerance={(tolerance: Tolerance) =>
           setFieldValue('dereplicationOptions.shiftTolerances', tolerance)
         }
       />
@@ -17,7 +19,7 @@ function QueryTabDereplication() {
         onChange={(isChecked) =>
           setFieldValue('dereplicationOptions.checkMultiplicity', isChecked)
         }
-        title="Check Multiplicity"
+        label="Check Multiplicity"
       />
       <CheckBox
         defaultValue={values.dereplicationOptions.checkEquivalencesCount}
@@ -27,14 +29,14 @@ function QueryTabDereplication() {
             isChecked,
           )
         }
-        title="Check Equivalences Count"
+        label="Check Equivalences Count"
       />
       <CheckBox
         defaultValue={values.dereplicationOptions.useMF}
         onChange={(isChecked) =>
           setFieldValue('dereplicationOptions.useMF', isChecked)
         }
-        title="Check Molecular Formula"
+        label="Check Molecular Formula"
       />
     </div>
   );

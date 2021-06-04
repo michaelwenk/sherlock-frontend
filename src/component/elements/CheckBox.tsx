@@ -1,7 +1,14 @@
 import { useCallback, useState } from 'react';
 
-function CheckBox({ defaultValue, onChange, title, className = 'CheckBox' }) {
-  const [isChecked, setIsChecked] = useState(defaultValue);
+type InputProps = {
+  defaultValue: boolean,
+  onChange: Function,
+  label?: string,
+  className?: string,
+}
+
+function CheckBox({ defaultValue, onChange, label, className = 'CheckBox' } : InputProps) {
+  const [isChecked, setIsChecked] = useState<boolean>(defaultValue);
 
   const handleOnChange = useCallback(() => {
     setIsChecked(!isChecked);
@@ -12,7 +19,7 @@ function CheckBox({ defaultValue, onChange, title, className = 'CheckBox' }) {
     <div className={className}>
       <span>
         <input type="checkbox" checked={isChecked} onChange={handleOnChange} />
-        <label>{title}</label>
+        <label>{label}</label>
       </span>
     </div>
   );

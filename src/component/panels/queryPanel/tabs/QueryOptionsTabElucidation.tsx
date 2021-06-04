@@ -2,9 +2,10 @@ import './QueryOptionsTabElucidation.scss';
 import CheckBox from '../../../elements/CheckBox';
 import { useFormikContext } from 'formik';
 import Input from '../../../elements/Input';
+import { QueryOptions } from '../QueryPanel';
 
 function QueryTabElucidation() {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<QueryOptions>();
 
   return (
     <div className="query-options-tab-elucidation-container">
@@ -17,7 +18,7 @@ function QueryTabElucidation() {
           onChange={(isChecked) =>
             setFieldValue('elucidationOptions.useElim', isChecked)
           }
-          title="allow"
+          label="allow"
         />
         <div className="elimination-inputs">
           <Input
@@ -87,21 +88,21 @@ function QueryTabElucidation() {
               isChecked,
             )
           }
-          title="Allow Hetero-Hetero Bonds"
+          label="Allow Hetero-Hetero Bonds"
         />
         <CheckBox
           defaultValue={values.elucidationOptions.useFilterLsdRing3}
           onChange={(isChecked) =>
             setFieldValue('elucidationOptions.useFilterLsdRing3', isChecked)
           }
-          title="Use filter for 3-membered rings"
+          label="Use filter for 3-membered rings"
         />
         <CheckBox
           defaultValue={values.elucidationOptions.useFilterLsdRing4}
           onChange={(isChecked) =>
             setFieldValue('elucidationOptions.useFilterLsdRing4', isChecked)
           }
-          title="Use filter for 4-membered rings"
+          label="Use filter for 4-membered rings"
         />
       </div>
       <div>

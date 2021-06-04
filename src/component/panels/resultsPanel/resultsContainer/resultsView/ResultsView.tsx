@@ -5,18 +5,24 @@ import CardDeck from 'react-bootstrap/CardDeck';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
+import { ResultMolecule } from '../../../../../App';
 
-function ResultsView({ molecules, limit }) {
+type InputProps = {
+  molecules: Array<ResultMolecule>,
+  limit: number,
+}
+
+function ResultsView({ molecules, limit } : InputProps) {
   const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState(0);
 
-  const handleOnSelectCardIndex = useCallback((index) => {
+  const handleOnSelectCardIndex = useCallback((index: number) => {
     setSelectedCardDeckIndex(index);
   }, []);
 
   const cardDeckData = useMemo(() => {
-    const _cardDeckData = [];
+    const _cardDeckData: Array<Array<JSX.Element>> = [];
     let counter = 0;
-    let resultCards = [];
+    let resultCards: Array<JSX.Element> = [];
     for (let i = 0; i < molecules.length; i++) {
       const resultCard = (
         <ResultCard
@@ -43,7 +49,7 @@ function ResultsView({ molecules, limit }) {
   }, [limit, molecules]);
 
   return (
-    cardDeckData.length > 0 && (
+    cardDeckData.length > 0 ? (
       <div className="results-view">
         <div className="results-view-header">
           <CustomPagination
@@ -59,7 +65,7 @@ function ResultsView({ molecules, limit }) {
           </Container>
         </div>
       </div>
-    )
+    ) : null
   );
 }
 
