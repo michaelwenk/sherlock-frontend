@@ -1,7 +1,7 @@
 import './App.scss';
 
 import NMRium from 'nmrium';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Molecule } from 'openchemlib/full';
 import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
@@ -13,7 +13,6 @@ import { Datum1D, Datum2D, Spectra, State } from './types/nmrium/nmrium';
 import { Data } from './types/Data';
 import { Result } from './types/Result';
 import { ResultMolecule } from './types/ResultMolecule';
-
 
 const preferences = {};
 
@@ -35,31 +34,32 @@ function App() {
   const [showQueryPanel, setShowQueryPanel] = useState<boolean>(true);
   const [requestWasSuccessful, setRequestWasSuccessful] = useState<boolean>();
 
-  const handleOnDataChange = useCallback(function (nmriumData : State) {
-    console.log(nmriumData);
-    const _spectra : Spectra =
+  const handleOnDataChange = useCallback(function (nmriumData: State) {
+    // console.log(nmriumData);
+    const _spectra: Spectra =
       nmriumData && nmriumData.data
         ? nmriumData.data.reduce<Spectra>((acc, spectrum) => {
             if (spectrum.id && spectrum.info && spectrum.info.isFid === false) {
               if (spectrum.info.dimension === 1) {
-                 const _spectrum : Datum1D = {
-                id: spectrum.id,
-                info: spectrum.info,
-                ranges: (spectrum as Datum1D).ranges,
-                data: (spectrum as Datum1D).data,
-              };
-                acc.push(_spectrum);                
-              }  else if (spectrum.info.dimension === 2) {
-                   const _spectrum : Datum2D = {
-                id: spectrum.id,
-                info: spectrum.info,
-                zones: (spectrum as Datum2D).zones,
-                data: (spectrum as Datum2D).data,
+                const _spectrum: Datum1D = {
+                  id: spectrum.id,
+                  info: spectrum.info,
+                  ranges: (spectrum as Datum1D).ranges,
+                  data: (spectrum as Datum1D).data,
+                };
+                acc.push(_spectrum);
+              } else if (spectrum.info.dimension === 2) {
+                const _spectrum: Datum2D = {
+                  id: spectrum.id,
+                  info: spectrum.info,
+                  zones: (spectrum as Datum2D).zones,
+                  data: (spectrum as Datum2D).data,
+                };
+                acc.push(_spectrum);
               }
-                   acc.push(_spectrum);
             }
-            
-          } ; return acc;}, [])
+            return acc;
+          }, [])
         : [];
     // console.log(_spectra);
     setData({ spectra: _spectra, correlations: nmriumData.correlations });
@@ -96,11 +96,11 @@ function App() {
         },
       })
         .then((res: any) => {
-          setRequestWasSuccessful(true);          
+          setRequestWasSuccessful(true);
           response = res;
         })
         .catch(() => {
-          console.log("FAILED!!!");
+          console.log('FAILED!!!');
           setRequestWasSuccessful(false);
         })
         .finally(() => setIsRequesting(false));
@@ -108,10 +108,12 @@ function App() {
       console.log('time need: ' + (t1 - t0) / 1000);
       console.log(response);
 
-      const molecules : Array<ResultMolecule> =
+      const molecules: Array<ResultMolecule> =
         response && response.data && response.data.dataSetList
           ? (response.data.dataSetList as Array<DataSet>).map((dataSet) => {
-              const molecule: Molecule = Molecule.fromSmiles(dataSet.meta.smiles);
+              const molecule: Molecule = Molecule.fromSmiles(
+                dataSet.meta.smiles,
+              );
               const { formula } = molecule.getMolecularFormula();
               return {
                 molfile: molecule.toMolfileV3(),
@@ -206,7 +208,11 @@ function App() {
             <button
               type="button"
               className="collapsible"
-              style={{ '--sign': (showQueryPanel ? '"\\2796"' : '"\\2795"')} as React.CSSProperties }
+              style={
+                {
+                  '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"',
+                } as React.CSSProperties
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 setShowQueryPanel(!showQueryPanel);
@@ -231,8 +237,8 @@ function App() {
                 </div>
               ) : (
                 <ResultsPanel
-                  result={result ?? {molecules: []}}
-                  onClickClear={() => setResult({molecules: [] })}
+                  result={result ?? { molecules: [] }}
+                  onClickClear={() => setResult({ molecules: [] })}
                 />
               ))}
           </div>

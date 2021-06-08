@@ -1,5 +1,5 @@
 export interface Tolerance {
-  [atomType: string]: number,
+  [atomType: string]: number;
 }
 
 const defaultTolerance = {

@@ -1,13 +1,18 @@
 import { useCallback, useState } from 'react';
 
 type InputProps = {
-  defaultValue: boolean,
-  onChange: Function,
-  label?: string,
-  className?: string,
-}
+  defaultValue: boolean;
+  onChange: Function;
+  label?: string;
+  className?: string;
+};
 
-function CheckBox({ defaultValue, onChange, label, className = 'CheckBox' } : InputProps) {
+function CheckBox({
+  defaultValue,
+  onChange,
+  label,
+  className = 'CheckBox',
+}: InputProps) {
   const [isChecked, setIsChecked] = useState<boolean>(defaultValue);
 
   const handleOnChange = useCallback(() => {

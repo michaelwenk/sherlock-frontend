@@ -4,18 +4,18 @@ import { useCallback } from 'react';
 import { Result } from '../../../../types/Result';
 
 type InputProps = {
-  result: Result,
-  onClickDownload: Function,
-  onClickClear: Function,
-  onChangeSortByValue: Function,
-}
+  result: Result;
+  onClickDownload: Function;
+  onClickClear: Function;
+  onChangeSortByValue: Function;
+};
 
 function ResultsInfo({
   result,
   onClickDownload,
   onChangeSortByValue,
   onClickClear,
-} : InputProps) {
+}: InputProps) {
   const handleOnClickDownload = useCallback(
     (e) => {
       e.stopPropagation();

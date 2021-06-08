@@ -1,6 +1,6 @@
-import { Meta } from "./webcase/Meta";
+import { Meta } from './webcase/Meta';
 
 export interface ResultMolecule {
-  molfile: string,
-  meta: Meta,
+  molfile: string;
+  meta: Meta;
 }

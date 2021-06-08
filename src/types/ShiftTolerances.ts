@@ -1,3 +1,3 @@
 export interface ShiftTolerances {
-  [atomType: string]: number,
-} 
+  [atomType: string]: number;
+}

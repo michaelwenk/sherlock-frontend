@@ -10,11 +10,11 @@ import { Result } from '../../../types/Result';
 import { ResultMolecule } from '../../../types/ResultMolecule';
 
 type InputProps = {
-  result: Result,
-  onClickClear: Function,
-}
+  result: Result;
+  onClickClear: Function;
+};
 
-function ResultsPanel({ result, onClickClear } : InputProps) {
+function ResultsPanel({ result, onClickClear }: InputProps) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
     sortOptions.rmsd,
   );
@@ -32,7 +32,7 @@ function ResultsPanel({ result, onClickClear } : InputProps) {
     setSelectedSortByValue(value);
   }, []);
 
-  const sortedMolecules : Array<ResultMolecule> = useMemo(() => {
+  const sortedMolecules: Array<ResultMolecule> = useMemo(() => {
     const _sortedMolecules =
       result && result.molecules
         ? result.molecules.map((mol) => {
@@ -54,7 +54,7 @@ function ResultsPanel({ result, onClickClear } : InputProps) {
           return 1;
         }
         return 0;
-      } 
+      }
       // else if (selectedSortByValue === sortOptions.tanimoto) {
       //   if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
       //     return -1;

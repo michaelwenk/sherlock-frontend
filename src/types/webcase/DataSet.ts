@@ -1,8 +1,8 @@
-import { Meta } from "./Meta";
+import { Meta } from './Meta';
 
 export interface DataSet {
-  structure: any,
-  spectrum: any,
-  assignment: any,
-  meta: Meta,
+  structure: any;
+  spectrum: any;
+  assignment: any;
+  meta: Meta;
 }

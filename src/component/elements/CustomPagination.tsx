@@ -2,12 +2,12 @@ import { useCallback, useMemo } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
 type InputProps = {
-  data: any,
-  selected: number,
-  onSelect: Function,
-  maxPages: number,
-  className?: string,
-}
+  data: any;
+  selected: number;
+  onSelect: Function;
+  maxPages: number;
+  className?: string;
+};
 
 function CustomPagination({
   data,
@@ -15,7 +15,7 @@ function CustomPagination({
   onSelect,
   maxPages,
   className = 'CustomPagination',
-} : InputProps) {
+}: InputProps) {
   const paginationItems = useMemo(() => {
     const items: Array<JSX.Element> = [];
     for (let i = 0; i < data.length; i++) {
@@ -40,7 +40,7 @@ function CustomPagination({
   }, [data, onSelect, selected]);
 
   const paginationItemLists = useMemo(() => {
-    let paginationItemLists: Array<Array<JSX.Element>> = [];
+    const paginationItemLists: Array<Array<JSX.Element>> = [];
     let paginationItemList: Array<JSX.Element> = [];
     for (let i = 0; i < paginationItems.length; i++) {
       if (i > 0 && i % maxPages === 0) {

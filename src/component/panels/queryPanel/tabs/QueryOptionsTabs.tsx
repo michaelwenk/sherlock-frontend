@@ -9,10 +9,10 @@ import QueryOptionsTabRetrieval from './QueryOptionsTabRetrieval';
 import queryTypes from '../../../../constants/queryTypes';
 
 type InputProps = {
-  onSelectTab: Function,
-}
+  onSelectTab: Function;
+};
 
-function QueryOptionsTabs({ onSelectTab } : InputProps) {
+function QueryOptionsTabs({ onSelectTab }: InputProps) {
   const handleOnSelectTab = useCallback(
     (index) => {
       switch (index) {

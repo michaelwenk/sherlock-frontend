@@ -1,5 +1,5 @@
-import { DataSet } from "./DataSet";
+import { DataSet } from './DataSet';
 
 export interface Result {
-  dataSetList: Array<DataSet>
+  dataSetList: Array<DataSet>;
 }

@@ -1,18 +1,18 @@
 import { useCallback } from 'react';
 
 type InputProps = {
-  selectionOptions: Array<string>,
-  defaultValue: string,
-  onChange: Function,
-  className?: string,
-}
+  selectionOptions: Array<string>;
+  defaultValue: string;
+  onChange: Function;
+  className?: string;
+};
 
 function SelectBox({
   selectionOptions,
   onChange,
   defaultValue,
   className = 'SelectBox',
-} : InputProps) {
+}: InputProps) {
   const handleOnChanged = useCallback(
     (e) => {
       onChange(e.target.value);

@@ -1,7 +1,7 @@
-import { ResultMolecule } from "./ResultMolecule";
+import { ResultMolecule } from './ResultMolecule';
 
 export interface Result {
-  molecules: Array<ResultMolecule>
-  resultID?: string,
-  time?: number,
+  molecules: Array<ResultMolecule>;
+  resultID?: string;
+  time?: number;
 }

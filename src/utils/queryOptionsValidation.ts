@@ -1,30 +1,30 @@
-import { QueryOptions } from "../component/panels/queryPanel/QueryPanel";
+import { QueryOptions } from '../component/panels/queryPanel/QueryPanel';
 
 export interface ShiftToleranceError {
-  [atomType: string]: string,
-} 
+  [atomType: string]: string;
+}
 
 export interface ValidationErrors {
   dereplicationOptions?: {
-    shiftTolerances?: ShiftToleranceError,
-    checkMultiplicity?: string,
-    checkEquivalencesCount?: string,
-    useMF?: string,
-  },
+    shiftTolerances?: ShiftToleranceError;
+    checkMultiplicity?: string;
+    checkEquivalencesCount?: string;
+    useMF?: string;
+  };
   elucidationOptions?: {
-    allowHeteroHeteroBonds?: string,
-    useElim?: string,
-    elimP1?: string
-    elimP2?: string
-    hmbcP3?: string
-    hmbcP4?: string
-    cosyP3?: string
-    cosyP4?: string
-    useFilterLsdRing3?: string,
-    useFilterLsdRing4?: string,
-    hybridizationDetectionThreshold?: string,
-  },
-  retrievalOptions?: { resultID?: string },
+    allowHeteroHeteroBonds?: string;
+    useElim?: string;
+    elimP1?: string;
+    elimP2?: string;
+    hmbcP3?: string;
+    hmbcP4?: string;
+    cosyP3?: string;
+    cosyP4?: string;
+    useFilterLsdRing3?: string;
+    useFilterLsdRing4?: string;
+    hybridizationDetectionThreshold?: string;
+  };
+  retrievalOptions?: { resultID?: string };
 }
 
 function validateQueryOptions(values: QueryOptions) {
@@ -33,8 +33,8 @@ function validateQueryOptions(values: QueryOptions) {
   if (
     values.elucidationOptions.elimP2 !== 0 &&
     values.elucidationOptions.elimP2 < 4
-  ) {  
-    if(!errors.elucidationOptions){
+  ) {
+    if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
     errors.elucidationOptions.elimP2 =
@@ -42,7 +42,7 @@ function validateQueryOptions(values: QueryOptions) {
   }
   // check HMBC
   if (values.elucidationOptions.hmbcP3 < 2) {
-    if(!errors.elucidationOptions){
+    if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
     errors.elucidationOptions.hmbcP3 =
@@ -52,7 +52,7 @@ function validateQueryOptions(values: QueryOptions) {
     values.elucidationOptions.hmbcP4 !== 0 &&
     values.elucidationOptions.hmbcP4 < values.elucidationOptions.hmbcP3
   ) {
-    if(!errors.elucidationOptions){
+    if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
     errors.elucidationOptions.hmbcP4 =
@@ -60,7 +60,7 @@ function validateQueryOptions(values: QueryOptions) {
   }
   // check COSY
   if (values.elucidationOptions.cosyP3 < 3) {
-    if(!errors.elucidationOptions){
+    if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
     errors.elucidationOptions.hmbcP3 =
@@ -70,7 +70,7 @@ function validateQueryOptions(values: QueryOptions) {
     values.elucidationOptions.cosyP4 !== 0 &&
     values.elucidationOptions.cosyP4 < values.elucidationOptions.cosyP3
   ) {
-    if(!errors.elucidationOptions){
+    if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
     errors.elucidationOptions.cosyP4 =

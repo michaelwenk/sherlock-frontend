@@ -1,4 +1,4 @@
-import {Types} from "nmr-correlation";
+import { Types } from 'nmr-correlation';
 
 export interface File {
   binary: ArrayBuffer;
