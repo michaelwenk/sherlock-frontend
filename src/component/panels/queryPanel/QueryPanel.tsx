@@ -6,10 +6,8 @@ import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import queryTypes from '../../../constants/queryTypes';
+import { ShiftTolerances } from '../../../types/ShiftTolerances';
 
-export interface ShiftTolerances {
-  [atomType: string]: number,
-} 
 
 export interface QueryOptions {
   dereplicationOptions: {
