@@ -6,8 +6,15 @@ import ResultsInfo from './resultsInfo/ResultsInfo';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import sortOptions from '../../../constants/sortOptions';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
+import { Result } from '../../../types/Result';
+import { ResultMolecule } from '../../../types/ResultMolecule';
 
-function ResultsPanel({ result, onClickClear }) {
+type InputProps = {
+  result: Result;
+  onClickClear: Function;
+};
+
+function ResultsPanel({ result, onClickClear }: InputProps) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
     sortOptions.rmsd,
   );
@@ -25,7 +32,7 @@ function ResultsPanel({ result, onClickClear }) {
     setSelectedSortByValue(value);
   }, []);
 
-  const sortedMolecules = useMemo(() => {
+  const sortedMolecules: Array<ResultMolecule> = useMemo(() => {
     const _sortedMolecules =
       result && result.molecules
         ? result.molecules.map((mol) => {
@@ -34,7 +41,7 @@ function ResultsPanel({ result, onClickClear }) {
               meta: {
                 ...mol.meta,
                 rmsd: Number(mol.meta.rmsd),
-                tanimoto: Number(mol.meta.tanimoto),
+                // tanimoto: Number(mol.meta.tanimoto),
               },
             };
           })
@@ -47,14 +54,15 @@ function ResultsPanel({ result, onClickClear }) {
           return 1;
         }
         return 0;
-      } else if (selectedSortByValue === sortOptions.tanimoto) {
-        if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
-          return -1;
-        } else if (molecule1.meta.tanimoto < molecule2.meta.tanimoto) {
-          return 1;
-        }
-        return 0;
       }
+      // else if (selectedSortByValue === sortOptions.tanimoto) {
+      //   if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
+      //     return -1;
+      //   } else if (molecule1.meta.tanimoto < molecule2.meta.tanimoto) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // }
 
       return 0;
     });

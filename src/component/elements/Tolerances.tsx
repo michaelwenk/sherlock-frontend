@@ -1,13 +1,20 @@
 import { useCallback, useMemo } from 'react';
+import { Tolerance } from '../../constants/defaultTolerance';
 import Input from './Input';
+
+type InputProps = {
+  tolerance: Tolerance;
+  onChangeTolerance: Function;
+  className?: string;
+};
 
 function Tolerances({
   tolerance,
   onChangeTolerance,
   className = 'Tolerances',
-}) {
+}: InputProps) {
   const onChangeToleranceHandler = useCallback(
-    (value, atomType) => {
+    (value: string, atomType: string) => {
       const _tolerance = { ...tolerance };
       _tolerance[atomType] = Number(value);
       onChangeTolerance(_tolerance);
@@ -23,8 +30,8 @@ function Tolerances({
             <label>Tolerance value [ppm]: </label>
             <Input
               type="number"
-              onChange={(value) =>
-                onChangeToleranceHandler(value, atomType, tolerance)
+              onChange={(value: string) =>
+                onChangeToleranceHandler(value, atomType)
               }
               defaultValue={tolerance[atomType]}
               label={atomType}

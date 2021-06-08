@@ -2,8 +2,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Card from 'react-bootstrap/Card';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { ResultMolecule } from '../../../../../types/ResultMolecule';
 
-function ResultCardText({ molecule }) {
+type InputProps = {
+  molecule: ResultMolecule;
+};
+
+function ResultCardText({ molecule }: InputProps) {
   return (
     <Card.Text style={{ fontSize: '14px' }}>
       Formula: {molecule.meta.mf}

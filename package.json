@@ -1,7 +1,12 @@
 {
   "name": "webcase-frontend",
   "version": "0.1.0",
-  "private": true,
+  "main": "lib-cjs/App.js",
+  "module": "lib/App.js",
+  "files": [
+    "lib",
+    "lib-cjs"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
@@ -11,6 +16,7 @@
     "file-saver": "^2.0.5",
     "formik": "^2.2.6",
     "lodash": "^4.17.21",
+    "nmr-correlation": "^1.3.3",
     "nmrium": "^0.12.0",
     "openchemlib": "^7.4.0",
     "react": "^17.0.2",
@@ -27,7 +33,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "compile": "tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
+    "clean-lib": "rimraf lib lib-cjs",
+    "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "eslint-fix": "npm run eslint --fix",
+    "prettier": "prettier --check src",
+    "prettier-write": "prettier --write src"
   },
   "eslintConfig": {
     "extends": [
@@ -48,18 +60,26 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.2",
-    "eslint-plugin-import": "^2.23.2",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.14.0",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.1",
+    "@types/react": "^17.0.9",
+    "@types/react-dom": "^17.0.6",
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/parser": "^4.26.1",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.0",
     "prettier": "^2.3.0",
     "react-scripts": "^4.0.3",
+    "typescript": "^4.3.2",
     "webpack-cli": "^4.7.0"
   },
   "volta": {
-    "node": "15.14.0"
+    "node": "16.2.0"
   }
 }

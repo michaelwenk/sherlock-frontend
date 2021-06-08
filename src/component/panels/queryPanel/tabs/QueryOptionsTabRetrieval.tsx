@@ -1,8 +1,9 @@
 import { useFormikContext } from 'formik';
 import Input from '../../../elements/Input';
+import { QueryOptions } from '../QueryPanel';
 
 function QueryOptionsTabRetrieval() {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<QueryOptions>();
 
   return (
     <Input

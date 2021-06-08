@@ -1,15 +1,23 @@
 import { useCallback, useMemo } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
+type InputProps = {
+  data: any;
+  selected: number;
+  onSelect: Function;
+  maxPages: number;
+  className?: string;
+};
+
 function CustomPagination({
   data,
   selected,
   onSelect,
   maxPages,
   className = 'CustomPagination',
-}) {
+}: InputProps) {
   const paginationItems = useMemo(() => {
-    const items = [];
+    const items: Array<JSX.Element> = [];
     for (let i = 0; i < data.length; i++) {
       const isActive = selected === i;
       items.push(
@@ -17,7 +25,7 @@ function CustomPagination({
           key={i}
           active={isActive}
           disabled={isActive}
-          onClick={(e) => {
+          onClick={(e: any) => {
             e.stopPropagation();
             onSelect(Number(e.target.text) - 1);
           }}
@@ -32,8 +40,8 @@ function CustomPagination({
   }, [data, onSelect, selected]);
 
   const paginationItemLists = useMemo(() => {
-    let paginationItemLists = [];
-    let paginationItemList = [];
+    const paginationItemLists: Array<Array<JSX.Element>> = [];
+    let paginationItemList: Array<JSX.Element> = [];
     for (let i = 0; i < paginationItems.length; i++) {
       if (i > 0 && i % maxPages === 0) {
         paginationItemLists.push(paginationItemList);
@@ -47,7 +55,7 @@ function CustomPagination({
   }, [maxPages, paginationItems]);
 
   const paginationItemListIndex = useMemo(() => {
-    return parseInt(selected / maxPages);
+    return selected / maxPages;
   }, [maxPages, selected]);
 
   const handleOnClickFirst = useCallback(

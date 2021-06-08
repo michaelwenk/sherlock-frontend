@@ -1,14 +1,44 @@
 import './QueryPanel.scss';
 
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import QueryOptionsTabs from './tabs/QueryOptionsTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import queryTypes from '../../../constants/queryTypes';
+import { ShiftTolerances } from '../../../types/ShiftTolerances';
 
-function QueryPanel({ onSubmit, isRequesting, show }) {
-  const [queryType, setQueryType] = useState(queryTypes.dereplication);
+export interface QueryOptions {
+  dereplicationOptions: {
+    shiftTolerances: ShiftTolerances;
+    checkMultiplicity: boolean;
+    checkEquivalencesCount: boolean;
+    useMF: boolean;
+  };
+  elucidationOptions: {
+    allowHeteroHeteroBonds: boolean;
+    useElim: boolean;
+    elimP1: number;
+    elimP2: number;
+    hmbcP3: number;
+    hmbcP4: number;
+    cosyP3: number;
+    cosyP4: number;
+    useFilterLsdRing3: boolean;
+    useFilterLsdRing4: boolean;
+    hybridizationDetectionThreshold: number;
+  };
+  retrievalOptions: { resultID: string };
+}
+
+type InputProps = {
+  onSubmit: Function;
+  isRequesting: boolean;
+  show: boolean;
+};
+
+function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
+  const [queryType, setQueryType] = useState<string>(queryTypes.dereplication);
 
   const handleOnSelectTab = useCallback((_queryType) => {
     setQueryType(_queryType);
@@ -17,9 +47,11 @@ function QueryPanel({ onSubmit, isRequesting, show }) {
   return (
     <div
       className="query-panel"
-      style={{
-        '--show': show ? 'flex' : 'none',
-      }}
+      style={
+        {
+          '--show': show ? 'flex' : 'none',
+        } as React.CSSProperties
+      }
     >
       <Formik
         initialValues={defaultQueryOptions}

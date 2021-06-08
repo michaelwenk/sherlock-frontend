@@ -1,4 +1,6 @@
-const buildSDFileContent = (resultData) => {
+import { ResultMolecule } from '../types/ResultMolecule';
+
+const buildSDFileContent = (resultData: Array<ResultMolecule>) => {
   let content = '';
   resultData.forEach((res, i) => {
     content += res.molfile;

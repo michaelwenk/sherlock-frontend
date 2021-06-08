@@ -1,17 +1,22 @@
 import './App.scss';
 
 import NMRium from 'nmrium';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Molecule } from 'openchemlib/full';
 import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
 import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios from 'axios';
+import { DataSet } from './types/webcase/DataSet';
+import { Datum1D, Datum2D, Spectra, State } from './types/nmrium/nmrium';
+import { Data } from './types/Data';
+import { Result } from './types/Result';
+import { ResultMolecule } from './types/ResultMolecule';
 
 const preferences = {};
 
-const initData = {};
+// const initData = {};
 
 const minWidth = {
   leftPanel: '25%',
@@ -20,31 +25,37 @@ const minWidth = {
 };
 
 function App() {
-  const [data, setData] = useState();
-  const [result, setResult] = useState({});
-  const [leftPanelWidth, setLeftPanelWidth] = useState();
-  const [hideLeftPanel, setHideLeftPanel] = useState(false);
-  const [hideRightPanel, setHideRightPanel] = useState(false);
-  const [isRequesting, setIsRequesting] = useState(false);
-  const [showQueryPanel, setShowQueryPanel] = useState(true);
-  const [requestWasSuccessful, setRequestWasSuccessful] = useState();
+  const [data, setData] = useState<Data>();
+  const [result, setResult] = useState<Result>();
+  const [leftPanelWidth, setLeftPanelWidth] = useState<number>();
+  const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
+  const [hideRightPanel, setHideRightPanel] = useState<boolean>(false);
+  const [isRequesting, setIsRequesting] = useState<boolean>(false);
+  const [showQueryPanel, setShowQueryPanel] = useState<boolean>(true);
+  const [requestWasSuccessful, setRequestWasSuccessful] = useState<boolean>();
 
-  const handleOnDataChange = useCallback((nmriumData) => {
+  const handleOnDataChange = useCallback(function (nmriumData: State) {
     // console.log(nmriumData);
-    const _spectra =
+    const _spectra: Spectra =
       nmriumData && nmriumData.data
-        ? nmriumData.data.reduce((acc, spectrum) => {
-            if (spectrum.info.isFid === false) {
-              const _spectrum = {
-                id: spectrum.id,
-                info: spectrum.info,
-              };
+        ? nmriumData.data.reduce<Spectra>((acc, spectrum) => {
+            if (spectrum.id && spectrum.info && spectrum.info.isFid === false) {
               if (spectrum.info.dimension === 1) {
-                _spectrum.ranges = spectrum.ranges;
+                const _spectrum: Datum1D = {
+                  id: spectrum.id,
+                  info: spectrum.info,
+                  ranges: (spectrum as Datum1D).ranges,
+                  data: (spectrum as Datum1D).data,
+                };
                 acc.push(_spectrum);
-                // } else if (spectrum.info.dimension === 2) {
-                //   _spectrum.zones = spectrum.zones;
-                //   acc.push(_spectrum);
+              } else if (spectrum.info.dimension === 2) {
+                const _spectrum: Datum2D = {
+                  id: spectrum.id,
+                  info: spectrum.info,
+                  zones: (spectrum as Datum2D).zones,
+                  data: (spectrum as Datum2D).data,
+                };
+                acc.push(_spectrum);
               }
             }
             return acc;
@@ -74,7 +85,7 @@ function App() {
       console.log(requestData);
 
       const t0 = performance.now();
-      let _result;
+      let response: any;
       await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
@@ -84,36 +95,36 @@ function App() {
           'Content-Type': 'application/json',
         },
       })
-        .then((res) => {
+        .then((res: any) => {
           setRequestWasSuccessful(true);
-          _result = res;
+          response = res;
         })
-        .catch((e) => {
+        .catch(() => {
+          console.log('FAILED!!!');
           setRequestWasSuccessful(false);
         })
         .finally(() => setIsRequesting(false));
       const t1 = performance.now();
       console.log('time need: ' + (t1 - t0) / 1000);
-      console.log(_result);
+      console.log(response);
 
-      const molecules =
-        _result && _result.data && _result.data.dataSetList
-          ? _result.data.dataSetList.map((dataSet) => {
-              const molecule = Molecule.fromSmiles(dataSet.meta.smiles);
-              const {
-                formula,
-                relativeWeight,
-              } = molecule.getMolecularFormula();
+      const molecules: Array<ResultMolecule> =
+        response && response.data && response.data.dataSetList
+          ? (response.data.dataSetList as Array<DataSet>).map((dataSet) => {
+              const molecule: Molecule = Molecule.fromSmiles(
+                dataSet.meta.smiles,
+              );
+              const { formula } = molecule.getMolecularFormula();
               return {
                 molfile: molecule.toMolfileV3(),
-                meta: { ...dataSet.meta, mf: formula, mw: relativeWeight },
+                meta: { ...dataSet.meta, mf: formula },
               };
             })
           : [];
 
       setResult({
         molecules,
-        resultID: _result ? _result.data.resultID : undefined,
+        resultID: response ? response.data.resultID : undefined,
         time: (t1 - t0) / 1000,
       });
     },
@@ -190,14 +201,18 @@ function App() {
             <NMRium
               preferences={preferences}
               onDataChange={handleOnDataChange}
-              data={initData}
+              // data={initData}
             />
           </div>
           <div className="panels">
             <button
               type="button"
               className="collapsible"
-              style={{ '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"' }}
+              style={
+                {
+                  '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"',
+                } as React.CSSProperties
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 setShowQueryPanel(!showQueryPanel);
@@ -222,9 +237,8 @@ function App() {
                 </div>
               ) : (
                 <ResultsPanel
-                  result={result}
-                  isRequesting={isRequesting}
-                  onClickClear={() => setResult({})}
+                  result={result ?? { molecules: [] }}
+                  onClickClear={() => setResult({ molecules: [] })}
                 />
               ))}
           </div>
