@@ -1,7 +1,8 @@
 {
   "name": "webcase-frontend",
   "version": "0.1.0",
-  "private": true,
+  "main": "lib-cjs/App.js",
+  "module": "lib/App.js",
   "files": [
     "lib",
     "lib-cjs"
@@ -55,20 +56,25 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.2",
     "@babel/plugin-transform-modules-commonjs": "^7.14.0",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.1",
+    "@types/react": "^17.0.9",
+    "@types/react-dom": "^17.0.6",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.0",
     "prettier": "^2.3.0",
     "react-scripts": "^4.0.3",
     "typescript": "^4.3.2",
     "webpack-cli": "^4.7.0"
   },
   "volta": {
-    "node": "15.14.0"
+    "node": "16.2.0"
   }
 }

@@ -13,6 +13,8 @@
 
 # production
 /build
+/lib
+/lib-cjs
 
 # misc
 .DS_Store
