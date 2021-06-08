@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
-import { ResultMolecule } from '../../../../../App';
+import { ResultMolecule } from '../../../../../types/ResultMolecule';
 
 type InputProps = {
   id: string | number,

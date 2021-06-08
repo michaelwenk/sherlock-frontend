@@ -2,7 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Card from 'react-bootstrap/Card';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { ResultMolecule } from '../../../../../App';
+import { ResultMolecule } from '../../../../../types/ResultMolecule';
+
 
 type InputProps = {
   molecule: ResultMolecule,

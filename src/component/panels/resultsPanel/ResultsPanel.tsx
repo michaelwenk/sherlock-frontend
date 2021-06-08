@@ -6,7 +6,8 @@ import ResultsInfo from './resultsInfo/ResultsInfo';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import sortOptions from '../../../constants/sortOptions';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
-import { Result, ResultMolecule } from '../../../App';
+import { Result } from '../../../types/Result';
+import { ResultMolecule } from '../../../types/ResultMolecule';
 
 type InputProps = {
   result: Result,

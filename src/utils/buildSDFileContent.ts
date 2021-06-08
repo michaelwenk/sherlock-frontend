@@ -1,4 +1,4 @@
-import { ResultMolecule } from "../App";
+import { ResultMolecule } from "../types/ResultMolecule";
 
 const buildSDFileContent = (resultData: Array<ResultMolecule>) => {
   let content = '';

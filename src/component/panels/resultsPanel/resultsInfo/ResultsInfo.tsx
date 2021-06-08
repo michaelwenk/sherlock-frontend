@@ -1,7 +1,7 @@
 import './ResultsInfo.scss';
 
 import { useCallback } from 'react';
-import { Result } from '../../../../App';
+import { Result } from '../../../../types/Result';
 
 type InputProps = {
   result: Result,

@@ -5,7 +5,7 @@ import CardDeck from 'react-bootstrap/CardDeck';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
-import { ResultMolecule } from '../../../../../App';
+import { ResultMolecule } from '../../../../../types/ResultMolecule';
 
 type InputProps = {
   molecules: Array<ResultMolecule>,
