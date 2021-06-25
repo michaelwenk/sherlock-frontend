@@ -2,13 +2,15 @@
 
 Frontend service for [WebCASE](https://github.com/michaelwenk/webcase).
 
-## Main Features
+## Main Components
 ### NMRium
 [NMRium](https://github.com/cheminfo/nmrium) is used as component for the (pre-)processing and visualization of 1D/2D NMR data.
 
 In addition to that, it contains a summary panel consisting of a correlation table and certain parameters to set, i.e. a molecular formula: 
 
-![screenshot_nmrium_1](public/screenshots/nmrium_1.png)
+<div align="center">
+    <img width="700" alt="screenshot_nmrium_1" src="public/screenshots/nmrium_1.png">
+</div>
 
 This information is then used in dereplication or elucidation process in WebCASE.
 
@@ -19,11 +21,15 @@ For both procedures it is allowed to set parameters for optimizations.
 
 Example for elucidation parameter settings:
 
-![screenshot_webcase_1](public/screenshots/webcase_1.png)
+<div align="center">
+    <img width="700" alt="screenshot_webcase_1" src="public/screenshots/webcase_1.png">
+</div>
 
 After executing the dereplication or elucidation, a list of ranked structure proposals is shown. Which can also be downloaded as SDF.
 
-![screenshot_webcase_2](public/screenshots/webcase_2.png)
+<div align="center">
+    <img width="700" alt="screenshot_webcase_2" src="public/screenshots/webcase_2.png">
+</div>
 
 
 ## Usage
