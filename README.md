@@ -17,15 +17,14 @@ This information is then used in dereplication or elucidation process in WebCASE
 ### WebCASE
 [WebCASE](https://github.com/michaelwenk/webcase) aims to support the dereplication or elucidation of (un)known natural products.
 
-For both procedures it is allowed to set parameters for optimizations. 
-
-Example for elucidation parameter settings:
+For both procedures it is allowed to set parameters beforehand. 
+Here is an example for elucidation parameter settings:
 
 <div align="center">
     <img width="700" alt="screenshot_webcase_1" src="public/screenshots/webcase_1.png">
 </div>
 
-After executing the dereplication or elucidation, a list of ranked structure proposals is shown. Which can also be downloaded as SDF.
+After running the dereplication or elucidation, a list of ranked structure proposals appears. The result can be downloaded as SDF as well.
 
 <div align="center">
     <img width="700" alt="screenshot_webcase_2" src="public/screenshots/webcase_2.png">
