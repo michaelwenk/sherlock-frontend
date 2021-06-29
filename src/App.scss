@@ -81,15 +81,33 @@
     top: calc(50% + 50px);
     left: calc(50% - 50px);
     position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    .Button {
+      margin-top: 10px;
+    }
   }
 
   .requestError {
+    height: 100%;
+    width: 100%;
     top: calc(50%);
-    left: calc(50% - 50px);
     position: absolute;
 
     p {
       color: red;
+    }
+  }
+
+  .requestCancelled {
+    height: 100%;
+    width: 100%;
+    top: calc(50%);
+    position: absolute;
+
+    p {
+      color: blue;
     }
   }
 }

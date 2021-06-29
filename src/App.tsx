@@ -7,12 +7,13 @@ import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
 import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
 import { DataSet } from './types/webcase/DataSet';
 import { Datum1D, Datum2D, Spectra, State } from './types/nmrium/nmrium';
 import { Data } from './types/Data';
 import { Result } from './types/Result';
 import { ResultMolecule } from './types/ResultMolecule';
+import { useRef } from 'react';
 
 const preferences = {};
 
@@ -32,7 +33,10 @@ function App() {
   const [hideRightPanel, setHideRightPanel] = useState<boolean>(false);
   const [isRequesting, setIsRequesting] = useState<boolean>(false);
   const [showQueryPanel, setShowQueryPanel] = useState<boolean>(true);
-  const [requestWasSuccessful, setRequestWasSuccessful] = useState<boolean>();
+  const [requestError, setRequestError] = useState<AxiosError>();
+  const [requestWasCancelled, setRequestWasCancelled] =
+    useState<boolean>(false);
+  const cancelRequestRef = useRef<Canceler>();
 
   const handleOnDataChange = useCallback(function (nmriumData: State) {
     // console.log(nmriumData);
@@ -84,8 +88,8 @@ function App() {
       };
       console.log(requestData);
 
+      let response: AxiosResponse | undefined;
       const t0 = performance.now();
-      let response: any;
       await axios({
         method: 'POST',
         url: 'http://localhost:8081/webcase-core/core',
@@ -94,14 +98,21 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
+        cancelToken: new axios.CancelToken(
+          (cancel) => (cancelRequestRef.current = cancel),
+        ),
       })
-        .then((res: any) => {
-          setRequestWasSuccessful(true);
+        .then((res) => {
+          setRequestError(undefined);
+          setRequestWasCancelled(false);
           response = res;
         })
-        .catch(() => {
-          console.log('FAILED!!!');
-          setRequestWasSuccessful(false);
+        .catch((err) => {
+          if (axios.isCancel(err)) {
+            setRequestWasCancelled(true);
+          } else if (axios.isAxiosError(err)) {
+            setRequestError(err);
+          }
         })
         .finally(() => setIsRequesting(false));
       const t1 = performance.now();
@@ -130,6 +141,11 @@ function App() {
     },
     [data],
   );
+
+  const handleOnCancelRequest = useCallback(() => {
+    if (cancelRequestRef.current)
+      cancelRequestRef.current('User has cancelled the request!!!');
+  }, []);
 
   const handleOnDragFinished = useCallback((width) => {
     setLeftPanelWidth(width);
@@ -228,12 +244,17 @@ function App() {
             />
             {!showQueryPanel &&
               (isRequesting === true ? (
-                <div className="spinner">
-                  <Spinner />
-                </div>
-              ) : requestWasSuccessful === false ? (
+                <Spinner onClickCancel={handleOnCancelRequest} />
+              ) : requestError ? (
                 <div className="requestError">
-                  <p>Request failed</p>
+                  <p>
+                    Request failed: Could not connect to WebCASE gateway
+                    service.
+                  </p>
+                </div>
+              ) : requestWasCancelled ? (
+                <div className="requestCancelled">
+                  <p>Request was cancelled by user!</p>
                 </div>
               ) : (
                 <ResultsPanel
