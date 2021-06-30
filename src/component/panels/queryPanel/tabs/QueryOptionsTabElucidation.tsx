@@ -2,7 +2,7 @@ import './QueryOptionsTabElucidation.scss';
 import CheckBox from '../../../elements/CheckBox';
 import { useFormikContext } from 'formik';
 import Input from '../../../elements/Input';
-import { QueryOptions } from '../QueryPanel';
+import { QueryOptions } from '../../../../types/QueryOptions';
 
 function QueryTabElucidation() {
   const { values, setFieldValue } = useFormikContext<QueryOptions>();

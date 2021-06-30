@@ -1,4 +1,4 @@
-import { QueryOptions } from '../component/panels/queryPanel/QueryPanel';
+import { QueryOptions } from '../types/QueryOptions';
 
 export interface ShiftToleranceError {
   [atomType: string]: string;

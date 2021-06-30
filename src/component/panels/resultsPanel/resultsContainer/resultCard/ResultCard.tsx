@@ -5,7 +5,6 @@ import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
-import React from 'react';
 
 type InputProps = {
   id: string | number;

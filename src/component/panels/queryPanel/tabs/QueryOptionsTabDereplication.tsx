@@ -1,8 +1,8 @@
 import Tolerances from '../../../elements/Tolerances';
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';
-import { QueryOptions } from '../QueryPanel';
 import { Tolerance } from '../../../../constants/defaultTolerance';
+import { QueryOptions } from '../../../../types/QueryOptions';
 
 function QueryTabDereplication() {
   const { values, setFieldValue } = useFormikContext<QueryOptions>();
