@@ -110,6 +110,7 @@ function App() {
         .catch((err) => {
           if (axios.isCancel(err)) {
             setRequestWasCancelled(true);
+            setShowQueryPanel(true);
           } else if (axios.isAxiosError(err)) {
             setRequestError(err);
           }
