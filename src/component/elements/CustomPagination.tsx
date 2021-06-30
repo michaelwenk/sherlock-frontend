@@ -37,7 +37,7 @@ function CustomPagination({
     }
 
     return items;
-  }, [data, onSelect, selected]);
+  }, [data.length, onSelect, selected]);
 
   const paginationItemLists = useMemo(() => {
     const paginationItemLists: Array<Array<JSX.Element>> = [];
@@ -54,9 +54,10 @@ function CustomPagination({
     return paginationItemLists;
   }, [maxPages, paginationItems]);
 
-  const paginationItemListIndex = useMemo(() => {
-    return selected / maxPages;
-  }, [maxPages, selected]);
+  const paginationItemListIndex = useMemo(
+    () => Math.floor(selected / maxPages),
+    [maxPages, selected],
+  );
 
   const handleOnClickFirst = useCallback(
     (e) => {
