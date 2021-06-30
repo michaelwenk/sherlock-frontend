@@ -12,9 +12,10 @@ import { ResultMolecule } from '../../../types/ResultMolecule';
 type InputProps = {
   result: Result;
   onClickClear: Function;
+  show: boolean;
 };
 
-function ResultsPanel({ result, onClickClear }: InputProps) {
+function ResultsPanel({ result, onClickClear, show }: InputProps) {
   const [selectedSortByValue, setSelectedSortByValue] = useState(
     sortOptions.rmsd,
   );
@@ -71,7 +72,14 @@ function ResultsPanel({ result, onClickClear }: InputProps) {
   }, [result, selectedSortByValue]);
 
   return (
-    <div className="results-panel">
+    <div
+      className="results-panel"
+      style={
+        {
+          '--show': show ? 'flex' : 'none',
+        } as React.CSSProperties
+      }
+    >
       <ResultsInfo
         result={result}
         onClickDownload={handleOnClickDownload}

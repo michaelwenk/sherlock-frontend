@@ -1,7 +1,7 @@
 import './App.scss';
 
 import NMRium from 'nmrium';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Molecule } from 'openchemlib/full';
 import Spinner from './component/elements/Spinner';
 import SplitPane from 'react-split-pane';
@@ -13,7 +13,6 @@ import { Datum1D, Datum2D, Spectra, State } from './types/nmrium/nmrium';
 import { Data } from './types/Data';
 import { Result } from './types/Result';
 import { ResultMolecule } from './types/ResultMolecule';
-import { useRef } from 'react';
 
 const preferences = {};
 
@@ -171,6 +170,12 @@ function App() {
     [hideLeftPanel, hideRightPanel, leftPanelWidth],
   );
 
+  const showResultsPanel = useMemo(
+    () =>
+      !showQueryPanel && !isRequesting && !requestError && !requestWasCancelled,
+    [isRequesting, requestError, requestWasCancelled, showQueryPanel],
+  );
+
   return (
     <div className="app">
       <div className="app-header">
@@ -243,26 +248,24 @@ function App() {
               isRequesting={isRequesting}
               show={showQueryPanel}
             />
+            <ResultsPanel
+              result={result ?? { molecules: [] }}
+              onClickClear={() => setResult({ molecules: [] })}
+              show={showResultsPanel}
+            />
             {!showQueryPanel &&
-              (isRequesting === true ? (
+              !showResultsPanel &&
+              (isRequesting ? (
                 <Spinner onClickCancel={handleOnCancelRequest} />
               ) : requestError ? (
                 <div className="requestError">
-                  <p>
-                    Request failed: Could not connect to WebCASE gateway
-                    service.
-                  </p>
+                  <p>Request failed: Could not connect to WebCASE services.</p>
                 </div>
               ) : requestWasCancelled ? (
                 <div className="requestCancelled">
                   <p>Request was cancelled by user!</p>
                 </div>
-              ) : (
-                <ResultsPanel
-                  result={result ?? { molecules: [] }}
-                  onClickClear={() => setResult({ molecules: [] })}
-                />
-              ))}
+              ) : null)}
           </div>
         </SplitPane>
       </div>
