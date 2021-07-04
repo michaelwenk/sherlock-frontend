@@ -22,7 +22,7 @@ export interface ValidationErrors {
     cosyP4?: string;
     useFilterLsdRing3?: string;
     useFilterLsdRing4?: string;
-    hybridizationDetectionThreshold?: string;
+    hybridizationDetectionThreshold?: number;
   };
   retrievalOptions?: { resultID?: string };
 }

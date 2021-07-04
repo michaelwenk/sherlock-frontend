@@ -28,6 +28,7 @@ function QueryTabElucidation() {
             }}
             defaultValue={values.elucidationOptions.elimP1}
             label="number of eliminations"
+            min={1}
           />
           <Input
             type="number"
@@ -36,6 +37,7 @@ function QueryTabElucidation() {
             }}
             defaultValue={values.elucidationOptions.elimP2}
             label="maximal path length"
+            min={2}
           />
         </div>
       </div>
@@ -49,6 +51,7 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.elucidationOptions.hmbcP3}
           label="min"
+          min={2}
         />
         <Input
           type="number"
@@ -57,6 +60,7 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.elucidationOptions.hmbcP4}
           label="max"
+          min={2}
         />
       </div>
       <div className="cosy-container">
@@ -68,6 +72,7 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.elucidationOptions.cosyP3}
           label="min"
+          min={3}
         />
         <Input
           type="number"
@@ -76,6 +81,18 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.elucidationOptions.cosyP4}
           label="max"
+          min={3}
+        />
+      </div>
+      <p style={{ fontWeight: 'bold' }}>Total time limit (minutes): </p>
+      <div className="time-limit-container">
+        <Input
+          type="number"
+          onChange={(value) => {
+            setFieldValue('elucidationOptions.timeLimitTotal', Number(value));
+          }}
+          defaultValue={values.elucidationOptions.timeLimitTotal}
+          min={1}
         />
       </div>
       <p style={{ fontWeight: 'bold' }}>Further settings:</p>
@@ -112,13 +129,16 @@ function QueryTabElucidation() {
           onChange={(value) => {
             setFieldValue(
               'elucidationOptions.hybridizationDetectionThreshold',
-              Number(value),
+              value / 100,
             );
           }}
           defaultValue={
             values.elucidationOptions.hybridizationDetectionThreshold
           }
-          label="Allowed minimal occurrence"
+          label="Allowed minimal occurrence per hybridization (%) "
+          min={0}
+          max={100}
+          step={1}
         />
       </div>
     </div>

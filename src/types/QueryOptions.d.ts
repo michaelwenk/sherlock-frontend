@@ -17,6 +17,7 @@ export interface QueryOptions {
     useFilterLsdRing3: boolean;
     useFilterLsdRing4: boolean;
     hybridizationDetectionThreshold: number;
+    timeLimitTotal: number;
   };
   retrievalOptions: { resultID: string };
 }

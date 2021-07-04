@@ -1,6 +1,7 @@
+import { QueryOptions } from '../types/QueryOptions';
 import defaultTolerance from './defaultTolerance';
 
-const defaultQueryOptions = {
+const defaultQueryOptions: QueryOptions = {
   dereplicationOptions: {
     shiftTolerances: defaultTolerance,
     checkMultiplicity: true,
@@ -18,7 +19,8 @@ const defaultQueryOptions = {
     cosyP4: 4, // maximal coupling path length COSY
     useFilterLsdRing3: true,
     useFilterLsdRing4: true,
-    hybridizationDetectionThreshold: 0.1,
+    hybridizationDetectionThreshold: 10,
+    timeLimitTotal: 5,
   },
   retrievalOptions: { resultID: '' },
 };
