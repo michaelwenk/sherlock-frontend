@@ -9,6 +9,7 @@ const defaultQueryOptions: QueryOptions = {
     useMF: true,
   },
   elucidationOptions: {
+    // PyLSD options
     allowHeteroHeteroBonds: false,
     useElim: false,
     elimP1: 1, // number of correlations (HMBC/COSY) to eliminate
@@ -19,8 +20,11 @@ const defaultQueryOptions: QueryOptions = {
     cosyP4: 4, // maximal coupling path length COSY
     useFilterLsdRing3: true,
     useFilterLsdRing4: true,
-    hybridizationDetectionThreshold: 10,
+    hybridizationDetectionThreshold: 0.1,
+    // elucidation process
     timeLimitTotal: 5,
+    // generated structures filter
+    maxRMSD: 30,
   },
   retrievalOptions: { resultID: '' },
 };

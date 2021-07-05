@@ -6,6 +6,7 @@ export interface QueryOptions {
     useMF: boolean;
   };
   elucidationOptions: {
+    // PyLSD options
     allowHeteroHeteroBonds: boolean;
     useElim: boolean;
     elimP1: number;
@@ -17,7 +18,10 @@ export interface QueryOptions {
     useFilterLsdRing3: boolean;
     useFilterLsdRing4: boolean;
     hybridizationDetectionThreshold: number;
+    // elucidation process
     timeLimitTotal: number;
+    // generated structures filter
+    maxRMSD: number;
   };
   retrievalOptions: { resultID: string };
 }

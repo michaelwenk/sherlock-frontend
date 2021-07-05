@@ -84,7 +84,7 @@ function QueryTabElucidation() {
           min={3}
         />
       </div>
-      <p style={{ fontWeight: 'bold' }}>Total time limit (minutes): </p>
+      <p style={{ fontWeight: 'bold' }}>Structure Generation: </p>
       <div className="time-limit-container">
         <Input
           type="number"
@@ -93,6 +93,16 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.elucidationOptions.timeLimitTotal}
           min={1}
+          label="Total time limit (min) "
+        />
+        <Input
+          type="number"
+          onChange={(value) => {
+            setFieldValue('elucidationOptions.maxRMSD', Number(value));
+          }}
+          defaultValue={values.elucidationOptions.maxRMSD}
+          min={0}
+          label="max RMSD (ppm) "
         />
       </div>
       <p style={{ fontWeight: 'bold' }}>Further settings:</p>
@@ -133,7 +143,7 @@ function QueryTabElucidation() {
             );
           }}
           defaultValue={
-            values.elucidationOptions.hybridizationDetectionThreshold
+            values.elucidationOptions.hybridizationDetectionThreshold * 100
           }
           label="Allowed minimal occurrence per hybridization (%) "
           min={0}
