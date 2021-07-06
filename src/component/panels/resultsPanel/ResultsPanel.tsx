@@ -35,23 +35,12 @@ function ResultsPanel({ result, onClickClear, show }: InputProps) {
 
   const sortedMolecules: Array<ResultMolecule> = useMemo(() => {
     const _sortedMolecules =
-      result && result.molecules
-        ? result.molecules.map((mol) => {
-            return {
-              ...mol,
-              meta: {
-                ...mol.meta,
-                rmsd: Number(mol.meta.rmsd),
-                // tanimoto: Number(mol.meta.tanimoto),
-              },
-            };
-          })
-        : [];
+      result && result.molecules ? result.molecules.slice() : [];
     _sortedMolecules.sort((molecule1, molecule2) => {
       if (selectedSortByValue === sortOptions.rmsd) {
-        if (molecule1.meta.rmsd < molecule2.meta.rmsd) {
+        if (molecule1.dataSet.meta.rmsd < molecule2.dataSet.meta.rmsd) {
           return -1;
-        } else if (molecule1.meta.rmsd > molecule2.meta.rmsd) {
+        } else if (molecule1.dataSet.meta.rmsd > molecule2.dataSet.meta.rmsd) {
           return 1;
         }
         return 0;

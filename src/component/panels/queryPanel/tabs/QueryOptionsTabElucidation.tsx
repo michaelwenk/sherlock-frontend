@@ -98,11 +98,14 @@ function QueryTabElucidation() {
         <Input
           type="number"
           onChange={(value) => {
-            setFieldValue('elucidationOptions.maxRMSD', Number(value));
+            setFieldValue(
+              'elucidationOptions.maxAverageDeviation',
+              Number(value),
+            );
           }}
-          defaultValue={values.elucidationOptions.maxRMSD}
+          defaultValue={values.elucidationOptions.maxAverageDeviation}
           min={0}
-          label="max RMSD (ppm) "
+          label="max avg. deviation (ppm) "
         />
       </div>
       <p style={{ fontWeight: 'bold' }}>Further settings:</p>

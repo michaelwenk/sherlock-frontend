@@ -7,11 +7,13 @@ const buildSDFileContent = (resultData: Array<ResultMolecule>) => {
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
-    content += `${res.meta.rmsd}\n\n`;
+    content += `${res.dataSet.meta.rmsd}\n\n`;
+    content += '> <AVG_DEV_PPM> \n';
+    content += `${res.dataSet.meta.averageDeviation}\n\n`;
     content += '> <SMILES> \n';
-    content += `${res.meta.smiles}\n\n`;
+    content += `${res.dataSet.meta.smiles}\n\n`;
     content += '> <Molecular_Formula> \n';
-    content += `${res.meta.mf}\n\n`;
+    content += `${res.dataSet.meta.mf}\n\n`;
     content += '$$$$\n';
   });
 

@@ -30,9 +30,6 @@ function ResultCard({ id, molecule, styles }: InputProps) {
           setHoverAtom={() => {}}
           setMolfile={() => {}}
         />
-        {/* <Card.Title>
-          {molecule.meta.rmsd ? Number(molecule.meta.rmsd).toFixed(3) : ''}
-        </Card.Title> */}
         <ResultCardText molecule={molecule} />
       </Card.Body>
     </Card>

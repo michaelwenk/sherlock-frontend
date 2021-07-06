@@ -7,6 +7,7 @@ const defaultQueryOptions: QueryOptions = {
     checkMultiplicity: true,
     checkEquivalencesCount: true,
     useMF: true,
+    maxAverageDeviation: 1,
   },
   elucidationOptions: {
     // PyLSD options
@@ -24,7 +25,7 @@ const defaultQueryOptions: QueryOptions = {
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
-    maxRMSD: 30,
+    maxAverageDeviation: 30,
   },
   retrievalOptions: { resultID: '' },
 };

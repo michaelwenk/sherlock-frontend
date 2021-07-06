@@ -125,10 +125,16 @@ function App() {
               const molecule: Molecule = Molecule.fromSmiles(
                 dataSet.meta.smiles,
               );
-              const { formula } = molecule.getMolecularFormula();
               return {
                 molfile: molecule.toMolfileV3(),
-                meta: { ...dataSet.meta, mf: formula },
+                dataSet: {
+                  ...dataSet,
+                  meta: {
+                    ...dataSet.meta,
+                    rmsd: Number(dataSet.meta.rmsd),
+                    averageDeviation: Number(dataSet.meta.averageDeviation),
+                  },
+                },
               };
             })
           : [];

@@ -4,6 +4,7 @@ export interface QueryOptions {
     checkMultiplicity: boolean;
     checkEquivalencesCount: boolean;
     useMF: boolean;
+    maxAverageDeviation: number;
   };
   elucidationOptions: {
     // PyLSD options
@@ -21,7 +22,7 @@ export interface QueryOptions {
     // elucidation process
     timeLimitTotal: number;
     // generated structures filter
-    maxRMSD: number;
+    maxAverageDeviation: number;
   };
   retrievalOptions: { resultID: string };
 }
