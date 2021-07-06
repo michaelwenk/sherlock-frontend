@@ -1,6 +1,6 @@
 import './ResultsView.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
@@ -47,6 +47,10 @@ function ResultsView({ molecules, limit }: InputProps) {
 
     return _cardDeckData;
   }, [limit, molecules]);
+
+  useEffect(() => {
+    setSelectedCardDeckIndex(0);
+  }, [cardDeckData]);
 
   return cardDeckData.length > 0 ? (
     <div className="results-view">
