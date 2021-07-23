@@ -1,10 +1,10 @@
 import './ResultsPanel.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { saveAs } from 'file-saver';
 import ResultsInfo from './resultsInfo/ResultsInfo';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
-import sortOptions from '../../../constants/sortOptions';
+// import sortOptions from '../../../constants/sortOptions';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
 import { Result } from '../../../types/Result';
 import { ResultMolecule } from '../../../types/ResultMolecule';
@@ -16,9 +16,9 @@ type InputProps = {
 };
 
 function ResultsPanel({ result, onClickClear, show }: InputProps) {
-  const [selectedSortByValue, setSelectedSortByValue] = useState(
-    sortOptions.rmsd,
-  );
+  // const [selectedSortByValue, setSelectedSortByValue] = useState(
+  //   sortOptions.rmsd,
+  // );
 
   const handleOnClickDownload = useCallback(() => {
     const fileData = buildSDFileContent(result.molecules);
@@ -29,36 +29,38 @@ function ResultsPanel({ result, onClickClear, show }: InputProps) {
     );
   }, [result]);
 
-  const handleOnChangeSortByValue = useCallback((value) => {
-    setSelectedSortByValue(value);
+  const handleOnChangeSortByValue = useCallback(() => {
+    // setSelectedSortByValue(value);
   }, []);
 
   const sortedMolecules: Array<ResultMolecule> = useMemo(() => {
-    const _sortedMolecules =
-      result && result.molecules ? result.molecules.slice() : [];
-    _sortedMolecules.sort((molecule1, molecule2) => {
-      if (selectedSortByValue === sortOptions.rmsd) {
-        if (molecule1.dataSet.meta.rmsd < molecule2.dataSet.meta.rmsd) {
-          return -1;
-        } else if (molecule1.dataSet.meta.rmsd > molecule2.dataSet.meta.rmsd) {
-          return 1;
-        }
-        return 0;
-      }
-      // else if (selectedSortByValue === sortOptions.tanimoto) {
-      //   if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
-      //     return -1;
-      //   } else if (molecule1.meta.tanimoto < molecule2.meta.tanimoto) {
-      //     return 1;
-      //   }
-      //   return 0;
-      // }
+    // const _sortedMolecules =
+    //   result && result.molecules ? result.molecules.slice() : [];
+    // _sortedMolecules.sort((molecule1, molecule2) => {
+    //   if (selectedSortByValue === sortOptions.rmsd) {
+    //     if (molecule1.dataSet.meta.rmsd < molecule2.dataSet.meta.rmsd) {
+    //       return -1;
+    //     } else if (molecule1.dataSet.meta.rmsd > molecule2.dataSet.meta.rmsd) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   }
+    //   // else if (selectedSortByValue === sortOptions.tanimoto) {
+    //   //   if (molecule1.meta.tanimoto > molecule2.meta.tanimoto) {
+    //   //     return -1;
+    //   //   } else if (molecule1.meta.tanimoto < molecule2.meta.tanimoto) {
+    //   //     return 1;
+    //   //   }
+    //   //   return 0;
+    //   // }
 
-      return 0;
-    });
+    //   return 0;
+    // });
 
-    return _sortedMolecules;
-  }, [result, selectedSortByValue]);
+    // return _sortedMolecules;
+
+    return result && result.molecules ? result.molecules : [];
+  }, [result]);
 
   return (
     <div
