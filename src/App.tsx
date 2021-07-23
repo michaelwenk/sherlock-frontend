@@ -131,8 +131,30 @@ function App() {
                   ...dataSet,
                   meta: {
                     ...dataSet.meta,
+                    querySpectrumSignalCount: Number(
+                      dataSet.meta.querySpectrumSignalCount,
+                    ),
+                    querySpectrumSignalCountWithEquivalences: Number(
+                      dataSet.meta.querySpectrumSignalCountWithEquivalences,
+                    ),
+                    isCompleteSpectralMatch:
+                      String(dataSet.meta.isCompleteSpectralMatch) === 'true',
+                    isCompleteSpectralMatchWithEquivalences:
+                      String(
+                        dataSet.meta.isCompleteSpectralMatchWithEquivalences,
+                      ) === 'true',
                     rmsd: Number(dataSet.meta.rmsd),
                     averageDeviation: Number(dataSet.meta.averageDeviation),
+                    setAssignmentsCount: Number(
+                      dataSet.meta.setAssignmentsCount,
+                    ),
+                    setAssignmentsCountWithEquivalences: Number(
+                      dataSet.meta.setAssignmentsCountWithEquivalences,
+                    ),
+                    rmsdIncomplete: Number(dataSet.meta.rmsdIncomplete),
+                    averageDeviationIncomplete: Number(
+                      dataSet.meta.averageDeviationIncomplete,
+                    ),
                   },
                 },
               };
