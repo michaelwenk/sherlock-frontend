@@ -11,8 +11,6 @@ type InputProps = {
 function ResultCardText({ molecule }: InputProps) {
   const color = molecule.dataSet.meta.isCompleteSpectralMatchWithEquivalences
     ? 'black'
-    : molecule.dataSet.meta.isCompleteSpectralMatch
-    ? 'orange'
     : 'red';
 
   return (
@@ -34,11 +32,7 @@ function ResultCardText({ molecule }: InputProps) {
                 color: color,
               }}
             >
-              {molecule.dataSet.meta.isCompleteSpectralMatchWithEquivalences
-                ? molecule.dataSet.meta.rmsd.toFixed(2)
-                : molecule.dataSet.meta.isCompleteSpectralMatch
-                ? molecule.dataSet.meta.rmsd.toFixed(2)
-                : molecule.dataSet.meta.rmsdIncomplete.toFixed(2)}
+              {molecule.dataSet.meta.rmsd.toFixed(2)}
             </td>
           </tr>
           <tr>
@@ -48,11 +42,17 @@ function ResultCardText({ molecule }: InputProps) {
                 color: color,
               }}
             >
-              {molecule.dataSet.meta.isCompleteSpectralMatchWithEquivalences
-                ? molecule.dataSet.meta.averageDeviation.toFixed(2)
-                : molecule.dataSet.meta.isCompleteSpectralMatch
-                ? molecule.dataSet.meta.averageDeviation.toFixed(2)
-                : molecule.dataSet.meta.averageDeviationIncomplete.toFixed(2)}
+              {molecule.dataSet.meta.averageDeviation.toFixed(2)}
+            </td>
+          </tr>
+          <tr>
+            <td>Tanimoto</td>
+            <td
+              style={{
+                color: color,
+              }}
+            >
+              {molecule.dataSet.meta.tanimoto.toFixed(2)}
             </td>
           </tr>
           <tr>

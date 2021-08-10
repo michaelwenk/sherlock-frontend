@@ -145,15 +145,12 @@ function App() {
                       ) === 'true',
                     rmsd: Number(dataSet.meta.rmsd),
                     averageDeviation: Number(dataSet.meta.averageDeviation),
+                    tanimoto: Number(dataSet.meta.tanimoto),
                     setAssignmentsCount: Number(
                       dataSet.meta.setAssignmentsCount,
                     ),
                     setAssignmentsCountWithEquivalences: Number(
                       dataSet.meta.setAssignmentsCountWithEquivalences,
-                    ),
-                    rmsdIncomplete: Number(dataSet.meta.rmsdIncomplete),
-                    averageDeviationIncomplete: Number(
-                      dataSet.meta.averageDeviationIncomplete,
                     ),
                   },
                 },

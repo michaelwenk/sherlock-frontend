@@ -6,10 +6,9 @@ export interface Meta {
   isCompleteSpectralMatchWithEquivalences: boolean;
   rmsd: number;
   averageDeviation: number;
+  tanimoto: number;
   setAssignmentsCount: number;
   setAssignmentsCountWithEquivalences: number;
-  rmsdIncomplete: number;
-  averageDeviationIncomplete: number;
   smiles: string;
   mf: string;
   title?: string;
