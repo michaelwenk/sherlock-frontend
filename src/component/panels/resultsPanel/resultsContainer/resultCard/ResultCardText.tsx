@@ -9,9 +9,7 @@ type InputProps = {
 };
 
 function ResultCardText({ molecule }: InputProps) {
-  const color = molecule.dataSet.meta.isCompleteSpectralMatchWithEquivalences
-    ? 'black'
-    : 'red';
+  const color = molecule.dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red';
 
   return (
     <Card.Text
@@ -62,7 +60,7 @@ function ResultCardText({ molecule }: InputProps) {
                 color: color,
               }}
             >
-              {`${molecule.dataSet.meta.setAssignmentsCountWithEquivalences}/${molecule.dataSet.meta.querySpectrumSignalCountWithEquivalences}`}
+              {`${molecule.dataSet.meta.setAssignmentsCount}/${molecule.dataSet.meta.querySpectrumSignalCount}`}
             </td>
           </tr>
           {molecule.dataSet.meta.id ? (

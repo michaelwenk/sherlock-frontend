@@ -25,7 +25,7 @@ const defaultQueryOptions: QueryOptions = {
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
-    maxAverageDeviation: 30,
+    maxAverageDeviation: 15,
   },
   retrievalOptions: { resultID: '' },
 };
