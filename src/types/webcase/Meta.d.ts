@@ -1,4 +1,5 @@
 export interface Meta {
+  source: string;
   id: string | number;
   querySpectrumSignalCount: number;
   querySpectrumSignalCountWithEquivalences: number;
