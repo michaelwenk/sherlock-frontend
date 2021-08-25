@@ -21,7 +21,7 @@ const defaultQueryOptions: QueryOptions = {
     cosyP4: 4, // maximal coupling path length COSY
     useFilterLsdRing3: true,
     useFilterLsdRing4: true,
-    hybridizationDetectionThreshold: 0.05,
+    hybridizationDetectionThreshold: 0.01,
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
