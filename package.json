@@ -32,6 +32,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "prod": "npx serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "compile": "tsc --project tsconfig.esm.json && tsc --project tsconfig.cjs.json",
