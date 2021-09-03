@@ -9,7 +9,6 @@ import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
 import { DataSet } from './types/webcase/DataSet';
-import { Data } from './types/Data';
 import { Result } from './types/Result';
 import { ResultMolecule } from './types/ResultMolecule';
 import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
