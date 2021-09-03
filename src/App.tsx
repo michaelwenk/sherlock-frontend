@@ -1,6 +1,6 @@
 import './App.scss';
 
-import NMRium from 'nmrium';
+import NMRium, { Spectra } from 'nmrium';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Molecule } from 'openchemlib/full';
 import Spinner from './component/elements/Spinner';
@@ -9,13 +9,14 @@ import QueryPanel from './component/panels/queryPanel/QueryPanel';
 import ResultsPanel from './component/panels/resultsPanel/ResultsPanel';
 import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
 import { DataSet } from './types/webcase/DataSet';
-import { Datum1D, Datum2D, Spectra, State } from './types/nmrium/nmrium';
 import { Data } from './types/Data';
 import { Result } from './types/Result';
 import { ResultMolecule } from './types/ResultMolecule';
+import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
+import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
+import { State } from 'nmrium/lib/component/reducer/Reducer';
 
 const preferences = {};
-
 // const initData = {};
 
 const minWidth = {
@@ -25,7 +26,7 @@ const minWidth = {
 };
 
 function App() {
-  const [data, setData] = useState<Data>();
+  const [nmriumData, setNmriumData] = useState<State>();
   const [result, setResult] = useState<Result>();
   const [leftPanelWidth, setLeftPanelWidth] = useState<number>();
   const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
@@ -37,36 +38,45 @@ function App() {
     useState<boolean>(false);
   const cancelRequestRef = useRef<Canceler>();
 
-  const handleOnDataChange = useCallback(function (nmriumData: State) {
+  const handleOnNMRiumDataChange = useCallback(function (nmriumData: State) {
     // console.log(nmriumData);
-    const _spectra: Spectra =
+    setNmriumData(nmriumData);
+  }, []);
+
+  const processNMRiumData = (nmriumData: State) => {
+    const _spectra =
       nmriumData && nmriumData.data
         ? nmriumData.data.reduce<Spectra>((acc, spectrum) => {
-            if (spectrum.id && spectrum.info && spectrum.info.isFid === false) {
+            if (
+              spectrum &&
+              spectrum.id &&
+              spectrum.info &&
+              spectrum.info.isFid === false
+            ) {
               if (spectrum.info.dimension === 1) {
-                const _spectrum: Datum1D = {
+                const _spectrum = {
                   id: spectrum.id,
                   info: spectrum.info,
                   ranges: (spectrum as Datum1D).ranges,
                   data: (spectrum as Datum1D).data,
                 };
-                acc.push(_spectrum);
+                acc.push(_spectrum as Datum1D);
               } else if (spectrum.info.dimension === 2) {
-                const _spectrum: Datum2D = {
+                const _spectrum = {
                   id: spectrum.id,
                   info: spectrum.info,
                   zones: (spectrum as Datum2D).zones,
                   data: (spectrum as Datum2D).data,
                 };
-                acc.push(_spectrum);
+                acc.push(_spectrum as Datum2D);
               }
             }
             return acc;
           }, [])
         : [];
     // console.log(_spectra);
-    setData({ spectra: _spectra, correlations: nmriumData.correlations });
-  }, []);
+    return _spectra;
+  };
 
   const handleOnSubmit = useCallback(
     async (
@@ -77,6 +87,11 @@ function App() {
     ) => {
       setIsRequesting(true);
       setShowQueryPanel(false);
+
+      const data = {
+        spectra: nmriumData ? processNMRiumData(nmriumData) : [],
+        correlations: nmriumData ? nmriumData.correlations : {},
+      };
 
       const requestData = {
         data,
@@ -164,7 +179,7 @@ function App() {
         time: (t1 - t0) / 1000,
       });
     },
-    [data],
+    [nmriumData],
   );
 
   const handleOnCancelRequest = useCallback(() => {
@@ -247,7 +262,7 @@ function App() {
           <div className="nmrium-container">
             <NMRium
               preferences={preferences}
-              onDataChange={handleOnDataChange}
+              onDataChange={handleOnNMRiumDataChange}
               // data={initData}
             />
           </div>
