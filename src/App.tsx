@@ -14,6 +14,7 @@ import { ResultMolecule } from './types/ResultMolecule';
 import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
 import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
+import { Types } from 'nmr-correlation';
 
 const preferences = {};
 // const initData = {};
@@ -89,7 +90,22 @@ function App() {
 
       const data = {
         spectra: nmriumData ? processNMRiumData(nmriumData) : [],
-        correlations: nmriumData ? nmriumData.correlations : {},
+        correlations: nmriumData
+          ? {
+              ...nmriumData.correlations,
+              values: nmriumData.correlations.values.map(
+                (value: Types.Correlation) => {
+                  return {
+                    ...value,
+                    hybridization:
+                      value.hybridization.trim().length === 0
+                        ? []
+                        : [value.hybridization],
+                  };
+                },
+              ),
+            }
+          : {},
       };
 
       const requestData = {
