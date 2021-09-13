@@ -136,23 +136,55 @@ function QueryTabElucidation() {
         />
       </div>
       <div>
-        <p style={{ fontWeight: 'bold' }}>Automatic hybridization detection:</p>
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue(
-              'elucidationOptions.hybridizationDetectionThreshold',
-              value / 100,
-            );
-          }}
-          defaultValue={
-            values.elucidationOptions.hybridizationDetectionThreshold * 100
-          }
-          label="Allowed minimal occurrence per hybridization (%) "
-          min={0}
-          max={100}
-          step={1}
-        />
+        <p style={{ fontWeight: 'bold' }}>Connectivity Statistics:</p>
+        <div>
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'elucidationOptions.hybridizationDetectionThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={
+              values.elucidationOptions.hybridizationDetectionThreshold * 100
+            }
+            label="Allowed minimal occurrence per hybridization in DB (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'elucidationOptions.hybridizationCountThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={
+              values.elucidationOptions.hybridizationCountThreshold * 100
+            }
+            label="Allowed minimal occurrence per hybridization in neighborhood (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'elucidationOptions.protonsCountThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={values.elucidationOptions.protonsCountThreshold * 100}
+            label="Allowed minimal occurrence per protons count per hybridization (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+        </div>
       </div>
     </div>
   );

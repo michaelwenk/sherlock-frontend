@@ -22,6 +22,8 @@ const defaultQueryOptions: QueryOptions = {
     useFilterLsdRing3: true,
     useFilterLsdRing4: true,
     hybridizationDetectionThreshold: 0.01,
+    hybridizationCountThreshold: 0.001,
+    protonsCountThreshold: 0.01,
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter

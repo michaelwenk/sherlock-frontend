@@ -19,6 +19,8 @@ export interface QueryOptions {
     useFilterLsdRing3: boolean;
     useFilterLsdRing4: boolean;
     hybridizationDetectionThreshold: number;
+    hybridizationCountThreshold: number;
+    protonsCountThreshold: number;
     // elucidation process
     timeLimitTotal: number;
     // generated structures filter
