@@ -3,10 +3,12 @@
 Frontend service for [WebCASE](https://github.com/michaelwenk/webcase).
 
 ## Main Components
+
 ### NMRium
+
 [NMRium](https://github.com/cheminfo/nmrium) is used as component for the (pre-)processing and visualization of 1D/2D NMR data.
 
-In addition to that, it contains a summary panel consisting of a correlation table and certain parameters to set, i.e. a molecular formula: 
+In addition to that, it contains a summary panel consisting of a correlation table and certain parameters to set, i.e. a molecular formula:
 
 <div align="center">
     <img width="700" alt="screenshot_nmrium_1" src="public/screenshots/nmrium_1.png">
@@ -15,9 +17,10 @@ In addition to that, it contains a summary panel consisting of a correlation tab
 This information is then used in dereplication or elucidation process in WebCASE.
 
 ### WebCASE
+
 [WebCASE](https://github.com/michaelwenk/webcase) aims to support the dereplication or elucidation of (un)known natural products.
 
-For both procedures it is allowed to set parameters beforehand. 
+For both procedures it is allowed to set parameters beforehand.
 Here is an example for elucidation parameter settings:
 
 <div align="center">
@@ -30,8 +33,8 @@ After running the dereplication or elucidation, a list of ranked structure propo
     <img width="700" alt="screenshot_webcase_2" src="public/screenshots/webcase_2.png">
 </div>
 
-
 ## Usage
+
 ### Docker and Application Start/Stop
 
 This project uses [Docker](https://www.docker.com). Make sure that docker is installed.
@@ -57,7 +60,7 @@ Then build the container image using following command:
 
 To start this service (in detached mode) use:
 
-    docker run -d -p 3001:3000 --name webcase-frontend michaelwenk/webcase-frontend
+    docker run -d -p 3001:5000 --name webcase-frontend michaelwenk/webcase-frontend
 
 As configured above, the backend service does allow requests from port 3001 only.
 
