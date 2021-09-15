@@ -15,6 +15,7 @@ import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
 import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
 import { Types } from 'nmr-correlation';
+import queryTypes from './constants/queryTypes';
 
 const preferences = {};
 // const initData = {};
@@ -88,25 +89,29 @@ function App() {
       setIsRequesting(true);
       setShowQueryPanel(false);
 
-      const data = {
-        spectra: nmriumData ? processNMRiumData(nmriumData) : [],
-        correlations: nmriumData
+      const data =
+        queryType === queryTypes.dereplication ||
+        queryType === queryTypes.elucidation
           ? {
-              ...nmriumData.correlations,
-              values: nmriumData.correlations.values.map(
-                (value: Types.Correlation) => {
-                  return {
-                    ...value,
-                    hybridization:
-                      value.hybridization.trim().length === 0
-                        ? []
-                        : [value.hybridization],
-                  };
-                },
-              ),
+              spectra: nmriumData ? processNMRiumData(nmriumData) : [],
+              correlations: nmriumData
+                ? {
+                    ...nmriumData.correlations,
+                    values: nmriumData.correlations.values.map(
+                      (value: Types.Correlation) => {
+                        return {
+                          ...value,
+                          hybridization:
+                            value.hybridization.trim().length === 0
+                              ? []
+                              : [value.hybridization],
+                        };
+                      },
+                    ),
+                  }
+                : {},
             }
-          : {},
-      };
+          : {};
 
       const requestData = {
         data,
