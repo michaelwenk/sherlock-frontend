@@ -136,12 +136,12 @@ function App() {
           (cancel) => (cancelRequestRef.current = cancel),
         ),
       })
-        .then((res) => {
+        .then((res: AxiosResponse) => {
           setRequestError(undefined);
           setRequestWasCancelled(false);
           response = res;
         })
-        .catch((err) => {
+        .catch((err: AxiosError) => {
           if (axios.isCancel(err)) {
             setRequestWasCancelled(true);
             setShowQueryPanel(true);
@@ -319,7 +319,12 @@ function App() {
                 <Spinner onClickCancel={handleOnCancelRequest} />
               ) : requestError ? (
                 <div className="requestError">
-                  <p>Request failed: Could not connect to WebCASE services.</p>
+                  <p>Request failed:</p>
+                  <p>
+                    {requestError.response?.data.errorMessage
+                      ? requestError.response?.data.errorMessage
+                      : 'Could not connect to WebCASE services'}
+                  </p>
                 </div>
               ) : requestWasCancelled ? (
                 <div className="requestCancelled">
