@@ -1,8 +1,8 @@
 const queryTypes = {
-  dereplication: 'Dereplication',
-  elucidation: 'Elucidation',
-  retrieval: 'Retrieval',
-  unknown: 'Unknown',
+  dereplication: 'dereplication',
+  elucidation: 'elucidation',
+  retrieval: 'retrieval',
+  unknown: 'unknown',
 };
 
 export default queryTypes;
