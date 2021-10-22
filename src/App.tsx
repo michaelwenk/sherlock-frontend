@@ -37,6 +37,7 @@ function App() {
   const [requestError, setRequestError] = useState<AxiosError>();
   const [requestWasCancelled, setRequestWasCancelled] =
     useState<boolean>(false);
+  const [isCanceling, setIsCanceling] = useState<boolean>(false);
   const cancelRequestRef = useRef<Canceler>();
 
   const handleOnNMRiumDataChange = useCallback(function (nmriumData: State) {
@@ -141,8 +142,15 @@ function App() {
           setRequestWasCancelled(false);
           response = res;
         })
-        .catch((err: AxiosError) => {
+        .catch(async (err: AxiosError) => {
           if (axios.isCancel(err)) {
+            setIsCanceling(true);
+            if (queryType === queryTypes.elucidation) {
+              await axios.get(
+                'http://localhost:8081/webcase-pylsd/cancelPyLSD',
+              );
+            }
+            setIsCanceling(false);
             setRequestWasCancelled(true);
             setShowQueryPanel(true);
           } else if (axios.isAxiosError(err)) {
@@ -316,7 +324,11 @@ function App() {
             {!showQueryPanel &&
               !showResultsPanel &&
               (isRequesting ? (
-                <Spinner onClickCancel={handleOnCancelRequest} />
+                <Spinner
+                  onClickCancel={handleOnCancelRequest}
+                  buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
+                  buttonDisabled={isCanceling}
+                />
               ) : requestError ? (
                 <div className="requestError">
                   <p>Request failed:</p>

@@ -6,12 +6,16 @@ type InputProps = {
   onClickCancel: Function;
   className?: string;
   classNameButton?: string;
+  buttonText?: string;
+  buttonDisabled?: boolean;
 };
 
 function Spinner({
   onClickCancel,
   className = 'spinner',
   classNameButton,
+  buttonText = 'Cancel',
+  buttonDisabled = false,
   ...props
 }: InputProps) {
   return (
@@ -24,9 +28,10 @@ function Spinner({
         {...props}
       />
       <Button
-        text="Cancel"
+        text={buttonText}
         onClick={onClickCancel}
         className={classNameButton}
+        disabled={buttonDisabled}
       />
     </div>
   );

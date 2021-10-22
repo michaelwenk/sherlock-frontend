@@ -4,15 +4,17 @@ type InputProps = {
   onClick: Function;
   text: string;
   className?: string;
+  disabled?: boolean;
 };
 
 function Button({
   onClick,
   text,
   className = 'Button',
+  disabled = false,
 }: InputProps) {
-    const handleOnClick = useCallback(
-    (e:  MouseEvent<HTMLButtonElement>) => {
+  const handleOnClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onClick(e.target);
     },
@@ -21,12 +23,9 @@ function Button({
 
   return (
     <div className={className}>
-    
-        <button
-          onClick={handleOnClick}
-        >
-            {text}
-        </button>
+      <button onClick={handleOnClick} disabled={disabled}>
+        {text}
+      </button>
     </div>
   );
 }
