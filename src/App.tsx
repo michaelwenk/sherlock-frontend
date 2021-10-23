@@ -149,9 +149,7 @@ function App() {
           if (axios.isCancel(err)) {
             setIsCanceling(true);
             if (queryType === queryTypes.elucidation) {
-              await axios.get(
-                'http://localhost:8081/webcase-pylsd/cancelPyLSD',
-              );
+              await axios.get('http://localhost:8081/webcase-core/cancel');
             }
             setIsCanceling(false);
             setRequestWasCancelled(true);
@@ -333,9 +331,9 @@ function App() {
               (isRequesting ? (
                 <Spinner
                   onClickCancel={handleOnCancelRequest}
-                  text={'processing...'}
                   buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
                   buttonDisabled={isCanceling}
+                  showTimer={true}
                 />
               ) : requestError ? (
                 <div className="requestError">
