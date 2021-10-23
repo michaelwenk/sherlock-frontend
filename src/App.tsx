@@ -85,6 +85,7 @@ function App() {
       queryType,
       dereplicationOptions,
       elucidationOptions,
+      detectionOptions,
       retrievalOptions,
     ) => {
       setIsRequesting(true);
@@ -92,7 +93,8 @@ function App() {
 
       const data =
         queryType === queryTypes.dereplication ||
-        queryType === queryTypes.elucidation
+        queryType === queryTypes.elucidation ||
+        queryType === queryTypes.detection
           ? {
               spectra: nmriumData ? processNMRiumData(nmriumData) : [],
               correlations: nmriumData
@@ -119,6 +121,7 @@ function App() {
         queryType,
         dereplicationOptions,
         elucidationOptions,
+        detectionOptions,
         resultID: retrievalOptions.resultID,
       };
       console.log(requestData);
@@ -206,6 +209,10 @@ function App() {
         resultID: response ? response.data.resultID : undefined,
         time: (t1 - t0) / 1000,
       });
+
+      if (queryType === queryTypes.detection) {
+        setShowQueryPanel(true);
+      }
     },
     [nmriumData],
   );
@@ -326,6 +333,7 @@ function App() {
               (isRequesting ? (
                 <Spinner
                   onClickCancel={handleOnCancelRequest}
+                  text={'processing...'}
                   buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
                   buttonDisabled={isCanceling}
                 />

@@ -1,4 +1,5 @@
 export interface QueryOptions {
+  queryType: string;
   dereplicationOptions: {
     shiftTolerances: ShiftTolerances;
     checkMultiplicity: boolean;
@@ -18,13 +19,15 @@ export interface QueryOptions {
     cosyP4: number;
     useFilterLsdRing3: boolean;
     useFilterLsdRing4: boolean;
-    hybridizationDetectionThreshold: number;
-    hybridizationCountThreshold: number;
-    protonsCountThreshold: number;
     // elucidation process
     timeLimitTotal: number;
     // generated structures filter
     maxAverageDeviation: number;
+  };
+  detectionOptions: {
+    hybridizationDetectionThreshold: number;
+    hybridizationCountThreshold: number;
+    protonsCountThreshold: number;
   };
   retrievalOptions: { resultID: string };
 }

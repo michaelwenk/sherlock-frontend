@@ -1,10 +1,11 @@
 import './QueryPanel.scss';
 
 import React, { useCallback, useState } from 'react';
-import QueryOptionsTabs from './tabs/QueryOptionsTabs';
+import QueryTabs from './tabs/QueryTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
+import Button from '../../elements/Button';
 import queryTypes from '../../../constants/queryTypes';
 
 type InputProps = {
@@ -16,8 +17,8 @@ type InputProps = {
 function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
   const [queryType, setQueryType] = useState<string>(queryTypes.dereplication);
 
-  const handleOnSelectTab = useCallback((_queryType) => {
-    setQueryType(_queryType);
+  const handleOnSelectTab = useCallback((type) => {
+    setQueryType(type);
   }, []);
 
   return (
@@ -34,21 +35,27 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
         validate={validateQueryOptions}
         onSubmit={(values, { setSubmitting }) => {
           onSubmit(
-            queryType,
+            values.queryType,
             values.dereplicationOptions,
             values.elucidationOptions,
+            values.detectionOptions,
             values.retrievalOptions,
           );
           setSubmitting(false);
         }}
       >
-        {() => (
+        {({ setFieldValue, submitForm }) => (
           <Form>
             <div className="form-tabs-container">
-              <QueryOptionsTabs onSelectTab={handleOnSelectTab} />
-              <button type="submit" disabled={isRequesting}>
-                {queryType}
-              </button>
+              <QueryTabs onSelectTab={handleOnSelectTab} />
+              <Button
+                onClick={() => {
+                  setFieldValue('queryType', queryType);
+                  submitForm();
+                }}
+                text={queryType}
+                disabled={isRequesting}
+              />
             </div>
           </Form>
         )}

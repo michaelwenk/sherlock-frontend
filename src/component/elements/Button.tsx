@@ -1,10 +1,11 @@
 import { MouseEvent, useCallback } from 'react';
 
 type InputProps = {
-  onClick: Function;
   text: string;
+  onClick: Function;
   className?: string;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 };
 
 function Button({
@@ -12,6 +13,7 @@ function Button({
   text,
   className = 'Button',
   disabled = false,
+  type = 'button',
 }: InputProps) {
   const handleOnClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -23,7 +25,7 @@ function Button({
 
   return (
     <div className={className}>
-      <button onClick={handleOnClick} disabled={disabled}>
+      <button onClick={handleOnClick} disabled={disabled} type={type}>
         {text}
       </button>
     </div>

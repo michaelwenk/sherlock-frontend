@@ -1,7 +1,9 @@
 import { QueryOptions } from '../types/QueryOptions';
 import defaultTolerance from './defaultTolerance';
+import queryTypes from './queryTypes';
 
 const defaultQueryOptions: QueryOptions = {
+  queryType: queryTypes.dereplication,
   dereplicationOptions: {
     shiftTolerances: defaultTolerance,
     checkMultiplicity: true,
@@ -21,13 +23,15 @@ const defaultQueryOptions: QueryOptions = {
     cosyP4: 4, // maximal coupling path length COSY
     useFilterLsdRing3: true,
     useFilterLsdRing4: true,
-    hybridizationDetectionThreshold: 0.01,
-    hybridizationCountThreshold: 0.001,
-    protonsCountThreshold: 0.01,
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
     maxAverageDeviation: 10,
+  },
+  detectionOptions: {
+    hybridizationDetectionThreshold: 0.01,
+    hybridizationCountThreshold: 0.001,
+    protonsCountThreshold: 0.01,
   },
   retrievalOptions: { resultID: '' },
 };

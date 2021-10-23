@@ -2,7 +2,7 @@ import { useFormikContext } from 'formik';
 import { QueryOptions } from '../../../../types/QueryOptions';
 import Input from '../../../elements/Input';
 
-function QueryOptionsTabRetrieval() {
+function QueryTabRetrieval() {
   const { setFieldValue } = useFormikContext<QueryOptions>();
 
   return (
@@ -15,4 +15,4 @@ function QueryOptionsTabRetrieval() {
   );
 }
 
-export default QueryOptionsTabRetrieval;
+export default QueryTabRetrieval;

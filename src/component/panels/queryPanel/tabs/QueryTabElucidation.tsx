@@ -1,14 +1,74 @@
-import './QueryOptionsTabElucidation.scss';
-import CheckBox from '../../../elements/CheckBox';
 import { useFormikContext } from 'formik';
-import Input from '../../../elements/Input';
+import Button from '../../../elements/Button';
 import { QueryOptions } from '../../../../types/QueryOptions';
+import CheckBox from '../../../elements/CheckBox';
+import Input from '../../../elements/Input';
+import queryTypes from '../../../../constants/queryTypes';
 
 function QueryTabElucidation() {
-  const { values, setFieldValue } = useFormikContext<QueryOptions>();
+  const { values, setFieldValue, submitForm } =
+    useFormikContext<QueryOptions>();
 
   return (
     <div className="query-options-tab-elucidation-container">
+      <div>
+        <p style={{ fontWeight: 'bold' }}>Connectivity Statistics Detection:</p>
+        <div>
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'detectionOptions.hybridizationDetectionThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={
+              values.detectionOptions.hybridizationDetectionThreshold * 100
+            }
+            label="Allowed minimal occurrence per hybridization in DB (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'detectionOptions.hybridizationCountThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={
+              values.detectionOptions.hybridizationCountThreshold * 100
+            }
+            label="Allowed minimal occurrence per hybridization in neighborhood (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+          <Input
+            type="number"
+            onChange={(value) => {
+              setFieldValue(
+                'detectionOptions.protonsCountThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={values.detectionOptions.protonsCountThreshold * 100}
+            label="Allowed minimal occurrence per protons count per hybridization (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+        </div>
+        <Button
+          text={'Detect'}
+          onClick={() => {
+            setFieldValue('queryType', queryTypes.detection);
+            submitForm();
+          }}
+        />
+      </div>
       <div className="elimination-container">
         <p style={{ fontWeight: 'bold' }}>
           Elimination of invalid correlations:{' '}
@@ -112,7 +172,7 @@ function QueryTabElucidation() {
       <div className="checkbox-container">
         <CheckBox
           defaultValue={values.elucidationOptions.allowHeteroHeteroBonds}
-          onChange={(isChecked) =>
+          onChange={(isChecked: boolean) =>
             setFieldValue(
               'elucidationOptions.allowHeteroHeteroBonds',
               isChecked,
@@ -121,70 +181,19 @@ function QueryTabElucidation() {
           label="Allow Hetero-Hetero Bonds"
         />
         <CheckBox
-          defaultValue={values.elucidationOptions.useFilterLsdRing3}
-          onChange={(isChecked) =>
-            setFieldValue('elucidationOptions.useFilterLsdRing3', isChecked)
+          defaultValue={!values.elucidationOptions.useFilterLsdRing3}
+          onChange={(isChecked: boolean) =>
+            setFieldValue('elucidationOptions.useFilterLsdRing3', !isChecked)
           }
-          label="Use filter for 3-membered rings"
+          label="Allow 3-membered rings"
         />
         <CheckBox
-          defaultValue={values.elucidationOptions.useFilterLsdRing4}
-          onChange={(isChecked) =>
-            setFieldValue('elucidationOptions.useFilterLsdRing4', isChecked)
+          defaultValue={!values.elucidationOptions.useFilterLsdRing4}
+          onChange={(isChecked: boolean) =>
+            setFieldValue('elucidationOptions.useFilterLsdRing4', !isChecked)
           }
-          label="Use filter for 4-membered rings"
+          label="Allow 4-membered rings"
         />
-      </div>
-      <div>
-        <p style={{ fontWeight: 'bold' }}>Connectivity Statistics:</p>
-        <div>
-          <Input
-            type="number"
-            onChange={(value) => {
-              setFieldValue(
-                'elucidationOptions.hybridizationDetectionThreshold',
-                value / 100,
-              );
-            }}
-            defaultValue={
-              values.elucidationOptions.hybridizationDetectionThreshold * 100
-            }
-            label="Allowed minimal occurrence per hybridization in DB (%) "
-            min={0}
-            max={100}
-            step={0.01}
-          />
-          <Input
-            type="number"
-            onChange={(value) => {
-              setFieldValue(
-                'elucidationOptions.hybridizationCountThreshold',
-                value / 100,
-              );
-            }}
-            defaultValue={
-              values.elucidationOptions.hybridizationCountThreshold * 100
-            }
-            label="Allowed minimal occurrence per hybridization in neighborhood (%) "
-            min={0}
-            max={100}
-            step={0.01}
-          />
-          <Input
-            type="number"
-            onChange={(value) => {
-              setFieldValue(
-                'elucidationOptions.protonsCountThreshold',
-                value / 100,
-              );
-            }}
-            defaultValue={values.elucidationOptions.protonsCountThreshold * 100}
-            label="Allowed minimal occurrence per protons count per hybridization (%) "
-            min={0}
-            max={100}
-            step={0.01}
-          />
-        </div>
       </div>
     </div>
   );
