@@ -30,8 +30,7 @@ const defaultQueryOptions: QueryOptions = {
   },
   detectionOptions: {
     hybridizationDetectionThreshold: 0.01,
-    hybridizationCountThreshold: 0.001,
-    protonsCountThreshold: 0.01,
+    elementCountThreshold: 0.001,
   },
   retrievalOptions: { resultID: '' },
 };

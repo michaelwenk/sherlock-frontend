@@ -26,8 +26,7 @@ export interface QueryOptions {
   };
   detectionOptions: {
     hybridizationDetectionThreshold: number;
-    hybridizationCountThreshold: number;
-    protonsCountThreshold: number;
+    elementCountThreshold: number;
   };
   retrievalOptions: { resultID: string };
 }

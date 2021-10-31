@@ -53,7 +53,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
                   setFieldValue('queryType', queryType);
                   submitForm();
                 }}
-                text={queryType}
+                child={queryType}
                 disabled={isRequesting}
               />
             </div>

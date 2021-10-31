@@ -1,7 +1,7 @@
 import './ResultsView.scss';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import CardDeck from 'react-bootstrap/CardDeck';
+import CardGroup from 'react-bootstrap/CardGroup';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
@@ -29,7 +29,13 @@ function ResultsView({ molecules, limit }: InputProps) {
           key={`resultCard${i}`}
           id={i + 1}
           molecule={molecules[i]}
-          styles={{ minWidth: '12rem', maxWidth: '12rem' }}
+          styles={{
+            minWidth: '12rem',
+            maxWidth: '12rem',
+            marginLeft: '4px',
+            marginBottom: '4px',
+            border: 'solid 1px lightgrey',
+          }}
         />
       );
       if (counter < limit) {
@@ -64,7 +70,7 @@ function ResultsView({ molecules, limit }: InputProps) {
       </div>
       <div className="card-deck-container">
         <Container>
-          <CardDeck>{cardDeckData[selectedCardDeckIndex]}</CardDeck>
+          <CardGroup>{cardDeckData[selectedCardDeckIndex]}</CardGroup>
         </Container>
       </div>
     </div>

@@ -1,0 +1,94 @@
+.panels {
+  width: 100%;
+  height: 90%;
+  position: fixed;
+
+  .collapsible {
+    height: 5%;
+    background-color: #eee;
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #ccc;
+    }
+
+    &:after {
+      content: var(--sign);
+      float: right;
+      margin-left: 5px;
+    }
+  }
+
+  .spinner {
+    top: calc(50% + 50px);
+    left: calc(50% - 50px);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    .Button {
+      margin-top: 10px;
+    }
+  }
+
+  .request-error {
+    height: 100%;
+    width: 100%;
+    top: calc(50%);
+    position: absolute;
+
+    p {
+      color: red;
+    }
+  }
+
+  .request-cancelled {
+    height: 100%;
+    width: 100%;
+    top: calc(50%);
+    position: absolute;
+
+    p {
+      color: blue;
+    }
+  }
+
+  .summary-panel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .query-and-result-panel {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.SplitPane {
+  height: '100%';
+  width: '100%';
+
+  .Resizer.vertical {
+    width: 15px;
+    background-color: '#f7f7f7';
+    cursor: col-resize;
+    padding: 2px;
+    border: 0.55px solid lightgrey;
+
+    &:hover {
+      background-color: lavender !important;
+    }
+
+    &:after {
+      content: '\22EE';
+      top: 50%;
+      color: black;
+      position: absolute;
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+}

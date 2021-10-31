@@ -58,7 +58,7 @@ function Spinner({
         >{`${timer.minutes} min : ${timer.seconds} s`}</p>
       )}
       <Button
-        text={buttonText}
+        child={buttonText}
         onClick={onClickCancel}
         className={classNameButton}
         disabled={buttonDisabled}

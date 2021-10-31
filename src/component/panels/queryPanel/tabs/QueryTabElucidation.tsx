@@ -25,7 +25,7 @@ function QueryTabElucidation() {
             defaultValue={
               values.detectionOptions.hybridizationDetectionThreshold * 100
             }
-            label="Allowed minimal occurrence per hybridization in DB (%) "
+            label="Minimal occurrence of hybridization in DB (%) "
             min={0}
             max={100}
             step={0.01}
@@ -34,35 +34,19 @@ function QueryTabElucidation() {
             type="number"
             onChange={(value) => {
               setFieldValue(
-                'detectionOptions.hybridizationCountThreshold',
+                'detectionOptions.elementCountThreshold',
                 value / 100,
               );
             }}
-            defaultValue={
-              values.detectionOptions.hybridizationCountThreshold * 100
-            }
-            label="Allowed minimal occurrence per hybridization in neighborhood (%) "
-            min={0}
-            max={100}
-            step={0.01}
-          />
-          <Input
-            type="number"
-            onChange={(value) => {
-              setFieldValue(
-                'detectionOptions.protonsCountThreshold',
-                value / 100,
-              );
-            }}
-            defaultValue={values.detectionOptions.protonsCountThreshold * 100}
-            label="Allowed minimal occurrence per protons count per hybridization (%) "
+            defaultValue={values.detectionOptions.elementCountThreshold * 100}
+            label="Minimal occurrence of element in neighborhood (%) "
             min={0}
             max={100}
             step={0.01}
           />
         </div>
         <Button
-          text={'Detect'}
+          child={'Detect'}
           onClick={() => {
             setFieldValue('queryType', queryTypes.detection);
             submitForm();

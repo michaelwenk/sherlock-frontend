@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 
 type InputProps = {
-  selectionOptions: Array<string>;
-  defaultValue: string;
+  values: string[] | number[];
+  defaultValue: string | number;
   onChange: Function;
   className?: string;
 };
 
 function SelectBox({
-  selectionOptions,
+  values,
   onChange,
   defaultValue,
   className = 'SelectBox',
@@ -21,15 +21,17 @@ function SelectBox({
   );
 
   return (
-    <div className={className}>
-      <select onChange={handleOnChanged} defaultValue={defaultValue}>
-        {selectionOptions.map((selectionOption) => (
-          <option key={selectionOption} value={selectionOption}>
-            {selectionOption}
-          </option>
-        ))}
-      </select>
-    </div>
+    <select
+      className={className}
+      onChange={handleOnChanged}
+      defaultValue={defaultValue}
+    >
+      {values.map((value: string | number) => (
+        <option key={value} value={value}>
+          {value}
+        </option>
+      ))}
+    </select>
   );
 }
 

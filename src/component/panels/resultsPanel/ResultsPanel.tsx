@@ -8,26 +8,33 @@ import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
 import { Result } from '../../../types/Result';
 import { ResultMolecule } from '../../../types/ResultMolecule';
+import { useData } from '../../../context/DataContext';
 
 type InputProps = {
-  result: Result;
+  result?: Result;
   onClickClear: Function;
   show: boolean;
 };
 
-function ResultsPanel({ result, onClickClear, show }: InputProps) {
+function ResultsPanel({ onClickClear, show }: InputProps) {
   // const [selectedSortByValue, setSelectedSortByValue] = useState(
   //   sortOptions.rmsd,
   // );
 
+  const { resultData } = useData();
+
   const handleOnClickDownload = useCallback(() => {
-    const fileData = buildSDFileContent(result.molecules);
-    const blob = new Blob([fileData], { type: 'text/plain' });
-    saveAs(
-      blob,
-      `${result && result.resultID ? result.resultID : 'results'}.sdf`,
-    );
-  }, [result]);
+    if (resultData && resultData.molecules) {
+      const fileData = buildSDFileContent(resultData.molecules);
+      const blob = new Blob([fileData], { type: 'text/plain' });
+      saveAs(
+        blob,
+        `${
+          resultData && resultData.resultID ? resultData.resultID : 'results'
+        }.sdf`,
+      );
+    }
+  }, [resultData]);
 
   const handleOnChangeSortByValue = useCallback(() => {
     // setSelectedSortByValue(value);
@@ -59,10 +66,10 @@ function ResultsPanel({ result, onClickClear, show }: InputProps) {
 
     // return _sortedMolecules;
 
-    return result && result.molecules ? result.molecules : [];
-  }, [result]);
+    return resultData && resultData.molecules ? resultData.molecules : [];
+  }, [resultData]);
 
-  return (
+  return resultData ? (
     <div
       className="results-panel"
       style={
@@ -72,14 +79,13 @@ function ResultsPanel({ result, onClickClear, show }: InputProps) {
       }
     >
       <ResultsInfo
-        result={result}
         onClickDownload={handleOnClickDownload}
         onChangeSortByValue={handleOnChangeSortByValue}
         onClickClear={onClickClear}
       />
       <ResultsView molecules={sortedMolecules} limit={50} />
     </div>
-  );
+  ) : null;
 }
 
 export default ResultsPanel;

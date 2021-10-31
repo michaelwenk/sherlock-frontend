@@ -1,21 +1,21 @@
 import './ResultsInfo.scss';
 
 import { useCallback } from 'react';
-import { Result } from '../../../../types/Result';
+import { useData } from '../../../../context/DataContext';
 
 type InputProps = {
-  result: Result;
   onClickDownload: Function;
   onClickClear: Function;
   onChangeSortByValue: Function;
 };
 
 function ResultsInfo({
-  result,
   onClickDownload,
   onChangeSortByValue,
   onClickClear,
 }: InputProps) {
+  const { resultData } = useData();
+
   const handleOnClickDownload = useCallback(
     (e) => {
       e.stopPropagation();
@@ -39,14 +39,14 @@ function ResultsInfo({
     [onClickClear],
   );
 
-  return result ? (
+  return resultData ? (
     <div className="info-container">
-      <p>Result ID: {result.resultID}</p>
+      <p>Result ID: {resultData.resultID}</p>
       <button
         type="button"
         onClick={handleOnClickDownload}
         disabled={
-          result.molecules && result.molecules.length > 0 ? false : true
+          resultData.molecules && resultData.molecules.length > 0 ? false : true
         }
       >
         Download
@@ -55,7 +55,7 @@ function ResultsInfo({
         type="button"
         onClick={handleOnClickClear}
         disabled={
-          result.molecules && result.molecules.length > 0 ? false : true
+          resultData.molecules && resultData.molecules.length > 0 ? false : true
         }
       >
         Clear
