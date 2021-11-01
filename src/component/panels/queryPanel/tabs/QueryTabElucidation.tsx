@@ -179,6 +179,17 @@ function QueryTabElucidation() {
           label="Allow 4-membered rings"
         />
       </div>
+      <p style={{ fontWeight: 'bold' }}>Extras: </p>
+      <div className="request-name-container">
+        <Input
+          type="string"
+          onChange={(value: string) => {
+            setFieldValue('retrievalOptions.resultName', value);
+          }}
+          defaultValue={values.retrievalOptions.resultName || ''}
+          label="Task name"
+        />
+      </div>
     </div>
   );
 }

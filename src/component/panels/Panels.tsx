@@ -229,7 +229,6 @@ function Panels() {
         await axios({
           method: 'POST',
           url: 'http://localhost:8081/webcase-core/core',
-          // params: {},
           data: requestData,
           headers: {
             'Content-Type': 'application/json',
