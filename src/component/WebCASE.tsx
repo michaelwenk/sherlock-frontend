@@ -18,7 +18,6 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 
 const preferences = {};
-// const initData = {};
 
 function WebCASE() {
   const [state, dispatch] = useReducer<Reducer<DataState, any>, DataState>(
@@ -59,7 +58,6 @@ function WebCASE() {
                   <NMRium
                     preferences={preferences}
                     onDataChange={handleOnNMRiumDataChange}
-                    // data={initData}
                   />
                 </div>
               </Tab>

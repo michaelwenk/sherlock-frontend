@@ -1,52 +1,51 @@
-import 'react-tabs/style/react-tabs.css';
+import './QueryTabs.scss';
 
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import QueryTabDereplication from './QueryTabDereplication';
 import { useCallback } from 'react';
-
 import QueryTabRetrieval from './QueryTabRetrieval';
 import queryTypes from '../../../../constants/queryTypes';
 import QueryTabElucidation from './QueryTabElucidation';
+import { Tab, Tabs } from 'react-bootstrap';
 
 type InputProps = {
   onSelectTab: Function;
 };
 
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 function QueryOptionsTabs({ onSelectTab }: InputProps) {
   const handleOnSelectTab = useCallback(
-    (index) => {
-      switch (index) {
-        case 0:
-          onSelectTab(queryTypes.dereplication);
-          break;
-        case 1:
-          onSelectTab(queryTypes.elucidation);
-          break;
-        case 2:
-          onSelectTab(queryTypes.retrieval);
-          break;
-      }
+    (queryType) => {
+      onSelectTab(queryType);
     },
     [onSelectTab],
   );
 
   return (
-    <Tabs onSelect={handleOnSelectTab}>
-      <TabList>
-        <Tab>Dereplication</Tab>
-        <Tab>Elucidation</Tab>
-        <Tab>Retrieval</Tab>
-      </TabList>
-      <TabPanel>
-        <QueryTabDereplication />
-      </TabPanel>
-      <TabPanel>
-        <QueryTabElucidation />
-      </TabPanel>
-      <TabPanel>
-        <QueryTabRetrieval />
-      </TabPanel>
-    </Tabs>
+    <div className="query-tabs">
+      <Tabs onSelect={handleOnSelectTab} defaultActiveKey="dereplication">
+        <Tab
+          eventKey={queryTypes.dereplication}
+          title={capitalize(queryTypes.dereplication)}
+        >
+          <QueryTabDereplication />
+        </Tab>
+        <Tab
+          eventKey={queryTypes.elucidation}
+          title={capitalize(queryTypes.elucidation)}
+        >
+          <QueryTabElucidation />
+        </Tab>
+        <Tab
+          eventKey={queryTypes.retrieval}
+          title={capitalize(queryTypes.retrieval)}
+        >
+          <QueryTabRetrieval />
+        </Tab>
+      </Tabs>
+    </div>
   );
 }
 
