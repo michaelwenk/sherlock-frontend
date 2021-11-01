@@ -9,9 +9,7 @@ import { Molecule } from 'openchemlib';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import { Result } from '../../types/Result';
-import { ResultMolecule } from '../../types/ResultMolecule';
 import Spinner from '../../component/elements/Spinner';
-import { DataSet } from '../../types/webcase/DataSet';
 import { HighlightProvider } from '../highlight';
 import QueryPanel from './queryPanel/QueryPanel';
 import ResultsPanel from './resultsPanel/ResultsPanel';
@@ -20,7 +18,18 @@ import SplitPane from 'react-split-pane';
 import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
 import { NMRiumData } from '../../types/nmrium/NMRiumData';
-import { CLEAR_MOLECULES, SET_RESULT_DATA } from '../../context/ActionTypes';
+import {
+  CLEAR_MOLECULES,
+  SET_RESULT_DATA,
+  SET_RESULT_DB_ENTRIES,
+} from '../../context/ActionTypes';
+import { QueryOptions } from '../../types/QueryOptions';
+import ResultRecord from '../../types/webcase/ResultRecord';
+import retrievalActions from '../../constants/retrievalAction';
+
+export interface onSubmitProps {
+  queryOptions: QueryOptions;
+}
 
 const minWidth = {
   leftPanel: '25%',
@@ -86,148 +95,297 @@ function Panels() {
       cancelRequestRef.current('User has cancelled the request!!!');
   }, []);
 
+  const handleOnFetch = useCallback(async () => {
+    let response: AxiosResponse | undefined;
+    const t0 = performance.now();
+    await axios({
+      method: 'GET',
+      url: 'http://localhost:8081/webcase-db-service-result/getAll',
+      cancelToken: new axios.CancelToken(
+        (cancel) => (cancelRequestRef.current = cancel),
+      ),
+    })
+      .then((res: AxiosResponse) => {
+        setRequestError(undefined);
+        setRequestWasCancelled(false);
+        setShowQueryPanel(true);
+        response = res;
+      })
+      .catch(async (err: AxiosError) => {
+        if (axios.isCancel(err)) {
+          setRequestWasCancelled(true);
+          setShowQueryPanel(true);
+        } else if (axios.isAxiosError(err)) {
+          setRequestError(err);
+        }
+      })
+      .finally(() => setIsRequesting(false));
+    const t1 = performance.now();
+    console.log('time need: ' + (t1 - t0) / 1000);
+    console.log(response);
+
+    if (response && response.data) {
+      dispatch({
+        type: SET_RESULT_DB_ENTRIES,
+        payload: { resultRecordList: response.data },
+      });
+    }
+  }, [dispatch]);
+
+  const buildMolecules = (resultRecord: ResultRecord | undefined) => {
+    return resultRecord
+      ? resultRecord.dataSetList.map((dataSet) => {
+          const molecule: Molecule = Molecule.fromSmiles(dataSet.meta.smiles);
+          return {
+            molfile: molecule.toMolfileV3(),
+            dataSet: {
+              ...dataSet,
+              meta: {
+                ...dataSet.meta,
+                querySpectrumSignalCount: Number(
+                  dataSet.meta.querySpectrumSignalCount,
+                ),
+                querySpectrumSignalCountWithEquivalences: Number(
+                  dataSet.meta.querySpectrumSignalCountWithEquivalences,
+                ),
+                isCompleteSpectralMatch:
+                  String(dataSet.meta.isCompleteSpectralMatch) === 'true',
+                isCompleteSpectralMatchWithEquivalences:
+                  String(
+                    dataSet.meta.isCompleteSpectralMatchWithEquivalences,
+                  ) === 'true',
+                rmsd: Number(dataSet.meta.rmsd),
+                averageDeviation: Number(dataSet.meta.averageDeviation),
+                tanimoto: Number(dataSet.meta.tanimoto),
+                setAssignmentsCount: Number(dataSet.meta.setAssignmentsCount),
+                setAssignmentsCountWithEquivalences: Number(
+                  dataSet.meta.setAssignmentsCountWithEquivalences,
+                ),
+              },
+            },
+          };
+        })
+      : [];
+  };
+
   const handleOnSubmit = useCallback(
-    async (
-      queryType,
-      dereplicationOptions,
-      elucidationOptions,
-      detectionOptions,
-      retrievalOptions,
-    ) => {
+    async ({ queryOptions }: onSubmitProps) => {
       setIsRequesting(true);
       setShowQueryPanel(false);
 
-      const data =
-        queryType === queryTypes.dereplication ||
-        queryType === queryTypes.elucidation ||
-        queryType === queryTypes.detection
-          ? {
-              spectra: nmriumData ? processNMRiumData(nmriumData) : [],
-              correlations: nmriumData
-                ? {
-                    ...nmriumData.correlations,
-                    values: nmriumData.correlations.values.map(
-                      (value: Types.Correlation) => {
-                        return {
-                          ...value,
-                          hybridization:
-                            value.hybridization.trim().length === 0
-                              ? []
-                              : [value.hybridization],
-                        };
-                      },
-                    ),
-                  }
-                : {},
-            }
-          : {};
-
-      const requestData = {
-        data,
+      const {
         queryType,
         dereplicationOptions,
         elucidationOptions,
         detectionOptions,
-        detections: resultData?.detections,
-        resultID: retrievalOptions.resultID,
-      };
-      console.log(requestData);
+        retrievalOptions,
+      } = queryOptions;
 
-      let response: AxiosResponse | undefined;
-      const t0 = performance.now();
-      await axios({
-        method: 'POST',
-        url: 'http://localhost:8081/webcase-core/core',
-        // params: {},
-        data: requestData,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cancelToken: new axios.CancelToken(
-          (cancel) => (cancelRequestRef.current = cancel),
-        ),
-      })
-        .then((res: AxiosResponse) => {
-          setRequestError(undefined);
-          setRequestWasCancelled(false);
-          response = res;
-        })
-        .catch(async (err: AxiosError) => {
-          if (axios.isCancel(err)) {
-            setIsCanceling(true);
-            if (queryType === queryTypes.elucidation) {
-              await axios.get('http://localhost:8081/webcase-core/cancel');
-            }
-            setIsCanceling(false);
-            setRequestWasCancelled(true);
-            setShowQueryPanel(true);
-          } else if (axios.isAxiosError(err)) {
-            setRequestError(err);
-          }
-        })
-        .finally(() => setIsRequesting(false));
-      const t1 = performance.now();
-      console.log('time need: ' + (t1 - t0) / 1000);
-      console.log(response);
+      if (queryType !== queryTypes.retrieval) {
+        const data =
+          queryType === queryTypes.dereplication ||
+          queryType === queryTypes.elucidation ||
+          queryType === queryTypes.detection
+            ? {
+                spectra: nmriumData ? processNMRiumData(nmriumData) : [],
+                correlations: nmriumData
+                  ? {
+                      ...nmriumData.correlations,
+                      values: nmriumData.correlations.values.map(
+                        (value: Types.Correlation) => {
+                          return {
+                            ...value,
+                            hybridization:
+                              value.hybridization.trim().length === 0
+                                ? []
+                                : [value.hybridization],
+                          };
+                        },
+                      ),
+                    }
+                  : {},
+              }
+            : {};
 
-      const molecules: Array<ResultMolecule> =
-        response && response.data && response.data.dataSetList
-          ? (response.data.dataSetList as Array<DataSet>).map((dataSet) => {
-              const molecule: Molecule = Molecule.fromSmiles(
-                dataSet.meta.smiles,
-              );
-              return {
-                molfile: molecule.toMolfileV3(),
-                dataSet: {
-                  ...dataSet,
-                  meta: {
-                    ...dataSet.meta,
-                    querySpectrumSignalCount: Number(
-                      dataSet.meta.querySpectrumSignalCount,
-                    ),
-                    querySpectrumSignalCountWithEquivalences: Number(
-                      dataSet.meta.querySpectrumSignalCountWithEquivalences,
-                    ),
-                    isCompleteSpectralMatch:
-                      String(dataSet.meta.isCompleteSpectralMatch) === 'true',
-                    isCompleteSpectralMatchWithEquivalences:
-                      String(
-                        dataSet.meta.isCompleteSpectralMatchWithEquivalences,
-                      ) === 'true',
-                    rmsd: Number(dataSet.meta.rmsd),
-                    averageDeviation: Number(dataSet.meta.averageDeviation),
-                    tanimoto: Number(dataSet.meta.tanimoto),
-                    setAssignmentsCount: Number(
-                      dataSet.meta.setAssignmentsCount,
-                    ),
-                    setAssignmentsCountWithEquivalences: Number(
-                      dataSet.meta.setAssignmentsCountWithEquivalences,
-                    ),
-                  },
-                },
-              };
-            })
-          : [];
-
-      if (response) {
-        const resultData: Result = {
+        const requestData = {
+          data,
           queryType,
-          molecules,
-          detections: response.data.detections,
-          resultID: response.data.resultID,
-          time: (t1 - t0) / 1000,
+          dereplicationOptions,
+          elucidationOptions,
+          detectionOptions,
+          detections: resultData?.detections,
+          resultRecord: {
+            id: retrievalOptions.resultID,
+            name: retrievalOptions.resultName,
+          } as ResultRecord,
         };
-        dispatch({
-          type: SET_RESULT_DATA,
-          payload: { resultData },
-        });
-      }
+        console.log(requestData);
 
-      if (queryType === queryTypes.detection) {
-        setShowQueryPanel(true);
+        let response: AxiosResponse | undefined;
+        const t0 = performance.now();
+        await axios({
+          method: 'POST',
+          url: 'http://localhost:8081/webcase-core/core',
+          // params: {},
+          data: requestData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cancelToken: new axios.CancelToken(
+            (cancel) => (cancelRequestRef.current = cancel),
+          ),
+        })
+          .then((res: AxiosResponse) => {
+            setRequestError(undefined);
+            setRequestWasCancelled(false);
+            response = res;
+          })
+          .catch(async (err: AxiosError) => {
+            if (axios.isCancel(err)) {
+              setIsCanceling(true);
+              if (queryType === queryTypes.elucidation) {
+                await axios.get('http://localhost:8081/webcase-core/cancel');
+              }
+              setIsCanceling(false);
+              setRequestWasCancelled(true);
+              setShowQueryPanel(true);
+            } else if (axios.isAxiosError(err)) {
+              setRequestError(err);
+            }
+          })
+          .finally(() => setIsRequesting(false));
+        const t1 = performance.now();
+        console.log('time need: ' + (t1 - t0) / 1000);
+        console.log(response);
+
+        if (response) {
+          const resultData: Result = {
+            queryType,
+            molecules: buildMolecules(response.data.resultRecord),
+            detections: response.data.detections,
+            resultID: response.data.resultRecord?.id,
+            time: (t1 - t0) / 1000,
+          };
+          dispatch({
+            type: SET_RESULT_DATA,
+            payload: { resultData },
+          });
+        }
+
+        if (queryType === queryTypes.detection) {
+          setShowQueryPanel(true);
+        }
+      } else {
+        if (retrievalOptions.action === retrievalActions.fetch) {
+          handleOnFetch();
+        } else if (retrievalOptions.action === retrievalActions.deleteAll) {
+          let response: AxiosResponse | undefined;
+          const t0 = performance.now();
+          await axios({
+            method: 'DELETE',
+            url: 'http://localhost:8081/webcase-db-service-result/deleteAll',
+            cancelToken: new axios.CancelToken(
+              (cancel) => (cancelRequestRef.current = cancel),
+            ),
+          })
+            .then((res: AxiosResponse) => {
+              setRequestError(undefined);
+              setRequestWasCancelled(false);
+              setShowQueryPanel(true);
+              response = res;
+            })
+            .catch(async (err: AxiosError) => {
+              if (axios.isCancel(err)) {
+                setRequestWasCancelled(true);
+                setShowQueryPanel(true);
+              } else if (axios.isAxiosError(err)) {
+                setRequestError(err);
+              }
+            })
+            .finally(() => setIsRequesting(false));
+          const t1 = performance.now();
+          console.log('time need: ' + (t1 - t0) / 1000);
+          console.log(response);
+
+          handleOnFetch();
+        } else if (retrievalOptions.action === retrievalActions.deletion) {
+          let response: AxiosResponse | undefined;
+          const t0 = performance.now();
+          await axios({
+            method: 'DELETE',
+            url: 'http://localhost:8081/webcase-db-service-result/deleteById',
+            params: { id: retrievalOptions.resultID },
+            cancelToken: new axios.CancelToken(
+              (cancel) => (cancelRequestRef.current = cancel),
+            ),
+          })
+            .then((res: AxiosResponse) => {
+              setRequestError(undefined);
+              setRequestWasCancelled(false);
+              setShowQueryPanel(true);
+              response = res;
+            })
+            .catch(async (err: AxiosError) => {
+              if (axios.isCancel(err)) {
+                setRequestWasCancelled(true);
+                setShowQueryPanel(true);
+              } else if (axios.isAxiosError(err)) {
+                setRequestError(err);
+              }
+            })
+            .finally(() => setIsRequesting(false));
+          const t1 = performance.now();
+          console.log('time need: ' + (t1 - t0) / 1000);
+          console.log(response);
+
+          handleOnFetch();
+        } else if (retrievalOptions.action === retrievalActions.retrieve) {
+          let response: AxiosResponse | undefined;
+          const t0 = performance.now();
+          await axios({
+            method: 'GET',
+            url: 'http://localhost:8081/webcase-db-service-result/getById',
+            params: { id: retrievalOptions.resultID },
+            cancelToken: new axios.CancelToken(
+              (cancel) => (cancelRequestRef.current = cancel),
+            ),
+          })
+            .then((res: AxiosResponse) => {
+              setRequestError(undefined);
+              setRequestWasCancelled(false);
+              setShowQueryPanel(true);
+              response = res;
+            })
+            .catch(async (err: AxiosError) => {
+              if (axios.isCancel(err)) {
+                setRequestWasCancelled(true);
+                setShowQueryPanel(true);
+              } else if (axios.isAxiosError(err)) {
+                setRequestError(err);
+              }
+            })
+            .finally(() => setIsRequesting(false));
+          const t1 = performance.now();
+          console.log('time need: ' + (t1 - t0) / 1000);
+          console.log(response);
+
+          if (response) {
+            const resultData: Result = {
+              queryType,
+              molecules: buildMolecules(response.data),
+              resultID: response.data.resultRecord?.id,
+              time: (t1 - t0) / 1000,
+            };
+            dispatch({
+              type: SET_RESULT_DATA,
+              payload: { resultData },
+            });
+          }
+          setShowQueryPanel(false);
+        }
       }
     },
-    [dispatch, nmriumData, resultData?.detections],
+    [dispatch, handleOnFetch, nmriumData, resultData?.detections],
   );
 
   const handleOnClearResult = useCallback(

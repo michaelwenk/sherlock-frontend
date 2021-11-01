@@ -3,6 +3,7 @@ import { getCorrelationIndex } from 'nmr-correlation';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
 import { NeighborsEntry } from '../types/webcase/NeighborsEntry';
+import ResultRecord from '../types/webcase/ResultRecord';
 import { DataState } from './Reducer';
 
 export interface Action {
@@ -64,4 +65,9 @@ export function editHybridizations(draft: Draft<DataState>, action: Action) {
     draft.resultData.detections.detectedHybridizations[correlationIndex] =
       editedHybridizations as number[];
   }
+}
+
+export function setResultDBEntries(draft: Draft<DataState>, action: Action) {
+  const { resultRecordList } = action.payload;
+  draft.resultDataDB = resultRecordList as ResultRecord[];
 }

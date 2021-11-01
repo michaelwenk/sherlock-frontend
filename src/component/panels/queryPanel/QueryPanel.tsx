@@ -34,13 +34,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
         initialValues={defaultQueryOptions}
         validate={validateQueryOptions}
         onSubmit={(values, { setSubmitting }) => {
-          onSubmit(
-            values.queryType,
-            values.dereplicationOptions,
-            values.elucidationOptions,
-            values.detectionOptions,
-            values.retrievalOptions,
-          );
+          onSubmit({ queryOptions: values });
           setSubmitting(false);
         }}
       >
@@ -48,14 +42,16 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
           <Form>
             <div className="form-tabs-container">
               <QueryTabs onSelectTab={handleOnSelectTab} />
-              <Button
-                onClick={() => {
-                  setFieldValue('queryType', queryType);
-                  submitForm();
-                }}
-                child={queryType}
-                disabled={isRequesting}
-              />
+              {queryType !== queryTypes.retrieval && (
+                <Button
+                  onClick={() => {
+                    setFieldValue('queryType', queryType);
+                    submitForm();
+                  }}
+                  child={queryType}
+                  disabled={isRequesting}
+                />
+              )}
             </div>
           </Form>
         )}

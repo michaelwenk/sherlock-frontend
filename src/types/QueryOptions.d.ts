@@ -1,3 +1,5 @@
+import RetrievalOptions from './webcase/RetrievalOptions';
+
 export interface QueryOptions {
   queryType: string;
   dereplicationOptions: {
@@ -28,5 +30,5 @@ export interface QueryOptions {
     hybridizationDetectionThreshold: number;
     elementCountThreshold: number;
   };
-  retrievalOptions: { resultID: string };
+  retrievalOptions: RetrievalOptions;
 }

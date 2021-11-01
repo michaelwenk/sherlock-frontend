@@ -1,6 +1,7 @@
 import { Draft, produce } from 'immer';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
+import ResultRecord from '../types/webcase/ResultRecord';
 import {
   Action,
   clearMolecules,
@@ -9,6 +10,7 @@ import {
   editSetNeighbors,
   setNmriumData,
   setResultData,
+  setResultDBEntries,
 } from './Actions';
 import {
   CLEAR_MOLECULES,
@@ -17,11 +19,13 @@ import {
   EDIT_SET_NEIGHBORS,
   SET_NMRIUM_DATA,
   SET_RESULT_DATA,
+  SET_RESULT_DB_ENTRIES,
 } from './ActionTypes';
 
 export interface DataState {
   nmriumData?: NMRiumData;
   resultData?: Result;
+  resultDataDB?: ResultRecord[];
 }
 
 export const initialState: DataState = {};
@@ -50,6 +54,8 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return editSetNeighbors(draft, action);
     case EDIT_HYBRIDIZATIONS:
       return editHybridizations(draft, action);
+    case SET_RESULT_DB_ENTRIES:
+      return setResultDBEntries(draft, action);
 
     default:
       return;

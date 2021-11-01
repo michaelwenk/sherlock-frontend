@@ -2,6 +2,8 @@ import './ResultsInfo.scss';
 
 import { useCallback } from 'react';
 import { useData } from '../../../../context/DataContext';
+import Button from '../../../elements/Button';
+import { FaFileDownload, FaTrashAlt } from 'react-icons/fa';
 
 type InputProps = {
   onClickDownload: Function;
@@ -16,13 +18,9 @@ function ResultsInfo({
 }: InputProps) {
   const { resultData } = useData();
 
-  const handleOnClickDownload = useCallback(
-    (e) => {
-      e.stopPropagation();
-      onClickDownload();
-    },
-    [onClickDownload],
-  );
+  const handleOnClickDownload = useCallback(() => {
+    onClickDownload();
+  }, [onClickDownload]);
 
   // const handleOnChangeSortByValue = useCallback(
   //   (value) => {
@@ -31,35 +29,27 @@ function ResultsInfo({
   //   [onChangeSortByValue],
   // );
 
-  const handleOnClickClear = useCallback(
-    (e) => {
-      e.stopPropagation();
-      onClickClear();
-    },
-    [onClickClear],
-  );
+  const handleOnClickClear = useCallback(() => {
+    onClickClear();
+  }, [onClickClear]);
 
   return resultData ? (
     <div className="info-container">
       <p>Result ID: {resultData.resultID}</p>
-      <button
-        type="button"
+      <Button
+        child={<FaFileDownload title="Download" />}
         onClick={handleOnClickDownload}
         disabled={
           resultData.molecules && resultData.molecules.length > 0 ? false : true
         }
-      >
-        Download
-      </button>
-      <button
-        type="button"
+      />
+      <Button
+        child={<FaTrashAlt title="Clear" />}
         onClick={handleOnClickClear}
         disabled={
           resultData.molecules && resultData.molecules.length > 0 ? false : true
         }
-      >
-        Clear
-      </button>
+      />
       {/* <SelectBox
         selectionOptions={Object.keys(sortOptions).map(
           (sortOptionKey) => sortOptions[sortOptionKey],

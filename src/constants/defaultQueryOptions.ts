@@ -1,6 +1,7 @@
 import { QueryOptions } from '../types/QueryOptions';
 import defaultTolerance from './defaultTolerance';
 import queryTypes from './queryTypes';
+import retrievalActions from './retrievalAction';
 
 const defaultQueryOptions: QueryOptions = {
   queryType: queryTypes.dereplication,
@@ -32,7 +33,7 @@ const defaultQueryOptions: QueryOptions = {
     hybridizationDetectionThreshold: 0.01,
     elementCountThreshold: 0.001,
   },
-  retrievalOptions: { resultID: '' },
+  retrievalOptions: { action: retrievalActions.fetch, resultID: '' },
 };
 
 export default defaultQueryOptions;

@@ -1,7 +1,7 @@
-import { DataSet } from './DataSet';
 import { Detections } from './Detections';
+import ResultRecord from './ResultRecord';
 
 export interface Result {
-  dataSetList: Array<DataSet>;
+  resultRecord: ResultRecord;
   detections: Detections;
 }
