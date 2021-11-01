@@ -5,11 +5,11 @@ import {
 } from 'nmr-correlation';
 import { useCallback, useMemo, useState } from 'react';
 import lodashCloneDeep from 'lodash/cloneDeep';
-import { useData } from '../../../../context/DataContext';
-import { useDispatch } from '../../../../context/DispatchContext';
-import Modal from '../../../elements/Modal';
-import EditHybridizations from './edit/EditHybridizations';
-import { EDIT_HYBRIDIZATIONS } from '../../../../context/ActionTypes';
+import { useData } from '../../../../../context/DataContext';
+import { useDispatch } from '../../../../../context/DispatchContext';
+import Modal from '../../../../elements/Modal';
+import EditHybridizations from './EditHybridizations';
+import { EDIT_HYBRIDIZATIONS } from '../../../../../context/ActionTypes';
 
 interface InputProps {
   correlation: Types.Correlation;

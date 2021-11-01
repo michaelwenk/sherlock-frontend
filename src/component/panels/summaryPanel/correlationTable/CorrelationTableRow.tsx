@@ -11,8 +11,8 @@ import { useData } from '../../../../context/DataContext';
 import { useHighlight } from '../../../highlight';
 
 import AdditionalColumnField from './AdditionalColumnField';
-import HybridizationsTableCell from './HybridizationsTableCell';
-import NeighborsTableCell from './NeighborsTableCell';
+import HybridizationsTableCell from './edit/HybridizationsTableCell';
+import NeighborsTableCell from './edit/NeighborsTableCell';
 
 interface InputProps {
   additionalColumnData: Types.Correlation[];

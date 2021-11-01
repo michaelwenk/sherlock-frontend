@@ -37,7 +37,7 @@ function EditNeighbors({
   }, [newAtomType, newProtonCount, onAdd]);
 
   const rows = useMemo(() => {
-    const protonCounts = ['-', '0', '1', '2', '3'];
+    const protonCounts = ['', '0', '1', '2', '3'];
 
     const _rows = Object.keys(neighbors)
       .map((atomType) => {
@@ -45,9 +45,9 @@ function EditNeighbors({
 
         if (protonCounts.length === 0) {
           return (
-            <tr key={`edit_hybridization_${generateID()}`}>
+            <tr key={`hybridization_${generateID()}`}>
               <td>{atomType}</td>
-              <td>{'-'}</td>
+              <td></td>
               <td>
                 <Button
                   child={<FaTrashAlt />}
@@ -59,7 +59,7 @@ function EditNeighbors({
         }
 
         return protonCounts.map((protonCount) => (
-          <tr key={`edit_hybridization_${generateID()}`}>
+          <tr key={`hybridization_${generateID()}`}>
             <td>{atomType}</td>
             <td>{protonCount}</td>
             <td>
@@ -78,9 +78,7 @@ function EditNeighbors({
         <td>
           <SelectBox
             key={`selectBox_atomType_new`}
-            defaultValue={
-              possibleNeighbors.length > 0 ? possibleNeighbors[0] : ''
-            }
+            defaultValue={newAtomType}
             onChange={(value: string) => setNewAtomType(value)}
             values={possibleNeighbors}
           />
@@ -88,9 +86,9 @@ function EditNeighbors({
         <td>
           <SelectBox
             key={`selectBox_protonCount_new`}
-            defaultValue={'-'}
+            defaultValue={newProtonCount}
             onChange={(value: string) =>
-              setNewProtonCount(value === '-' ? -1 : Number(value))
+              setNewProtonCount(value === '' ? -1 : Number(value))
             }
             values={protonCounts}
           />
@@ -102,7 +100,14 @@ function EditNeighbors({
     );
 
     return _rows;
-  }, [handleOnAdd, handleOnDelete, neighbors, possibleNeighbors]);
+  }, [
+    handleOnAdd,
+    handleOnDelete,
+    neighbors,
+    newAtomType,
+    newProtonCount,
+    possibleNeighbors,
+  ]);
 
   const table = useMemo(() => {
     return (

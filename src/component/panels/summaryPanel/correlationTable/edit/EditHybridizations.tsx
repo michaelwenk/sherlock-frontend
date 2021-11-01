@@ -12,10 +12,10 @@ interface InputProps {
   onAdd: Function;
 }
 
-const possibleHybridizations = [1, 2, 3];
+const possibleHybridizations = ['SP1', 'SP2', 'SP3'];
 
 function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
-  const [newHybridization, setNewHybridization] = useState<number>(
+  const [newHybridization, setNewHybridization] = useState<string>(
     possibleHybridizations[2],
   );
 
@@ -27,14 +27,14 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
   );
 
   const handleOnAdd = useCallback(() => {
-    onAdd(newHybridization);
+    onAdd(Number(newHybridization.split('SP')[1]));
   }, [newHybridization, onAdd]);
 
   const rows = useMemo(() => {
     const _rows = hybridizations
       .map((hybridization) => {
         return (
-          <tr key={`edit_hybridization_${generateID()}`}>
+          <tr key={`hybridization_${generateID()}`}>
             <td>{`SP${hybridization}`}</td>
             <td>
               <Button
@@ -48,14 +48,12 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
       .flat();
 
     _rows.push(
-      <tr key={`edit_hybridization_${generateID()}`}>
+      <tr key={`new_hybridization_${generateID()}`}>
         <td>
           <SelectBox
-            defaultValue={`SP${possibleHybridizations[2]}`}
-            onChange={(value: string) =>
-              setNewHybridization(Number(value.split('SP')[1]))
-            }
-            values={possibleHybridizations.map((hybrid) => `SP${hybrid}`)}
+            defaultValue={newHybridization}
+            onChange={(value: string) => setNewHybridization(value)}
+            values={possibleHybridizations}
           />
         </td>
         <td>
@@ -65,7 +63,7 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
     );
 
     return _rows;
-  }, [handleOnAdd, handleOnDelete, hybridizations]);
+  }, [handleOnAdd, handleOnDelete, hybridizations, newHybridization]);
 
   const table = useMemo(() => {
     return (

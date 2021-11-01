@@ -5,16 +5,16 @@ import {
   Types,
 } from 'nmr-correlation';
 import { useCallback, useMemo, useState } from 'react';
-import { NeighborsEntry } from '../../../../types/webcase/NeighborsEntry';
-import Modal from '../../../elements/Modal';
-import EditNeighbors from './edit/EditNeighbors';
+import { NeighborsEntry } from '../../../../../types/webcase/NeighborsEntry';
+import Modal from '../../../../elements/Modal';
+import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
-import { useData } from '../../../../context/DataContext';
-import { useDispatch } from '../../../../context/DispatchContext';
+import { useData } from '../../../../../context/DataContext';
+import { useDispatch } from '../../../../../context/DispatchContext';
 import {
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_SET_NEIGHBORS,
-} from '../../../../context/ActionTypes';
+} from '../../../../../context/ActionTypes';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -36,6 +36,9 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
           _editedNeighbors[atomType].indexOf(protonCount),
           1,
         );
+        if (_editedNeighbors[atomType].length === 0) {
+          delete _editedNeighbors[atomType];
+        }
       } else if (protonCount === -1) {
         delete _editedNeighbors[atomType];
       }
@@ -75,14 +78,16 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
       .map((atomType) => {
         const protonCounts = neighbors[atomType];
         if (Object.keys(protonCounts).length === 0) {
-          return `${atomType}*`;
+          return `${atomType}`;
         }
 
         return protonCounts
-          .map((protonCount) =>
-            protonCount === 0
-              ? atomType
-              : `${atomType}H${protonCount > 1 ? protonCount : ''}`,
+          .map(
+            (protonCount) =>
+              // protonCount === 0
+              //   ? `q${atomType}`
+              //   : `${atomType}H${protonCount > 1 ? protonCount : ''}`,
+              `${atomType}H${protonCount}`,
           )
           .flat();
       })
