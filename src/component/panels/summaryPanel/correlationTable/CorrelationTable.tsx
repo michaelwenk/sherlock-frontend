@@ -1,61 +1,11 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+import './CorrelationTable.scss';
+
 import { useMemo } from 'react';
-
 import { getLabelColor } from '../Utilities';
-
 import AdditionalColumnHeader from './AdditionalColumnHeader';
 import CorrelationTableRow from './CorrelationTableRow';
 import { Types } from 'nmr-correlation';
 import { useData } from '../../../../context/DataContext';
-
-const tableStyle = css`
-  overflow: auto;
-  height: 95%;
-  display: block;
-  table {
-    border-spacing: 0;
-    border: 1px solid #dedede;
-    width: 100%;
-    font-size: 12px;
-    height: 100%;
-  }
-  tr {
-    :last-child {
-      td {
-        border-bottom: 0;
-      }
-    }
-  }
-  thead tr {
-    background-color: white !important;
-  }
-  th {
-    position: sticky;
-    background-color: white;
-    top: 0;
-  }
-
-  th,
-  td {
-    white-space: nowrap;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0.4rem;
-    border-bottom: 1px solid #dedede;
-    border-right: 1px solid #dedede;
-
-    :last-child {
-      border-right: 0;
-    }
-    button {
-      background-color: transparent;
-      border: none;
-    }
-  }
-`;
 
 interface InputPros {
   additionalColumnData: Types.Correlation[];
@@ -116,7 +66,7 @@ function CorrelationTable({
   );
 
   return (
-    <div css={tableStyle}>
+    <div className="correlation-table">
       <table>
         <thead>
           <tr>
