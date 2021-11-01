@@ -35,7 +35,6 @@ function ResultsInfo({
 
   return resultData ? (
     <div className="info-container">
-      <p>Result ID: {resultData.resultID}</p>
       <Button
         child={<FaFileDownload title="Download" />}
         onClick={handleOnClickDownload}

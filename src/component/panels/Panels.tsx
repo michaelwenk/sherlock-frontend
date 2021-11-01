@@ -95,42 +95,45 @@ function Panels() {
       cancelRequestRef.current('User has cancelled the request!!!');
   }, []);
 
-  const handleOnFetch = useCallback(async () => {
-    let response: AxiosResponse | undefined;
-    const t0 = performance.now();
-    await axios({
-      method: 'GET',
-      url: 'http://localhost:8081/webcase-db-service-result/getAll',
-      cancelToken: new axios.CancelToken(
-        (cancel) => (cancelRequestRef.current = cancel),
-      ),
-    })
-      .then((res: AxiosResponse) => {
-        setRequestError(undefined);
-        setRequestWasCancelled(false);
-        setShowQueryPanel(true);
-        response = res;
+  const handleOnFetch = useCallback(
+    async (_showQueryPanel: boolean) => {
+      let response: AxiosResponse | undefined;
+      const t0 = performance.now();
+      await axios({
+        method: 'GET',
+        url: 'http://localhost:8081/webcase-db-service-result/getAll',
+        cancelToken: new axios.CancelToken(
+          (cancel) => (cancelRequestRef.current = cancel),
+        ),
       })
-      .catch(async (err: AxiosError) => {
-        if (axios.isCancel(err)) {
-          setRequestWasCancelled(true);
-          setShowQueryPanel(true);
-        } else if (axios.isAxiosError(err)) {
-          setRequestError(err);
-        }
-      })
-      .finally(() => setIsRequesting(false));
-    const t1 = performance.now();
-    console.log('time need: ' + (t1 - t0) / 1000);
-    console.log(response);
+        .then((res: AxiosResponse) => {
+          setRequestError(undefined);
+          setRequestWasCancelled(false);
+          setShowQueryPanel(_showQueryPanel);
+          response = res;
+        })
+        .catch(async (err: AxiosError) => {
+          if (axios.isCancel(err)) {
+            setRequestWasCancelled(true);
+            setShowQueryPanel(_showQueryPanel);
+          } else if (axios.isAxiosError(err)) {
+            setRequestError(err);
+          }
+        })
+        .finally(() => setIsRequesting(false));
+      const t1 = performance.now();
+      console.log('time need: ' + (t1 - t0) / 1000);
+      console.log(response);
 
-    if (response && response.data) {
-      dispatch({
-        type: SET_RESULT_DB_ENTRIES,
-        payload: { resultRecordList: response.data },
-      });
-    }
-  }, [dispatch]);
+      if (response && response.data) {
+        dispatch({
+          type: SET_RESULT_DB_ENTRIES,
+          payload: { resultRecordList: response.data },
+        });
+      }
+    },
+    [dispatch],
+  );
 
   const buildMolecules = (resultRecord: ResultRecord | undefined) => {
     return resultRecord
@@ -270,6 +273,8 @@ function Panels() {
             type: SET_RESULT_DATA,
             payload: { resultData },
           });
+
+          handleOnFetch(false);
         }
 
         if (queryType === queryTypes.detection) {
@@ -277,7 +282,7 @@ function Panels() {
         }
       } else {
         if (retrievalOptions.action === retrievalActions.fetch) {
-          handleOnFetch();
+          handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.deleteAll) {
           let response: AxiosResponse | undefined;
           const t0 = performance.now();
@@ -307,7 +312,7 @@ function Panels() {
           console.log('time need: ' + (t1 - t0) / 1000);
           console.log(response);
 
-          handleOnFetch();
+          handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.deletion) {
           let response: AxiosResponse | undefined;
           const t0 = performance.now();
@@ -338,7 +343,7 @@ function Panels() {
           console.log('time need: ' + (t1 - t0) / 1000);
           console.log(response);
 
-          handleOnFetch();
+          handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.retrieve) {
           let response: AxiosResponse | undefined;
           const t0 = performance.now();
