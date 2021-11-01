@@ -6,7 +6,7 @@ import { Spectra } from 'nmrium';
 import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
 import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
 import { Molecule } from 'openchemlib';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import { Result } from '../../types/Result';
 import Spinner from '../../component/elements/Spinner';
@@ -134,6 +134,10 @@ function Panels() {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    handleOnFetch(true);
+  }, [handleOnFetch]);
 
   const buildMolecules = (resultRecord: ResultRecord | undefined) => {
     return resultRecord
