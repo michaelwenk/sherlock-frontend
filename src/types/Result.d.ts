@@ -1,10 +1,9 @@
-import { ResultMolecule } from './ResultMolecule';
 import { Detections } from './webcase/Detections';
+import ResultRecord from './webcase/ResultRecord';
 
 export interface Result {
   queryType: string;
   time: number;
-  molecules?: Array<ResultMolecule>;
+  resultRecord: ResultRecord;
   detections?: Detections;
-  resultID?: string;
 }

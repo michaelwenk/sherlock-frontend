@@ -9,6 +9,7 @@ import buildSDFileContent from '../../../utils/buildSDFileContent';
 import { Result } from '../../../types/Result';
 import { ResultMolecule } from '../../../types/ResultMolecule';
 import { useData } from '../../../context/DataContext';
+import buildMolecules from '../../../utils/buildMolecules';
 
 type InputProps = {
   result?: Result;
@@ -23,18 +24,26 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
 
   const { resultData } = useData();
 
+  const molecules = useMemo(() => {
+    return resultData && resultData.resultRecord
+      ? buildMolecules(resultData.resultRecord)
+      : [];
+  }, [resultData]);
+
   const handleOnClickDownload = useCallback(() => {
-    if (resultData && resultData.molecules) {
-      const fileData = buildSDFileContent(resultData.molecules);
+    if (molecules) {
+      const fileData = buildSDFileContent(molecules);
       const blob = new Blob([fileData], { type: 'text/plain' });
       saveAs(
         blob,
         `${
-          resultData && resultData.resultID ? resultData.resultID : 'results'
+          resultData && resultData.resultRecord?.id
+            ? resultData.resultRecord.id
+            : 'results'
         }.sdf`,
       );
     }
-  }, [resultData]);
+  }, [molecules, resultData]);
 
   const handleOnChangeSortByValue = useCallback(() => {
     // setSelectedSortByValue(value);
@@ -42,7 +51,7 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
 
   const sortedMolecules: Array<ResultMolecule> = useMemo(() => {
     // const _sortedMolecules =
-    //   result && result.molecules ? result.molecules.slice() : [];
+    //    molecules ? molecules.slice() : [];
     // _sortedMolecules.sort((molecule1, molecule2) => {
     //   if (selectedSortByValue === sortOptions.rmsd) {
     //     if (molecule1.dataSet.meta.rmsd < molecule2.dataSet.meta.rmsd) {
@@ -66,8 +75,8 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
 
     // return _sortedMolecules;
 
-    return resultData && resultData.molecules ? resultData.molecules : [];
-  }, [resultData]);
+    return molecules;
+  }, [molecules]);
 
   return resultData ? (
     <div

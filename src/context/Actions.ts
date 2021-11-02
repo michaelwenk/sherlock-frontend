@@ -20,8 +20,8 @@ export function setResultData(draft: Draft<DataState>, action: Action) {
 }
 
 export function clearMolecules(draft: Draft<DataState>) {
-  if (draft.resultData?.molecules) {
-    draft.resultData.molecules = [];
+  if (draft.resultData?.resultRecord) {
+    draft.resultData.resultRecord.dataSetList = [];
   }
 }
 

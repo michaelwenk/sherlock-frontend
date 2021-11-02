@@ -39,16 +39,23 @@ function ResultsInfo({
         child={<FaFileDownload title="Download" />}
         onClick={handleOnClickDownload}
         disabled={
-          resultData.molecules && resultData.molecules.length > 0 ? false : true
+          resultData.resultRecord?.dataSetList &&
+          resultData.resultRecord.dataSetList.length > 0
+            ? false
+            : true
         }
       />
       <Button
         child={<FaTrashAlt title="Clear" />}
         onClick={handleOnClickClear}
         disabled={
-          resultData.molecules && resultData.molecules.length > 0 ? false : true
+          resultData.resultRecord?.dataSetList &&
+          resultData.resultRecord.dataSetList.length > 0
+            ? false
+            : true
         }
       />
+      <p>Task name: {resultData.resultRecord?.name}</p>
       {/* <SelectBox
         selectionOptions={Object.keys(sortOptions).map(
           (sortOptionKey) => sortOptions[sortOptionKey],

@@ -5,7 +5,6 @@ import { Types } from 'nmr-correlation';
 import { Spectra } from 'nmrium';
 import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
 import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
-import { Molecule } from 'openchemlib';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import { Result } from '../../types/Result';
@@ -139,42 +138,6 @@ function Panels() {
     handleOnFetch(true);
   }, [handleOnFetch]);
 
-  const buildMolecules = (resultRecord: ResultRecord | undefined) => {
-    return resultRecord
-      ? resultRecord.dataSetList.map((dataSet) => {
-          const molecule: Molecule = Molecule.fromSmiles(dataSet.meta.smiles);
-          return {
-            molfile: molecule.toMolfileV3(),
-            dataSet: {
-              ...dataSet,
-              meta: {
-                ...dataSet.meta,
-                querySpectrumSignalCount: Number(
-                  dataSet.meta.querySpectrumSignalCount,
-                ),
-                querySpectrumSignalCountWithEquivalences: Number(
-                  dataSet.meta.querySpectrumSignalCountWithEquivalences,
-                ),
-                isCompleteSpectralMatch:
-                  String(dataSet.meta.isCompleteSpectralMatch) === 'true',
-                isCompleteSpectralMatchWithEquivalences:
-                  String(
-                    dataSet.meta.isCompleteSpectralMatchWithEquivalences,
-                  ) === 'true',
-                rmsd: Number(dataSet.meta.rmsd),
-                averageDeviation: Number(dataSet.meta.averageDeviation),
-                tanimoto: Number(dataSet.meta.tanimoto),
-                setAssignmentsCount: Number(dataSet.meta.setAssignmentsCount),
-                setAssignmentsCountWithEquivalences: Number(
-                  dataSet.meta.setAssignmentsCountWithEquivalences,
-                ),
-              },
-            },
-          };
-        })
-      : [];
-  };
-
   const handleOnSubmit = useCallback(
     async ({ queryOptions }: onSubmitProps) => {
       setIsRequesting(true);
@@ -267,9 +230,8 @@ function Panels() {
         if (response) {
           const resultData: Result = {
             queryType,
-            molecules: buildMolecules(response.data.resultRecord),
             detections: response.data.detections,
-            resultID: response.data.resultRecord?.id,
+            resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };
           dispatch({
@@ -380,8 +342,7 @@ function Panels() {
           if (response) {
             const resultData: Result = {
               queryType,
-              molecules: buildMolecules(response.data),
-              resultID: response.data.resultRecord?.id,
+              resultRecord: response.data,
               time: (t1 - t0) / 1000,
             };
             dispatch({
