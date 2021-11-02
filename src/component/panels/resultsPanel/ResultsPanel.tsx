@@ -32,13 +32,15 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
 
   const handleOnClickDownload = useCallback(() => {
     if (molecules) {
-      const fileData = buildSDFileContent(molecules);
+      const fileData = buildSDFileContent({ resultMolecules: molecules });
       const blob = new Blob([fileData], { type: 'text/plain' });
       saveAs(
         blob,
         `${
-          resultData && resultData.resultRecord?.id
-            ? resultData.resultRecord.id
+          resultData
+            ? resultData.resultRecord?.name
+              ? resultData.resultRecord.name
+              : 'results'
             : 'results'
         }.sdf`,
       );

@@ -1,8 +1,11 @@
 import { ResultMolecule } from '../types/ResultMolecule';
+interface InputProps {
+  resultMolecules: ResultMolecule[];
+}
 
-const buildSDFileContent = (resultData: Array<ResultMolecule>) => {
+const buildSDFileContent = ({ resultMolecules }: InputProps) => {
   let content = '';
-  resultData.forEach((res, i) => {
+  resultMolecules.forEach((res, i) => {
     content += res.molfile;
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
