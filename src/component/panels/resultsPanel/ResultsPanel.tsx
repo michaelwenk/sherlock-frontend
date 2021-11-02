@@ -53,7 +53,6 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
       <ResultsInfo
         onClickDownload={handleOnClickDownload}
         onClickClear={onClickClear}
-        onChangeSortByValue={() => {}}
       />
       <ResultsView molecules={molecules} limit={50} />
     </div>
