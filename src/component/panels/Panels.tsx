@@ -101,7 +101,7 @@ function Panels() {
       const t0 = performance.now();
       await axios({
         method: 'GET',
-        url: 'http://localhost:8081/webcase-db-service-result/getAll',
+        url: 'http://localhost:8081/webcase-db-service-result/getAllMeta',
         cancelToken: new axios.CancelToken(
           (cancel) => (cancelRequestRef.current = cancel),
         ),
