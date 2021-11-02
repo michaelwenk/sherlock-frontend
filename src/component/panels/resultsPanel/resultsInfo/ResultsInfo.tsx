@@ -56,6 +56,7 @@ function ResultsInfo({
         }
       />
       <p>Task name: {resultData.resultRecord?.name}</p>
+      <p>Result count: {resultData.resultRecord?.dataSetListSize}</p>
       {/* <SelectBox
         selectionOptions={Object.keys(sortOptions).map(
           (sortOptionKey) => sortOptions[sortOptionKey],

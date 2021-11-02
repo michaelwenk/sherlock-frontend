@@ -239,11 +239,11 @@ function Panels() {
             payload: { resultData },
           });
 
-          handleOnFetch(false);
-        }
-
-        if (queryType === queryTypes.detection) {
-          setShowQueryPanel(true);
+          if (queryType === queryTypes.detection) {
+            handleOnFetch(true);
+          } else {
+            handleOnFetch(false);
+          }
         }
       } else {
         if (retrievalOptions.action === retrievalActions.fetch) {

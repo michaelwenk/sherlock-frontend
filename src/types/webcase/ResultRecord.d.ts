@@ -5,4 +5,6 @@ export default interface ResultRecord {
   name: string;
   date: string;
   dataSetList: DataSet[];
+  dataSetListSize: number;
+  previewDataSet: DataSet;
 }

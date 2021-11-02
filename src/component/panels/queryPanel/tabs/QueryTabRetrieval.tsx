@@ -1,3 +1,5 @@
+import './QueryTabRetrieval.scss';
+
 import { useFormikContext } from 'formik';
 import { useMemo } from 'react';
 import { FaEye, FaSyncAlt, FaTrashAlt } from 'react-icons/fa';
@@ -6,6 +8,9 @@ import retrievalActions from '../../../../constants/retrievalAction';
 import { useData } from '../../../../context/DataContext';
 import { QueryOptions } from '../../../../types/QueryOptions';
 import Button from '../../../elements/Button';
+import OCLnmr from 'react-ocl-nmr';
+import OCL from 'openchemlib/full';
+import { Molecule } from 'openchemlib';
 
 function QueryTabRetrieval() {
   const { resultDataDB } = useData();
@@ -15,11 +20,30 @@ function QueryTabRetrieval() {
     return resultDataDB
       ? resultDataDB.map((resultRecord) => {
           const date = new Date(resultRecord.date);
+          const molecule = Molecule.fromSmiles(
+            resultRecord.previewDataSet.meta.smiles,
+          );
+
           return (
             <tr key={`resultDataDB_${resultRecord.id}`}>
               <td>{resultRecord.name}</td>
               <td>{`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}</td>
-              {/* <td>{resultRecord.id}</td> */}
+              <td>{resultRecord.dataSetListSize}</td>
+              <td>
+                <OCLnmr
+                  OCL={OCL}
+                  id={`molSVG${resultRecord.id}`}
+                  width={100}
+                  height={100}
+                  molfile={molecule.toMolfileV3()}
+                  setSelectedAtom={() => {}}
+                  atomHighlightColor={'red'}
+                  atomHighlightOpacity={0.35}
+                  highlights={[]}
+                  setHoverAtom={() => {}}
+                  setMolfile={() => {}}
+                />
+              </td>
               <td>
                 <Button
                   child={<FaEye title="Load from Database" />}
@@ -56,18 +80,6 @@ function QueryTabRetrieval() {
 
   return (
     <div className="query-tab-retrieval-container">
-      {/* <Input
-        type="text"
-        onChange={(value: string) => {
-          setFieldValue('queryType', queryTypes.retrieval);
-          setFieldValue('retrievalOptions.action', retrievalActions.retrieve);
-          setFieldValue('retrievalOptions.resultID', value);
-          setFieldValue('retrievalOptions.resultName', 'TEST_NAME');
-        }}
-        defaultValue=""
-        label="Result ID"
-        className="retrieval-input"
-      /> */}
       <Button
         child={<FaSyncAlt title="Fetch database entries" />}
         onClick={() => {
@@ -89,7 +101,8 @@ function QueryTabRetrieval() {
           <tr>
             <th>Name</th>
             <th>Date</th>
-            {/* <th>ID</th> */}
+            <th>Count</th>
+            <th>Preview</th>
             <th></th>
             <th></th>
           </tr>
