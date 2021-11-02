@@ -28,22 +28,13 @@ function ResultsInfo({ onClickDownload, onClickClear }: InputProps) {
         <Row>
           <Col className="key">Name:</Col>
           <Col className="value">{resultData.resultRecord?.name}</Col>
+          <Col></Col>
         </Row>
         <Row>
           <Col className="key">Results:</Col>
           <Col className="value">
             {resultData.resultRecord?.dataSetListSize}
           </Col>
-        </Row>
-        <Row>
-          <Col className="key">Time:</Col>
-          <Col className="value">
-            {(resultData.time / 60).toFixed(0)}
-            {'min, '}
-            {(resultData.time % 60).toFixed(0)}s
-          </Col>
-        </Row>
-        <Row>
           <Col className="action-buttons">
             <Button
               child={<FaFileDownload title="Download" />}
@@ -66,6 +57,15 @@ function ResultsInfo({ onClickDownload, onClickClear }: InputProps) {
               }
             />
           </Col>
+        </Row>
+        <Row>
+          <Col className="key">Time:</Col>
+          <Col className="value">
+            {(resultData.time / 60).toFixed(0)}
+            {'min, '}
+            {(resultData.time % 60).toFixed(0)}s
+          </Col>
+          <Col></Col>
         </Row>
       </Container>
     </div>
