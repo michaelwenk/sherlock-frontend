@@ -96,19 +96,21 @@ function QueryTabRetrieval() {
           submitForm();
         }}
       />
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Count</th>
-            <th>Preview</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
+      {rows.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Count</th>
+              <th>Preview</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      )}
     </div>
   );
 }
