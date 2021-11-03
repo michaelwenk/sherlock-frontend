@@ -28,7 +28,8 @@ export interface QueryOptions {
   };
   detectionOptions: {
     hybridizationDetectionThreshold: number;
-    elementCountThreshold: number;
+    lowerElementCountThreshold: number;
+    upperElementCountThreshold: number;
   };
   retrievalOptions: RetrievalOptions;
 }

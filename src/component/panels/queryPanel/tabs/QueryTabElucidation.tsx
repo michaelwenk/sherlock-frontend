@@ -32,14 +32,32 @@ function QueryTabElucidation() {
           />
           <Input
             type="number"
-            onChange={(value) => {
+            onChange={(value: number) => {
               setFieldValue(
-                'detectionOptions.elementCountThreshold',
+                'detectionOptions.lowerElementCountThreshold',
                 value / 100,
               );
             }}
-            defaultValue={values.detectionOptions.elementCountThreshold * 100}
-            label="Minimal occurrence of element in neighborhood (%) "
+            defaultValue={
+              values.detectionOptions.lowerElementCountThreshold * 100
+            }
+            label="Lower limit for non-neighbors detection (%) "
+            min={0}
+            max={100}
+            step={0.01}
+          />
+          <Input
+            type="number"
+            onChange={(value: number) => {
+              setFieldValue(
+                'detectionOptions.upperElementCountThreshold',
+                value / 100,
+              );
+            }}
+            defaultValue={
+              values.detectionOptions.upperElementCountThreshold * 100
+            }
+            label="Lower limit for set neighbors detection (%) "
             min={0}
             max={100}
             step={0.01}
