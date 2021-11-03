@@ -1,7 +1,7 @@
 import './QueryTabRetrieval.scss';
 
 import { useFormikContext } from 'formik';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { FaEye, FaSyncAlt, FaTrashAlt } from 'react-icons/fa';
 import queryTypes from '../../../../constants/queryTypes';
 import retrievalActions from '../../../../constants/retrievalAction';
@@ -11,10 +11,12 @@ import Button from '../../../elements/Button';
 import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import { Molecule } from 'openchemlib';
+import CustomModal from '../../../elements/Modal';
 
 function QueryTabRetrieval() {
   const { resultDataDB } = useData();
   const { setFieldValue, submitForm } = useFormikContext<QueryOptions>();
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState<boolean>(false);
 
   const rows = useMemo(() => {
     return resultDataDB
@@ -80,22 +82,46 @@ function QueryTabRetrieval() {
 
   return (
     <div className="query-tab-retrieval-container">
-      <Button
-        child={<FaSyncAlt title="Fetch database entries" />}
-        onClick={() => {
-          setFieldValue('queryType', queryTypes.retrieval);
-          setFieldValue('retrievalOptions.action', retrievalActions.fetch);
-          submitForm();
-        }}
-      />
-      <Button
-        child={<FaTrashAlt title="Delete all database entries" />}
-        onClick={() => {
-          setFieldValue('queryType', queryTypes.retrieval);
-          setFieldValue('retrievalOptions.action', retrievalActions.deleteAll);
-          submitForm();
-        }}
-      />
+      <div className="button-container">
+        <Button
+          child={<FaSyncAlt title="Fetch database entries" />}
+          onClick={() => {
+            setFieldValue('queryType', queryTypes.retrieval);
+            setFieldValue('retrievalOptions.action', retrievalActions.fetch);
+            submitForm();
+          }}
+        />
+        <Button
+          child={<FaTrashAlt title="Delete all database entries" />}
+          onClick={() => {
+            setShowDeleteAllModal(true);
+          }}
+        />
+      </div>
+      {showDeleteAllModal && (
+        <CustomModal
+          show={showDeleteAllModal}
+          title="Delete all result database entries?"
+          onClose={() => {
+            setShowDeleteAllModal(false);
+          }}
+          footer={
+            <Button
+              child="Confirm"
+              onClick={() => {
+                setFieldValue('queryType', queryTypes.retrieval);
+                setFieldValue(
+                  'retrievalOptions.action',
+                  retrievalActions.deleteAll,
+                );
+                submitForm();
+                setShowDeleteAllModal(false);
+              }}
+              className="footer-button"
+            />
+          }
+        />
+      )}
       {rows.length > 0 && (
         <table>
           <thead>

@@ -162,7 +162,7 @@ function CorrelationTableRow({
       </td>
       <td title={t} {...otherTableDataProps}>
         {correlation.pseudo === false ? (
-          <text style={equivalenceCellStyle}>{correlation.equivalence}</text>
+          <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
         ) : (
           ''
         )}

@@ -6,7 +6,6 @@ import {
 } from 'nmr-correlation';
 import { useCallback, useMemo, useState } from 'react';
 import { NeighborsEntry } from '../../../../../types/webcase/NeighborsEntry';
-import Modal from '../../../../elements/Modal';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
@@ -15,6 +14,7 @@ import {
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_SET_NEIGHBORS,
 } from '../../../../../context/ActionTypes';
+import CustomModal from '../../../../elements/Modal';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -114,25 +114,28 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
       }}
     >
       {label}
-      <Modal
-        show={show}
-        title={`Edit Forbidden Neighbors: ${correlation.atomType}${
-          getCorrelationIndex(nmriumData?.correlations.values, correlation) + 1
-        } (${
-          getCorrelationDelta(correlation)
-            ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
-            : ''
-        })`}
-        children={
-          <EditNeighbors
-            neighbors={neighbors}
-            possibleNeighbors={possibleNeighbors}
-            onDelete={handleOnDelete}
-            onAdd={handleOnAdd}
-          />
-        }
-        onClose={handleOnClose}
-      />
+      {show && (
+        <CustomModal
+          show={show}
+          title={`Edit Forbidden Neighbors: ${correlation.atomType}${
+            getCorrelationIndex(nmriumData?.correlations.values, correlation) +
+            1
+          } (${
+            getCorrelationDelta(correlation)
+              ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
+              : ''
+          })`}
+          body={
+            <EditNeighbors
+              neighbors={neighbors}
+              possibleNeighbors={possibleNeighbors}
+              onDelete={handleOnDelete}
+              onAdd={handleOnAdd}
+            />
+          }
+          onClose={handleOnClose}
+        />
+      )}
     </div>
   );
 }

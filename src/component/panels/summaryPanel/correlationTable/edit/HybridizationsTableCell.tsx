@@ -7,9 +7,9 @@ import { useCallback, useMemo, useState } from 'react';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
 import { useDispatch } from '../../../../../context/DispatchContext';
-import Modal from '../../../../elements/Modal';
 import EditHybridizations from './EditHybridizations';
 import { EDIT_HYBRIDIZATIONS } from '../../../../../context/ActionTypes';
+import CustomModal from '../../../../elements/Modal';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -73,25 +73,27 @@ function HybridizationsTableCell({ correlation, hybridizations }: InputProps) {
       }}
     >
       {label}
-
-      <Modal
-        show={show}
-        title={`Edit Hybridization: ${correlation.atomType}${
-          getCorrelationIndex(nmriumData?.correlations.values, correlation) + 1
-        } (${
-          getCorrelationDelta(correlation)
-            ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
-            : ''
-        })`}
-        children={
-          <EditHybridizations
-            hybridizations={hybridizations}
-            onDelete={handleOnDelete}
-            onAdd={handleOnAdd}
-          />
-        }
-        onClose={handleOnClose}
-      />
+      {show && (
+        <CustomModal
+          show={show}
+          title={`Edit Hybridization: ${correlation.atomType}${
+            getCorrelationIndex(nmriumData?.correlations.values, correlation) +
+            1
+          } (${
+            getCorrelationDelta(correlation)
+              ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
+              : ''
+          })`}
+          body={
+            <EditHybridizations
+              hybridizations={hybridizations}
+              onDelete={handleOnDelete}
+              onAdd={handleOnAdd}
+            />
+          }
+          onClose={handleOnClose}
+        />
+      )}
     </div>
   );
 }
