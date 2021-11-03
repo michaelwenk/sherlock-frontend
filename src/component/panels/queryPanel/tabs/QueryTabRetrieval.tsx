@@ -29,7 +29,7 @@ function QueryTabRetrieval() {
           return (
             <tr key={`resultDataDB_${resultRecord.id}`}>
               <td>{resultRecord.name}</td>
-              <td>{`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}</td>
+              <td>{`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}, ${date.getHours()}:${date.getMinutes()}`}</td>
               <td>{resultRecord.dataSetListSize}</td>
               <td>
                 <OCLnmr
@@ -46,7 +46,7 @@ function QueryTabRetrieval() {
                   setMolfile={() => {}}
                 />
               </td>
-              <td>
+              <td style={{ borderRight: 'none' }}>
                 <Button
                   child={<FaEye title="Load from Database" />}
                   onClick={() => {
@@ -130,7 +130,7 @@ function QueryTabRetrieval() {
               <th>Date</th>
               <th>Count</th>
               <th>Preview</th>
-              <th></th>
+              <th style={{ borderRight: 'none' }}></th>
               <th></th>
             </tr>
           </thead>
