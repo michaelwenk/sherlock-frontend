@@ -50,7 +50,8 @@ function SummaryPanel() {
   //   [dispatch],
   // );
 
-  return (
+  return nmriumData?.correlations.values &&
+    nmriumData?.correlations.values.length > 0 ? (
     <div className="summary-panel">
       <Overview
         mf={nmriumData ? nmriumData.correlations.options.mf : ''}
@@ -65,6 +66,19 @@ function SummaryPanel() {
         showAdditionalColumns={showAdditionalColumns}
       />
     </div>
+  ) : (
+    <p
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontStyle: 'italic',
+      }}
+    >
+      No data
+    </p>
   );
 }
 
