@@ -9,6 +9,7 @@ type InputProps = {
   max?: number;
   step?: number;
   className?: string;
+  placeholder?: string;
 };
 
 function Input({
@@ -20,10 +21,13 @@ function Input({
   max,
   step,
   className = 'Input',
+  placeholder = '',
 }: InputProps) {
   const handleOnChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
       e.stopPropagation();
+
       onChange(e.target.value);
     },
     [onChange],
@@ -37,6 +41,7 @@ function Input({
           type={type}
           onChange={handleOnChange}
           defaultValue={defaultValue}
+          placeholder={placeholder}
           min={min}
           max={max}
           step={step}
