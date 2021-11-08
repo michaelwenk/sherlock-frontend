@@ -8,12 +8,21 @@
   height: 100%;
   text-align: center;
 
-  .button-container {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    .Button {
-      border: none;
-      background-color: transparent;
+  .search-and-button-container {
+    .Input {
+      input {
+        text-align: center;
+      }
+      margin-top: 15px;
+    }
+
+    .button-container {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      .Button {
+        border: none;
+        background-color: transparent;
+      }
     }
   }
 
