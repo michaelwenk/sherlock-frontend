@@ -22,8 +22,8 @@ const defaultQueryOptions: QueryOptions = {
     hmbcP4: 4, // maximal coupling path length HMBC
     cosyP3: 3, // minimal coupling path length COSY
     cosyP4: 4, // maximal coupling path length COSY
-    useFilterLsdRing3: true,
-    useFilterLsdRing4: true,
+    useFilterLsdRing3: false,
+    useFilterLsdRing4: false,
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
@@ -32,7 +32,7 @@ const defaultQueryOptions: QueryOptions = {
   detectionOptions: {
     hybridizationDetectionThreshold: 0.01,
     lowerElementCountThreshold: 0.001,
-    upperElementCountThreshold: 0.95,
+    upperElementCountThreshold: 0.9,
   },
   retrievalOptions: { action: retrievalActions.fetch, resultID: '' },
 };
