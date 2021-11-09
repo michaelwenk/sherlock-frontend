@@ -78,16 +78,14 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
       .map((atomType) => {
         const protonCounts = neighbors[atomType];
         if (Object.keys(protonCounts).length === 0) {
-          return `${atomType}`;
+          return `${atomType}\u2217`;
         }
 
         return protonCounts
-          .map(
-            (protonCount) =>
-              // protonCount === 0
-              //   ? `q${atomType}`
-              //   : `${atomType}H${protonCount > 1 ? protonCount : ''}`,
-              `${atomType}H${protonCount}`,
+          .map((protonCount) =>
+            protonCount === 0
+              ? `${atomType}`
+              : `${atomType}H${protonCount > 1 ? protonCount : ''}`,
           )
           .flat();
       })

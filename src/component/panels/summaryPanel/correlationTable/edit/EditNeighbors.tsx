@@ -21,7 +21,7 @@ function EditNeighbors({
   onAdd,
 }: InputProps) {
   const [newAtomType, setNewAtomType] = useState<string>(
-    possibleNeighbors.length > 0 ? possibleNeighbors[0] : '',
+    possibleNeighbors.length > 0 ? possibleNeighbors[0] : '\u2217',
   );
   const [newProtonCount, setNewProtonCount] = useState<number>(-1);
 
@@ -37,7 +37,7 @@ function EditNeighbors({
   }, [newAtomType, newProtonCount, onAdd]);
 
   const rows = useMemo(() => {
-    const protonCounts = ['', '0', '1', '2', '3'];
+    const protonCounts = ['\u2217', '0', '1', '2', '3'];
 
     const _rows = Object.keys(neighbors)
       .map((atomType) => {
@@ -47,7 +47,7 @@ function EditNeighbors({
           return (
             <tr key={`hybridization_${generateID()}`}>
               <td>{atomType}</td>
-              <td></td>
+              <td>{'\u2217'}</td>
               <td>
                 <Button
                   child={<FaTrashAlt />}
@@ -88,7 +88,7 @@ function EditNeighbors({
             key={`selectBox_protonCount_new`}
             defaultValue={newProtonCount}
             onChange={(value: string) =>
-              setNewProtonCount(value === '' ? -1 : Number(value))
+              setNewProtonCount(value === '\u2217' ? -1 : Number(value))
             }
             values={protonCounts}
           />
