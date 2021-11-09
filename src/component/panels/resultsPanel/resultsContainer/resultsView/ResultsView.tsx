@@ -9,10 +9,11 @@ import { ResultMolecule } from '../../../../../types/ResultMolecule';
 
 type InputProps = {
   molecules: Array<ResultMolecule>;
-  limit: number;
+  pageLimit: number;
+  maxPages: number;
 };
 
-function ResultsView({ molecules, limit }: InputProps) {
+function ResultsView({ molecules, pageLimit, maxPages }: InputProps) {
   const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState(0);
 
   const handleOnSelectCardIndex = useCallback((index: number) => {
@@ -20,15 +21,33 @@ function ResultsView({ molecules, limit }: InputProps) {
   }, []);
 
   const cardDeckData = useMemo(() => {
-    const _cardDeckData: Array<Array<JSX.Element>> = [];
+    const _cardDeckData: Array<Array<ResultMolecule>> = [];
     let counter = 0;
-    let resultCards: Array<JSX.Element> = [];
+    let resultMolecules: Array<ResultMolecule> = [];
     for (let i = 0; i < molecules.length; i++) {
-      const resultCard = (
+      if (counter < pageLimit) {
+        counter++;
+        resultMolecules.push(molecules[i]);
+      } else {
+        _cardDeckData.push(resultMolecules);
+        resultMolecules = [molecules[i]];
+        counter = 1;
+      }
+    }
+    if (resultMolecules.length > 0) {
+      _cardDeckData.push(resultMolecules);
+    }
+
+    return _cardDeckData;
+  }, [pageLimit, molecules]);
+
+  const cardDecks = useMemo(
+    () =>
+      cardDeckData[selectedCardDeckIndex].map((mol, i) => (
         <ResultCard
           key={`resultCard${i}`}
-          id={i + 1}
-          molecule={molecules[i]}
+          id={selectedCardDeckIndex * pageLimit + i + 1}
+          molecule={mol}
           styles={{
             minWidth: '12rem',
             maxWidth: '12rem',
@@ -37,22 +56,9 @@ function ResultsView({ molecules, limit }: InputProps) {
             border: 'solid 1px lightgrey',
           }}
         />
-      );
-      if (counter < limit) {
-        counter++;
-        resultCards.push(resultCard);
-      } else {
-        _cardDeckData.push(resultCards);
-        resultCards = [resultCard];
-        counter = 1;
-      }
-    }
-    if (resultCards.length > 0) {
-      _cardDeckData.push(resultCards);
-    }
-
-    return _cardDeckData;
-  }, [limit, molecules]);
+      )),
+    [cardDeckData, pageLimit, selectedCardDeckIndex],
+  );
 
   useEffect(() => {
     setSelectedCardDeckIndex(0);
@@ -65,12 +71,12 @@ function ResultsView({ molecules, limit }: InputProps) {
           data={cardDeckData}
           selected={selectedCardDeckIndex}
           onSelect={handleOnSelectCardIndex}
-          maxPages={5}
+          maxPages={maxPages}
         />
       </div>
       <div className="card-deck-container">
         <Container>
-          <CardGroup>{cardDeckData[selectedCardDeckIndex]}</CardGroup>
+          <CardGroup>{cardDecks}</CardGroup>
         </Container>
       </div>
     </div>
