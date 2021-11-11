@@ -1,20 +1,24 @@
 import './ResultsView.scss';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import CardGroup from 'react-bootstrap/CardGroup';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
+import SelectBox from '../../../../elements/SelectBox';
 
 type InputProps = {
   molecules: Array<ResultMolecule>;
-  pageLimit: number;
   maxPages: number;
+  pageLimits: number[];
 };
 
-function ResultsView({ molecules, pageLimit, maxPages }: InputProps) {
-  const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState(0);
+function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
+  const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState<number>(0);
+  const [selectedPageLimit, setSelectedPageLimit] = useState<number>(
+    pageLimits[1],
+  );
 
   const handleOnSelectCardIndex = useCallback((index: number) => {
     setSelectedCardDeckIndex(index);
@@ -25,7 +29,7 @@ function ResultsView({ molecules, pageLimit, maxPages }: InputProps) {
     let counter = 0;
     let resultMolecules: Array<ResultMolecule> = [];
     for (let i = 0; i < molecules.length; i++) {
-      if (counter < pageLimit) {
+      if (counter < selectedPageLimit) {
         counter++;
         resultMolecules.push(molecules[i]);
       } else {
@@ -39,40 +43,51 @@ function ResultsView({ molecules, pageLimit, maxPages }: InputProps) {
     }
 
     return _cardDeckData;
-  }, [pageLimit, molecules]);
+  }, [molecules, selectedPageLimit]);
 
-  const cardDecks = useMemo(
-    () =>
-      cardDeckData[selectedCardDeckIndex].map((mol, i) => (
-        <ResultCard
-          key={`resultCard${i}`}
-          id={selectedCardDeckIndex * pageLimit + i + 1}
-          molecule={mol}
-          styles={{
-            minWidth: '12rem',
-            maxWidth: '12rem',
-            marginLeft: '4px',
-            marginBottom: '4px',
-            border: 'solid 1px lightgrey',
-          }}
-        />
-      )),
-    [cardDeckData, pageLimit, selectedCardDeckIndex],
-  );
+  const cardDecks = useMemo(() => {
+    let cardDeckIndex = selectedCardDeckIndex;
+    if (cardDeckIndex >= cardDeckData.length) {
+      cardDeckIndex = 0;
+      setSelectedCardDeckIndex(cardDeckIndex);
+    }
 
-  useEffect(() => {
-    setSelectedCardDeckIndex(0);
-  }, [cardDeckData]);
+    return cardDeckData.length > 0
+      ? cardDeckData[cardDeckIndex].map((mol, i) => (
+          <ResultCard
+            key={`resultCard${i}`}
+            id={cardDeckIndex * selectedPageLimit + i + 1}
+            molecule={mol}
+            styles={{
+              minWidth: '12rem',
+              maxWidth: '12rem',
+              marginLeft: '4px',
+              marginBottom: '4px',
+              border: 'solid 1px lightgrey',
+            }}
+          />
+        ))
+      : [];
+  }, [cardDeckData, selectedCardDeckIndex, selectedPageLimit]);
 
   return cardDeckData.length > 0 ? (
     <div className="results-view">
       <div className="results-view-header">
-        <CustomPagination
-          data={cardDeckData}
-          selected={selectedCardDeckIndex}
-          onSelect={handleOnSelectCardIndex}
-          maxPages={maxPages}
-        />
+        <div className="pagination">
+          <CustomPagination
+            data={cardDeckData}
+            selected={selectedCardDeckIndex}
+            onSelect={handleOnSelectCardIndex}
+            maxPages={maxPages}
+          />
+        </div>
+        <div className="page-limit-selection">
+          <SelectBox
+            values={pageLimits}
+            defaultValue={selectedPageLimit}
+            onChange={(value: number) => setSelectedPageLimit(value)}
+          />
+        </div>
       </div>
       <div className="card-deck-container">
         <Container>

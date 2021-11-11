@@ -54,7 +54,11 @@ function ResultsPanel({ onClickClear, show }: InputProps) {
         onClickDownload={handleOnClickDownload}
         onClickClear={onClickClear}
       />
-      <ResultsView molecules={molecules} maxPages={5} pageLimit={30} />
+      <ResultsView
+        molecules={molecules}
+        maxPages={5}
+        pageLimits={[10, 25, 50, 100]}
+      />
     </div>
   ) : null;
 }
