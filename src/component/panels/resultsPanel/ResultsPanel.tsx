@@ -84,7 +84,7 @@ function ResultsPanel({ show }: InputProps) {
       });
 
     setShowDeleteModal(false);
-  }, [dispatch, resultData?.resultRecord.id]);
+  }, [dispatch, resultData?.resultRecord]);
 
   return resultData ? (
     <div
