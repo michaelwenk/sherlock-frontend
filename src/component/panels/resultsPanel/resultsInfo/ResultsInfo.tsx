@@ -8,19 +8,19 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 type InputProps = {
   onClickDownload: Function;
-  onClickClear: Function;
+  onClickDelete: Function;
 };
 
-function ResultsInfo({ onClickDownload, onClickClear }: InputProps) {
+function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
   const { resultData } = useData();
 
   const handleOnClickDownload = useCallback(() => {
     onClickDownload();
   }, [onClickDownload]);
 
-  const handleOnClickClear = useCallback(() => {
-    onClickClear();
-  }, [onClickClear]);
+  const handleOnClickDelete = useCallback(() => {
+    onClickDelete(resultData?.resultRecord);
+  }, [onClickDelete, resultData?.resultRecord]);
 
   return resultData ? (
     <div className="info-container">
@@ -47,8 +47,8 @@ function ResultsInfo({ onClickDownload, onClickClear }: InputProps) {
               }
             />
             <Button
-              child={<FaTrashAlt title="Clear view" />}
-              onClick={handleOnClickClear}
+              child={<FaTrashAlt title="Delete results" />}
+              onClick={handleOnClickDelete}
               disabled={
                 resultData.resultRecord?.dataSetList &&
                 resultData.resultRecord.dataSetList.length > 0
@@ -58,15 +58,17 @@ function ResultsInfo({ onClickDownload, onClickClear }: InputProps) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col className="key">Time:</Col>
-          <Col className="value">
-            {(resultData.time / 60).toFixed(0)}
-            {'min, '}
-            {(resultData.time % 60).toFixed(0)}s
-          </Col>
-          <Col></Col>
-        </Row>
+        {resultData.time && (
+          <Row>
+            <Col className="key">Time:</Col>
+            <Col className="value">
+              {(resultData.time / 60).toFixed(0)}
+              {'min, '}
+              {(resultData.time % 60).toFixed(0)}s
+            </Col>
+            <Col></Col>
+          </Row>
+        )}
       </Container>
     </div>
   ) : null;

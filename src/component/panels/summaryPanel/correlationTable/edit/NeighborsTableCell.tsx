@@ -14,7 +14,7 @@ import {
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_SET_NEIGHBORS,
 } from '../../../../../context/ActionTypes';
-import CustomModal from '../../../../elements/Modal';
+import CustomModal from '../../../../elements/modal/CustomModal';
 
 interface InputProps {
   correlation: Types.Correlation;

@@ -19,10 +19,8 @@ export function setResultData(draft: Draft<DataState>, action: Action) {
   draft.resultData = action.payload.resultData as Result;
 }
 
-export function clearMolecules(draft: Draft<DataState>) {
-  if (draft.resultData?.resultRecord) {
-    draft.resultData.resultRecord.dataSetList = [];
-  }
+export function clearResultData(draft: Draft<DataState>) {
+  delete draft.resultData;
 }
 
 export function editForbiddenNeighbors(

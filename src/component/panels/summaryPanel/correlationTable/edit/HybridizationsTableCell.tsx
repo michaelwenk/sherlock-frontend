@@ -9,7 +9,7 @@ import { useData } from '../../../../../context/DataContext';
 import { useDispatch } from '../../../../../context/DispatchContext';
 import EditHybridizations from './EditHybridizations';
 import { EDIT_HYBRIDIZATIONS } from '../../../../../context/ActionTypes';
-import CustomModal from '../../../../elements/Modal';
+import CustomModal from '../../../../elements/modal/CustomModal';
 
 interface InputProps {
   correlation: Types.Correlation;

@@ -1,6 +1,11 @@
 import './Panels.scss';
 
-import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Canceler,
+} from 'axios';
 import { Types } from 'nmr-correlation';
 import { Spectra } from 'nmrium';
 import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
@@ -18,7 +23,6 @@ import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
 import { NMRiumData } from '../../types/nmrium/NMRiumData';
 import {
-  CLEAR_MOLECULES,
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
 } from '../../context/ActionTypes';
@@ -97,7 +101,6 @@ function Panels() {
   const handleOnFetch = useCallback(
     async (_showQueryPanel: boolean) => {
       let response: AxiosResponse | undefined;
-      const t0 = performance.now();
       await axios({
         method: 'GET',
         url: 'http://localhost:8081/webcase-db-service-result/getAllMeta',
@@ -120,9 +123,6 @@ function Panels() {
           }
         })
         .finally(() => setIsRequesting(false));
-      const t1 = performance.now();
-      console.log('time need: ' + (t1 - t0) / 1000);
-      console.log(response);
 
       if (response && response.data) {
         dispatch({
@@ -138,6 +138,39 @@ function Panels() {
     handleOnFetch(true);
   }, [handleOnFetch]);
 
+  const request = useCallback(
+    async (
+      config: AxiosRequestConfig,
+      queryType: string,
+    ): Promise<AxiosResponse | undefined> => {
+      let response: AxiosResponse | undefined;
+      await axios(config)
+        .then((res: AxiosResponse) => {
+          setRequestError(undefined);
+          setRequestWasCancelled(false);
+          setShowQueryPanel(true);
+          response = res;
+        })
+        .catch(async (err: AxiosError) => {
+          if (axios.isCancel(err)) {
+            setIsCanceling(true);
+            if (queryType === queryTypes.elucidation) {
+              await axios.get('http://localhost:8081/webcase-core/cancel');
+            }
+            setIsCanceling(false);
+            setRequestWasCancelled(true);
+            setShowQueryPanel(true);
+          } else if (axios.isAxiosError(err)) {
+            setRequestError(err);
+          }
+        })
+        .finally(() => setIsRequesting(false));
+
+      return response;
+    },
+    [],
+  );
+
   const handleOnSubmit = useCallback(
     async ({ queryOptions }: onSubmitProps) => {
       setIsRequesting(true);
@@ -152,31 +185,25 @@ function Panels() {
       } = queryOptions;
 
       if (queryType !== queryTypes.retrieval) {
-        const data =
-          queryType === queryTypes.dereplication ||
-          queryType === queryTypes.elucidation ||
-          queryType === queryTypes.detection
+        const data = {
+          spectra: nmriumData ? processNMRiumData(nmriumData) : [],
+          correlations: nmriumData
             ? {
-                spectra: nmriumData ? processNMRiumData(nmriumData) : [],
-                correlations: nmriumData
-                  ? {
-                      ...nmriumData.correlations,
-                      values: nmriumData.correlations.values.map(
-                        (value: Types.Correlation) => {
-                          return {
-                            ...value,
-                            hybridization:
-                              value.hybridization.trim().length === 0
-                                ? []
-                                : [value.hybridization],
-                          };
-                        },
-                      ),
-                    }
-                  : {},
+                ...nmriumData.correlations,
+                values: nmriumData.correlations.values.map(
+                  (value: Types.Correlation) => {
+                    return {
+                      ...value,
+                      hybridization:
+                        value.hybridization.trim().length === 0
+                          ? []
+                          : [value.hybridization],
+                    };
+                  },
+                ),
               }
-            : {};
-
+            : {},
+        };
         const requestData = {
           data,
           queryType,
@@ -191,9 +218,8 @@ function Panels() {
         };
         console.log(requestData);
 
-        let response: AxiosResponse | undefined;
         const t0 = performance.now();
-        await axios({
+        const requestConfig: AxiosRequestConfig = {
           method: 'POST',
           url: 'http://localhost:8081/webcase-core/core',
           data: requestData,
@@ -203,31 +229,11 @@ function Panels() {
           cancelToken: new axios.CancelToken(
             (cancel) => (cancelRequestRef.current = cancel),
           ),
-        })
-          .then((res: AxiosResponse) => {
-            setRequestError(undefined);
-            setRequestWasCancelled(false);
-            response = res;
-          })
-          .catch(async (err: AxiosError) => {
-            if (axios.isCancel(err)) {
-              setIsCanceling(true);
-              if (queryType === queryTypes.elucidation) {
-                await axios.get('http://localhost:8081/webcase-core/cancel');
-              }
-              setIsCanceling(false);
-              setRequestWasCancelled(true);
-              setShowQueryPanel(true);
-            } else if (axios.isAxiosError(err)) {
-              setRequestError(err);
-            }
-          })
-          .finally(() => setIsRequesting(false));
-        const t1 = performance.now();
-        console.log('time need: ' + (t1 - t0) / 1000);
-        console.log(response);
-
+        };
+        const response = await request(requestConfig, queryType);
         if (response) {
+          const t1 = performance.now();
+          console.log(response);
           const resultData: Result = {
             queryType,
             detections: response.data.detections,
@@ -249,101 +255,43 @@ function Panels() {
         if (retrievalOptions.action === retrievalActions.fetch) {
           handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.deleteAll) {
-          let response: AxiosResponse | undefined;
-          const t0 = performance.now();
-          await axios({
+          const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
             url: 'http://localhost:8081/webcase-db-service-result/deleteAll',
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
-          })
-            .then((res: AxiosResponse) => {
-              setRequestError(undefined);
-              setRequestWasCancelled(false);
-              setShowQueryPanel(true);
-              response = res;
-            })
-            .catch(async (err: AxiosError) => {
-              if (axios.isCancel(err)) {
-                setRequestWasCancelled(true);
-                setShowQueryPanel(true);
-              } else if (axios.isAxiosError(err)) {
-                setRequestError(err);
-              }
-            })
-            .finally(() => setIsRequesting(false));
-          const t1 = performance.now();
-          console.log('time need: ' + (t1 - t0) / 1000);
-          console.log(response);
+          };
+          await request(requestConfig, queryType).then();
 
           handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.deletion) {
-          let response: AxiosResponse | undefined;
-          const t0 = performance.now();
-          await axios({
+          const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
             url: 'http://localhost:8081/webcase-db-service-result/deleteById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
-          })
-            .then((res: AxiosResponse) => {
-              setRequestError(undefined);
-              setRequestWasCancelled(false);
-              setShowQueryPanel(true);
-              response = res;
-            })
-            .catch(async (err: AxiosError) => {
-              if (axios.isCancel(err)) {
-                setRequestWasCancelled(true);
-                setShowQueryPanel(true);
-              } else if (axios.isAxiosError(err)) {
-                setRequestError(err);
-              }
-            })
-            .finally(() => setIsRequesting(false));
-          const t1 = performance.now();
-          console.log('time need: ' + (t1 - t0) / 1000);
-          console.log(response);
+          };
+          await request(requestConfig, queryType).then();
 
           handleOnFetch(true);
         } else if (retrievalOptions.action === retrievalActions.retrieve) {
-          let response: AxiosResponse | undefined;
-          const t0 = performance.now();
-          await axios({
+          const requestConfig: AxiosRequestConfig = {
             method: 'GET',
             url: 'http://localhost:8081/webcase-db-service-result/getById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
-          })
-            .then((res: AxiosResponse) => {
-              setRequestError(undefined);
-              setRequestWasCancelled(false);
-              setShowQueryPanel(true);
-              response = res;
-            })
-            .catch(async (err: AxiosError) => {
-              if (axios.isCancel(err)) {
-                setRequestWasCancelled(true);
-                setShowQueryPanel(true);
-              } else if (axios.isAxiosError(err)) {
-                setRequestError(err);
-              }
-            })
-            .finally(() => setIsRequesting(false));
-          const t1 = performance.now();
-          console.log('time need: ' + (t1 - t0) / 1000);
-          console.log(response);
+          };
+          const response = await request(requestConfig, queryType);
 
           if (response) {
             const resultData: Result = {
               queryType,
               resultRecord: response.data,
-              time: (t1 - t0) / 1000,
             };
             dispatch({
               type: SET_RESULT_DATA,
@@ -354,12 +302,7 @@ function Panels() {
         }
       }
     },
-    [dispatch, handleOnFetch, nmriumData, resultData?.detections],
-  );
-
-  const handleOnClearResult = useCallback(
-    () => dispatch({ type: CLEAR_MOLECULES }),
-    [dispatch],
+    [dispatch, handleOnFetch, nmriumData, request, resultData?.detections],
   );
 
   const handleOnDragFinished = useCallback((width) => {
@@ -448,10 +391,7 @@ function Panels() {
               isRequesting={isRequesting}
               show={showQueryPanel}
             />
-            <ResultsPanel
-              onClickClear={handleOnClearResult}
-              show={showResultsPanel}
-            />
+            <ResultsPanel show={showResultsPanel} />
             {!showQueryPanel &&
               !showResultsPanel &&
               (isRequesting ? (

@@ -1,7 +1,7 @@
 import './QueryTabRetrieval.scss';
 
 import { useFormikContext } from 'formik';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FaEye, FaSyncAlt, FaTrashAlt } from 'react-icons/fa';
 import queryTypes from '../../../../constants/queryTypes';
 import retrievalActions from '../../../../constants/retrievalAction';
@@ -11,22 +11,29 @@ import Button from '../../../elements/Button';
 import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import { Molecule } from 'openchemlib';
-import CustomModal from '../../../elements/Modal';
 import Input from '../../../elements/Input';
+import ResultRecord from '../../../../types/webcase/ResultRecord';
+import ConfirmModal from '../../../elements/modal/ConfirmModal';
 
 function QueryTabRetrieval() {
   const { resultDataDB } = useData();
   const { setFieldValue, submitForm } = useFormikContext<QueryOptions>();
-  const [showDeleteAllModal, setShowDeleteAllModal] = useState<boolean>(false);
   const [searchPattern, setSearchPattern] = useState<string>('');
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [resultRecordToDelete, setResultRecordToDelete] =
+    useState<ResultRecord>();
 
-  const filteredResultDataDB = useMemo(() => {
-    return resultDataDB
-      ? resultDataDB.filter((resultRecord) =>
-          resultRecord.name?.toLowerCase().includes(searchPattern),
-        )
-      : [];
-  }, [resultDataDB, searchPattern]);
+  const filteredResultDataDB = useMemo(
+    () =>
+      resultDataDB
+        ? searchPattern.length > 0
+          ? resultDataDB.filter((resultRecord) =>
+              resultRecord.name?.toLowerCase().includes(searchPattern),
+            )
+          : resultDataDB
+        : [],
+    [resultDataDB, searchPattern],
+  );
 
   const filteredRows = useMemo(
     () =>
@@ -74,13 +81,8 @@ function QueryTabRetrieval() {
               <Button
                 child={<FaTrashAlt title="Delete in Database" />}
                 onClick={() => {
-                  setFieldValue('queryType', queryTypes.retrieval);
-                  setFieldValue(
-                    'retrievalOptions.action',
-                    retrievalActions.deletion,
-                  );
-                  setFieldValue('retrievalOptions.resultID', resultRecord.id);
-                  submitForm();
+                  setResultRecordToDelete(resultRecord);
+                  setShowDeleteModal(true);
                 }}
               />
             </td>
@@ -90,13 +92,29 @@ function QueryTabRetrieval() {
     [filteredResultDataDB, setFieldValue, submitForm],
   );
 
+  const handleOnConfirmDelete = useCallback(() => {
+    () => {
+      setFieldValue('queryType', queryTypes.retrieval);
+      if (resultRecordToDelete) {
+        setFieldValue('retrievalOptions.action', retrievalActions.deletion);
+        setFieldValue('retrievalOptions.resultID', resultRecordToDelete.id);
+      } else {
+        setFieldValue('retrievalOptions.action', retrievalActions.deleteAll);
+      }
+      submitForm().then(() => {
+        setShowDeleteModal(false);
+        setResultRecordToDelete(undefined);
+      });
+    };
+  }, [resultRecordToDelete, setFieldValue, submitForm]);
+
   return (
     <div className="query-tab-retrieval-container">
       <div className="search-and-button-container">
         <Input
           type="string"
           defaultValue=""
-          onChange={(value: string) => setSearchPattern(value)}
+          onChange={(value: string) => setSearchPattern(value.trim())}
           placeholder="Search..."
         />
         <div className="button-container">
@@ -111,38 +129,23 @@ function QueryTabRetrieval() {
           <Button
             child={<FaTrashAlt title="Delete all database entries" />}
             onClick={() => {
-              setShowDeleteAllModal(true);
+              setShowDeleteModal(true);
             }}
           />
         </div>
       </div>
-      {showDeleteAllModal && (
-        <CustomModal
-          show={showDeleteAllModal}
-          title="Delete all result database entries?"
-          onClose={() => setShowDeleteAllModal(false)}
-          footer={
-            <div>
-              <Button
-                child="Cancel"
-                onClick={() => setShowDeleteAllModal(false)}
-                className="footer-button"
-              />
-              <Button
-                child="Confirm"
-                onClick={() => {
-                  setFieldValue('queryType', queryTypes.retrieval);
-                  setFieldValue(
-                    'retrievalOptions.action',
-                    retrievalActions.deleteAll,
-                  );
-                  submitForm();
-                  setShowDeleteAllModal(false);
-                }}
-                className="footer-button"
-              />
-            </div>
+      {showDeleteModal && (
+        <ConfirmModal
+          show={showDeleteModal}
+          title={
+            resultRecordToDelete
+              ? `Delete ${
+                  resultRecordToDelete.name || resultRecordToDelete.id
+                }?`
+              : 'Delete all result database entries?'
           }
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={handleOnConfirmDelete}
         />
       )}
       {filteredRows.length > 0 && (

@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Modal.scss';
+import './CustomModal.scss';
 
 import { useCallback, useRef } from 'react';
-import Button from '../elements/Button';
+import Button from '../../elements/Button';
 import Modal from 'react-bootstrap/Modal';
 interface InputProps {
   show: boolean;

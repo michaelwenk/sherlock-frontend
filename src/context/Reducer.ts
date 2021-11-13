@@ -4,7 +4,7 @@ import { Result } from '../types/Result';
 import ResultRecord from '../types/webcase/ResultRecord';
 import {
   Action,
-  clearMolecules,
+  clearResultData,
   editForbiddenNeighbors,
   editHybridizations,
   editSetNeighbors,
@@ -13,7 +13,7 @@ import {
   setResultDBEntries,
 } from './Actions';
 import {
-  CLEAR_MOLECULES,
+  CLEAR_RESULT_DATA,
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_HYBRIDIZATIONS,
   EDIT_SET_NEIGHBORS,
@@ -46,8 +46,8 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return setNmriumData(draft, action);
     case SET_RESULT_DATA:
       return setResultData(draft, action);
-    case CLEAR_MOLECULES:
-      return clearMolecules(draft);
+    case CLEAR_RESULT_DATA:
+      return clearResultData(draft);
     case EDIT_FORBIDDEN_NEIGHBORS:
       return editForbiddenNeighbors(draft, action);
     case EDIT_SET_NEIGHBORS:
