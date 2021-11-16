@@ -29,19 +29,29 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
   const [show, setShow] = useState<boolean>(false);
 
   const handleOnDelete = useCallback(
-    (atomType: string, protonCount: number) => {
+    (atomType: string, protonCount: number, hybridization: number) => {
       const _editedNeighbors = lodashCloneDeep(neighbors);
-      if (_editedNeighbors[atomType].includes(protonCount)) {
-        _editedNeighbors[atomType].splice(
-          _editedNeighbors[atomType].indexOf(protonCount),
-          1,
-        );
-        if (_editedNeighbors[atomType].length === 0) {
+      if (
+        Object.keys(_editedNeighbors[atomType]).includes(`${hybridization}`)
+      ) {
+        if (_editedNeighbors[atomType][hybridization].includes(protonCount)) {
+          _editedNeighbors[atomType][hybridization].splice(
+            _editedNeighbors[atomType][hybridization].indexOf(protonCount),
+            1,
+          );
+          if (_editedNeighbors[atomType][hybridization].length === 0) {
+            delete _editedNeighbors[atomType][hybridization];
+          }
+        } else if (protonCount === -1) {
+          delete _editedNeighbors[atomType][hybridization];
+        }
+        if (Object.keys(_editedNeighbors[atomType]).length === 0) {
           delete _editedNeighbors[atomType];
         }
-      } else if (protonCount === -1) {
+      } else if (hybridization === -1) {
         delete _editedNeighbors[atomType];
       }
+
       dispatch({
         type:
           mode === 'forbidden' ? EDIT_FORBIDDEN_NEIGHBORS : EDIT_SET_NEIGHBORS,
@@ -52,14 +62,39 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
   );
 
   const handleOnAdd = useCallback(
-    (atomType: string, protonCount: number) => {
+    (atomType: string, protonCount: number, hybridization: number) => {
       const _editedNeighbors = lodashCloneDeep(neighbors);
       if (!Object.keys(_editedNeighbors).includes(atomType)) {
-        _editedNeighbors[atomType] = [];
+        _editedNeighbors[atomType] = {};
       }
-      if (protonCount >= 0) {
-        _editedNeighbors[atomType].push(protonCount);
+      if (protonCount >= 0 || hybridization !== -1) {
+        if (
+          !Object.keys(_editedNeighbors[atomType]).includes(`${hybridization}`)
+        ) {
+          _editedNeighbors[atomType][hybridization] = [];
+        }
+        if (
+          protonCount >= 0 &&
+          !_editedNeighbors[atomType][hybridization].includes(protonCount)
+        ) {
+          _editedNeighbors[atomType][hybridization].push(protonCount);
+        }
       }
+      if (
+        protonCount >= 0 &&
+        hybridization !== -1 &&
+        _editedNeighbors[atomType][-1] &&
+        _editedNeighbors[atomType][-1].includes(protonCount)
+      ) {
+        _editedNeighbors[atomType][-1].splice(
+          _editedNeighbors[atomType][-1].indexOf(protonCount),
+          1,
+        );
+        if (_editedNeighbors[atomType][-1].length === 0) {
+          delete _editedNeighbors[atomType][-1];
+        }
+      }
+
       dispatch({
         type:
           mode === 'forbidden' ? EDIT_FORBIDDEN_NEIGHBORS : EDIT_SET_NEIGHBORS,
@@ -76,20 +111,34 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
   const label = useMemo(() => {
     const values = Object.keys(neighbors)
       .map((atomType) => {
-        const protonCounts = neighbors[atomType];
-        if (Object.keys(protonCounts).length === 0) {
+        const hybridizations = neighbors[atomType];
+        if (Object.keys(hybridizations).length === 0) {
           return `${atomType}\u2217`;
         }
 
-        return protonCounts
-          .map((protonCount) =>
-            protonCount === 0
-              ? `${atomType}`
-              : `${atomType}H${protonCount > 1 ? protonCount : ''}`,
-          )
+        return Object.keys(hybridizations)
+          .map((hybridization) => Number(hybridization))
+          .map((hybridization) => {
+            if (
+              hybridization === -1 &&
+              hybridizations[hybridization].length === 0
+            ) {
+              return `${atomType}\u2217`;
+            }
+            return hybridizations[hybridization].map((protonCount) => {
+              return protonCount === 0
+                ? `${atomType}${
+                    hybridization === -1 ? '' : ` (SP${hybridization})`
+                  }`
+                : `${atomType}H${protonCount > 1 ? protonCount : ''}${
+                    hybridization === -1 ? '' : ` (SP${hybridization})`
+                  }`;
+            });
+          })
           .flat();
       })
       .flat();
+
     return <label>{values.join(', ')}</label>;
   }, [neighbors]);
 

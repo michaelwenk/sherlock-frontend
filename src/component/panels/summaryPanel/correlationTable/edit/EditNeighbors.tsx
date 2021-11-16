@@ -23,53 +23,81 @@ function EditNeighbors({
   const [newAtomType, setNewAtomType] = useState<string>(
     possibleNeighbors.length > 0 ? possibleNeighbors[0] : '\u2217',
   );
+  const [newHybridization, setNewHybridization] = useState<number>(-1);
   const [newProtonCount, setNewProtonCount] = useState<number>(-1);
 
   const handleOnDelete = useCallback(
-    (atomType: string, protonCount: number) => {
-      onDelete(atomType, protonCount);
+    (atomType: string, protonCount: number, hybridization: number) => {
+      onDelete(atomType, protonCount, hybridization);
     },
     [onDelete],
   );
 
   const handleOnAdd = useCallback(() => {
-    onAdd(newAtomType, newProtonCount);
-  }, [newAtomType, newProtonCount, onAdd]);
+    onAdd(newAtomType, newProtonCount, newHybridization);
+  }, [newAtomType, newHybridization, newProtonCount, onAdd]);
 
   const rows = useMemo(() => {
+    const hybridizations = ['\u2217', '1', '2', '3'];
     const protonCounts = ['\u2217', '0', '1', '2', '3'];
 
     const _rows = Object.keys(neighbors)
       .map((atomType) => {
-        const protonCounts = neighbors[atomType];
-
-        if (protonCounts.length === 0) {
+        const hybridizations = neighbors[atomType];
+        if (Object.keys(hybridizations).length === 0) {
           return (
             <tr key={`hybridization_${generateID()}`}>
               <td>{atomType}</td>
               <td>{'\u2217'}</td>
+              <td>{'\u2217'}</td>
               <td>
                 <Button
                   child={<FaTrashAlt />}
-                  onClick={() => handleOnDelete(atomType, -1)}
+                  onClick={() => handleOnDelete(atomType, -1, -1)}
                 />
               </td>
             </tr>
           );
         }
 
-        return protonCounts.map((protonCount) => (
-          <tr key={`hybridization_${generateID()}`}>
-            <td>{atomType}</td>
-            <td>{protonCount}</td>
-            <td>
-              <Button
-                child={<FaTrashAlt />}
-                onClick={() => handleOnDelete(atomType, protonCount)}
-              />
-            </td>
-          </tr>
-        ));
+        return Object.keys(hybridizations)
+          .map((hybridization) => Number(hybridization))
+          .map((hybridization) => {
+            if (
+              hybridization === -1 &&
+              hybridizations[hybridization].length === 0
+            ) {
+              return (
+                <tr key={`hybridization_${generateID()}`}>
+                  <td>{atomType}</td>
+                  <td>{'\u2217'}</td>
+                  <td>{'\u2217'}</td>
+                  <td>
+                    <Button
+                      child={<FaTrashAlt />}
+                      onClick={() => handleOnDelete(atomType, -1, -1)}
+                    />
+                  </td>
+                </tr>
+              );
+            }
+
+            return hybridizations[hybridization].map((protonCount) => (
+              <tr key={`hybridization_${generateID()}`}>
+                <td>{atomType}</td>
+                <td>{protonCount === -1 ? '\u2217' : protonCount}</td>
+                <td>{hybridization === -1 ? '\u2217' : hybridization}</td>
+                <td>
+                  <Button
+                    child={<FaTrashAlt />}
+                    onClick={() =>
+                      handleOnDelete(atomType, protonCount, hybridization)
+                    }
+                  />
+                </td>
+              </tr>
+            ));
+          });
       })
       .flat();
 
@@ -94,6 +122,17 @@ function EditNeighbors({
           />
         </td>
         <td>
+          <SelectBox
+            key={`selectBox_hybridization_new`}
+            defaultValue={newHybridization}
+            onChange={(value: string) =>
+              setNewHybridization(value === '\u2217' ? -1 : Number(value))
+            }
+            values={hybridizations}
+          />
+        </td>
+
+        <td>
           <Button child={<FaPlus />} onClick={handleOnAdd} />
         </td>
       </tr>,
@@ -105,6 +144,7 @@ function EditNeighbors({
     handleOnDelete,
     neighbors,
     newAtomType,
+    newHybridization,
     newProtonCount,
     possibleNeighbors,
   ]);
@@ -116,6 +156,7 @@ function EditNeighbors({
           <tr>
             <th>Atom</th>
             <th>#H</th>
+            <th>Hybrid</th>
             <th></th>
           </tr>
         </thead>
