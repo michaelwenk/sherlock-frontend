@@ -177,7 +177,7 @@ function CorrelationTableRow({
           style: { ...tableDataProps.style },
         }}
       >
-        {correlation.pseudo === false && resultData && resultData.detections ? (
+        {resultData && resultData.detections ? (
           <HybridizationsTableCell
             correlation={correlation}
             hybridizations={
@@ -186,7 +186,7 @@ function CorrelationTableRow({
                   nmriumData?.correlations.values,
                   correlation,
                 )
-              ]
+              ] || []
             }
           />
         ) : (
