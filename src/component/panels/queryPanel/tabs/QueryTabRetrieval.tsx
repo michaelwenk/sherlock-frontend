@@ -93,19 +93,19 @@ function QueryTabRetrieval() {
   );
 
   const handleOnConfirmDelete = useCallback(() => {
-    () => {
-      setFieldValue('queryType', queryTypes.retrieval);
-      if (resultRecordToDelete) {
-        setFieldValue('retrievalOptions.action', retrievalActions.deletion);
-        setFieldValue('retrievalOptions.resultID', resultRecordToDelete.id);
-      } else {
-        setFieldValue('retrievalOptions.action', retrievalActions.deleteAll);
-      }
-      submitForm().then(() => {
-        setShowDeleteModal(false);
-        setResultRecordToDelete(undefined);
-      });
-    };
+    setFieldValue('queryType', queryTypes.retrieval);
+    if (resultRecordToDelete) {
+      setFieldValue('retrievalOptions.action', retrievalActions.deletion);
+      setFieldValue('retrievalOptions.resultID', resultRecordToDelete.id);
+    } else {
+      setFieldValue('retrievalOptions.action', retrievalActions.deleteAll);
+    }
+    submitForm().then(() => {
+      setShowDeleteModal(false);
+      setResultRecordToDelete(undefined);
+    });
+
+    setShowDeleteModal(false);
   }, [resultRecordToDelete, setFieldValue, submitForm]);
 
   return (
