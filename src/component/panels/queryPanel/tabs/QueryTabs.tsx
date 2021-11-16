@@ -6,14 +6,11 @@ import QueryTabRetrieval from './QueryTabRetrieval';
 import queryTypes from '../../../../constants/queryTypes';
 import QueryTabElucidation from './QueryTabElucidation';
 import { Tab, Tabs } from 'react-bootstrap';
+import capitalize from '../../../../utils/capitalize';
 
 type InputProps = {
   onSelectTab: Function;
 };
-
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
 function QueryOptionsTabs({ onSelectTab }: InputProps) {
   const handleOnSelectTab = useCallback(
