@@ -4,7 +4,7 @@ import {
   getCorrelationIndex,
   Types,
 } from 'nmr-correlation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NeighborsEntry } from '../../../../../types/webcase/NeighborsEntry';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
@@ -15,14 +15,21 @@ import {
   EDIT_SET_NEIGHBORS,
 } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
+import Highlight from '../../../../../types/Highlight';
 
 interface InputProps {
   correlation: Types.Correlation;
   neighbors: NeighborsEntry;
   mode: 'forbidden' | 'set';
+  highlight: Highlight;
 }
 
-function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
+function NeighborsTableCell({
+  correlation,
+  neighbors,
+  mode,
+  highlight,
+}: InputProps) {
   const { nmriumData } = useData();
   const dispatch = useDispatch();
 
@@ -151,6 +158,12 @@ function NeighborsTableCell({ correlation, neighbors, mode }: InputProps) {
         : [],
     [nmriumData],
   );
+
+  useEffect(() => {
+    if (show) {
+      highlight.hide();
+    }
+  }, [highlight, show]);
 
   return (
     <div

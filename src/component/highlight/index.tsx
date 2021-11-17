@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
 } from 'react';
+import Highlight from '../../types/Highlight';
 
 type HighlightActions = 'HIDE' | 'SHOW' | 'SET_PERMANENT' | 'UNSET_PERMANENT';
 
@@ -123,7 +124,7 @@ export function useHighlightData() {
  * @param {Array<string | number>}  highlights
  * @param {SourceData = null} sourceData
  */
-export function useHighlight(highlights: (string | number)[]) {
+export function useHighlight(highlights: (string | number)[]): Highlight {
   if (!Array.isArray(highlights)) {
     throw new Error('highlights must be an array');
   }

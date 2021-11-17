@@ -3,20 +3,26 @@ import {
   getCorrelationIndex,
   Types,
 } from 'nmr-correlation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
 import { useDispatch } from '../../../../../context/DispatchContext';
 import EditHybridizations from './EditHybridizations';
 import { EDIT_HYBRIDIZATIONS } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
+import Highlight from '../../../../../types/Highlight';
 
 interface InputProps {
   correlation: Types.Correlation;
   hybridizations: number[];
+  highlight: Highlight;
 }
 
-function HybridizationsTableCell({ correlation, hybridizations }: InputProps) {
+function HybridizationsTableCell({
+  correlation,
+  hybridizations,
+  highlight,
+}: InputProps) {
   const { nmriumData } = useData();
   const dispatch = useDispatch();
 
@@ -63,6 +69,12 @@ function HybridizationsTableCell({ correlation, hybridizations }: InputProps) {
       <label>{hybridizations.map((hybrid) => 'SP' + hybrid).join(', ')}</label>
     );
   }, [hybridizations]);
+
+  useEffect(() => {
+    if (show) {
+      highlight.hide();
+    }
+  }, [highlight, show]);
 
   return (
     <div

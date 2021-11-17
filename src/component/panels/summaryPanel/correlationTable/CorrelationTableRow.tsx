@@ -38,11 +38,11 @@ function CorrelationTableRow({
     }
     const ids: string[] = [];
 
-    // correlation.link.forEach((link) => {
-    //   if (link.pseudo === false) {
-    //     ids.push(link.signal.id);
-    //   }
-    // });
+    correlation.link.forEach((link) => {
+      if (link.pseudo === false) {
+        ids.push(link.signal.id);
+      }
+    });
 
     return ids;
   }, [correlation]);
@@ -188,6 +188,7 @@ function CorrelationTableRow({
                 )
               ] || []
             }
+            highlight={highlightRow}
           />
         ) : (
           ''
@@ -212,6 +213,7 @@ function CorrelationTableRow({
               ]
             }
             mode="forbidden"
+            highlight={highlightRow}
           />
         ) : (
           ''
@@ -239,6 +241,7 @@ function CorrelationTableRow({
               ] || {}
             }
             mode="set"
+            highlight={highlightRow}
           />
         ) : (
           ''
