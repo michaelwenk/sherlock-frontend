@@ -220,27 +220,30 @@ function NeighborsTableCell({
       })
       .flat();
 
-    const correlationIndex = getCorrelationIndex(
-      nmriumData?.correlations.values,
-      correlation,
-    );
-    if (
-      resultData?.detections?.fixedNeighbors &&
-      resultData?.detections?.fixedNeighbors[correlationIndex]
-    ) {
-      resultData.detections.fixedNeighbors[correlationIndex].forEach(
-        (neighborCorrelationIndex) => {
-          values.push(
-            nmriumData?.correlations.values[neighborCorrelationIndex].label
-              .origin,
-          );
-        },
+    if (mode === 'set') {
+      const correlationIndex = getCorrelationIndex(
+        nmriumData?.correlations.values,
+        correlation,
       );
+      if (
+        resultData?.detections?.fixedNeighbors &&
+        resultData?.detections?.fixedNeighbors[correlationIndex]
+      ) {
+        resultData.detections.fixedNeighbors[correlationIndex].forEach(
+          (neighborCorrelationIndex) => {
+            values.push(
+              nmriumData?.correlations.values[neighborCorrelationIndex].label
+                .origin,
+            );
+          },
+        );
+      }
     }
 
     return <label>{values.join(', ')}</label>;
   }, [
     correlation,
+    mode,
     neighbors,
     nmriumData?.correlations.values,
     resultData?.detections?.fixedNeighbors,
