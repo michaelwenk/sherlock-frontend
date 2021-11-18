@@ -1,3 +1,3 @@
 export interface NeighborsEntry {
-  [neighborAtomType: string]: number[];
+  [neighborAtomType: string]: { [neighborHybridization: number]: number[] };
 }

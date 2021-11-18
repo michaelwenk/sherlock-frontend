@@ -31,7 +31,7 @@ const defaultQueryOptions: QueryOptions = {
   },
   detectionOptions: {
     hybridizationDetectionThreshold: 0.01,
-    lowerElementCountThreshold: 0.001,
+    lowerElementCountThreshold: 0.01,
     upperElementCountThreshold: 0.9,
   },
   retrievalOptions: { action: retrievalActions.fetch, resultID: '' },

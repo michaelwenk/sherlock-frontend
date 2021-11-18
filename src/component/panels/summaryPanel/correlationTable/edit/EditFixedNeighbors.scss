@@ -1,0 +1,45 @@
+.edit-fixed-neighbors {
+  user-select: none;
+  -ms-user-selec: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+
+  width: 100%;
+  height: 100%;
+  text-align: center;
+
+  table {
+    width: 100%;
+    height: 100%;
+
+    background-color: transparent;
+    border-spacing: 0;
+    border: 1px solid #dedede;
+    font-size: 13px;
+
+    th,
+    td {
+      white-space: nowrap;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 0.4rem;
+      border-bottom: 1px solid #dedede;
+      border-right: 1px solid #dedede;
+
+      .Button {
+        background-color: transparent;
+        border: none;
+      }
+
+      .SelectBox {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background-color: transparent;
+        border: 1px solid lightgray;
+      }
+    }
+  }
+}

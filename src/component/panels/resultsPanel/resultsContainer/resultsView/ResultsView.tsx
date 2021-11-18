@@ -7,6 +7,8 @@ import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 import SelectBox from '../../../../elements/SelectBox';
+import sortOptions from '../../../../../constants/sortOptions';
+import capitalize from '../../../../../utils/capitalize';
 
 type InputProps = {
   molecules: Array<ResultMolecule>;
@@ -19,22 +21,45 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
   const [selectedPageLimit, setSelectedPageLimit] = useState<number>(
     pageLimits[1],
   );
+  const [sortByValue, setSortByValue] = useState<string>(
+    sortOptions.averageDeviation,
+  );
 
   const handleOnSelectCardIndex = useCallback((index: number) => {
     setSelectedCardDeckIndex(index);
   }, []);
 
+  const sortedMolecules = useMemo(() => {
+    function sort(mol1: ResultMolecule, mol2: ResultMolecule) {
+      if (sortByValue === sortOptions.tanimoto) {
+        return mol1.dataSet.meta[sortByValue] >= mol2.dataSet.meta[sortByValue]
+          ? -1
+          : 1;
+      } else {
+        return mol1.dataSet.meta[sortByValue] <= mol2.dataSet.meta[sortByValue]
+          ? -1
+          : 1;
+      }
+    }
+
+    const _sortedMolecules = molecules.slice();
+    _sortedMolecules.sort(sort);
+
+    return _sortedMolecules;
+  }, [molecules, sortByValue]);
+
   const cardDeckData = useMemo(() => {
-    const _cardDeckData: Array<Array<ResultMolecule>> = [];
+    const _cardDeckData: ResultMolecule[][] = [];
     let counter = 0;
-    let resultMolecules: Array<ResultMolecule> = [];
-    for (let i = 0; i < molecules.length; i++) {
+    let resultMolecules: ResultMolecule[] = [];
+
+    for (let i = 0; i < sortedMolecules.length; i++) {
       if (counter < selectedPageLimit) {
         counter++;
-        resultMolecules.push(molecules[i]);
+        resultMolecules.push(sortedMolecules[i]);
       } else {
         _cardDeckData.push(resultMolecules);
-        resultMolecules = [molecules[i]];
+        resultMolecules = [sortedMolecules[i]];
         counter = 1;
       }
     }
@@ -43,7 +68,7 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
     }
 
     return _cardDeckData;
-  }, [molecules, selectedPageLimit]);
+  }, [selectedPageLimit, sortedMolecules]);
 
   const cardDecks = useMemo(() => {
     let cardDeckIndex = selectedCardDeckIndex;
@@ -81,7 +106,12 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
             maxPages={maxPages}
           />
         </div>
-        <div className="page-limit-selection">
+        <div className="sort-by-and-page-limit-selection">
+          <SelectBox
+            values={Object.keys(sortOptions)}
+            defaultValue={sortOptions.averageDeviation}
+            onChange={(value: string) => setSortByValue(value)}
+          />
           <SelectBox
             values={pageLimits}
             defaultValue={selectedPageLimit}

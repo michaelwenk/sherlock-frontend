@@ -21,16 +21,16 @@
       }
     }
 
-    .page-limit-selection {
+    .sort-by-and-page-limit-selection {
       display: flex;
       justify-content: flex-end;
       text-align: center;
       height: 100%;
       margin-right: 5px;
 
-      .SelectBox {
-        width: 60px;
-      }
+      // .SelectBox {
+      //   width: 60px;
+      // }
     }
   }
 

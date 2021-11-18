@@ -188,6 +188,7 @@ function CorrelationTableRow({
                 )
               ] || []
             }
+            highlight={highlightRow}
           />
         ) : (
           ''
@@ -212,6 +213,7 @@ function CorrelationTableRow({
               ]
             }
             mode="forbidden"
+            highlight={highlightRow}
           />
         ) : (
           ''
@@ -239,6 +241,7 @@ function CorrelationTableRow({
               ] || {}
             }
             mode="set"
+            highlight={highlightRow}
           />
         ) : (
           ''
