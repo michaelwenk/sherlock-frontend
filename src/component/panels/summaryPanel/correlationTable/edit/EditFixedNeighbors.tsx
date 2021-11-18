@@ -5,8 +5,24 @@ import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import generateID from '../../../../../utils/generateID';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
-import { Types } from 'nmr-correlation';
+import { getCorrelationDelta, Types } from 'nmr-correlation';
 
+function buildLabel(
+  correlations: Types.Correlation[],
+  correlationIndex: number,
+): string {
+  return `${correlations[correlationIndex].label.origin}: ${
+    correlations[correlationIndex].atomType
+  }H${correlations[correlationIndex].protonsCount.join(',') || '\u2217'}${
+    getCorrelationDelta(correlations[correlationIndex])
+      ? ', ' + getCorrelationDelta(correlations[correlationIndex])?.toFixed(2)
+      : ''
+  }`;
+  // SP${
+  //   correlations[neighborCorrelationIndex].hybridization.join(',') ||
+  //   '\u2217'
+  // }
+}
 interface InputProps {
   fixedNeighborEntry: number[];
   correlations: Types.Correlation[];
@@ -36,37 +52,34 @@ function EditFixedNeighbors({
 
   const rows = useMemo(() => {
     const _rows = fixedNeighborEntry
-      ? fixedNeighborEntry.map((neighborCorrelationIndex) => (
-          <tr key={`hybridization_${generateID()}`}>
-            <td>{`${correlations[neighborCorrelationIndex].label.origin}: ${
-              correlations[neighborCorrelationIndex].protonsCount.join(',') ||
-              '\u2217'
-            }H`}</td>
-            <td>
-              <Button
-                child={<FaTrashAlt />}
-                onClick={() => handleOnDelete(neighborCorrelationIndex)}
-              />
-            </td>
-          </tr>
-          // SP${
-          //   correlations[neighborCorrelationIndex].hybridization.join(',') ||
-          //   '\u2217'
-          // }
-        ))
+      ? fixedNeighborEntry.map((neighborCorrelationIndex) => {
+          const labelSplit1 = buildLabel(
+            correlations,
+            neighborCorrelationIndex,
+          ).split(':');
+          const labelSplit2 = labelSplit1[1].split(',');
+          return (
+            <tr key={`neighborCorrelation_${generateID()}`}>
+              <td>{labelSplit1[0]}</td>
+              <td>{labelSplit2[0].split('H')[1]}</td>
+              <td>{labelSplit2[1]}</td>
+              <td>
+                <Button
+                  child={<FaTrashAlt />}
+                  onClick={() => handleOnDelete(neighborCorrelationIndex)}
+                />
+              </td>
+            </tr>
+          );
+        })
       : [];
 
     _rows.push(
       <tr key={`edit_fixed_neighbors_${generateID()}`}>
-        <td>
+        <td colSpan={3}>
           <SelectBox
             key={`selectBox_correlation_new`}
-            defaultValue={`${
-              correlations[newFixedCorrelationIndex].label.origin
-            }: ${
-              correlations[newFixedCorrelationIndex].protonsCount.join(',') ||
-              '\u2217'
-            }H`}
+            defaultValue={buildLabel(correlations, newFixedCorrelationIndex)}
             onChange={(value: string) =>
               setNewFixedCorrelationIndex(
                 correlations.findIndex(
@@ -80,11 +93,11 @@ function EditFixedNeighbors({
                 (correlation) =>
                   correlation.atomType !== 'H' && correlation.equivalence === 1,
               )
-              .map(
-                (correlation) =>
-                  `${correlation.label.origin}: ${
-                    correlation.protonsCount.join(',') || '\u2217'
-                  }H`,
+              .map((correlation) =>
+                buildLabel(
+                  correlations,
+                  correlations.findIndex((corr) => corr.id === correlation.id),
+                ),
               )}
           />
         </td>
@@ -110,7 +123,9 @@ function EditFixedNeighbors({
         <table>
           <thead>
             <tr>
-              <th>Correlation</th>
+              <th>Atom</th>
+              <th>#H</th>
+              <th>Shift</th>
               <th></th>
             </tr>
           </thead>
