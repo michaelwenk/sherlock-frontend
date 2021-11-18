@@ -5,6 +5,7 @@ import ResultRecord from '../types/webcase/ResultRecord';
 import {
   Action,
   clearResultData,
+  editFixedNeighbors,
   editForbiddenNeighbors,
   editHybridizations,
   editSetNeighbors,
@@ -14,6 +15,7 @@ import {
 } from './Actions';
 import {
   CLEAR_RESULT_DATA,
+  EDIT_FIXED_NEIGHBORS,
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_HYBRIDIZATIONS,
   EDIT_SET_NEIGHBORS,
@@ -52,6 +54,8 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return editForbiddenNeighbors(draft, action);
     case EDIT_SET_NEIGHBORS:
       return editSetNeighbors(draft, action);
+    case EDIT_FIXED_NEIGHBORS:
+      return editFixedNeighbors(draft, action);
     case EDIT_HYBRIDIZATIONS:
       return editHybridizations(draft, action);
     case SET_RESULT_DB_ENTRIES:

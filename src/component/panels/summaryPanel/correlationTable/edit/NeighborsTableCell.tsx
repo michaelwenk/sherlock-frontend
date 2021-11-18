@@ -11,12 +11,15 @@ import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
 import { useDispatch } from '../../../../../context/DispatchContext';
 import {
+  EDIT_FIXED_NEIGHBORS,
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_SET_NEIGHBORS,
 } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
 import Highlight from '../../../../../types/Highlight';
 import capitalize from '../../../../../utils/capitalize';
+import { Tab, Tabs } from 'react-bootstrap';
+import EditFixedNeighbors from './EditFixedNeighbors';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -31,7 +34,7 @@ function NeighborsTableCell({
   mode,
   highlight,
 }: InputProps) {
-  const { nmriumData } = useData();
+  const { nmriumData, resultData } = useData();
   const dispatch = useDispatch();
 
   const [show, setShow] = useState<boolean>(false);
@@ -112,6 +115,76 @@ function NeighborsTableCell({
     [correlation, dispatch, mode, neighbors],
   );
 
+  const handleOnDeleteFixed = useCallback(
+    (neighborCorrelationIndex: number) => {
+      const _fixedNeighbors = lodashCloneDeep(
+        resultData?.detections?.fixedNeighbors,
+      );
+      if (_fixedNeighbors) {
+        const correlationIndex = getCorrelationIndex(
+          nmriumData?.correlations.values,
+          correlation,
+        );
+        if (
+          _fixedNeighbors[correlationIndex] &&
+          _fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
+        ) {
+          _fixedNeighbors[correlationIndex].splice(
+            _fixedNeighbors[correlationIndex].indexOf(neighborCorrelationIndex),
+            1,
+          );
+          if (_fixedNeighbors[correlationIndex].length === 0) {
+            delete _fixedNeighbors[correlationIndex];
+          }
+        }
+      }
+
+      dispatch({
+        type: EDIT_FIXED_NEIGHBORS,
+        payload: { fixedNeighbors: _fixedNeighbors },
+      });
+    },
+    [
+      correlation,
+      dispatch,
+      nmriumData?.correlations.values,
+      resultData?.detections?.fixedNeighbors,
+    ],
+  );
+
+  const handleOnAddFixed = useCallback(
+    (neighborCorrelationIndex: number) => {
+      const _fixedNeighbors = lodashCloneDeep(
+        resultData?.detections?.fixedNeighbors,
+      );
+      if (_fixedNeighbors) {
+        const correlationIndex = getCorrelationIndex(
+          nmriumData?.correlations.values,
+          correlation,
+        );
+        if (!_fixedNeighbors[correlationIndex]) {
+          _fixedNeighbors[correlationIndex] = [];
+        }
+        if (
+          !_fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
+        ) {
+          _fixedNeighbors[correlationIndex].push(neighborCorrelationIndex);
+        }
+      }
+
+      dispatch({
+        type: EDIT_FIXED_NEIGHBORS,
+        payload: { fixedNeighbors: _fixedNeighbors },
+      });
+    },
+    [
+      correlation,
+      dispatch,
+      nmriumData?.correlations.values,
+      resultData?.detections?.fixedNeighbors,
+    ],
+  );
+
   const handleOnClose = useCallback(() => {
     setShow(false);
   }, []);
@@ -147,8 +220,31 @@ function NeighborsTableCell({
       })
       .flat();
 
+    const correlationIndex = getCorrelationIndex(
+      nmriumData?.correlations.values,
+      correlation,
+    );
+    if (
+      resultData?.detections?.fixedNeighbors &&
+      resultData?.detections?.fixedNeighbors[correlationIndex]
+    ) {
+      resultData.detections.fixedNeighbors[correlationIndex].forEach(
+        (neighborCorrelationIndex) => {
+          values.push(
+            nmriumData?.correlations.values[neighborCorrelationIndex].label
+              .origin,
+          );
+        },
+      );
+    }
+
     return <label>{values.join(', ')}</label>;
-  }, [neighbors]);
+  }, [
+    correlation,
+    neighbors,
+    nmriumData?.correlations.values,
+    resultData?.detections?.fixedNeighbors,
+  ]);
 
   const possibleNeighbors = useMemo(
     () =>
@@ -187,12 +283,42 @@ function NeighborsTableCell({
               : ''
           })`}
           body={
-            <EditNeighbors
-              neighbors={neighbors}
-              possibleNeighbors={possibleNeighbors}
-              onDelete={handleOnDelete}
-              onAdd={handleOnAdd}
-            />
+            mode === 'forbidden' ? (
+              <EditNeighbors
+                neighbors={neighbors}
+                possibleNeighbors={possibleNeighbors}
+                onDelete={handleOnDelete}
+                onAdd={handleOnAdd}
+              />
+            ) : (
+              <Tabs onSelect={() => {}} defaultActiveKey="general">
+                <Tab eventKey={'general'} title="General">
+                  <EditNeighbors
+                    neighbors={neighbors}
+                    possibleNeighbors={possibleNeighbors}
+                    onDelete={handleOnDelete}
+                    onAdd={handleOnAdd}
+                  />
+                </Tab>
+                {resultData?.detections?.fixedNeighbors && (
+                  <Tab eventKey={'fixed'} title="Fixed">
+                    <EditFixedNeighbors
+                      fixedNeighborEntry={
+                        resultData.detections.fixedNeighbors[
+                          getCorrelationIndex(
+                            nmriumData?.correlations.values,
+                            correlation,
+                          )
+                        ]
+                      }
+                      correlations={nmriumData?.correlations.values}
+                      onDelete={handleOnDeleteFixed}
+                      onAdd={handleOnAddFixed}
+                    />
+                  </Tab>
+                )}
+              </Tabs>
+            )
           }
           onClose={handleOnClose}
         />
