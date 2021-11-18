@@ -16,6 +16,7 @@ import {
 } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
 import Highlight from '../../../../../types/Highlight';
+import capitalize from '../../../../../utils/capitalize';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -177,7 +178,7 @@ function NeighborsTableCell({
       {show && (
         <CustomModal
           show={show}
-          title={`Edit Forbidden Neighbors: ${correlation.atomType}${
+          title={`Edit ${capitalize(mode)} Neighbors: ${correlation.atomType}${
             getCorrelationIndex(nmriumData?.correlations.values, correlation) +
             1
           } (${
