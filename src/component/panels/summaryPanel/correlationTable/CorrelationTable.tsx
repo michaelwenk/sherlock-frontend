@@ -9,14 +9,14 @@ import { useData } from '../../../../context/DataContext';
 
 interface InputPros {
   additionalColumnData: Types.Correlation[];
-  changeHybridizationSaveHandler: Function;
   showAdditionalColumns: boolean;
+  showProtonsAsRows: boolean;
 }
 
 function CorrelationTable({
   additionalColumnData,
-  changeHybridizationSaveHandler,
   showAdditionalColumns,
+  showProtonsAsRows,
 }: InputPros) {
   const { nmriumData } = useData();
 
@@ -24,7 +24,11 @@ function CorrelationTable({
     () =>
       nmriumData && nmriumData.correlations
         ? nmriumData.correlations.values
-            .filter((correlation) => correlation.atomType !== 'H')
+            .filter((correlation) =>
+              showProtonsAsRows
+                ? correlation.atomType === 'H'
+                : correlation.atomType !== 'H',
+            )
             .map((correlation) => (
               <CorrelationTableRow
                 additionalColumnData={additionalColumnData}
@@ -41,16 +45,15 @@ function CorrelationTable({
                       }
                     : {}
                 }
-                onChangeHybridization={changeHybridizationSaveHandler}
                 showAdditionalColumns={showAdditionalColumns}
               />
             ))
         : [],
     [
       additionalColumnData,
-      changeHybridizationSaveHandler,
       nmriumData,
       showAdditionalColumns,
+      showProtonsAsRows,
     ],
   );
 

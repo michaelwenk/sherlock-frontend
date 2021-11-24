@@ -19,7 +19,6 @@ interface InputProps {
   correlation: Types.Correlation;
   styleRow;
   styleLabel;
-  onChangeHybridization: Function;
   showAdditionalColumns: boolean;
 }
 
