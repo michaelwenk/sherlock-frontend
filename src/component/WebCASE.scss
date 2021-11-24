@@ -1,28 +1,26 @@
 .webcase {
-  //   width: 100%;
-  //   height: 100%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 
   .webcase-header {
     width: 100%;
-    height: 5%;
+    height: 40px;
+    text-align: center;
+    font-size: x-large;
+    font-weight: bold;
   }
 
   .webcase-body {
     width: 100%;
-    height: 90%;
+    height: calc(100% - 40px);
 
-    .nav-tabs {
-      height: 5%;
+    .tabs-bar {
+      height: 40px;
     }
 
     .nmrium-container {
       width: 100%;
-      height: 90%;
+      height: calc(100% - 40px - 40px);
       position: fixed;
     }
   }

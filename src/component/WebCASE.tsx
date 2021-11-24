@@ -49,10 +49,10 @@ function WebCASE() {
       <DataProvider value={state}>
         <div className="webcase">
           <div className="webcase-header">
-            <p>Welcome to WebCASE !!!</p>
+            <p>Sherlock</p>
           </div>
           <div className="webcase-body">
-            <Tabs defaultActiveKey="nmrium">
+            <Tabs defaultActiveKey="nmrium" className="tabs-bar">
               <Tab eventKey="nmrium" title="NMRium">
                 <div className="nmrium-container">
                   <NMRium
