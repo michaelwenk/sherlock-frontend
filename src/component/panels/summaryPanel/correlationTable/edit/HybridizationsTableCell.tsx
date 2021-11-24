@@ -66,7 +66,7 @@ function HybridizationsTableCell({
 
   const label = useMemo(() => {
     return (
-      <label>{hybridizations.map((hybrid) => 'SP' + hybrid).join(', ')}</label>
+      <label>{hybridizations.map((hybrid) => 'sp' + hybrid).join(', ')}</label>
     );
   }, [hybridizations]);
 
