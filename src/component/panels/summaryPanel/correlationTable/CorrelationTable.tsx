@@ -75,15 +75,29 @@ function CorrelationTable({
           <tr>
             <th>Atom</th>
             <th>δ (ppm)</th>
-            <th>Equiv</th>
-            <th>#H</th>
-            <th>Hybrid</th>
-            <th>non-neighbor</th>
             <th
-              style={showAdditionalColumns ? { borderRight: '1px solid' } : {}}
+              style={
+                showAdditionalColumns && showProtonsAsRows
+                  ? { borderRight: '1px solid' }
+                  : {}
+              }
             >
-              neighbor
+              Equiv
             </th>
+            {!showProtonsAsRows && (
+              <>
+                <th>#H</th>
+                <th>Hybrid</th>
+                <th>non-neighbor</th>
+                <th
+                  style={
+                    showAdditionalColumns ? { borderRight: '1px solid' } : {}
+                  }
+                >
+                  neighbor
+                </th>
+              </>
+            )}
             {showAdditionalColumns && additionalColumnHeader}
           </tr>
         </thead>

@@ -159,93 +159,115 @@ function CorrelationTableRow({
           ? getCorrelationDelta(correlation)?.toFixed(2)
           : ''}
       </td>
-      <td title={t} {...otherTableDataProps}>
+      <td
+        title={t}
+        {...otherTableDataProps}
+        style={{
+          ...otherTableDataProps.style,
+          ...{
+            borderRight:
+              showAdditionalColumns && correlation.atomType === 'H'
+                ? '1px solid'
+                : 'none',
+          },
+        }}
+      >
         {correlation.pseudo === false ? (
           <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
         ) : (
           ''
         )}
       </td>
-      <td title={t} {...otherTableDataProps}>
-        {correlation.protonsCount.join(',')}
-      </td>
-      <td
-        title={t}
-        {...{
-          ...otherTableDataProps,
-          style: { ...tableDataProps.style },
-        }}
-      >
-        {resultData && resultData.detections ? (
-          <HybridizationsTableCell
-            correlation={correlation}
-            hybridizations={
-              resultData.detections.detectedHybridizations[
-                getCorrelationIndex(
-                  nmriumData?.correlations.values,
-                  correlation,
-                )
-              ] || []
-            }
-            highlight={highlightRow}
-          />
-        ) : (
-          ''
-        )}
-      </td>
-      <td
-        title={t}
-        {...{
-          ...otherTableDataProps,
-          style: tableDataProps.style,
-        }}
-      >
-        {correlation.pseudo === false && resultData && resultData.detections ? (
-          <NeighborsTableCell
-            correlation={correlation}
-            neighbors={
-              resultData.detections.forbiddenNeighbors[
-                getCorrelationIndex(
-                  nmriumData?.correlations.values,
-                  correlation,
-                )
-              ]
-            }
-            mode="forbidden"
-            highlight={highlightRow}
-          />
-        ) : (
-          ''
-        )}
-      </td>
-      <td
-        title={t}
-        {...{
-          ...otherTableDataProps,
-          style: {
-            ...tableDataProps.style,
-            borderRight: showAdditionalColumns ? '1px solid' : undefined,
-          },
-        }}
-      >
-        {correlation.pseudo === false && resultData && resultData.detections ? (
-          <NeighborsTableCell
-            correlation={correlation}
-            neighbors={
-              resultData.detections.setNeighbors[
-                getCorrelationIndex(
-                  nmriumData?.correlations.values,
-                  correlation,
-                )
-              ] || {}
-            }
-            mode="set"
-            highlight={highlightRow}
-          />
-        ) : (
-          ''
-        )}
-      </td>
+      {correlation.atomType != 'H' && (
+        <>
+          <td title={t} {...otherTableDataProps}>
+            {correlation.protonsCount.join(',')}
+          </td>
+          <td
+            title={t}
+            {...{
+              ...otherTableDataProps,
+              style: {
+                ...tableDataProps.style,
+              },
+            }}
+          >
+            {correlation.atomType != 'H' &&
+            resultData &&
+            resultData.detections ? (
+              <HybridizationsTableCell
+                correlation={correlation}
+                hybridizations={
+                  resultData.detections.detectedHybridizations[
+                    getCorrelationIndex(
+                      nmriumData?.correlations.values,
+                      correlation,
+                    )
+                  ] || []
+                }
+                highlight={highlightRow}
+              />
+            ) : (
+              ''
+            )}
+          </td>
+          <td
+            title={t}
+            {...{
+              ...otherTableDataProps,
+              style: tableDataProps.style,
+            }}
+          >
+            {correlation.atomType != 'H' &&
+            resultData &&
+            resultData.detections ? (
+              <NeighborsTableCell
+                correlation={correlation}
+                neighbors={
+                  resultData.detections.forbiddenNeighbors[
+                    getCorrelationIndex(
+                      nmriumData?.correlations.values,
+                      correlation,
+                    )
+                  ] || {}
+                }
+                mode="forbidden"
+                highlight={highlightRow}
+              />
+            ) : (
+              ''
+            )}
+          </td>
+          <td
+            title={t}
+            {...{
+              ...otherTableDataProps,
+              style: {
+                ...tableDataProps.style,
+                borderRight: showAdditionalColumns ? '1px solid' : 'none',
+              },
+            }}
+          >
+            {resultData && resultData.detections ? (
+              <NeighborsTableCell
+                correlation={correlation}
+                neighbors={
+                  resultData.detections.setNeighbors[
+                    getCorrelationIndex(
+                      nmriumData?.correlations.values,
+                      correlation,
+                    )
+                  ] || {}
+                }
+                mode="set"
+                highlight={highlightRow}
+              />
+            ) : (
+              ''
+            )}
+          </td>
+        </>
+      )}
       {showAdditionalColumns && additionalColumnFields}
     </tr>
   );
