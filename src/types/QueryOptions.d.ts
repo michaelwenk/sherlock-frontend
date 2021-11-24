@@ -15,10 +15,6 @@ export interface QueryOptions {
     useElim: boolean;
     elimP1: number;
     elimP2: number;
-    hmbcP3: number;
-    hmbcP4: number;
-    cosyP3: number;
-    cosyP4: number;
     useFilterLsdRing3: boolean;
     useFilterLsdRing4: boolean;
     // elucidation process

@@ -18,10 +18,6 @@ const defaultQueryOptions: QueryOptions = {
     useElim: false,
     elimP1: 1, // number of correlations (HMBC/COSY) to eliminate
     elimP2: 4, // number of bonds between the atoms
-    hmbcP3: 2, // minimal coupling path length HMBC
-    hmbcP4: 4, // maximal coupling path length HMBC
-    cosyP3: 3, // minimal coupling path length COSY
-    cosyP4: 4, // maximal coupling path length COSY
     useFilterLsdRing3: false,
     useFilterLsdRing4: false,
     // elucidation process

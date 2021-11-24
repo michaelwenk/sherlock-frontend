@@ -195,9 +195,11 @@ function Panels() {
                     return {
                       ...value,
                       hybridization:
-                        value.hybridization.trim().length === 0
-                          ? []
-                          : [value.hybridization],
+                        typeof value.hybridization == 'string' // @TODO remove the conversion at some point
+                          ? value.hybridization.trim().length === 0
+                            ? []
+                            : [value.hybridization]
+                          : value.hybridization,
                     };
                   },
                 ),

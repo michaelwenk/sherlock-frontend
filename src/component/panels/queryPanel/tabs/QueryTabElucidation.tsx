@@ -103,49 +103,6 @@ function QueryTabElucidation() {
           />
         </div>
       </div>
-      <p style={{ fontWeight: 'bold' }}>General allowed path lengths: </p>
-      <div className="hmbc-container">
-        <p>HMBC</p>
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue('elucidationOptions.hmbcP3', Number(value));
-          }}
-          defaultValue={values.elucidationOptions.hmbcP3}
-          label="min"
-          min={2}
-        />
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue('elucidationOptions.hmbcP4', Number(value));
-          }}
-          defaultValue={values.elucidationOptions.hmbcP4}
-          label="max"
-          min={2}
-        />
-      </div>
-      <div className="cosy-container">
-        <p>COSY</p>
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue('elucidationOptions.cosyP3', Number(value));
-          }}
-          defaultValue={values.elucidationOptions.cosyP3}
-          label="min"
-          min={3}
-        />
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue('elucidationOptions.cosyP4', Number(value));
-          }}
-          defaultValue={values.elucidationOptions.cosyP4}
-          label="max"
-          min={3}
-        />
-      </div>
       <p style={{ fontWeight: 'bold' }}>Structure Generation: </p>
       <div className="time-limit-container">
         <Input
