@@ -41,9 +41,6 @@ function validateQueryOptions(values: QueryOptions) {
       'Invalid value for ELIM P2: Must be 0 (unlimited) or at least 4';
   }
 
-  console.log(values);
-  console.log(errors);
-
   return errors;
 }
 
