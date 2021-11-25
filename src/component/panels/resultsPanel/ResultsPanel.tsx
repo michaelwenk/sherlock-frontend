@@ -102,7 +102,7 @@ function ResultsPanel({ show }: InputProps) {
       <ResultsView
         molecules={molecules}
         maxPages={5}
-        pageLimits={[10, 25, 50, 100]}
+        pageLimits={[10, 25, 50]}
       />
       {showDeleteModal && (
         <ConfirmModal

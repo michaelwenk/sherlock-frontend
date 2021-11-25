@@ -10,10 +10,18 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 type InputProps = {
   id: string | number;
   molecule: ResultMolecule;
-  styles: any;
+  imageWidth: number;
+  imageHeight: number;
+  styles?: any;
 };
 
-function ResultCard({ id, molecule, styles }: InputProps) {
+function ResultCard({
+  id,
+  molecule,
+  imageWidth,
+  imageHeight,
+  styles = {},
+}: InputProps) {
   return (
     <Card style={styles}>
       <Card.Header>{`#${id}`}</Card.Header>
@@ -21,8 +29,8 @@ function ResultCard({ id, molecule, styles }: InputProps) {
         <OCLnmr
           OCL={OCL}
           id={`molSVG${id}`}
-          width={150}
-          height={150}
+          width={imageWidth}
+          height={imageHeight}
           molfile={molecule.molfile}
           setSelectedAtom={() => {}}
           atomHighlightColor={'red'}
