@@ -168,7 +168,7 @@ function CorrelationTableRow({
             borderRight:
               showAdditionalColumns && correlation.atomType === 'H'
                 ? '1px solid'
-                : 'none',
+                : undefined,
           },
         }}
       >
