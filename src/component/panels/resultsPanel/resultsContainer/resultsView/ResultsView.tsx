@@ -8,6 +8,7 @@ import ResultCard from '../resultCard/ResultCard';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
+import ResultsInfo from '../../resultsInfo/ResultsInfo';
 
 interface ImageSize {
   width: number;
@@ -25,15 +26,23 @@ type InputProps = {
   molecules: Array<ResultMolecule>;
   maxPages: number;
   pageLimits: number[];
+  onClickDownload: Function;
+  onClickDelete: Function;
 };
 
-function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
+function ResultsView({
+  molecules,
+  maxPages,
+  pageLimits,
+  onClickDownload,
+  onClickDelete,
+}: InputProps) {
   const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState<number>(0);
   const [selectedPageLimit, setSelectedPageLimit] = useState<number>(
     pageLimits[1],
   );
-  const [sortByValue, setSortByValue] = useState<string>(
-    sortOptions.averageDeviation,
+  const [sortByLabel, setSortByLabel] = useState<string>(
+    sortOptions.averageDeviation.label,
   );
   const [selectedImageSize, setSelectedImageSize] = useState<ImageSize>(
     imageSizes[0],
@@ -44,8 +53,11 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
   }, []);
 
   const sortedMolecules = useMemo(() => {
+    const sortByValue = Object.keys(sortOptions).filter(
+      (sortOption) => sortOptions[sortOption].label === sortByLabel,
+    )[0];
     function sort(mol1: ResultMolecule, mol2: ResultMolecule) {
-      if (sortByValue === sortOptions.tanimoto) {
+      if (sortByValue === sortOptions.tanimoto.value) {
         return mol1.dataSet.meta[sortByValue] >= mol2.dataSet.meta[sortByValue]
           ? -1
           : 1;
@@ -55,12 +67,11 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
           : 1;
       }
     }
-
     const _sortedMolecules = molecules.slice();
     _sortedMolecules.sort(sort);
 
     return _sortedMolecules;
-  }, [molecules, sortByValue]);
+  }, [molecules, sortByLabel]);
 
   const cardDeckData = useMemo(() => {
     const _cardDeckData: ResultMolecule[][] = [];
@@ -120,37 +131,66 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
   return cardDeckData.length > 0 ? (
     <div className="results-view">
       <div className="results-view-header">
-        <div className="pagination">
-          <CustomPagination
-            data={cardDeckData}
-            selected={selectedCardDeckIndex}
-            onSelect={handleOnSelectCardIndex}
-            maxPages={maxPages}
+        <div className="results-info">
+          <ResultsInfo
+            onClickDownload={onClickDownload}
+            onClickDelete={onClickDelete}
           />
         </div>
-        <div className="sort-by-and-page-limit-selection">
-          <SelectBox
-            values={imageSizes.map((size) => `${size.width}x${size.height}`)}
-            defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
-            onChange={(value: string) => {
-              const split = value.split('x');
-              setSelectedImageSize({
-                width: Number(split[0]),
-                height: Number(split[1]),
-              });
-            }}
-          />
-          <SelectBox
-            values={Object.keys(sortOptions)}
-            defaultValue={sortOptions.averageDeviation}
-            onChange={(value: string) => setSortByValue(value)}
-          />
-          <SelectBox
-            values={pageLimits}
-            defaultValue={selectedPageLimit}
-            onChange={(value: number) => setSelectedPageLimit(value)}
-          />
+        <div className="view-settings">
+          <table>
+            <tbody>
+              <tr>
+                <td>img. size</td>
+                <td>
+                  <SelectBox
+                    values={imageSizes.map(
+                      (size) => `${size.width}x${size.height}`,
+                    )}
+                    defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
+                    onChange={(value: string) => {
+                      const split = value.split('x');
+                      setSelectedImageSize({
+                        width: Number(split[0]),
+                        height: Number(split[1]),
+                      });
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>no. results</td>
+                <td>
+                  <SelectBox
+                    values={pageLimits}
+                    defaultValue={selectedPageLimit}
+                    onChange={(value: number) => setSelectedPageLimit(value)}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>sort by</td>
+                <td>
+                  <SelectBox
+                    values={Object.keys(sortOptions).map(
+                      (sortOption) => sortOptions[sortOption].label,
+                    )}
+                    defaultValue={sortByLabel}
+                    onChange={(label: string) => setSortByLabel(label)}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+      <div className="pagination">
+        <CustomPagination
+          data={cardDeckData}
+          selected={selectedCardDeckIndex}
+          onSelect={handleOnSelectCardIndex}
+          maxPages={maxPages}
+        />
       </div>
       <div className="card-deck-container">
         <Container>

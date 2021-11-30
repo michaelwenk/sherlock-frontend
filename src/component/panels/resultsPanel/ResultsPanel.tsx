@@ -95,14 +95,12 @@ function ResultsPanel({ show }: InputProps) {
         } as React.CSSProperties
       }
     >
-      <ResultsInfo
-        onClickDownload={handleOnClickDownload}
-        onClickDelete={handleOnClickDelete}
-      />
       <ResultsView
         molecules={molecules}
         maxPages={5}
         pageLimits={[10, 25, 50]}
+        onClickDownload={handleOnClickDownload}
+        onClickDelete={handleOnClickDelete}
       />
       {showDeleteModal && (
         <ConfirmModal

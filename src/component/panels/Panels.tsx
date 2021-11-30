@@ -401,7 +401,7 @@ function Panels() {
                   onClickCancel={handleOnCancelRequest}
                   buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
                   buttonDisabled={isCanceling}
-                  showTimer={true}
+                  showTimer={false}
                 />
               ) : requestError ? (
                 <div className="request-error">
