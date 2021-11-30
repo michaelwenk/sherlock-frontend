@@ -9,23 +9,30 @@
     width: 100%;
     height: 80px;
     display: flex;
-    flex-direction: row;
     align-items: center;
     white-space: nowrap;
+    overflow-x: auto;
 
     .results-info {
-      width: calc(100% - 155px);
+      width: calc(100% - 180px);
+      min-width: 400px;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .view-settings {
-      width: 155px;
+      width: 180px;
       height: 100%;
       white-space: nowrap;
-      border: 1px solid grey;
       border-radius: 5px;
       padding: 2px;
       font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-right: 5px;
 
       .SelectBox {
         width: 80px;
