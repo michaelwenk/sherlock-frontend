@@ -6,6 +6,7 @@ import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { useMemo } from 'react';
 
 type InputProps = {
   id: string | number;
@@ -22,9 +23,8 @@ function ResultCard({
   imageHeight,
   styles = {},
 }: InputProps) {
-  return (
-    <Card style={styles}>
-      <Card.Header>{`#${id}`}</Card.Header>
+  const cardBody = useMemo(
+    () => (
       <Card.Body>
         <OCLnmr
           OCL={OCL}
@@ -41,9 +41,15 @@ function ResultCard({
         />
         <ResultCardText molecule={molecule} />
       </Card.Body>
-      {molecule.dataSet.meta.id ? (
-        <Card.Link>
-          {molecule.dataSet.meta.source === 'nmrshiftdb' ? (
+    ),
+    [id, imageHeight, imageWidth, molecule],
+  );
+
+  const cardLink = useMemo(
+    () => (
+      <Card.Link>
+        {molecule.dataSet.meta.id ? (
+          molecule.dataSet.meta.source === 'nmrshiftdb' ? (
             <a
               href={`http://www.nmrshiftdb.org/molecule/${molecule.dataSet.meta.id}`}
               target="_blank"
@@ -63,9 +69,18 @@ function ResultCard({
               <FaExternalLinkAlt size="11" />
               {` ${molecule.dataSet.meta.id}`}
             </a>
-          ) : null}
-        </Card.Link>
-      ) : null}
+          ) : null
+        ) : null}
+      </Card.Link>
+    ),
+    [molecule.dataSet.meta.id, molecule.dataSet.meta.source],
+  );
+
+  return (
+    <Card style={styles}>
+      <Card.Header>{`#${id}`}</Card.Header>
+      {cardBody}
+      {cardLink}
     </Card>
   );
 }
