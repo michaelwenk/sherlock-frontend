@@ -27,8 +27,10 @@ function QueryTabRetrieval() {
     () =>
       resultDataDB
         ? searchPattern.length > 0
-          ? resultDataDB.filter((resultRecord) =>
-              resultRecord.name?.toLowerCase().includes(searchPattern),
+          ? resultDataDB.filter(
+              (resultRecord) =>
+                resultRecord.name?.toLowerCase().includes(searchPattern) ||
+                resultRecord.id?.toLowerCase().includes(searchPattern),
             )
           : resultDataDB
         : [],
@@ -45,8 +47,12 @@ function QueryTabRetrieval() {
 
         return (
           <tr key={`resultDataDB_${resultRecord.id}`}>
-            <td>{resultRecord.name}</td>
-            <td>{`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}, ${date.getHours()}:${date.getMinutes()}`}</td>
+            <td>{resultRecord.name || resultRecord.id}</td>
+            <td>
+              {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
+              <br />
+              {`${date.getHours()}:${date.getMinutes()}`}
+            </td>
             <td>{resultRecord.dataSetListSize}</td>
             <td>
               <OCLnmr
@@ -152,7 +158,7 @@ function QueryTabRetrieval() {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Name/ID</th>
               <th>Date</th>
               <th>Count</th>
               <th>Preview</th>
