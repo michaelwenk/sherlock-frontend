@@ -1,10 +1,10 @@
 import './App.scss';
-import WebCASE from './component/WebCASE';
+import Sherlock from './component/Sherlock';
 
 function App() {
   return (
     <div className="app">
-      <WebCASE />
+      <Sherlock />
     </div>
   );
 }

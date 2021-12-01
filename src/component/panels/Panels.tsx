@@ -27,7 +27,7 @@ import {
   SET_RESULT_DB_ENTRIES,
 } from '../../context/ActionTypes';
 import { QueryOptions } from '../../types/QueryOptions';
-import ResultRecord from '../../types/webcase/ResultRecord';
+import ResultRecord from '../../types/sherlock/ResultRecord';
 import retrievalActions from '../../constants/retrievalAction';
 
 export interface onSubmitProps {
@@ -409,7 +409,7 @@ function Panels() {
                   <p>
                     {requestError.response?.data.errorMessage
                       ? requestError.response?.data.errorMessage
-                      : 'Could not connect to WebCASE services'}
+                      : 'Could not connect to Sherlock`s backend services'}
                   </p>
                 </div>
               ) : requestWasCancelled ? (

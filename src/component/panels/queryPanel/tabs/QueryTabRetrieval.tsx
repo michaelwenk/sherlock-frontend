@@ -12,7 +12,7 @@ import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import { Molecule } from 'openchemlib';
 import Input from '../../../elements/Input';
-import ResultRecord from '../../../../types/webcase/ResultRecord';
+import ResultRecord from '../../../../types/sherlock/ResultRecord';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
 
 function QueryTabRetrieval() {

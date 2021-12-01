@@ -1,5 +1,5 @@
-import { Detections } from './webcase/Detections';
-import ResultRecord from './webcase/ResultRecord';
+import { Detections } from './sherlock/Detections';
+import ResultRecord from './sherlock/ResultRecord';
 
 export interface Result {
   queryType: string;

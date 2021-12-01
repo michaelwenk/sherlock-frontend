@@ -1,4 +1,4 @@
-import './WebCASE.scss';
+import './Sherlock.scss';
 
 import { Tab, Tabs } from 'react-bootstrap';
 import NMRium from 'nmrium';
@@ -19,7 +19,7 @@ import { NMRiumData } from '../types/nmrium/NMRiumData';
 
 const preferences = {};
 
-function WebCASE() {
+function Sherlock() {
   const [state, dispatch] = useReducer<Reducer<DataState, any>, DataState>(
     DataReducer,
     initialState,
@@ -47,11 +47,11 @@ function WebCASE() {
   return (
     <DispatchProvider value={dispatcherMemo}>
       <DataProvider value={state}>
-        <div className="webcase">
-          <div className="webcase-header">
+        <div className="sherlock">
+          <div className="sherlock-header">
             <p>Sherlock</p>
           </div>
-          <div className="webcase-body">
+          <div className="sherlock-body">
             <Tabs defaultActiveKey="nmrium" className="tabs-bar">
               <Tab eventKey="nmrium" title="Spectra">
                 <div className="nmrium-container">
@@ -72,4 +72,4 @@ function WebCASE() {
     </DispatchProvider>
   );
 }
-export default WebCASE;
+export default Sherlock;

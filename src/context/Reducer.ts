@@ -1,7 +1,7 @@
 import { Draft, produce } from 'immer';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
-import ResultRecord from '../types/webcase/ResultRecord';
+import ResultRecord from '../types/sherlock/ResultRecord';
 import {
   Action,
   clearResultData,

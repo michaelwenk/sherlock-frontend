@@ -2,9 +2,9 @@ import { Draft } from 'immer';
 import { getCorrelationIndex } from 'nmr-correlation';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
-import FixedNeighbors from '../types/webcase/FixedNeighbors';
-import { NeighborsEntry } from '../types/webcase/NeighborsEntry';
-import ResultRecord from '../types/webcase/ResultRecord';
+import FixedNeighbors from '../types/sherlock/FixedNeighbors';
+import { NeighborsEntry } from '../types/sherlock/NeighborsEntry';
+import ResultRecord from '../types/sherlock/ResultRecord';
 import { DataState } from './Reducer';
 
 export interface Action {
