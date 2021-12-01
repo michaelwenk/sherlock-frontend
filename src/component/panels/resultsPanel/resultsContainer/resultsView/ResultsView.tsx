@@ -8,21 +8,44 @@ import ResultCard from '../resultCard/ResultCard';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
-import capitalize from '../../../../../utils/capitalize';
+import ResultsInfo from '../../resultsInfo/ResultsInfo';
+
+interface ImageSize {
+  width: number;
+  height: number;
+}
+
+const imageSizes: ImageSize[] = [
+  { width: 150, height: 150 },
+  { width: 200, height: 200 },
+  { width: 250, height: 250 },
+  { width: 300, height: 300 },
+];
 
 type InputProps = {
   molecules: Array<ResultMolecule>;
   maxPages: number;
   pageLimits: number[];
+  onClickDownload: Function;
+  onClickDelete: Function;
 };
 
-function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
+function ResultsView({
+  molecules,
+  maxPages,
+  pageLimits,
+  onClickDownload,
+  onClickDelete,
+}: InputProps) {
   const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState<number>(0);
   const [selectedPageLimit, setSelectedPageLimit] = useState<number>(
     pageLimits[1],
   );
-  const [sortByValue, setSortByValue] = useState<string>(
-    sortOptions.averageDeviation,
+  const [sortByLabel, setSortByLabel] = useState<string>(
+    sortOptions.averageDeviation.label,
+  );
+  const [selectedImageSize, setSelectedImageSize] = useState<ImageSize>(
+    imageSizes[0],
   );
 
   const handleOnSelectCardIndex = useCallback((index: number) => {
@@ -30,8 +53,11 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
   }, []);
 
   const sortedMolecules = useMemo(() => {
+    const sortByValue = Object.keys(sortOptions).filter(
+      (sortOption) => sortOptions[sortOption].label === sortByLabel,
+    )[0];
     function sort(mol1: ResultMolecule, mol2: ResultMolecule) {
-      if (sortByValue === sortOptions.tanimoto) {
+      if (sortByValue === sortOptions.tanimoto.value) {
         return mol1.dataSet.meta[sortByValue] >= mol2.dataSet.meta[sortByValue]
           ? -1
           : 1;
@@ -41,12 +67,11 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
           : 1;
       }
     }
-
     const _sortedMolecules = molecules.slice();
     _sortedMolecules.sort(sort);
 
     return _sortedMolecules;
-  }, [molecules, sortByValue]);
+  }, [molecules, sortByLabel]);
 
   const cardDeckData = useMemo(() => {
     const _cardDeckData: ResultMolecule[][] = [];
@@ -83,9 +108,11 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
             key={`resultCard${i}`}
             id={cardDeckIndex * selectedPageLimit + i + 1}
             molecule={mol}
+            imageWidth={selectedImageSize.width}
+            imageHeight={selectedImageSize.height}
             styles={{
-              minWidth: '12rem',
-              maxWidth: '12rem',
+              minWidth: selectedImageSize.width + 25,
+              maxWidth: selectedImageSize.height + 25,
               marginLeft: '4px',
               marginBottom: '4px',
               border: 'solid 1px lightgrey',
@@ -93,31 +120,77 @@ function ResultsView({ molecules, maxPages, pageLimits }: InputProps) {
           />
         ))
       : [];
-  }, [cardDeckData, selectedCardDeckIndex, selectedPageLimit]);
+  }, [
+    cardDeckData,
+    selectedCardDeckIndex,
+    selectedImageSize.height,
+    selectedImageSize.width,
+    selectedPageLimit,
+  ]);
 
   return cardDeckData.length > 0 ? (
     <div className="results-view">
       <div className="results-view-header">
-        <div className="pagination">
-          <CustomPagination
-            data={cardDeckData}
-            selected={selectedCardDeckIndex}
-            onSelect={handleOnSelectCardIndex}
-            maxPages={maxPages}
+        <div className="results-info">
+          <ResultsInfo
+            onClickDownload={onClickDownload}
+            onClickDelete={onClickDelete}
           />
         </div>
-        <div className="sort-by-and-page-limit-selection">
-          <SelectBox
-            values={Object.keys(sortOptions)}
-            defaultValue={sortOptions.averageDeviation}
-            onChange={(value: string) => setSortByValue(value)}
-          />
-          <SelectBox
-            values={pageLimits}
-            defaultValue={selectedPageLimit}
-            onChange={(value: number) => setSelectedPageLimit(value)}
-          />
+        <div className="view-settings">
+          <table>
+            <tbody>
+              <tr>
+                <td>img. size</td>
+                <td>
+                  <SelectBox
+                    values={imageSizes.map(
+                      (size) => `${size.width}x${size.height}`,
+                    )}
+                    defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
+                    onChange={(value: string) => {
+                      const split = value.split('x');
+                      setSelectedImageSize({
+                        width: Number(split[0]),
+                        height: Number(split[1]),
+                      });
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>no. results</td>
+                <td>
+                  <SelectBox
+                    values={pageLimits}
+                    defaultValue={selectedPageLimit}
+                    onChange={(value: number) => setSelectedPageLimit(value)}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>sort by</td>
+                <td>
+                  <SelectBox
+                    values={Object.keys(sortOptions).map(
+                      (sortOption) => sortOptions[sortOption].label,
+                    )}
+                    defaultValue={sortByLabel}
+                    onChange={(label: string) => setSortByLabel(label)}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+      <div className="pagination">
+        <CustomPagination
+          data={cardDeckData}
+          selected={selectedCardDeckIndex}
+          onSelect={handleOnSelectCardIndex}
+          maxPages={maxPages}
+        />
       </div>
       <div className="card-deck-container">
         <Container>

@@ -1,4 +1,4 @@
-import ResultRecord from '../types/webcase/ResultRecord';
+import ResultRecord from '../types/sherlock/ResultRecord';
 import { Molecule } from 'openchemlib';
 
 export default function buildMolecules(resultRecord: ResultRecord | undefined) {

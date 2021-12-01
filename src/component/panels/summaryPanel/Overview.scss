@@ -1,20 +1,47 @@
 .overview-container {
   display: flex;
-  flex-direction: row;
   width: 100%;
-  height: 5%;
-  border-bottom: 0.55px solid rgb(240, 240, 240);
+  height: 30px;
   padding: 0px 5px;
+  font-size: 14px;
 
-  .Button {
-    border-radius: 5px;
-    margin-top: 3px;
-    margin-left: 5px;
-    color: black;
-    border: none;
-    height: 16px;
-    width: 18px;
-    font-size: 12px;
-    padding: 0;
+  .formula {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .table-view-selection {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    label {
+      margin-right: 5px;
+    }
+
+    .SelectBox {
+      font-size: 12px;
+      width: 55px;
+      height: 18px;
+      border: 1px solid gray;
+      border-radius: 5px;
+    }
+
+    .Button {
+      font-size: 18px;
+      border-radius: 5px;
+      margin-right: 5px;
+      margin-left: 10px;
+      color: black;
+      border: none;
+      padding: 0;
+      background-color: transparent;
+    }
   }
 }

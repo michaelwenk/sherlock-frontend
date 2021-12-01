@@ -1,4 +1,4 @@
-import { DataSet } from './webcase/DataSet';
+import { DataSet } from './sherlock/DataSet';
 
 export interface ResultMolecule {
   molfile: string;

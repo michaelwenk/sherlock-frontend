@@ -12,7 +12,7 @@ interface InputProps {
   onAdd: Function;
 }
 
-const possibleHybridizations = ['SP1', 'SP2', 'SP3'];
+const possibleHybridizations = ['sp1', 'sp2', 'sp3'];
 
 function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
   const [newHybridization, setNewHybridization] = useState<string>(
@@ -27,7 +27,7 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
   );
 
   const handleOnAdd = useCallback(() => {
-    onAdd(Number(newHybridization.split('SP')[1]));
+    onAdd(Number(newHybridization.split('sp')[1]));
   }, [newHybridization, onAdd]);
 
   const rows = useMemo(() => {
@@ -35,7 +35,7 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
       .map((hybridization) => {
         return (
           <tr key={`hybridization_${generateID()}`}>
-            <td>{`SP${hybridization}`}</td>
+            <td>{`sp${hybridization}`}</td>
             <td>
               <Button
                 child={<FaTrashAlt />}

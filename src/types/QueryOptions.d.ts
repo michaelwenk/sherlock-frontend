@@ -1,4 +1,4 @@
-import RetrievalOptions from './webcase/RetrievalOptions';
+import RetrievalOptions from './sherlock/RetrievalOptions';
 
 export interface QueryOptions {
   queryType: string;

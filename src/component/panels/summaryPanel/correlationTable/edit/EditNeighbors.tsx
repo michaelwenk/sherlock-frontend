@@ -2,7 +2,7 @@ import './EditNeighbors.scss';
 
 import { useCallback, useMemo, useState } from 'react';
 import { FaPlus, FaTrashAlt } from 'react-icons/fa';
-import { NeighborsEntry } from '../../../../../types/webcase/NeighborsEntry';
+import { NeighborsEntry } from '../../../../../types/sherlock/NeighborsEntry';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
 import generateID from '../../../../../utils/generateID';

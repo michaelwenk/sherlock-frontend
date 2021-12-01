@@ -1,7 +1,7 @@
 import lodashGet from 'lodash/get';
 import { buildLink, Types } from 'nmr-correlation';
 
-import { ErrorColors } from './Constants';
+import { DefaultPathLengths, ErrorColors } from './Constants';
 
 function getLabelColor(correlationData, correlation) {
   const error = lodashGet(
@@ -28,28 +28,42 @@ function getLabelColor(correlationData, correlation) {
 }
 
 function getAbbreviation(link: Types.Link): string {
+  let abbreviation = 'X';
   if (link.experimentType === 'hsqc' || link.experimentType === 'hmqc') {
-    return !link.signal || link.signal.sign === 0
-      ? 'S'
-      : `S${link.signal.sign === 1 ? '+' : '-'}`;
+    abbreviation =
+      !link.signal || link.signal.sign === 0
+        ? 'S'
+        : `S${link.signal.sign === 1 ? '+' : '-'}`;
   } else if (
     link.experimentType === 'hmbc' ||
     link.experimentType === 'cosy' ||
     link.experimentType === 'tocsy'
   ) {
-    return 'M';
+    abbreviation = 'M';
   } else if (
     link.experimentType === 'noesy' ||
     link.experimentType === 'roesy'
   ) {
-    return 'NOE';
+    abbreviation = 'NOE';
   } else if (link.experimentType === 'inadequate') {
-    return 'I';
+    abbreviation = 'I';
   } else if (link.experimentType === 'adequate') {
-    return 'A';
+    abbreviation = 'A';
   }
 
-  return 'X';
+  const pathLength = link.signal.pathLength;
+  if (pathLength) {
+    const isDefaultCorrelation =
+      DefaultPathLengths[link.experimentType] &&
+      pathLength.min >= DefaultPathLengths[link.experimentType].min &&
+      pathLength.min <= DefaultPathLengths[link.experimentType].max &&
+      pathLength.max >= DefaultPathLengths[link.experimentType].min &&
+      pathLength.max <= DefaultPathLengths[link.experimentType].max;
+
+    return `${abbreviation}${isDefaultCorrelation ? '' : '*'}`;
+  }
+
+  return abbreviation;
 }
 
 function buildNewLink1D(link) {

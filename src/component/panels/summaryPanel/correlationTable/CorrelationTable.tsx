@@ -9,14 +9,14 @@ import { useData } from '../../../../context/DataContext';
 
 interface InputPros {
   additionalColumnData: Types.Correlation[];
-  changeHybridizationSaveHandler: Function;
   showAdditionalColumns: boolean;
+  showProtonsAsRows: boolean;
 }
 
 function CorrelationTable({
   additionalColumnData,
-  changeHybridizationSaveHandler,
   showAdditionalColumns,
+  showProtonsAsRows,
 }: InputPros) {
   const { nmriumData } = useData();
 
@@ -24,7 +24,11 @@ function CorrelationTable({
     () =>
       nmriumData && nmriumData.correlations
         ? nmriumData.correlations.values
-            .filter((correlation) => correlation.atomType !== 'H')
+            .filter((correlation) =>
+              showProtonsAsRows
+                ? correlation.atomType === 'H'
+                : correlation.atomType !== 'H',
+            )
             .map((correlation) => (
               <CorrelationTableRow
                 additionalColumnData={additionalColumnData}
@@ -41,16 +45,15 @@ function CorrelationTable({
                       }
                     : {}
                 }
-                onChangeHybridization={changeHybridizationSaveHandler}
                 showAdditionalColumns={showAdditionalColumns}
               />
             ))
         : [],
     [
       additionalColumnData,
-      changeHybridizationSaveHandler,
       nmriumData,
       showAdditionalColumns,
+      showProtonsAsRows,
     ],
   );
 
@@ -72,15 +75,29 @@ function CorrelationTable({
           <tr>
             <th>Atom</th>
             <th>δ (ppm)</th>
-            <th>Equiv</th>
-            <th>#H</th>
-            <th>Hybrid</th>
-            <th>non-neighbor</th>
             <th
-              style={showAdditionalColumns ? { borderRight: '1px solid' } : {}}
+              style={
+                showAdditionalColumns && showProtonsAsRows
+                  ? { borderRight: '1px solid' }
+                  : {}
+              }
             >
-              neighbor
+              Equiv
             </th>
+            {!showProtonsAsRows && (
+              <>
+                <th>#H</th>
+                <th>Hybrid</th>
+                <th>non-neighbor</th>
+                <th
+                  style={
+                    showAdditionalColumns ? { borderRight: '1px solid' } : {}
+                  }
+                >
+                  neighbor
+                </th>
+              </>
+            )}
             {showAdditionalColumns && additionalColumnHeader}
           </tr>
         </thead>

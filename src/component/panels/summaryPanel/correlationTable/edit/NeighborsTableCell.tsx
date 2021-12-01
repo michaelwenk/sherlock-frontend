@@ -5,7 +5,7 @@ import {
   Types,
 } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { NeighborsEntry } from '../../../../../types/webcase/NeighborsEntry';
+import { NeighborsEntry } from '../../../../../types/sherlock/NeighborsEntry';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
