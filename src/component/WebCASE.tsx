@@ -53,7 +53,7 @@ function WebCASE() {
           </div>
           <div className="webcase-body">
             <Tabs defaultActiveKey="nmrium" className="tabs-bar">
-              <Tab eventKey="nmrium" title="NMRium">
+              <Tab eventKey="nmrium" title="Spectra">
                 <div className="nmrium-container">
                   <NMRium
                     preferences={preferences}
