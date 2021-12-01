@@ -45,7 +45,6 @@
   .pagination {
     height: 40px;
     justify-content: center;
-    margin-top: 5px;
 
     .PaginationItem {
       white-space: nowrap;
@@ -54,7 +53,7 @@
 
   .card-deck-container {
     width: 100%;
-    height: calc(100% - 80px - 40px - 5px - 5px);
+    height: calc(100% - 80px - 40px - 5px);
     padding: 2px;
     overflow-y: scroll;
     margin-top: 5px;
