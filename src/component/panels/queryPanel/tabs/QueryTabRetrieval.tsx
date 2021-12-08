@@ -122,6 +122,7 @@ function QueryTabRetrieval() {
           defaultValue=""
           onChange={(value: string) => setSearchPattern(value.trim())}
           placeholder="Search..."
+          inputWidth="100%"
         />
         <div className="button-container">
           <Button
