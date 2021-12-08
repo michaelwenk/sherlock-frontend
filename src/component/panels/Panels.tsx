@@ -103,7 +103,7 @@ function Panels() {
       let response: AxiosResponse | undefined;
       await axios({
         method: 'GET',
-        url: 'http://localhost:8081/webcase-db-service-result/getAllMeta',
+        url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
         cancelToken: new axios.CancelToken(
           (cancel) => (cancelRequestRef.current = cancel),
         ),
@@ -155,7 +155,7 @@ function Panels() {
           if (axios.isCancel(err)) {
             setIsCanceling(true);
             if (queryType === queryTypes.elucidation) {
-              await axios.get('http://localhost:8081/webcase-core/cancel');
+              await axios.get('http://localhost:8081/sherlock-core/cancel');
             }
             setIsCanceling(false);
             setRequestWasCancelled(true);
@@ -223,7 +223,7 @@ function Panels() {
         const t0 = performance.now();
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
-          url: 'http://localhost:8081/webcase-core/core',
+          url: 'http://localhost:8081/sherlock-core/core',
           data: requestData,
           headers: {
             'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deleteAll) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8081/webcase-db-service-result/deleteAll',
+            url: 'http://localhost:8081/sherlock-db-service-result/deleteAll',
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
@@ -270,7 +270,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deletion) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8081/webcase-db-service-result/deleteById',
+            url: 'http://localhost:8081/sherlock-db-service-result/deleteById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
@@ -282,7 +282,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.retrieve) {
           const requestConfig: AxiosRequestConfig = {
             method: 'GET',
-            url: 'http://localhost:8081/webcase-db-service-result/getById',
+            url: 'http://localhost:8081/sherlock-db-service-result/getById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
