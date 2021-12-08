@@ -1,4 +1,4 @@
-FROM node:15
+FROM node:16.13.1
 
 # Create app directory
 WORKDIR /app
@@ -8,9 +8,8 @@ COPY . .
 
 # install dependencies
 RUN npm install --legacy-peer-deps
-RUN npm install serve -g
 # for production mode
 RUN npm run build
 
 EXPOSE 5000
-CMD [ "npm", "run", "prod" ]
+CMD npm run preview

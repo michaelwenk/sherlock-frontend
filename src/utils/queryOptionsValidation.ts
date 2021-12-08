@@ -6,7 +6,8 @@ export interface ShiftToleranceError {
 
 export interface ValidationErrors {
   dereplicationOptions?: {
-    shiftTolerances?: ShiftToleranceError;
+    shiftTolerance: number;
+    maxAverageDeviation: number;
     checkMultiplicity?: string;
     checkEquivalencesCount?: string;
     useMF?: string;
@@ -16,10 +17,6 @@ export interface ValidationErrors {
     useElim?: string;
     elimP1?: string;
     elimP2?: string;
-    hmbcP3?: string;
-    hmbcP4?: string;
-    cosyP3?: string;
-    cosyP4?: string;
     useFilterLsdRing3?: string;
     useFilterLsdRing4?: string;
     hybridizationDetectionThreshold?: number;
@@ -28,6 +25,8 @@ export interface ValidationErrors {
 }
 
 function validateQueryOptions(values: QueryOptions) {
+  console.log(values);
+
   const errors: ValidationErrors = {};
   // check ELIM
   if (

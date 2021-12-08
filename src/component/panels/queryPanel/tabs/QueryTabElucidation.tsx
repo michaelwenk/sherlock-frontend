@@ -28,7 +28,6 @@ function QueryTabElucidation() {
             label="Minimal occurrence of hybridization in DB (%) "
             min={0}
             max={100}
-            step={0.01}
           />
           <Input
             type="number"
@@ -44,7 +43,6 @@ function QueryTabElucidation() {
             label="Lower limit for non-neighbors detection (%) "
             min={0}
             max={100}
-            step={0.01}
           />
           <Input
             type="number"
@@ -60,7 +58,6 @@ function QueryTabElucidation() {
             label="Lower limit for set neighbors detection (%) "
             min={0}
             max={100}
-            step={0.01}
           />
         </div>
         <Button
@@ -157,7 +154,7 @@ function QueryTabElucidation() {
       <p style={{ fontWeight: 'bold' }}>Extras: </p>
       <div className="request-name-container">
         <Input
-          type="string"
+          type="text"
           onChange={(value: string) => {
             setFieldValue('retrievalOptions.resultName', value);
           }}

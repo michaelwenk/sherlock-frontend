@@ -1,13 +1,15 @@
+import './Input.scss';
+
 import { ChangeEvent, useCallback } from 'react';
 
 type InputProps = {
-  type: string;
+  type: React.HTMLInputTypeAttribute;
   defaultValue: string | number;
   onChange: Function;
   label?: string;
   min?: number;
   max?: number;
-  step?: number;
+  inputWidth?: string;
   className?: string;
   placeholder?: string;
 };
@@ -16,10 +18,10 @@ function Input({
   type,
   defaultValue,
   onChange,
-  label = '',
+  label,
   min,
   max,
-  step,
+  inputWidth = '80px',
   className = 'Input',
   placeholder = '',
 }: InputProps) {
@@ -35,18 +37,20 @@ function Input({
 
   return (
     <div className={className}>
-      <label>
-        {`${label}\t`}
-        <input
-          type={type}
-          onChange={handleOnChange}
-          defaultValue={defaultValue}
-          placeholder={placeholder}
-          min={min}
-          max={max}
-          step={step}
-        />
-      </label>
+      {label && <label>{`${label}`}</label>}
+      <input
+        type={type}
+        onChange={handleOnChange}
+        defaultValue={defaultValue}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        style={
+          {
+            '--inputWidth': inputWidth,
+          } as React.CSSProperties
+        }
+      />
     </div>
   );
 }

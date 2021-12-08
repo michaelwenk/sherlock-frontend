@@ -1,8 +1,6 @@
 import Tolerances from '../../../elements/Tolerances';
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';
-import { Tolerance } from '../../../../constants/defaultTolerance';
-import Input from '../../../elements/Input';
 import { QueryOptions } from '../../../../types/QueryOptions';
 
 function QueryTabDereplication() {
@@ -10,26 +8,19 @@ function QueryTabDereplication() {
   return (
     <div>
       <Tolerances
-        tolerance={values.dereplicationOptions.shiftTolerances}
-        onChangeTolerance={(tolerance: Tolerance) =>
-          setFieldValue('dereplicationOptions.shiftTolerances', tolerance)
+        tolerance={values.dereplicationOptions.shiftTolerance}
+        onChangeTolerance={(tolerance: number) =>
+          setFieldValue('dereplicationOptions.shiftTolerance', tolerance)
+        }
+        maxAverageDeviation={values.dereplicationOptions.maxAverageDeviation}
+        onChangeMaxAverageDeviation={(maxAverageDeviation: number) =>
+          setFieldValue(
+            'dereplicationOptions.maxAverageDeviation',
+            maxAverageDeviation,
+          )
         }
       />
-      <span>
-        <label>Maximum avg. deviation [ppm]: </label>
-        <Input
-          type="number"
-          onChange={(value) => {
-            setFieldValue(
-              'dereplicationOptions.maxAverageDeviation',
-              Number(value),
-            );
-          }}
-          defaultValue={values.dereplicationOptions.maxAverageDeviation}
-          min={0}
-          label="C"
-        />
-      </span>
+
       <CheckBox
         defaultValue={values.dereplicationOptions.checkMultiplicity}
         onChange={(isChecked) =>
