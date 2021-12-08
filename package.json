@@ -5,7 +5,7 @@
     "start": "vite --host localhost --port 3001 --strictPort --open",
     "build": "rimraf dist && tsc && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 5000",
-    "clean-install": "rimraf package-lock.json && rimraf node_modules && npm i --legacy-peer-deps",
+    "clean-install": "rm package-lock.json && rm -rf node_modules && npm i --legacy-peer-deps",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "eslint-fix": "npm run eslint --fix",
     "prettier": "prettier --check src",
