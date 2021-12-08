@@ -1,3 +1,5 @@
+import './Button.scss';
+
 import { MouseEvent, useCallback } from 'react';
 
 type InputProps = {

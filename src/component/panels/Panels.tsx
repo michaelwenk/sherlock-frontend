@@ -7,9 +7,9 @@ import axios, {
   Canceler,
 } from 'axios';
 import { Types } from 'nmr-correlation';
-import { Spectra } from 'nmrium';
-import { Datum1D } from 'nmrium/lib/data/data1d/Spectrum1D';
-import { Datum2D } from 'nmrium/lib/data/data2d/Spectrum2D';
+import { Spectra } from '@michaelwenk/nmrium';
+import { Datum1D } from '@michaelwenk/nmrium/lib/data/types/data1d';
+import { Datum2D } from '@michaelwenk/nmrium/lib/data/types/data2d/Datum2D';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import { Result } from '../../types/Result';

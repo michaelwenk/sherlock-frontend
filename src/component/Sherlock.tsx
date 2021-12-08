@@ -1,12 +1,12 @@
 import './Sherlock.scss';
 
 import { Tab, Tabs } from 'react-bootstrap';
-import NMRium from 'nmrium';
+import NMRium from '@michaelwenk/nmrium';
 import Panels from './panels/Panels';
 import { Reducer, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
-import { State } from 'nmrium/lib/component/reducer/Reducer';
+import { State } from '@michaelwenk/nmrium/lib/component/reducer/Reducer';
 import {
   DataReducer,
   DataState,
@@ -45,31 +45,31 @@ function Sherlock() {
   );
 
   return (
-    <DispatchProvider value={dispatcherMemo}>
-      <DataProvider value={state}>
-        <div className="sherlock">
-          <div className="sherlock-header">
-            <p>Sherlock</p>
-          </div>
-          <div className="sherlock-body">
-            <Tabs defaultActiveKey="nmrium" className="tabs-bar">
-              <Tab eventKey="nmrium" title="Spectra">
-                <div className="nmrium-container">
-                  <NMRium
-                    preferences={preferences}
-                    onDataChange={handleOnNMRiumDataChange}
-                  />
-                </div>
-              </Tab>
-              <Tab eventKey="case" title="CASE">
+    <div className="sherlock">
+      <div className="sherlock-header">
+        <p>Sherlock</p>
+      </div>
+      <div className="sherlock-body">
+        <Tabs defaultActiveKey="nmrium" className="tabs-bar">
+          <Tab eventKey="nmrium" title="Spectra">
+            <div className="nmrium-container">
+              <NMRium
+                preferences={preferences}
+                onDataChange={handleOnNMRiumDataChange}
+              />
+            </div>
+          </Tab>
+          <Tab eventKey="case" title="CASE">
+            <DispatchProvider value={dispatcherMemo}>
+              <DataProvider value={state}>
                 <Panels />
-              </Tab>
-              <Tab eventKey="about" title="About"></Tab>
-            </Tabs>
-          </div>
-        </div>
-      </DataProvider>
-    </DispatchProvider>
+              </DataProvider>
+            </DispatchProvider>
+          </Tab>
+          <Tab eventKey="about" title="About"></Tab>
+        </Tabs>
+      </div>
+    </div>
   );
 }
 export default Sherlock;

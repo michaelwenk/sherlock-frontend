@@ -1,5 +1,3 @@
-build
-lib
-lib-cjs
+dist
 node_modules
 public

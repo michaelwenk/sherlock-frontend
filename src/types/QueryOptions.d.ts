@@ -3,11 +3,11 @@ import RetrievalOptions from './sherlock/RetrievalOptions';
 export interface QueryOptions {
   queryType: string;
   dereplicationOptions: {
-    shiftTolerances: ShiftTolerances;
+    shiftTolerance: number;
+    maxAverageDeviation: number;
     checkMultiplicity: boolean;
     checkEquivalencesCount: boolean;
     useMF: boolean;
-    maxAverageDeviation: number;
   };
   elucidationOptions: {
     // PyLSD options

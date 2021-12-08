@@ -1,16 +1,15 @@
 import { QueryOptions } from '../types/QueryOptions';
-import defaultTolerance from './defaultTolerance';
 import queryTypes from './queryTypes';
 import retrievalActions from './retrievalAction';
 
 const defaultQueryOptions: QueryOptions = {
   queryType: queryTypes.dereplication,
   dereplicationOptions: {
-    shiftTolerances: defaultTolerance,
+    shiftTolerance: 2,
+    maxAverageDeviation: 1,
     checkMultiplicity: true,
     checkEquivalencesCount: true,
     useMF: true,
-    maxAverageDeviation: 1,
   },
   elucidationOptions: {
     // PyLSD options

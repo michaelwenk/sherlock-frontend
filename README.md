@@ -54,7 +54,7 @@ If you want to build the container image by yourself, you need to first clone th
 
 Then build the container image using following command:
 
-    docker build -t webcase-frontend .
+    docker build -t michaelwenk/webcase-frontend .
 
 #### Start
 

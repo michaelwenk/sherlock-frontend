@@ -12,9 +12,7 @@
 /coverage
 
 # production
-/build
-/lib
-/lib-cjs
+/dist
 
 # misc
 .DS_Store
