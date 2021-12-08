@@ -160,6 +160,7 @@ function QueryTabElucidation() {
           }}
           defaultValue={values.retrievalOptions.resultName || ''}
           label="Task name"
+          inputWidth="100%"
         />
       </div>
     </div>
