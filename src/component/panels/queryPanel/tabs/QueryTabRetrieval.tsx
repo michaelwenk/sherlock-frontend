@@ -57,7 +57,7 @@ function QueryTabRetrieval() {
             <td>
               <OCLnmr
                 OCL={OCL}
-                id={`molSVG${resultRecord.id}`}
+                id={`molSVG${resultRecord.id}_preview`}
                 width={100}
                 height={100}
                 molfile={molecule.toMolfileV3()}

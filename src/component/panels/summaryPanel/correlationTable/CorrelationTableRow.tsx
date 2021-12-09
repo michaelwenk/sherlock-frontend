@@ -194,11 +194,11 @@ function CorrelationTableRow({
           >
             {correlation.atomType != 'H' &&
             resultData &&
-            resultData.detections ? (
+            resultData.resultRecord.detections ? (
               <HybridizationsTableCell
                 correlation={correlation}
                 hybridizations={
-                  resultData.detections.detectedHybridizations[
+                  resultData.resultRecord.detections.detectedHybridizations[
                     getCorrelationIndex(
                       nmriumData?.correlations.values,
                       correlation,
@@ -220,11 +220,11 @@ function CorrelationTableRow({
           >
             {correlation.atomType != 'H' &&
             resultData &&
-            resultData.detections ? (
+            resultData.resultRecord.detections ? (
               <NeighborsTableCell
                 correlation={correlation}
                 neighbors={
-                  resultData.detections.forbiddenNeighbors[
+                  resultData.resultRecord.detections.forbiddenNeighbors[
                     getCorrelationIndex(
                       nmriumData?.correlations.values,
                       correlation,
@@ -248,11 +248,11 @@ function CorrelationTableRow({
               },
             }}
           >
-            {resultData && resultData.detections ? (
+            {resultData && resultData.resultRecord.detections ? (
               <NeighborsTableCell
                 correlation={correlation}
                 neighbors={
-                  resultData.detections.setNeighbors[
+                  resultData.resultRecord.detections.setNeighbors[
                     getCorrelationIndex(
                       nmriumData?.correlations.values,
                       correlation,

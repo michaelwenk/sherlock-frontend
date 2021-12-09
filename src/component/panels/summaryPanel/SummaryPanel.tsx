@@ -46,8 +46,8 @@ function SummaryPanel() {
     );
   }, [nmriumData]);
 
-  return nmriumData?.correlations.values &&
-    nmriumData?.correlations.values.length > 0 ? (
+  return nmriumData?.correlations?.values &&
+    nmriumData.correlations.values.length > 0 ? (
     <div className="summary-panel">
       <Overview
         mf={nmriumData ? nmriumData.correlations.options.mf : ''}

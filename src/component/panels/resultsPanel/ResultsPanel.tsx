@@ -2,7 +2,6 @@ import './ResultsPanel.scss';
 
 import { useCallback, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
-import ResultsInfo from './resultsInfo/ResultsInfo';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
 import { Result } from '../../../types/Result';
@@ -24,7 +23,6 @@ type InputProps = {
 function ResultsPanel({ show }: InputProps) {
   const { resultData } = useData();
   const dispatch = useDispatch();
-
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const molecules = useMemo(() => {

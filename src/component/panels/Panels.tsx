@@ -56,9 +56,9 @@ function Panels() {
   const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
   const [hideRightPanel, setHideRightPanel] = useState<boolean>(false);
 
-  const processNMRiumData = (nmriumData: NMRiumData) =>
+  function processNMRiumData(nmriumData: NMRiumData) {
     nmriumData && nmriumData.spectra
-      ? nmriumData.spectra.reduce<Spectra>((acc, spectrum) => {
+      ? (nmriumData.spectra as Spectra).reduce<Spectra>((acc, spectrum) => {
           if (
             spectrum &&
             spectrum.id &&
@@ -86,6 +86,7 @@ function Panels() {
           return acc;
         }, [])
       : [];
+  }
 
   const showResultsPanel = useMemo(
     () =>
@@ -212,7 +213,7 @@ function Panels() {
           dereplicationOptions,
           elucidationOptions,
           detectionOptions,
-          detections: resultData?.detections,
+          detections: resultData?.resultRecord?.detections,
           resultRecord: {
             id: retrievalOptions.resultID,
             name: retrievalOptions.resultName,
@@ -238,13 +239,12 @@ function Panels() {
           console.log(response);
           const resultData: Result = {
             queryType,
-            detections: response.data.detections,
             resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };
           dispatch({
             type: SET_RESULT_DATA,
-            payload: { resultData },
+            payload: { queryType, resultData },
           });
 
           if (queryType === queryTypes.detection) {
@@ -297,14 +297,20 @@ function Panels() {
             };
             dispatch({
               type: SET_RESULT_DATA,
-              payload: { resultData },
+              payload: { queryType, resultData },
             });
           }
           setShowQueryPanel(false);
         }
       }
     },
-    [dispatch, handleOnFetch, nmriumData, request, resultData?.detections],
+    [
+      dispatch,
+      handleOnFetch,
+      nmriumData,
+      request,
+      resultData?.resultRecord?.detections,
+    ],
   );
 
   const handleOnDragFinished = useCallback((width) => {

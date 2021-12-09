@@ -118,7 +118,7 @@ function NeighborsTableCell({
   const handleOnDeleteFixed = useCallback(
     (neighborCorrelationIndex: number) => {
       const _fixedNeighbors = lodashCloneDeep(
-        resultData?.detections?.fixedNeighbors,
+        resultData?.resultRecord.detections?.fixedNeighbors,
       );
       if (_fixedNeighbors) {
         const correlationIndex = getCorrelationIndex(
@@ -148,14 +148,14 @@ function NeighborsTableCell({
       correlation,
       dispatch,
       nmriumData?.correlations.values,
-      resultData?.detections?.fixedNeighbors,
+      resultData?.resultRecord.detections?.fixedNeighbors,
     ],
   );
 
   const handleOnAddFixed = useCallback(
     (neighborCorrelationIndex: number) => {
       const _fixedNeighbors = lodashCloneDeep(
-        resultData?.detections?.fixedNeighbors,
+        resultData?.resultRecord.detections?.fixedNeighbors,
       );
       if (_fixedNeighbors) {
         const correlationIndex = getCorrelationIndex(
@@ -181,7 +181,7 @@ function NeighborsTableCell({
       correlation,
       dispatch,
       nmriumData?.correlations.values,
-      resultData?.detections?.fixedNeighbors,
+      resultData?.resultRecord.detections?.fixedNeighbors,
     ],
   );
 
@@ -226,17 +226,17 @@ function NeighborsTableCell({
         correlation,
       );
       if (
-        resultData?.detections?.fixedNeighbors &&
-        resultData?.detections?.fixedNeighbors[correlationIndex]
+        resultData?.resultRecord.detections?.fixedNeighbors &&
+        resultData?.resultRecord.detections?.fixedNeighbors[correlationIndex]
       ) {
-        resultData.detections.fixedNeighbors[correlationIndex].forEach(
-          (neighborCorrelationIndex) => {
-            values.push(
-              nmriumData?.correlations.values[neighborCorrelationIndex].label
-                .origin,
-            );
-          },
-        );
+        resultData.resultRecord.detections.fixedNeighbors[
+          correlationIndex
+        ].forEach((neighborCorrelationIndex) => {
+          values.push(
+            nmriumData?.correlations.values[neighborCorrelationIndex].label
+              .origin,
+          );
+        });
       }
     }
 
@@ -246,7 +246,7 @@ function NeighborsTableCell({
     mode,
     neighbors,
     nmriumData?.correlations.values,
-    resultData?.detections?.fixedNeighbors,
+    resultData?.resultRecord.detections?.fixedNeighbors,
   ]);
 
   const possibleNeighbors = useMemo(
@@ -303,11 +303,11 @@ function NeighborsTableCell({
                     onAdd={handleOnAdd}
                   />
                 </Tab>
-                {resultData?.detections?.fixedNeighbors && (
+                {resultData?.resultRecord.detections?.fixedNeighbors && (
                   <Tab eventKey={'fixed'} title="Fixed">
                     <EditFixedNeighbors
                       fixedNeighborEntry={
-                        resultData.detections.fixedNeighbors[
+                        resultData.resultRecord.detections.fixedNeighbors[
                           getCorrelationIndex(
                             nmriumData?.correlations.values,
                             correlation,

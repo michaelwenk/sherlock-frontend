@@ -2,7 +2,7 @@ import ResultRecord from '../types/sherlock/ResultRecord';
 import { Molecule } from 'openchemlib';
 
 export default function buildMolecules(resultRecord: ResultRecord | undefined) {
-  return resultRecord
+  return resultRecord && resultRecord.dataSetList
     ? resultRecord.dataSetList.map((dataSet) => {
         const molecule: Molecule = Molecule.fromSmiles(dataSet.meta.smiles);
         return {

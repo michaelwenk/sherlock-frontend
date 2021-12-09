@@ -1,7 +1,6 @@
+import { Spectra } from '@michaelwenk/nmrium';
 import { Types } from 'nmr-correlation';
-import { Spectra } from 'nmr-correlation/lib/types';
-
 export interface NMRiumData {
-  spectra: Spectra;
-  correlations: Types.CorrelationData;
+  spectra?: Spectra;
+  correlations?: Types.CorrelationData;
 }
