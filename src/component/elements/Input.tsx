@@ -1,6 +1,6 @@
 import './Input.scss';
 
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, CSSProperties, useCallback } from 'react';
 
 type InputProps = {
   type: React.HTMLInputTypeAttribute;
@@ -12,6 +12,7 @@ type InputProps = {
   inputWidth?: string;
   className?: string;
   placeholder?: string;
+  style?: CSSProperties;
 };
 
 function Input({
@@ -24,6 +25,7 @@ function Input({
   inputWidth = '80px',
   className = 'Input',
   placeholder = '',
+  style,
 }: InputProps) {
   const handleOnChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,11 +47,7 @@ function Input({
         placeholder={placeholder}
         min={min}
         max={max}
-        style={
-          {
-            '--inputWidth': inputWidth,
-          } as React.CSSProperties
-        }
+        style={{ ...style, '--inputWidth': inputWidth } as React.CSSProperties}
       />
     </div>
   );

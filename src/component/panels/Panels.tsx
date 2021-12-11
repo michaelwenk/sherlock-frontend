@@ -7,9 +7,6 @@ import axios, {
   Canceler,
 } from 'axios';
 import { Types } from 'nmr-correlation';
-import { Spectra } from '@michaelwenk/nmrium';
-import { Datum1D } from '@michaelwenk/nmrium/lib/data/types/data1d';
-import { Datum2D } from '@michaelwenk/nmrium/lib/data/types/data2d/Datum2D';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import { Result } from '../../types/Result';
@@ -21,7 +18,6 @@ import SummaryPanel from './summaryPanel/SummaryPanel';
 import SplitPane from 'react-split-pane';
 import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
-import { NMRiumData } from '../../types/nmrium/NMRiumData';
 import {
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
@@ -29,6 +25,11 @@ import {
 import { QueryOptions } from '../../types/QueryOptions';
 import ResultRecord from '../../types/sherlock/ResultRecord';
 import retrievalActions from '../../constants/retrievalAction';
+import Button from '../elements/Button';
+import { Spectra } from '@michaelwenk/nmrium';
+import { Datum1D } from '@michaelwenk/nmrium/lib/data/types/data1d';
+import { Datum2D } from '@michaelwenk/nmrium/lib/data/types/data2d';
+import { NMRiumData } from '../../types/nmrium/NMRiumData';
 
 export interface onSubmitProps {
   queryOptions: QueryOptions;
@@ -207,14 +208,15 @@ function Panels() {
               }
             : {},
         };
+
         const requestData = {
-          data,
           queryType,
           dereplicationOptions,
-          elucidationOptions,
-          detectionOptions,
-          detections: resultData?.resultRecord?.detections,
           resultRecord: {
+            ...resultData?.resultRecord,
+            correlations: data.correlations,
+            elucidationOptions,
+            detectionOptions,
             id: retrievalOptions.resultID,
             name: retrievalOptions.resultName,
           } as ResultRecord,
@@ -289,7 +291,6 @@ function Panels() {
             ),
           };
           const response = await request(requestConfig, queryType);
-
           if (response) {
             const resultData: Result = {
               queryType,
@@ -304,13 +305,7 @@ function Panels() {
         }
       }
     },
-    [
-      dispatch,
-      handleOnFetch,
-      nmriumData,
-      request,
-      resultData?.resultRecord?.detections,
-    ],
+    [dispatch, handleOnFetch, nmriumData, request, resultData?.resultRecord],
   );
 
   const handleOnDragFinished = useCallback((width) => {
@@ -378,7 +373,7 @@ function Panels() {
         >
           <SummaryPanel />
           <div className="query-and-result-panel">
-            <button
+            <Button
               type="button"
               className="collapsible"
               style={
@@ -386,13 +381,13 @@ function Panels() {
                   '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"',
                 } as React.CSSProperties
               }
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={() => {
                 setShowQueryPanel(!showQueryPanel);
               }}
-            >
-              {showQueryPanel ? 'Hide query options' : 'Show query options'}
-            </button>
+              child={
+                showQueryPanel ? 'Hide query options' : 'Show query options'
+              }
+            />
 
             <QueryPanel
               onSubmit={handleOnSubmit}

@@ -1,10 +1,12 @@
-import { useCallback } from 'react';
+import './SelectBox.scss';
+import { CSSProperties, useCallback } from 'react';
 
 type InputProps = {
   values: string[] | number[];
   defaultValue: string | number;
   onChange: Function;
   className?: string;
+  style?: CSSProperties;
 };
 
 function SelectBox({
@@ -12,6 +14,7 @@ function SelectBox({
   onChange,
   defaultValue,
   className = 'SelectBox',
+  style,
 }: InputProps) {
   const handleOnChanged = useCallback(
     (e) => {
@@ -25,6 +28,7 @@ function SelectBox({
       className={className}
       onChange={handleOnChanged}
       defaultValue={defaultValue}
+      style={style}
     >
       {values.map((value: string | number) => (
         <option key={value} value={value}>

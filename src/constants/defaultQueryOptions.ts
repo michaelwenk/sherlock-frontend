@@ -29,7 +29,11 @@ const defaultQueryOptions: QueryOptions = {
     lowerElementCountThreshold: 0.01,
     upperElementCountThreshold: 0.9,
   },
-  retrievalOptions: { action: retrievalActions.fetch, resultID: '' },
+  retrievalOptions: {
+    action: retrievalActions.fetch,
+    resultID: '',
+    resultName: '',
+  },
 };
 
 export default defaultQueryOptions;

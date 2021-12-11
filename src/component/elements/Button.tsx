@@ -1,6 +1,6 @@
 import './Button.scss';
 
-import { MouseEvent, useCallback } from 'react';
+import { CSSProperties, MouseEvent, useCallback } from 'react';
 
 type InputProps = {
   onClick: Function;
@@ -9,6 +9,7 @@ type InputProps = {
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
   title?: string;
+  style?: CSSProperties;
 };
 
 function Button({
@@ -18,6 +19,7 @@ function Button({
   disabled = false,
   type = 'button',
   title = '',
+  style,
 }: InputProps) {
   const handleOnClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -35,6 +37,7 @@ function Button({
       disabled={disabled}
       type={type}
       title={title}
+      style={style}
     >
       {child}
     </button>

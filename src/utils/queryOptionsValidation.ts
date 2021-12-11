@@ -25,8 +25,6 @@ export interface ValidationErrors {
 }
 
 function validateQueryOptions(values: QueryOptions) {
-  console.log(values);
-
   const errors: ValidationErrors = {};
   // check ELIM
   if (

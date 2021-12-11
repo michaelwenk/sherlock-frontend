@@ -17,7 +17,7 @@ function CustomModal({
   title,
   onClose,
   body,
-  footer = <Button child="Close" onClick={onClose} className="footer-button" />,
+  footer = <Button child="Close" onClick={onClose} />,
 }: InputProps) {
   const modalRef = useRef<any>();
 

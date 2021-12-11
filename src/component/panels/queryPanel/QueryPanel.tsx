@@ -1,12 +1,15 @@
 import './QueryPanel.scss';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import Button from '../../elements/Button';
 import queryTypes from '../../../constants/queryTypes';
+import { QueryOptions } from '../../../types/QueryOptions';
+import { useData } from '../../../context/DataContext';
+import capitalize from '../../../utils/capitalize';
 
 type InputProps = {
   onSubmit: Function;
@@ -15,11 +18,32 @@ type InputProps = {
 };
 
 function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
+  const { resultData } = useData();
   const [queryType, setQueryType] = useState<string>(queryTypes.dereplication);
 
   const handleOnSelectTab = useCallback((type) => {
     setQueryType(type);
   }, []);
+
+  const queryOptions = useMemo((): QueryOptions => {
+    const _queryOptions: QueryOptions = {
+      queryType: resultData?.queryType || defaultQueryOptions.queryType,
+      dereplicationOptions: defaultQueryOptions.dereplicationOptions,
+      detectionOptions:
+        resultData?.resultRecord?.detectionOptions ||
+        defaultQueryOptions.detectionOptions,
+      elucidationOptions:
+        resultData?.resultRecord?.elucidationOptions ||
+        defaultQueryOptions.elucidationOptions,
+      retrievalOptions: {
+        action: '',
+        resultID: resultData?.resultRecord.id || '',
+        resultName: resultData?.resultRecord.name || '',
+      },
+    };
+
+    return _queryOptions;
+  }, [resultData]);
 
   return (
     <div
@@ -31,30 +55,33 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
       }
     >
       <Formik
-        initialValues={defaultQueryOptions}
+        initialValues={queryOptions}
         validate={validateQueryOptions}
         onSubmit={(values, { setSubmitting }) => {
           onSubmit({ queryOptions: values });
           setSubmitting(false);
         }}
+        enableReinitialize={true}
       >
-        {({ setFieldValue, submitForm }) => (
-          <Form>
-            <div className="form-tabs-container">
-              <QueryTabs onSelectTab={handleOnSelectTab} />
-              {queryType !== queryTypes.retrieval && (
-                <Button
-                  onClick={() => {
-                    setFieldValue('queryType', queryType);
-                    submitForm();
-                  }}
-                  child={queryType}
-                  disabled={isRequesting}
-                />
-              )}
-            </div>
-          </Form>
-        )}
+        {({ setFieldValue, submitForm }) => {
+          return (
+            <Form>
+              <div className="form-tabs-container">
+                <QueryTabs onSelectTab={handleOnSelectTab} />
+                {queryType !== queryTypes.retrieval && (
+                  <Button
+                    onClick={() => {
+                      setFieldValue('queryType', queryType);
+                      submitForm();
+                    }}
+                    child={capitalize(queryType)}
+                    disabled={isRequesting}
+                  />
+                )}
+              </div>
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );

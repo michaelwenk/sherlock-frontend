@@ -16,12 +16,8 @@ function ConfirmModal({ show, title, onCancel, onConfirm }: InputProps) {
       onClose={onCancel}
       footer={
         <div>
-          <Button child="Cancel" onClick={onCancel} className="footer-button" />
-          <Button
-            child="Confirm"
-            onClick={onConfirm}
-            className="footer-button"
-          />
+          <Button child="Cancel" onClick={onCancel} />
+          <Button child="Confirm" onClick={onConfirm} />
         </div>
       }
     />

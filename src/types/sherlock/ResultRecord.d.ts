@@ -1,6 +1,8 @@
 import { Types } from 'nmr-correlation';
 import { DataSet } from './DataSet';
+import DetectionOptions from './DetectionOptions';
 import { Detections } from './Detections';
+import ElucidationOptions from './ElucidationOptions';
 
 export default interface ResultRecord {
   id: string;
@@ -11,4 +13,6 @@ export default interface ResultRecord {
   previewDataSet: DataSet;
   correlations: Types.CorrelationData;
   detections: Detections;
+  detectionOptions: DetectionOptions;
+  elucidationOptions: ElucidationOptions;
 }

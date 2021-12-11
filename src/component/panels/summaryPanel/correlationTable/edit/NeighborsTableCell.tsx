@@ -267,7 +267,6 @@ function NeighborsTableCell({
 
   return (
     <div
-      style={{ width: '100%', height: '100%' }}
       onDoubleClick={(e) => {
         e.stopPropagation();
         setShow(true);
