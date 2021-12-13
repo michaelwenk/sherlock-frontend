@@ -1,3 +1,4 @@
+import './CheckBox.scss';
 import { useCallback, useState } from 'react';
 
 type InputProps = {
@@ -12,6 +13,7 @@ function CheckBox({
   onChange,
   label,
   className = 'CheckBox',
+  ...props
 }: InputProps) {
   const [isChecked, setIsChecked] = useState<boolean>(defaultValue);
 
@@ -22,10 +24,13 @@ function CheckBox({
 
   return (
     <div className={className}>
-      <span>
-        <input type="checkbox" checked={isChecked} onChange={handleOnChange} />
-        <label>{label}</label>
-      </span>
+      <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={handleOnChange}
+        {...props}
+      />
+      <label>{label}</label>
     </div>
   );
 }

@@ -1,14 +1,15 @@
+import './CheckBox.scss';
 import { useField } from 'formik';
 
 type InputProps = {
   name: string;
-  label: string;
+  label?: string;
   className?: string;
 };
 
 function FormikCheckBox({
   name,
-  label,
+  label = '',
   className = 'CheckBox',
   ...props
 }: InputProps) {
