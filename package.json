@@ -1,5 +1,5 @@
 {
-  "name": "webcase-frontend",
+  "name": "sherlock-frontend",
   "version": "0.1.0",
   "scripts": {
     "start": "vite --host localhost --port 3001 --strictPort --open",
