@@ -17,16 +17,25 @@ function QueryTabElucidation() {
             type="number"
             label="Minimal occurrence of hybridization in DB (%)"
             name="detectionOptions.hybridizationDetectionThreshold"
+            inPercentage={true}
+            min={0}
+            max={100}
           />
           <FormikInput
             type="number"
             label="Lower limit for non-neighbors detection (%)"
             name="detectionOptions.lowerElementCountThreshold"
+            inPercentage={true}
+            min={0}
+            max={100}
           />
           <FormikInput
             type="number"
             label="Lower limit for set neighbors detection (%)"
             name="detectionOptions.upperElementCountThreshold"
+            inPercentage={true}
+            min={0}
+            max={100}
           />
         </div>
         <Button
@@ -47,11 +56,15 @@ function QueryTabElucidation() {
             type="number"
             label="Number of eliminations"
             name="elucidationOptions.elimP1"
+            min={1}
+            max={20}
           />
           <FormikInput
             type="number"
             label="Maximal path length"
             name="elucidationOptions.elimP2"
+            min={4}
+            max={10}
           />
         </div>
       </div>
@@ -86,7 +99,7 @@ function QueryTabElucidation() {
       <p style={{ fontWeight: 'bold' }}>Extras: </p>
       <div className="request-name-container">
         <FormikInput
-          type="text"
+          type="string"
           label="Task name"
           name="retrievalOptions.resultName"
           inputWidth="100%"
