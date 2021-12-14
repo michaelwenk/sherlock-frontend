@@ -5,7 +5,6 @@ import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
-import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useMemo } from 'react';
 
 type InputProps = {
@@ -47,29 +46,35 @@ function ResultCard({
 
   const cardLink = useMemo(
     () => (
-      <Card.Link>
+      <Card.Link
+        style={{
+          color: 'blue',
+          fontSize: 14,
+          textAlign: 'center',
+          marginBottom: '5px',
+        }}
+      >
         {molecule.dataSet.meta.id ? (
-          molecule.dataSet.meta.source === 'nmrshiftdb' ? (
-            <a
-              href={`http://www.nmrshiftdb.org/molecule/${molecule.dataSet.meta.id}`}
-              target="_blank"
-              rel="noreferrer"
-              title={`Link to molecule ${molecule.dataSet.meta.id} in NMRShiftDB`}
-            >
-              <FaExternalLinkAlt size="11" />
-              {` ${molecule.dataSet.meta.id}`}
-            </a>
-          ) : molecule.dataSet.meta.source === 'coconut' ? (
-            <a
-              href={`https://coconut.naturalproducts.net/compound/coconut_id/${molecule.dataSet.meta.id}`}
-              target="_blank"
-              rel="noreferrer"
-              title={`Link to molecule ${molecule.dataSet.meta.id} in COCONUT`}
-            >
-              <FaExternalLinkAlt size="11" />
-              {` ${molecule.dataSet.meta.id}`}
-            </a>
-          ) : null
+          <a
+            href={
+              molecule.dataSet.meta.source === 'nmrshiftdb'
+                ? `http://www.nmrshiftdb.org/molecule/${molecule.dataSet.meta.id}`
+                : molecule.dataSet.meta.source === 'coconut'
+                ? `https://coconut.naturalproducts.net/compound/coconut_id/${molecule.dataSet.meta.id}`
+                : '?'
+            }
+            target="_blank"
+            rel="noreferrer"
+            title={`Link to molecule ${molecule.dataSet.meta.id} in ${
+              molecule.dataSet.meta.source === 'nmrshiftdb'
+                ? 'NMRShiftDB'
+                : molecule.dataSet.meta.source === 'coconut'
+                ? 'COCONUT'
+                : '?'
+            }`}
+          >
+            <text>{molecule.dataSet.meta.id}</text>
+          </a>
         ) : null}
       </Card.Link>
     ),
