@@ -8,12 +8,11 @@ import retrievalActions from '../../../../constants/retrievalAction';
 import { useData } from '../../../../context/DataContext';
 import { QueryOptions } from '../../../../types/QueryOptions';
 import Button from '../../../elements/Button';
-import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
-import { Molecule } from 'openchemlib';
 import Input from '../../../elements/Input';
 import ResultRecord from '../../../../types/sherlock/ResultRecord';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
+import { SmilesSvgRenderer } from 'react-ocl/base';
 
 function QueryTabRetrieval() {
   const { resultDataDB } = useData();
@@ -23,79 +22,81 @@ function QueryTabRetrieval() {
   const [resultRecordToDelete, setResultRecordToDelete] =
     useState<ResultRecord>();
 
-  const filteredResultDataDB = useMemo(
+  const rows = useMemo(
     () =>
       resultDataDB
-        ? searchPattern.length > 0
-          ? resultDataDB.filter(
-              (resultRecord) =>
-                resultRecord.name?.toLowerCase().includes(searchPattern) ||
-                resultRecord.id?.toLowerCase().includes(searchPattern),
-            )
-          : resultDataDB
+        ? resultDataDB.map((resultRecord) => {
+            const date = new Date(resultRecord.date);
+
+            return {
+              id: resultRecord.id,
+              name: resultRecord.name,
+              rendered: (
+                <tr key={`resultDataDB_${resultRecord.id}`}>
+                  <td>{resultRecord.name || resultRecord.id}</td>
+                  <td>
+                    {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
+                    <br />
+                    {`${date.getHours()}:${date.getMinutes()}`}
+                  </td>
+                  <td>{resultRecord.dataSetListSize}</td>
+                  <td>
+                    <SmilesSvgRenderer
+                      OCL={OCL}
+                      id={`molSVG${resultRecord.id}_preview`}
+                      smiles={resultRecord.previewDataSet.meta.smiles}
+                      width={120}
+                      height={120}
+                    />
+                  </td>
+                  <td style={{ borderRight: 'none' }}>
+                    <Button
+                      child={<FaEye title="Load from Database" />}
+                      onClick={() => {
+                        setFieldValue('queryType', queryTypes.retrieval);
+                        setFieldValue(
+                          'retrievalOptions.action',
+                          retrievalActions.retrieve,
+                        );
+                        setFieldValue(
+                          'retrievalOptions.resultID',
+                          resultRecord.id,
+                        );
+                        submitForm();
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <Button
+                      child={<FaTrashAlt title="Delete in Database" />}
+                      onClick={() => {
+                        setResultRecordToDelete(resultRecord);
+                        setShowDeleteModal(true);
+                      }}
+                    />
+                  </td>
+                </tr>
+              ),
+            };
+          })
         : [],
-    [resultDataDB, searchPattern],
+    [resultDataDB, setFieldValue, submitForm],
   );
 
   const filteredRows = useMemo(
     () =>
-      filteredResultDataDB.map((resultRecord) => {
-        const date = new Date(resultRecord.date);
-        const molecule = Molecule.fromSmiles(
-          resultRecord.previewDataSet.meta.smiles,
-        );
-
-        return (
-          <tr key={`resultDataDB_${resultRecord.id}`}>
-            <td>{resultRecord.name || resultRecord.id}</td>
-            <td>
-              {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
-              <br />
-              {`${date.getHours()}:${date.getMinutes()}`}
-            </td>
-            <td>{resultRecord.dataSetListSize}</td>
-            <td>
-              <OCLnmr
-                OCL={OCL}
-                id={`molSVG${resultRecord.id}_preview`}
-                width={100}
-                height={100}
-                molfile={molecule.toMolfileV3()}
-                setSelectedAtom={() => {}}
-                atomHighlightColor={'red'}
-                atomHighlightOpacity={0.35}
-                highlights={[]}
-                setHoverAtom={() => {}}
-                setMolfile={() => {}}
-              />
-            </td>
-            <td style={{ borderRight: 'none' }}>
-              <Button
-                child={<FaEye title="Load from Database" />}
-                onClick={() => {
-                  setFieldValue('queryType', queryTypes.retrieval);
-                  setFieldValue(
-                    'retrievalOptions.action',
-                    retrievalActions.retrieve,
-                  );
-                  setFieldValue('retrievalOptions.resultID', resultRecord.id);
-                  submitForm();
-                }}
-              />
-            </td>
-            <td>
-              <Button
-                child={<FaTrashAlt title="Delete in Database" />}
-                onClick={() => {
-                  setResultRecordToDelete(resultRecord);
-                  setShowDeleteModal(true);
-                }}
-              />
-            </td>
-          </tr>
-        );
-      }),
-    [filteredResultDataDB, setFieldValue, submitForm],
+      searchPattern.length > 0
+        ? rows.reduce((_filteredRows, row) => {
+            if (
+              row.name?.toLowerCase().includes(searchPattern) ||
+              row.id?.toLowerCase().includes(searchPattern)
+            ) {
+              _filteredRows.push(row.rendered);
+            }
+            return _filteredRows;
+          }, [] as JSX.Element[])
+        : rows.map((row) => row.rendered),
+    [rows, searchPattern],
   );
 
   const handleOnConfirmDelete = useCallback(() => {

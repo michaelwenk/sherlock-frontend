@@ -6,7 +6,7 @@ export default function buildMolecules(resultRecord: ResultRecord | undefined) {
     ? resultRecord.dataSetList.map((dataSet) => {
         const molecule: Molecule = Molecule.fromSmiles(dataSet.meta.smiles);
         return {
-          molfile: molecule.toMolfileV3(),
+          // molfile: molecule.toMolfileV3(),
           dataSet: {
             ...dataSet,
             meta: {

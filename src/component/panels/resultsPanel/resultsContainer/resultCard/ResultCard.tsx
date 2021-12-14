@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Card from 'react-bootstrap/Card';
-import OCLnmr from 'react-ocl-nmr';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 import { useMemo } from 'react';
+import { SmilesSvgRenderer } from 'react-ocl/base';
 
 type InputProps = {
   id: string | number;
@@ -25,18 +25,12 @@ function ResultCard({
   const cardBody = useMemo(
     () => (
       <Card.Body>
-        <OCLnmr
+        <SmilesSvgRenderer
           OCL={OCL}
           id={`molSVG${id}`}
+          smiles={molecule.dataSet.meta.smiles}
           width={imageWidth}
           height={imageHeight}
-          molfile={molecule.molfile}
-          setSelectedAtom={() => {}}
-          atomHighlightColor={'red'}
-          atomHighlightOpacity={0.35}
-          highlights={[]}
-          setHoverAtom={() => {}}
-          setMolfile={() => {}}
         />
         <ResultCardText molecule={molecule} />
       </Card.Body>
