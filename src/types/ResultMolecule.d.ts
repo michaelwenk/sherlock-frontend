@@ -1,6 +1,6 @@
 import { DataSet } from './sherlock/DataSet';
 
 export interface ResultMolecule {
-  molfile: string;
+  molfile?: string;
   dataSet: DataSet;
 }
