@@ -4,9 +4,24 @@ import { QueryOptions } from '../../../../types/QueryOptions';
 import queryTypes from '../../../../constants/queryTypes';
 import FormikInput from '../../../elements/FormikInput';
 import FormikCheckBox from '../../../elements/FormikCheckBox';
+import { useEffect } from 'react';
 
 function QueryTabElucidation() {
-  const { setFieldValue, submitForm } = useFormikContext<QueryOptions>();
+  const { setFieldValue, submitForm, values } =
+    useFormikContext<QueryOptions>();
+
+  useEffect(() => {
+    if (values.detectionOptions.useNeighborDetections) {
+      setFieldValue('detectionOptions.useHybridizationDetections', true);
+    }
+    if (!values.detectionOptions.useHybridizationDetections) {
+      setFieldValue('detectionOptions.useNeighborDetections', false);
+    }
+  }, [
+    setFieldValue,
+    values.detectionOptions.useHybridizationDetections,
+    values.detectionOptions.useNeighborDetections,
+  ]);
 
   return (
     <div className="query-options-tab-elucidation-container">
@@ -19,6 +34,18 @@ function QueryTabElucidation() {
               </td>
             </tr>
             <tr>
+              <td>Use hybridization detection</td>
+              <td style={{ textAlign: 'center' }}>
+                <FormikCheckBox
+                  name="detectionOptions.useHybridizationDetections"
+                  // label="allow"
+                  {...{
+                    disabled: values.detectionOptions.useNeighborDetections,
+                  }}
+                />
+              </td>
+            </tr>
+            <tr>
               <td>Minimal occurrence of hybridization in DB (%)</td>
               <td>
                 <FormikInput
@@ -28,6 +55,19 @@ function QueryTabElucidation() {
                   inPercentage={true}
                   min={0}
                   max={100}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Use neighbor detection</td>
+              <td style={{ textAlign: 'center' }}>
+                <FormikCheckBox
+                  name="detectionOptions.useNeighborDetections"
+                  // label="allow"
+                  {...{
+                    disabled:
+                      !values.detectionOptions.useHybridizationDetections,
+                  }}
                 />
               </td>
             </tr>

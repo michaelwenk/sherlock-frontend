@@ -26,7 +26,7 @@ function QueryTabRetrieval() {
     () =>
       resultDataDB
         ? resultDataDB.map((resultRecord) => {
-            const date = new Date(resultRecord.date);
+            const date = new Date(resultRecord.date || '');
 
             return {
               id: resultRecord.id,
@@ -41,13 +41,15 @@ function QueryTabRetrieval() {
                   </td>
                   <td>{resultRecord.dataSetListSize}</td>
                   <td>
-                    <SmilesSvgRenderer
-                      OCL={OCL}
-                      id={`molSVG${resultRecord.id}_preview`}
-                      smiles={resultRecord.previewDataSet.meta.smiles}
-                      width={120}
-                      height={120}
-                    />
+                    {resultRecord.previewDataSet?.meta.smiles && (
+                      <SmilesSvgRenderer
+                        OCL={OCL}
+                        id={`molSVG${resultRecord.id}_preview`}
+                        smiles={resultRecord.previewDataSet.meta.smiles}
+                        width={120}
+                        height={120}
+                      />
+                    )}
                   </td>
                   <td style={{ borderRight: 'none' }}>
                     <Button

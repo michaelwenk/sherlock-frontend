@@ -5,14 +5,14 @@ import { Detections } from './Detections';
 import ElucidationOptions from './ElucidationOptions';
 
 export default interface ResultRecord {
-  id: string;
-  name: string;
-  date: string;
-  dataSetList: DataSet[];
-  dataSetListSize: number;
-  previewDataSet: DataSet;
-  correlations: Types.CorrelationData;
-  detections: Detections;
-  detectionOptions: DetectionOptions;
-  elucidationOptions: ElucidationOptions;
+  id?: string;
+  name?: string;
+  date?: string;
+  dataSetList?: DataSet[];
+  dataSetListSize?: number;
+  previewDataSet?: DataSet;
+  correlations?: Types.CorrelationData;
+  detections?: Detections;
+  detectionOptions?: DetectionOptions;
+  elucidationOptions?: ElucidationOptions;
 }

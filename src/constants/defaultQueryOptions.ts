@@ -25,6 +25,8 @@ const defaultQueryOptions: QueryOptions = {
     maxAverageDeviation: 10,
   },
   detectionOptions: {
+    useHybridizationDetections: true,
+    useNeighborDetections: true,
     hybridizationDetectionThreshold: 0.01,
     lowerElementCountThreshold: 0.01,
     upperElementCountThreshold: 0.9,

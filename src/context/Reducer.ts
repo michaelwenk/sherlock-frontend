@@ -1,6 +1,8 @@
 import { Draft, produce } from 'immer';
+import queryTypes from '../constants/queryTypes';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
+import { Detections } from '../types/sherlock/Detections';
 import ResultRecord from '../types/sherlock/ResultRecord';
 import {
   Action,
@@ -30,7 +32,19 @@ export interface DataState {
   resultDataDB?: ResultRecord[];
 }
 
-export const initialState: DataState = {};
+const initialDetections: Detections = {
+  detectedHybridizations: {},
+  detectedConnectivities: {},
+  forbiddenNeighbors: {},
+  setNeighbors: {},
+  fixedNeighbors: {},
+};
+export const initialState: DataState = {
+  resultData: {
+    queryType: queryTypes.dereplication,
+    resultRecord: { detections: initialDetections },
+  },
+};
 
 export function initState(state: DataState): DataState {
   return {
