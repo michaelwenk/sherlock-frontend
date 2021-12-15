@@ -69,7 +69,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
                     setFieldValue('queryType', queryType)
                   }
                 />
-                {capitalize(values.queryType) !== queryTypes.retrieval && (
+                {values.queryType !== queryTypes.retrieval && (
                   <Button
                     onClick={() => {
                       if (!values.detectionOptions.useHybridizationDetections) {
