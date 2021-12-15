@@ -1,6 +1,6 @@
 import './QueryPanel.scss';
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
@@ -20,7 +20,12 @@ type InputProps = {
 
 function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
   const { resultData } = useData();
+  const [queryType, setQueryType] = useState<string>(queryTypes.dereplication);
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
+  const handleOnSelectTab = useCallback((type: string) => {
+    setQueryType(type);
+  }, []);
 
   const queryOptions = useMemo((): QueryOptions => {
     const _queryOptions: QueryOptions = {
@@ -64,21 +69,18 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
           return (
             <Form>
               <div className="form-tabs-container">
-                <QueryTabs
-                  onSelectTab={(queryType: string) =>
-                    setFieldValue('queryType', queryType)
-                  }
-                />
-                {values.queryType !== queryTypes.retrieval && (
+                <QueryTabs onSelectTab={handleOnSelectTab} />
+                {queryType !== queryTypes.retrieval && (
                   <Button
                     onClick={() => {
                       if (!values.detectionOptions.useHybridizationDetections) {
                         setShowConfirmDialog(true);
                       } else {
+                        setFieldValue('queryType', queryType);
                         submitForm();
                       }
                     }}
-                    child={capitalize(values.queryType)}
+                    child={capitalize(queryType)}
                     disabled={isRequesting}
                   />
                 )}
@@ -90,6 +92,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
                 onCancel={() => setShowConfirmDialog(false)}
                 onConfirm={() => {
                   setShowConfirmDialog(false);
+                  setFieldValue('queryType', queryType);
                   submitForm();
                 }}
                 body={
