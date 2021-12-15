@@ -1,6 +1,6 @@
 import './QueryPanel.scss';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
@@ -10,6 +10,7 @@ import queryTypes from '../../../constants/queryTypes';
 import { QueryOptions } from '../../../types/QueryOptions';
 import { useData } from '../../../context/DataContext';
 import capitalize from '../../../utils/capitalize';
+import ConfirmModal from '../../elements/modal/ConfirmModal';
 
 type InputProps = {
   onSubmit: Function;
@@ -19,11 +20,7 @@ type InputProps = {
 
 function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
   const { resultData } = useData();
-  const [queryType, setQueryType] = useState<string>(queryTypes.dereplication);
-
-  const handleOnSelectTab = useCallback((type) => {
-    setQueryType(type);
-  }, []);
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
   const queryOptions = useMemo((): QueryOptions => {
     const _queryOptions: QueryOptions = {
@@ -63,22 +60,49 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
         }}
         enableReinitialize={true}
       >
-        {({ setFieldValue, submitForm }) => {
+        {({ setFieldValue, submitForm, values }) => {
           return (
             <Form>
               <div className="form-tabs-container">
-                <QueryTabs onSelectTab={handleOnSelectTab} />
-                {queryType !== queryTypes.retrieval && (
+                <QueryTabs
+                  onSelectTab={(queryType: string) =>
+                    setFieldValue('queryType', queryType)
+                  }
+                />
+                {capitalize(values.queryType) !== queryTypes.retrieval && (
                   <Button
                     onClick={() => {
-                      setFieldValue('queryType', queryType);
-                      submitForm();
+                      if (!values.detectionOptions.useHybridizationDetections) {
+                        setShowConfirmDialog(true);
+                      } else {
+                        submitForm();
+                      }
                     }}
-                    child={capitalize(queryType)}
+                    child={capitalize(values.queryType)}
                     disabled={isRequesting}
                   />
                 )}
               </div>
+
+              <ConfirmModal
+                show={showConfirmDialog}
+                title="Start elucidation without set or detected hybridizations?"
+                onCancel={() => setShowConfirmDialog(false)}
+                onConfirm={() => {
+                  setShowConfirmDialog(false);
+                  submitForm();
+                }}
+                body={
+                  <p
+                    style={{
+                      fontSize: '15px',
+                      color: 'blue',
+                    }}
+                  >
+                    Usually, this leads to longer running time!
+                  </p>
+                }
+              />
             </Form>
           );
         }}

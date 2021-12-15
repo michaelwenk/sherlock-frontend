@@ -35,16 +35,12 @@ function CustomModal({
     >
       <Modal.Dialog>
         <Modal.Header>
-          <Modal.Title className="title">
+          <Modal.Title>
             <p>{title}</p>
           </Modal.Title>
         </Modal.Header>
         {body && <Modal.Body>{body}</Modal.Body>}
-        {footer && (
-          <Modal.Footer className="footer-container">
-            {<div>{footer}</div>}
-          </Modal.Footer>
-        )}
+        {footer && <Modal.Footer>{<div>{footer}</div>}</Modal.Footer>}
       </Modal.Dialog>
     </Modal>
   );

@@ -6,14 +6,16 @@ interface InputProps {
   title: string;
   onCancel: Function;
   onConfirm: Function;
+  body?: JSX.Element;
 }
 
-function ConfirmModal({ show, title, onCancel, onConfirm }: InputProps) {
+function ConfirmModal({ show, title, onCancel, onConfirm, body }: InputProps) {
   return (
     <CustomModal
       show={show}
       title={title}
       onClose={onCancel}
+      body={body}
       footer={
         <div>
           <Button child="Cancel" onClick={onCancel} />
