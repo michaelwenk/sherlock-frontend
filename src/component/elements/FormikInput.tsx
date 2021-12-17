@@ -1,6 +1,6 @@
-import './Input.scss';
+import './FormikInput.scss';
 import { useFormikContext } from 'formik';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 interface InputProps {
   type: 'number' | 'string';
@@ -18,8 +18,6 @@ function FormikInput({
   type,
   name,
   label,
-  min,
-  max,
   inPercentage = false,
   inputWidth = '80px',
   className = 'Input',
@@ -29,55 +27,48 @@ function FormikInput({
   const { setFieldValue, getFieldMeta } = useFormikContext();
   const fieldMeta = getFieldMeta(name);
 
+  const hasErrors = useMemo(
+    () => fieldMeta.error !== undefined,
+    [fieldMeta.error],
+  );
+
   const onChange = useCallback(
     (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      if (type === 'number') {
-        let value = Number(e.target.value);
-        if (inPercentage) {
-          value = value / 100;
-        }
-        if (min !== undefined && max !== undefined) {
-          let minValue = min;
-          let maxValue = max;
+      if (e.target.value !== '') {
+        if (type === 'number') {
+          let value = Number(e.target.value);
           if (inPercentage) {
-            minValue = minValue / 100;
-            maxValue = maxValue / 100;
+            value = value / 100;
           }
-          if (value >= minValue && value <= maxValue) {
-            setFieldValue(name, value);
-          } else if (value < minValue) {
-            setFieldValue(name, minValue);
-          } else if (value > maxValue) {
-            setFieldValue(name, maxValue);
-          }
-        } else {
           setFieldValue(name, value);
+        } else {
+          setFieldValue(name, e.target.value as string);
         }
       } else {
         setFieldValue(name, e.target.value as string);
       }
     },
-    [inPercentage, max, min, name, setFieldValue, type],
+    [inPercentage, name, setFieldValue, type],
   );
 
   return (
-    <div className={className}>
+    <div className={className} style={{ color: hasErrors ? 'red' : 'inherit' }}>
       {label && <label>{`${label}`}</label>}
       <input
         type={type === 'number' ? 'number' : 'text'}
         placeholder={placeholder}
-        min={min}
-        max={max}
         style={
           {
             '--inputWidth': inputWidth,
           } as React.CSSProperties
         }
         value={
-          type === 'number'
+          fieldMeta.value === ''
+            ? ''
+            : type === 'number'
             ? inPercentage
               ? (fieldMeta.value as number) * 100
               : (fieldMeta.value as number)

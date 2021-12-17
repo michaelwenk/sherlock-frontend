@@ -65,7 +65,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
         }}
         enableReinitialize={true}
       >
-        {({ setFieldValue, submitForm, values }) => {
+        {({ setFieldValue, submitForm, values, errors }) => {
           return (
             <Form>
               <div className="form-tabs-container">
@@ -81,7 +81,11 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
                       }
                     }}
                     child={capitalize(queryType)}
-                    disabled={isRequesting}
+                    disabled={isRequesting || Object.keys(errors).length > 0}
+                    style={{
+                      color:
+                        Object.keys(errors).length > 0 ? 'grey' : 'inherit',
+                    }}
                   />
                 )}
               </div>

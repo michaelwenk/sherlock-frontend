@@ -1,52 +1,48 @@
+import './QueryTabDereplication.scss';
+
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';
 import { QueryOptions } from '../../../../types/QueryOptions';
-import Input from '../../../elements/Input';
-import { useCallback } from 'react';
+import FormikInput from '../../../elements/FormikInput';
+import ErrorSymbol from '../../../elements/ErrorSymbol';
 
 function QueryTabDereplication() {
-  const { values, setFieldValue } = useFormikContext<QueryOptions>();
-
-  const onChangeToleranceHandler = useCallback(
-    (value: string) => {
-      setFieldValue('dereplicationOptions.shiftTolerance', Number(value));
-    },
-    [setFieldValue],
-  );
-
-  const onChangeMaxAvgDevHandler = useCallback(
-    (value: string) => {
-      setFieldValue('dereplicationOptions.maxAverageDeviation', Number(value));
-    },
-    [setFieldValue],
-  );
+  const { errors, values, setFieldValue } = useFormikContext<QueryOptions>();
 
   return (
-    <div>
-      <table style={{ textAlign: 'left', marginTop: '5px' }}>
+    <div className="query-options-tab-dereplication-container">
+      <table>
         <tbody>
           <tr>
             <td>Tolerance (ppm)</td>
             <td>
-              <Input
+              <FormikInput
                 type="number"
-                onChange={(value: string) => onChangeToleranceHandler(value)}
-                defaultValue={values.dereplicationOptions.shiftTolerance}
-                // label="Tolerance [ppm]"
-                inputWidth="120px"
+                name="dereplicationOptions.shiftTolerance"
               />
+            </td>
+            <td>
+              {errors.dereplicationOptions?.shiftTolerance && (
+                <ErrorSymbol
+                  message={errors.dereplicationOptions.shiftTolerance}
+                />
+              )}
             </td>
           </tr>
           <tr>
             <td>Maximum average deviation (ppm)</td>
             <td>
-              <Input
+              <FormikInput
                 type="number"
-                onChange={(value: string) => onChangeMaxAvgDevHandler(value)}
-                defaultValue={values.dereplicationOptions.maxAverageDeviation}
-                // label="Max. Avg. Deviation [ppm]"
-                inputWidth="120px"
+                name="dereplicationOptions.maxAverageDeviation"
               />
+            </td>
+            <td>
+              {errors.dereplicationOptions?.maxAverageDeviation && (
+                <ErrorSymbol
+                  message={errors.dereplicationOptions.maxAverageDeviation}
+                />
+              )}
             </td>
           </tr>
           <tr>

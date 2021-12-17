@@ -5,9 +5,10 @@ import queryTypes from '../../../../constants/queryTypes';
 import FormikInput from '../../../elements/FormikInput';
 import FormikCheckBox from '../../../elements/FormikCheckBox';
 import { useEffect } from 'react';
+import ErrorSymbol from '../../../elements/ErrorSymbol';
 
 function QueryTabElucidation() {
-  const { setFieldValue, submitForm, values } =
+  const { setFieldValue, submitForm, values, errors } =
     useFormikContext<QueryOptions>();
 
   useEffect(() => {
@@ -25,203 +26,209 @@ function QueryTabElucidation() {
 
   return (
     <div className="query-options-tab-elucidation-container">
-      <div>
-        <table style={{ textAlign: 'left', marginTop: '5px' }}>
-          <tbody>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                Connectivity Statistics Detection:
-              </td>
-            </tr>
-            <tr>
-              <td>Use hybridization detection</td>
-              <td style={{ textAlign: 'center' }}>
-                <FormikCheckBox
-                  name="detectionOptions.useHybridizationDetections"
-                  // label="allow"
-                  {...{
-                    disabled: values.detectionOptions.useNeighborDetections,
-                  }}
+      <table>
+        <tbody>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 'bold' }}>
+              Connectivity Statistics Detection:
+            </td>
+          </tr>
+          <tr>
+            <td>Use hybridization detection</td>
+            <td style={{ textAlign: 'center' }}>
+              <FormikCheckBox
+                name="detectionOptions.useHybridizationDetections"
+                {...{
+                  disabled: values.detectionOptions.useNeighborDetections,
+                }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Minimal occurrence of hybridization in DB (%)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="detectionOptions.hybridizationDetectionThreshold"
+                inPercentage={true}
+              />
+            </td>
+            <td>
+              {errors.detectionOptions?.hybridizationDetectionThreshold && (
+                <ErrorSymbol
+                  message={
+                    errors.detectionOptions.hybridizationDetectionThreshold
+                  }
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Minimal occurrence of hybridization in DB (%)</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Minimal occurrence of hybridization in DB (%)"
-                  name="detectionOptions.hybridizationDetectionThreshold"
-                  inPercentage={true}
-                  min={0}
-                  max={100}
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Use neighbor detection</td>
+            <td style={{ textAlign: 'center' }}>
+              <FormikCheckBox
+                name="detectionOptions.useNeighborDetections"
+                {...{
+                  disabled: !values.detectionOptions.useHybridizationDetections,
+                }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Lower limit for non-neighbors detection (%)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="detectionOptions.lowerElementCountThreshold"
+                inPercentage={true}
+              />
+            </td>
+            <td>
+              {errors.detectionOptions?.lowerElementCountThreshold && (
+                <ErrorSymbol
+                  message={errors.detectionOptions.lowerElementCountThreshold}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Use neighbor detection</td>
-              <td style={{ textAlign: 'center' }}>
-                <FormikCheckBox
-                  name="detectionOptions.useNeighborDetections"
-                  // label="allow"
-                  {...{
-                    disabled:
-                      !values.detectionOptions.useHybridizationDetections,
-                  }}
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Lower limit for set neighbors detection (%)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="detectionOptions.upperElementCountThreshold"
+                inPercentage={true}
+              />
+            </td>
+            <td>
+              {errors.detectionOptions?.upperElementCountThreshold && (
+                <ErrorSymbol
+                  message={errors.detectionOptions.upperElementCountThreshold}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Lower limit for non-neighbors detection (%)</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Lower limit for non-neighbors detection (%)"
-                  name="detectionOptions.lowerElementCountThreshold"
-                  inPercentage={true}
-                  min={0}
-                  max={100}
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{ textAlign: 'center' }}>
+              <Button
+                child={'Detect'}
+                onClick={() => {
+                  setFieldValue('queryType', queryTypes.detection);
+                  submitForm();
+                }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 'bold' }}>
+              {' '}
+              Elimination of correlations:
+            </td>
+          </tr>
+          <tr>
+            <td>Allow</td>
+            <td style={{ textAlign: 'center' }}>
+              <FormikCheckBox name="elucidationOptions.useElim" />
+            </td>
+          </tr>
+          <tr>
+            <td>Number of eliminations</td>
+            <td>
+              <FormikInput type="number" name="elucidationOptions.elimP1" />
+            </td>
+            <td>
+              {errors.elucidationOptions?.elimP1 && (
+                <ErrorSymbol message={errors.elucidationOptions.elimP1} />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Maximal path length</td>
+            <td>
+              <FormikInput type="number" name="elucidationOptions.elimP2" />
+            </td>
+            <td>
+              {errors.elucidationOptions?.elimP2 && (
+                <ErrorSymbol message={errors.elucidationOptions.elimP2} />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 'bold' }}>
+              Structure Generation:
+            </td>
+          </tr>
+          <tr>
+            <td>Total time limit (min)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="elucidationOptions.timeLimitTotal"
+              />
+            </td>
+            <td>
+              {errors.elucidationOptions?.timeLimitTotal && (
+                <ErrorSymbol
+                  message={errors.elucidationOptions.timeLimitTotal}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td>Lower limit for set neighbors detection (%)</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Lower limit for set neighbors detection (%)"
-                  name="detectionOptions.upperElementCountThreshold"
-                  inPercentage={true}
-                  min={0}
-                  max={100}
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>Maximum average deviation (ppm)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="elucidationOptions.maxAverageDeviation"
+              />
+            </td>
+            <td>
+              {errors.elucidationOptions?.maxAverageDeviation && (
+                <ErrorSymbol
+                  message={errors.elucidationOptions.maxAverageDeviation}
                 />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ textAlign: 'center' }}>
-                <Button
-                  child={'Detect'}
-                  onClick={() => {
-                    setFieldValue('queryType', queryTypes.detection);
-                    submitForm();
-                  }}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                {' '}
-                Elimination of correlations:
-              </td>
-            </tr>
-            <tr>
-              <td>Allow</td>
-              <td style={{ textAlign: 'center' }}>
-                <FormikCheckBox
-                  name="elucidationOptions.useElim"
-                  // label="allow"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Number of eliminations</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Number of eliminations"
-                  name="elucidationOptions.elimP1"
-                  min={1}
-                  max={20}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Maximal path length</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Maximal path length"
-                  name="elucidationOptions.elimP2"
-                  min={4}
-                  max={10}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                Structure Generation:
-              </td>
-            </tr>
-            <tr>
-              <td>Total time limit (min)</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Total time limit (min)"
-                  name="elucidationOptions.timeLimitTotal"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Maximum average deviation (ppm)</td>
-              <td>
-                <FormikInput
-                  type="number"
-                  // label="Max avg. deviation (ppm)"
-                  name="elucidationOptions.maxAverageDeviation"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                Further settings:
-              </td>
-            </tr>
-            <tr>
-              <td>Allow Hetero-Hetero Bonds</td>
-              <td>
-                <FormikCheckBox
-                  name="elucidationOptions.allowHeteroHeteroBonds"
-                  // label="Allow Hetero-Hetero Bonds"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Filter out 3-membered rings</td>
-              <td>
-                <FormikCheckBox
-                  name="elucidationOptions.useFilterLsdRing3"
-                  // label="Filter out 3-membered rings"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Filter out 4-membered rings</td>
-              <td>
-                <FormikCheckBox
-                  name="elucidationOptions.useFilterLsdRing4"
-                  // label="Filter out 4-membered rings"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                Task name:
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2}>
-                <FormikInput
-                  type="string"
-                  // label="Task name"
-                  name="retrievalOptions.resultName"
-                  inputWidth="100%"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 'bold' }}>
+              Further settings:
+            </td>
+          </tr>
+          <tr>
+            <td>Allow Hetero-Hetero Bonds</td>
+            <td>
+              <FormikCheckBox name="elucidationOptions.allowHeteroHeteroBonds" />
+            </td>
+          </tr>
+          <tr>
+            <td>Filter out 3-membered rings</td>
+            <td>
+              <FormikCheckBox name="elucidationOptions.useFilterLsdRing3" />
+            </td>
+          </tr>
+          <tr>
+            <td>Filter out 4-membered rings</td>
+            <td>
+              <FormikCheckBox name="elucidationOptions.useFilterLsdRing4" />
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 'bold' }}>
+              Task name:
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2}>
+              <FormikInput
+                type="string"
+                name="retrievalOptions.resultName"
+                inputWidth="100%"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
