@@ -1,4 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './ResultCardText.scss';
+import { useMemo } from 'react';
 
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
 
@@ -7,10 +9,16 @@ type InputProps = {
 };
 
 function ResultCardText({ molecule }: InputProps) {
-  const color = molecule.dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red';
+  const color = useMemo(
+    () => (molecule.dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red'),
+    [molecule.dataSet.meta.isCompleteSpectralMatch],
+  );
 
   return (
-    <table style={{ fontSize: '14px', width: '100%', textAlign: 'left' }}>
+    <table
+      className="result-card-text"
+      style={{ '--value-color': color } as React.CSSProperties}
+    >
       <tbody>
         <tr>
           <td>Formula</td>
@@ -18,41 +26,35 @@ function ResultCardText({ molecule }: InputProps) {
         </tr>
         <tr>
           <td>RMSD</td>
-          <td
-            style={{
-              color: color,
-            }}
-          >
-            {molecule.dataSet.meta.rmsd.toFixed(2)}
+          <td>
+            <span className="value-with-unit">
+              <label className="value">
+                {molecule.dataSet.meta.rmsd.toFixed(2)}
+              </label>
+              <label className="unit">ppm</label>
+            </span>
           </td>
         </tr>
         <tr>
           <td>AvgDev</td>
-          <td
-            style={{
-              color: color,
-            }}
-          >
-            {molecule.dataSet.meta.averageDeviation.toFixed(2)}
+          <td>
+            <span className="value-with-unit">
+              <label className="value">
+                {molecule.dataSet.meta.averageDeviation.toFixed(2)}
+              </label>
+              <label className="unit">ppm</label>
+            </span>
           </td>
         </tr>
         <tr>
           <td>Tanimoto</td>
-          <td
-            style={{
-              color: color,
-            }}
-          >
+          <td className="value-single">
             {molecule.dataSet.meta.tanimoto.toFixed(2)}
           </td>
         </tr>
         <tr>
           <td>#Hits</td>
-          <td
-            style={{
-              color: color,
-            }}
-          >
+          <td className="value-single">
             {`${molecule.dataSet.meta.setAssignmentsCount}/${molecule.dataSet.meta.querySpectrumSignalCount}`}
           </td>
         </tr>

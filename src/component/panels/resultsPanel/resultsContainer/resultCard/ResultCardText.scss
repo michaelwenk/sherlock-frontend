@@ -1,0 +1,27 @@
+$value-color: var(--value-color);
+
+.result-card-text {
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+
+  .value-with-unit {
+    display: flex;
+    width: 100%;
+
+    .value {
+      width: 100%;
+      justify-content: flex-start;
+      color: $value-color;
+    }
+    .unit {
+      justify-content: flex-end;
+    }
+  }
+
+  .value-single {
+    display: flex;
+    width: 100%;
+    color: $value-color;
+  }
+}

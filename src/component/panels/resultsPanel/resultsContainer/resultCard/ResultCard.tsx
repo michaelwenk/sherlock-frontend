@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
 import { ResultMolecule } from '../../../../../types/ResultMolecule';
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import { SmilesSvgRenderer } from 'react-ocl/base';
 
 type InputProps = {
@@ -12,7 +12,7 @@ type InputProps = {
   molecule: ResultMolecule;
   imageWidth: number;
   imageHeight: number;
-  styles?: any;
+  styles?: CSSProperties;
 };
 
 function ResultCard({
