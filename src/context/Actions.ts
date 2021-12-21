@@ -1,6 +1,5 @@
 import { Draft } from 'immer';
 import { getCorrelationIndex } from 'nmr-correlation';
-import queryTypes from '../constants/queryTypes';
 import { NMRiumData } from '../types/nmrium/NMRiumData';
 import { Result } from '../types/Result';
 import FixedNeighbors from '../types/sherlock/FixedNeighbors';
@@ -18,19 +17,17 @@ export function setNmriumData(draft: Draft<DataState>, action: Action) {
 }
 
 export function setResultData(draft: Draft<DataState>, action: Action) {
-  const { queryType, resultData } = action.payload;
+  const { resultData } = action.payload;
   draft.resultData = resultData as Result;
 
   if (!draft.nmriumData) {
-    draft.nmriumData = {};
-  }
-  draft.nmriumData.correlations = draft.resultData.resultRecord.correlations;
-
-  if (queryType === queryTypes.retrieval)
     draft.nmriumData = {
       spectra: [],
-      correlations: (resultData as Result).resultRecord.correlations,
     };
+  }
+  draft.nmriumData.correlations = (
+    resultData as Result
+  ).resultRecord.correlations;
 }
 
 export function clearResultData(draft: Draft<DataState>) {
