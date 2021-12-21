@@ -1,3 +1,5 @@
+import './QueryTabElucidation.scss';
+
 import { useFormikContext } from 'formik';
 import Button from '../../../elements/Button';
 import { QueryOptions } from '../../../../types/QueryOptions';
