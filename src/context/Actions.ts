@@ -21,6 +21,11 @@ export function setResultData(draft: Draft<DataState>, action: Action) {
   const { queryType, resultData } = action.payload;
   draft.resultData = resultData as Result;
 
+  if (!draft.nmriumData) {
+    draft.nmriumData = {};
+  }
+  draft.nmriumData.correlations = draft.resultData.resultRecord.correlations;
+
   if (queryType === queryTypes.retrieval)
     draft.nmriumData = {
       spectra: [],
