@@ -23,6 +23,7 @@ function EditNeighbors({
   const [newAtomType, setNewAtomType] = useState<string>(
     possibleNeighbors.length > 0 ? possibleNeighbors[0] : '\u2217',
   );
+  // eslint-disable-next-line no-unused-vars
   const [newHybridization, setNewHybridization] = useState<number>(-1);
   const [newProtonCount, setNewProtonCount] = useState<number>(-1);
 
