@@ -38,7 +38,7 @@ function EditNeighbors({
   }, [newAtomType, newHybridization, newProtonCount, onAdd]);
 
   const rows = useMemo(() => {
-    const hybridizations = ['\u2217', '1', '2', '3'];
+    // const hybridizations = ['\u2217', '1', '2', '3'];
     const protonCounts = ['\u2217', '0', '1', '2', '3'];
 
     const _rows = Object.keys(neighbors)
@@ -46,10 +46,10 @@ function EditNeighbors({
         const hybridizations = neighbors[atomType];
         if (Object.keys(hybridizations).length === 0) {
           return (
-            <tr key={`hybridization_${generateID()}`}>
+            <tr key={generateID()}>
               <td>{atomType}</td>
               <td>{'\u2217'}</td>
-              <td>{'\u2217'}</td>
+              {/* <td>{'\u2217'}</td> */}
               <td>
                 <Button
                   child={<FaTrashAlt />}
@@ -71,7 +71,7 @@ function EditNeighbors({
                 <tr key={`hybridization_${generateID()}`}>
                   <td>{atomType}</td>
                   <td>{'\u2217'}</td>
-                  <td>{'\u2217'}</td>
+                  {/* <td>{'\u2217'}</td> */}
                   <td>
                     <Button
                       child={<FaTrashAlt />}
@@ -86,7 +86,7 @@ function EditNeighbors({
               <tr key={`hybridization_${generateID()}`}>
                 <td>{atomType}</td>
                 <td>{protonCount === -1 ? '\u2217' : protonCount}</td>
-                <td>{hybridization === -1 ? '\u2217' : hybridization}</td>
+                {/* <td>{hybridization === -1 ? '\u2217' : hybridization}</td> */}
                 <td>
                   <Button
                     child={<FaTrashAlt />}
@@ -121,7 +121,7 @@ function EditNeighbors({
             values={protonCounts}
           />
         </td>
-        <td>
+        {/* <td>
           <SelectBox
             key={`selectBox_hybridization_new`}
             defaultValue={newHybridization}
@@ -130,7 +130,7 @@ function EditNeighbors({
             }
             values={hybridizations}
           />
-        </td>
+        </td> */}
 
         <td>
           <Button child={<FaPlus />} onClick={handleOnAdd} />
@@ -144,7 +144,6 @@ function EditNeighbors({
     handleOnDelete,
     neighbors,
     newAtomType,
-    newHybridization,
     newProtonCount,
     possibleNeighbors,
   ]);
@@ -156,7 +155,7 @@ function EditNeighbors({
           <tr>
             <th>Atom</th>
             <th>#H</th>
-            <th>Hybrid</th>
+            {/* <th>Hybrid</th> */}
             <th></th>
           </tr>
         </thead>
