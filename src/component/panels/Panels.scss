@@ -22,18 +22,6 @@
     }
   }
 
-  .spinner {
-    top: calc(50% + 50px);
-    left: calc(50% - 50px);
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-
-    .Button {
-      margin-top: 10px;
-    }
-  }
-
   .request-error {
     height: 100%;
     width: 100%;

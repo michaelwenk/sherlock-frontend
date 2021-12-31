@@ -7,7 +7,8 @@ import Modal from 'react-bootstrap/Modal';
 interface InputProps {
   show: boolean;
   title: string;
-  onClose: Function;
+  showCloseButton?: boolean;
+  onClose?: Function;
   body?: JSX.Element;
   footer?: JSX.Element | undefined | null;
 }
@@ -16,13 +17,18 @@ function CustomModal({
   show,
   title,
   onClose,
+  showCloseButton = onClose !== undefined,
   body,
-  footer = <Button child="Close" onClick={onClose} />,
+  footer = showCloseButton ? (
+    <Button child="Close" onClick={onClose ? onClose : () => {}} />
+  ) : null,
 }: InputProps) {
   const modalRef = useRef<any>();
 
   const handleOnClose = useCallback(() => {
-    onClose();
+    if (onClose) {
+      onClose();
+    }
   }, [onClose]);
 
   return (

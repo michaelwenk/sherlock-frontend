@@ -13,7 +13,7 @@ type InputProps = {
 };
 
 function Button({
-  onClick,
+  onClick = () => {},
   child = '',
   className = 'Button',
   disabled = false,

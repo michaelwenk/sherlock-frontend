@@ -1,12 +1,15 @@
+import { Molecule } from 'openchemlib';
 import { ResultMolecule } from '../types/ResultMolecule';
 interface InputProps {
   resultMolecules: ResultMolecule[];
 }
 
-const buildSDFileContent = ({ resultMolecules }: InputProps) => {
+function buildSDFileContent({ resultMolecules }: InputProps) {
   let content = '';
   resultMolecules.forEach((res, i) => {
-    content += res.molfile;
+    const molfile = Molecule.fromSmiles(res.dataSet.meta.smiles).toMolfileV3();
+
+    content += molfile;
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
@@ -21,6 +24,6 @@ const buildSDFileContent = ({ resultMolecules }: InputProps) => {
   });
 
   return content;
-};
+}
 
 export default buildSDFileContent;

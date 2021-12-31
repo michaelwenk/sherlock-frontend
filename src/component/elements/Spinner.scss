@@ -1,0 +1,13 @@
+.Spinner {
+  top: calc(50% + 50px);
+  left: calc(50% - 50px);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .Button {
+    margin-top: 10px;
+  }
+}

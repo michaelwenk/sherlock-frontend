@@ -1,6 +1,6 @@
 import './ResultsPanel.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
@@ -14,6 +14,8 @@ import {
   SET_RESULT_DB_ENTRIES,
 } from '../../../context/ActionTypes';
 import ConfirmModal from '../../elements/modal/ConfirmModal';
+import { ResultMolecule } from '../../../types/ResultMolecule';
+import CustomModal from '../../elements/modal/CustomModal';
 
 type InputProps = {
   result?: Result;
@@ -24,29 +26,44 @@ function ResultsPanel({ show }: InputProps) {
   const { resultData } = useData();
   const dispatch = useDispatch();
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [isPreparingDownload, setIsPreparingDownload] =
+    useState<boolean>(false);
 
-  const molecules = useMemo(() => {
+  const molecules = useMemo((): ResultMolecule[] => {
     return resultData && resultData.resultRecord
       ? buildMolecules(resultData.resultRecord)
       : [];
   }, [resultData]);
 
-  const handleOnClickDownload = useCallback(() => {
-    if (molecules) {
-      const fileData = buildSDFileContent({ resultMolecules: molecules });
-      const blob = new Blob([fileData], { type: 'text/plain' });
-      saveAs(
-        blob,
-        `${
-          resultData
-            ? resultData.resultRecord?.name
-              ? resultData.resultRecord.name
+  const onDownload = useCallback(async () => {
+    new Promise<string>((resolve) =>
+      resolve(buildSDFileContent({ resultMolecules: molecules })),
+    )
+      .then((fileContent) => {
+        const blob = new Blob([fileContent], { type: 'text/plain' });
+        saveAs(
+          blob,
+          `${
+            resultData
+              ? resultData.resultRecord?.name
+                ? resultData.resultRecord.name
+                : 'results'
               : 'results'
-            : 'results'
-        }.sdf`,
-      );
-    }
+          }.sdf`,
+        );
+      })
+      .finally(() => setIsPreparingDownload(false));
   }, [molecules, resultData]);
+
+  const handleOnClickDownload = useCallback(async () => {
+    setIsPreparingDownload(true);
+  }, []);
+
+  useEffect(() => {
+    if (isPreparingDownload) {
+      onDownload();
+    }
+  }, [isPreparingDownload, onDownload]);
 
   const handleOnClickDelete = useCallback(() => {
     setShowDeleteModal(true);
@@ -55,7 +72,7 @@ function ResultsPanel({ show }: InputProps) {
   const handleOnConfirmDelete = useCallback(async () => {
     await axios({
       method: 'DELETE',
-      url: 'http://localhost:8081/webcase-db-service-result/deleteById',
+      url: 'http://localhost:8081/sherlock-db-service-result/deleteById',
       params: { id: resultData?.resultRecord.id },
     }).catch(async (err: AxiosError) => {
       if (axios.isCancel(err)) {
@@ -65,7 +82,7 @@ function ResultsPanel({ show }: InputProps) {
     dispatch({ type: CLEAR_RESULT_DATA });
     await axios({
       method: 'GET',
-      url: 'http://localhost:8081/webcase-db-service-result/getAllMeta',
+      url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
     })
       .then((res: AxiosResponse) => {
         if (res && res.data) {
@@ -84,6 +101,19 @@ function ResultsPanel({ show }: InputProps) {
     setShowDeleteModal(false);
   }, [dispatch, resultData?.resultRecord]);
 
+  const resultsView = useMemo(
+    () => (
+      <ResultsView
+        molecules={molecules}
+        maxPages={5}
+        pageLimits={[10, 25, 50]}
+        onClickDownload={handleOnClickDownload}
+        onClickDelete={handleOnClickDelete}
+      />
+    ),
+    [handleOnClickDelete, handleOnClickDownload, molecules],
+  );
+
   return resultData ? (
     <div
       className="results-panel"
@@ -93,23 +123,20 @@ function ResultsPanel({ show }: InputProps) {
         } as React.CSSProperties
       }
     >
-      <ResultsView
-        molecules={molecules}
-        maxPages={5}
-        pageLimits={[10, 25, 50]}
-        onClickDownload={handleOnClickDownload}
-        onClickDelete={handleOnClickDelete}
+      {resultsView}
+      <CustomModal
+        title="Preparing Download..."
+        show={isPreparingDownload}
+        showCloseButton={false}
       />
-      {showDeleteModal && (
-        <ConfirmModal
-          show={showDeleteModal}
-          title={`Delete ${
-            resultData?.resultRecord.name || resultData?.resultRecord.id
-          }?`}
-          onCancel={() => setShowDeleteModal(false)}
-          onConfirm={handleOnConfirmDelete}
-        />
-      )}
+      <ConfirmModal
+        show={showDeleteModal}
+        title={`Delete ${
+          resultData?.resultRecord.name || resultData?.resultRecord.id
+        }?`}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleOnConfirmDelete}
+      />
     </div>
   ) : null;
 }

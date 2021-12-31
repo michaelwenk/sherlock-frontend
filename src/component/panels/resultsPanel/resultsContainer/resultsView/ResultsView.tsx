@@ -198,7 +198,9 @@ function ResultsView({
         </Container>
       </div>
     </div>
-  ) : null;
+  ) : (
+    <p className="no-results-text">No results</p>
+  );
 }
 
 export default ResultsView;

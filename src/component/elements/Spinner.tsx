@@ -1,10 +1,10 @@
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import './Spinner.scss';
 import Loader from 'react-loader-spinner';
 import Button from './Button';
 import { useEffect, useState } from 'react';
 
 type InputProps = {
-  onClickCancel: Function;
+  onClickCancel?: Function;
   className?: string;
   classNameButton?: string;
   buttonText?: string;
@@ -13,8 +13,8 @@ type InputProps = {
 };
 
 function Spinner({
-  onClickCancel,
-  className = 'spinner',
+  onClickCancel = () => {},
+  className = 'Spinner',
   classNameButton,
   buttonText = 'Cancel',
   buttonDisabled = false,
@@ -32,16 +32,18 @@ function Spinner({
   });
 
   useEffect(() => {
-    const timeout = setTimeout(function () {
-      const totalSeconds = timer.totalSeconds + 1;
-      const seconds = totalSeconds % 60;
-      const minutes = Math.floor(totalSeconds / 60);
-      setTimer({ totalSeconds, seconds, minutes });
-    }, 1000);
+    if (showTimer) {
+      const timeout = setTimeout(function () {
+        const totalSeconds = timer.totalSeconds + 1;
+        const seconds = totalSeconds % 60;
+        const minutes = Math.floor(totalSeconds / 60);
+        setTimer({ totalSeconds, seconds, minutes });
+      }, 1000);
 
-    // clear timeout if the component is unmounted
-    return () => clearTimeout(timeout);
-  }, [timer]);
+      // clear timeout if the component is unmounted
+      return () => clearTimeout(timeout);
+    }
+  }, [showTimer, timer]);
 
   return (
     <div className={className}>
@@ -57,12 +59,19 @@ function Spinner({
           style={{ marginTop: 10 }}
         >{`${timer.minutes} min : ${timer.seconds} s`}</p>
       )}
-      <Button
-        child={buttonText}
-        onClick={onClickCancel}
-        className={classNameButton}
-        disabled={buttonDisabled}
-      />
+      {buttonText && onClickCancel && (
+        <Button
+          child={buttonText}
+          onClick={onClickCancel}
+          className={classNameButton}
+          disabled={buttonDisabled}
+          style={
+            buttonDisabled
+              ? { border: 'none', backgroundColor: 'transparent' }
+              : {}
+          }
+        />
+      )}
     </div>
   );
 }
