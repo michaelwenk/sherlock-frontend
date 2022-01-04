@@ -1,5 +1,6 @@
 import lodashGet from 'lodash/get';
-import { buildLink, Types } from 'nmr-correlation';
+import { buildLink, getCorrelationIndex, Types } from 'nmr-correlation';
+import ResultRecord from '../../../types/sherlock/ResultRecord';
 
 import { DefaultPathLengths, ErrorColors } from './Constants';
 
@@ -90,4 +91,35 @@ function buildNewLink2D(link: Types.Link, axis: 'x' | 'y') {
   });
 }
 
-export { buildNewLink1D, buildNewLink2D, getAbbreviation, getLabelColor };
+function getGroupIndex(
+  resultRecord: ResultRecord | undefined,
+  correlation: Types.Correlation,
+) {
+  if (resultRecord?.correlations) {
+    const correlationIndex = getCorrelationIndex(
+      resultRecord.correlations.values,
+      correlation,
+    );
+    const _groupIndex =
+      resultRecord.grouping?.transformedGroups[correlation.atomType]?.[
+        correlationIndex
+      ];
+
+    if (_groupIndex !== undefined) {
+      const group =
+        resultRecord.grouping?.groups[correlation.atomType]?.[_groupIndex];
+      if (group !== undefined && group.length > 1) {
+        return _groupIndex;
+      }
+    }
+  }
+  return -1;
+}
+
+export {
+  buildNewLink1D,
+  buildNewLink2D,
+  getAbbreviation,
+  getGroupIndex,
+  getLabelColor,
+};

@@ -3,6 +3,7 @@ import { DataSet } from './DataSet';
 import DetectionOptions from './DetectionOptions';
 import { Detections } from './Detections';
 import ElucidationOptions from './ElucidationOptions';
+import Grouping from './Grouping';
 
 export default interface ResultRecord {
   id?: string;
@@ -15,4 +16,5 @@ export default interface ResultRecord {
   detections?: Detections;
   detectionOptions?: DetectionOptions;
   elucidationOptions?: ElucidationOptions;
+  grouping?: Grouping;
 }

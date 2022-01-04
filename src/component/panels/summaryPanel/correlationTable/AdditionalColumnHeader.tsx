@@ -1,12 +1,12 @@
-import { getCorrelationDelta } from 'nmr-correlation';
+import { getCorrelationDelta, getCorrelationIndex } from 'nmr-correlation';
 import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
 import { useHighlight } from '../../../highlight';
-import { getLabelColor } from '../Utilities';
+import { getGroupIndex, getLabelColor } from '../Utilities';
 
 function AdditionalColumnHeader({ correlation }) {
-  const { nmriumData } = useData();
+  const { nmriumData, resultData } = useData();
 
   const highlightIDsAdditionalColumn = useMemo(() => {
     if (correlation.pseudo === true) {
@@ -38,12 +38,39 @@ function AdditionalColumnHeader({ correlation }) {
     [highlightAdditionalColumn],
   );
 
+  const correlationIndex = useMemo(
+    () =>
+      getCorrelationIndex(
+        resultData?.resultRecord?.correlations?.values || [],
+        correlation,
+      ),
+    [correlation, resultData?.resultRecord?.correlations?.values],
+  );
+
+  const groupIndex = useMemo(
+    () => getGroupIndex(resultData?.resultRecord, correlation),
+    [correlation, resultData?.resultRecord],
+  );
+
   const tableHeaderProps = useMemo(() => {
     return {
       style: {
         ...{
           color:
             getLabelColor(nmriumData?.correlations, correlation) || undefined,
+          borderRight:
+            groupIndex !== -1 &&
+            (resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[
+              groupIndex
+            ]
+              ? resultData?.resultRecord.grouping?.groups[
+                  correlation.atomType
+                ]?.[groupIndex]?.findIndex(
+                  (index) => index === correlationIndex,
+                )
+              : 0) > 0
+              ? 'none'
+              : 'solid 1px lightgrey',
         },
         backgroundColor: highlightAdditionalColumn.isActive
           ? '#ff6f0057'
@@ -68,10 +95,13 @@ function AdditionalColumnHeader({ correlation }) {
     };
   }, [
     correlation,
+    correlationIndex,
+    groupIndex,
     highlightAdditionalColumn.isActive,
     mouseEnterHandler,
     mouseLeaveHandler,
     nmriumData?.correlations,
+    resultData?.resultRecord.grouping?.groups,
   ]);
 
   const equivalenceTextStyle = useMemo(() => {
@@ -90,19 +120,17 @@ function AdditionalColumnHeader({ correlation }) {
 
   return (
     <th {...thProps} title={title === false ? undefined : title}>
-      <div style={{ display: 'block' }}>
-        <p>{correlation.label.origin}</p>
-        <p>
-          {getCorrelationDelta(correlation)
-            ? getCorrelationDelta(correlation)?.toFixed(2)
-            : ''}
-        </p>
-        <p style={equivalenceTextStyle}>
-          {Number.isInteger(correlation.equivalence)
-            ? correlation.equivalence
-            : correlation.equivalence.toFixed(2)}
-        </p>
-      </div>
+      <p>{correlation.label.origin}</p>
+      <p>
+        {getCorrelationDelta(correlation)
+          ? getCorrelationDelta(correlation)?.toFixed(2)
+          : ''}
+      </p>
+      <p style={equivalenceTextStyle}>
+        {Number.isInteger(correlation.equivalence)
+          ? correlation.equivalence
+          : correlation.equivalence.toFixed(2)}
+      </p>
     </th>
   );
 }

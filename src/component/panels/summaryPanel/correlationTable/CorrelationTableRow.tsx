@@ -5,10 +5,11 @@ import {
   getLabel,
   Types,
 } from 'nmr-correlation';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
 import { useHighlight } from '../../../highlight';
+import { getGroupIndex } from '../Utilities';
 
 import AdditionalColumnField from './AdditionalColumnField';
 import HybridizationsTableCell from './edit/HybridizationsTableCell';
@@ -62,11 +63,39 @@ function CorrelationTableRow({
     [highlightRow],
   );
 
+  const correlationIndex = useMemo(
+    () =>
+      getCorrelationIndex(
+        resultData?.resultRecord?.correlations?.values || [],
+        correlation,
+      ),
+    [correlation, resultData?.resultRecord?.correlations?.values],
+  );
+
+  const groupIndex = useMemo(
+    () => getGroupIndex(resultData?.resultRecord, correlation),
+    [correlation, resultData?.resultRecord],
+  );
+
   const tableDataProps = useMemo(() => {
     return {
       style: {
         ...styleRow,
         backgroundColor: highlightRow.isActive ? '#ff6f0057' : 'inherit',
+        borderBottom:
+          groupIndex !== -1 &&
+          resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[
+            groupIndex
+          ] &&
+          resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[
+            groupIndex
+          ]?.findIndex((index) => index === correlationIndex) <
+            resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[
+              groupIndex
+            ].length -
+              1
+            ? 'none'
+            : 'solid 1px lightgrey',
       },
       title:
         correlation.pseudo === false &&
@@ -86,11 +115,15 @@ function CorrelationTableRow({
       onMouseLeave: mouseLeaveHandler,
     };
   }, [
+    correlation.atomType,
     correlation.link,
     correlation.pseudo,
+    correlationIndex,
+    groupIndex,
     highlightRow.isActive,
     mouseEnterHandler,
     mouseLeaveHandler,
+    resultData?.resultRecord.grouping?.groups,
     styleRow,
   ]);
 
@@ -129,7 +162,8 @@ function CorrelationTableRow({
       return (
         <AdditionalColumnField
           key={`addColData_${correlation.id}_${_correlation.id}`}
-          commonLinks={commonLinks}
+          correlationDim1={_correlation}
+          correlationDim2={correlation}
         />
       );
     });
@@ -155,9 +189,23 @@ function CorrelationTableRow({
         {getLabel(nmriumData?.correlations.values, correlation)}
       </td>
       <td title={t} {...otherTableDataProps}>
-        {getCorrelationDelta(correlation)
-          ? getCorrelationDelta(correlation)?.toFixed(2)
-          : ''}
+        {getCorrelationDelta(correlation) ? (
+          <p>
+            {getCorrelationDelta(correlation)?.toFixed(2)}
+            {/* {groupIndex !== -1 && (
+              <sup
+                style={{
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                }}
+              >
+                {groupIndex + 1}
+              </sup>
+            )} */}
+          </p>
+        ) : (
+          ''
+        )}
       </td>
       <td
         title={t}
