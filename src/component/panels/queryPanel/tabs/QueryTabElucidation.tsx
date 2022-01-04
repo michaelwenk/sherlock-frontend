@@ -2,7 +2,7 @@ import './QueryTabElucidation.scss';
 
 import { useFormikContext } from 'formik';
 import Button from '../../../elements/Button';
-import { QueryOptions } from '../../../../types/QueryOptions';
+import QueryOptions from '../../../../types/QueryOptions';
 import queryTypes from '../../../../constants/queryTypes';
 import FormikInput from '../../../elements/FormikInput';
 import FormikCheckBox from '../../../elements/FormikCheckBox';

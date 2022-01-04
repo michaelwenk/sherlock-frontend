@@ -153,8 +153,8 @@ function AdditionalColumnField({
               correlationDim2.atomType
             ]?.[groupIndexDim2].length -
               1
-            ? 'none'
-            : 'solid 1px lightgrey',
+            ? 'dashed 1px lightgrey'
+            : 'solid 2px lightgrey',
         borderRight:
           groupIndexDim1 !== -1 &&
           (resultData?.resultRecord.grouping?.groups[
@@ -166,8 +166,8 @@ function AdditionalColumnField({
                 (index) => index === correlationIndexDim1,
               )
             : 0) > 0
-            ? 'none'
-            : 'solid 1px lightgrey',
+            ? 'dashed 1px lightgrey'
+            : 'solid 2px lightgrey',
       }}
       title={title}
       onMouseEnter={mouseEnterHandler}

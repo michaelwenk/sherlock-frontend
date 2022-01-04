@@ -6,7 +6,7 @@ import { FaEye, FaSyncAlt, FaTrashAlt } from 'react-icons/fa';
 import queryTypes from '../../../../constants/queryTypes';
 import retrievalActions from '../../../../constants/retrievalAction';
 import { useData } from '../../../../context/DataContext';
-import { QueryOptions } from '../../../../types/QueryOptions';
+import QueryOptions from '../../../../types/QueryOptions';
 import Button from '../../../elements/Button';
 import OCL from 'openchemlib/full';
 import Input from '../../../elements/Input';

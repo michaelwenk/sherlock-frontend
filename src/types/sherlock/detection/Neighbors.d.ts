@@ -1,5 +1,5 @@
-import { NeighborsEntry } from './NeighborsEntry';
+import NeighborsEntry from './NeighborsEntry';
 
-export interface Neighbors {
+export default interface Neighbors {
   [correlationIndex: number]: NeighborsEntry;
 }

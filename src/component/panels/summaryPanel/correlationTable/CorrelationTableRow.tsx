@@ -5,7 +5,7 @@ import {
   getLabel,
   Types,
 } from 'nmr-correlation';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
 import { useHighlight } from '../../../highlight';
@@ -65,11 +65,8 @@ function CorrelationTableRow({
 
   const correlationIndex = useMemo(
     () =>
-      getCorrelationIndex(
-        resultData?.resultRecord?.correlations?.values || [],
-        correlation,
-      ),
-    [correlation, resultData?.resultRecord?.correlations?.values],
+      getCorrelationIndex(nmriumData?.correlations?.values || [], correlation),
+    [correlation, nmriumData?.correlations?.values],
   );
 
   const groupIndex = useMemo(
@@ -94,8 +91,8 @@ function CorrelationTableRow({
               groupIndex
             ].length -
               1
-            ? 'none'
-            : 'solid 1px lightgrey',
+            ? 'dashed 1px lightgrey'
+            : 'solid 2px lightgrey',
       },
       title:
         correlation.pseudo === false &&
@@ -189,23 +186,9 @@ function CorrelationTableRow({
         {getLabel(nmriumData?.correlations.values, correlation)}
       </td>
       <td title={t} {...otherTableDataProps}>
-        {getCorrelationDelta(correlation) ? (
-          <p>
-            {getCorrelationDelta(correlation)?.toFixed(2)}
-            {/* {groupIndex !== -1 && (
-              <sup
-                style={{
-                  fontSize: 10,
-                  fontWeight: 'bold',
-                }}
-              >
-                {groupIndex + 1}
-              </sup>
-            )} */}
-          </p>
-        ) : (
-          ''
-        )}
+        {getCorrelationDelta(correlation)
+          ? getCorrelationDelta(correlation)?.toFixed(2)
+          : ''}
       </td>
       <td
         title={t}
@@ -240,18 +223,12 @@ function CorrelationTableRow({
               },
             }}
           >
-            {correlation.atomType != 'H' &&
-            resultData &&
-            resultData.resultRecord.detections ? (
+            {correlation.atomType != 'H' ? (
               <HybridizationsTableCell
                 correlation={correlation}
                 hybridizations={
-                  resultData.resultRecord.detections.detectedHybridizations[
-                    getCorrelationIndex(
-                      nmriumData?.correlations.values,
-                      correlation,
-                    )
-                  ] || []
+                  resultData?.resultRecord?.detections
+                    ?.detectedHybridizations?.[correlationIndex] || []
                 }
                 highlight={highlightRow}
               />
@@ -266,17 +243,12 @@ function CorrelationTableRow({
               style: tableDataProps.style,
             }}
           >
-            {correlation.atomType != 'H' &&
-            resultData &&
-            resultData.resultRecord.detections ? (
+            {correlation.atomType != 'H' ? (
               <NeighborsTableCell
                 correlation={correlation}
                 neighbors={
-                  resultData.resultRecord.detections.forbiddenNeighbors[
-                    getCorrelationIndex(
-                      nmriumData?.correlations.values,
-                      correlation,
-                    )
+                  resultData?.resultRecord?.detections?.forbiddenNeighbors[
+                    correlationIndex
                   ] || {}
                 }
                 mode="forbidden"
@@ -296,15 +268,12 @@ function CorrelationTableRow({
               },
             }}
           >
-            {resultData && resultData.resultRecord.detections ? (
+            {resultData ? (
               <NeighborsTableCell
                 correlation={correlation}
                 neighbors={
-                  resultData.resultRecord.detections.setNeighbors[
-                    getCorrelationIndex(
-                      nmriumData?.correlations.values,
-                      correlation,
-                    )
+                  resultData?.resultRecord?.detections?.setNeighbors[
+                    correlationIndex
                   ] || {}
                 }
                 mode="set"

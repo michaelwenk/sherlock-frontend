@@ -1,4 +1,4 @@
-import { QueryOptions } from '../types/QueryOptions';
+import QueryOptions from '../types/QueryOptions';
 
 export interface ShiftToleranceError {
   [atomType: string]: string;

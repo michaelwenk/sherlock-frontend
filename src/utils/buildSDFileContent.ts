@@ -1,5 +1,5 @@
 import { Molecule } from 'openchemlib';
-import { ResultMolecule } from '../types/ResultMolecule';
+import ResultMolecule from '../types/ResultMolecule';
 interface InputProps {
   resultMolecules: ResultMolecule[];
 }

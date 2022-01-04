@@ -1,11 +1,21 @@
 import { Draft } from 'immer';
 import { getCorrelationIndex } from 'nmr-correlation';
-import { NMRiumData } from '../types/nmrium/NMRiumData';
-import { Result } from '../types/Result';
-import FixedNeighbors from '../types/sherlock/FixedNeighbors';
-import { NeighborsEntry } from '../types/sherlock/NeighborsEntry';
+import queryTypes from '../constants/queryTypes';
+import DataState from '../types/DataState';
+import NMRiumData from '../types/nmrium/NMRiumData';
+import Result from '../types/Result';
+import Detections from '../types/sherlock/detection/Detections';
+import FixedNeighbors from '../types/sherlock/detection/FixedNeighbors';
+import NeighborsEntry from '../types/sherlock/detection/NeighborsEntry';
 import ResultRecord from '../types/sherlock/ResultRecord';
-import { DataState } from './Reducer';
+
+const initialDetections: Detections = {
+  detectedHybridizations: {},
+  detectedConnectivities: {},
+  forbiddenNeighbors: {},
+  setNeighbors: {},
+  fixedNeighbors: {},
+};
 
 export interface Action {
   type: string;
@@ -34,66 +44,66 @@ export function clearResultData(draft: Draft<DataState>) {
   delete draft.resultData;
 }
 
+function initDetections(draft: Draft<DataState>) {
+  if (!draft.resultData) {
+    draft.resultData = {
+      queryType: queryTypes.dereplication,
+      resultRecord: {},
+    };
+  }
+  if (!draft.resultData?.resultRecord?.detections) {
+    draft.resultData.resultRecord.detections = initialDetections;
+  }
+}
+
 export function editForbiddenNeighbors(
   draft: Draft<DataState>,
   action: Action,
 ) {
   const { editedNeighbors, correlation } = action.payload;
 
-  if (
-    draft.resultData?.resultRecord.detections &&
-    draft.nmriumData?.correlations
-  ) {
-    const correlationIndex = getCorrelationIndex(
-      draft?.nmriumData?.correlations.values,
-      correlation,
-    );
-    draft.resultData.resultRecord.detections.forbiddenNeighbors[
-      correlationIndex
-    ] = editedNeighbors as NeighborsEntry;
-  }
+  initDetections(draft);
+  const correlationIndex = getCorrelationIndex(
+    draft.nmriumData?.correlations.values,
+    correlation,
+  );
+  (draft.resultData as Result).resultRecord.detections.forbiddenNeighbors[
+    correlationIndex
+  ] = editedNeighbors as NeighborsEntry;
 }
 
 export function editSetNeighbors(draft: Draft<DataState>, action: Action) {
   const { editedNeighbors, correlation } = action.payload;
 
-  if (
-    draft.resultData?.resultRecord.detections &&
-    draft.nmriumData?.correlations
-  ) {
-    const correlationIndex = getCorrelationIndex(
-      draft?.nmriumData?.correlations.values,
-      correlation,
-    );
-    draft.resultData.resultRecord.detections.setNeighbors[correlationIndex] =
-      editedNeighbors as NeighborsEntry;
-  }
-}
-
-export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
-  const { fixedNeighbors } = action.payload;
-
-  if (draft.resultData?.resultRecord.detections) {
-    draft.resultData.resultRecord.detections.fixedNeighbors =
-      fixedNeighbors as FixedNeighbors;
-  }
+  initDetections(draft);
+  const correlationIndex = getCorrelationIndex(
+    draft.nmriumData?.correlations.values,
+    correlation,
+  );
+  (draft.resultData as Result).resultRecord.detections.setNeighbors[
+    correlationIndex
+  ] = editedNeighbors as NeighborsEntry;
 }
 
 export function editHybridizations(draft: Draft<DataState>, action: Action) {
   const { editedHybridizations, correlation } = action.payload;
 
-  if (
-    draft.resultData?.resultRecord.detections &&
-    draft.nmriumData?.correlations
-  ) {
-    const correlationIndex = getCorrelationIndex(
-      draft?.nmriumData?.correlations.values,
-      correlation,
-    );
-    draft.resultData.resultRecord.detections.detectedHybridizations[
-      correlationIndex
-    ] = editedHybridizations as number[];
-  }
+  initDetections(draft);
+  const correlationIndex = getCorrelationIndex(
+    draft.nmriumData?.correlations.values,
+    correlation,
+  );
+  (draft.resultData as Result).resultRecord.detections.detectedHybridizations[
+    correlationIndex
+  ] = editedHybridizations as number[];
+}
+
+export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
+  const { fixedNeighbors } = action.payload;
+
+  initDetections(draft);
+  (draft.resultData as Result).resultRecord.detections.fixedNeighbors =
+    fixedNeighbors as FixedNeighbors;
 }
 
 export function setResultDBEntries(draft: Draft<DataState>, action: Action) {

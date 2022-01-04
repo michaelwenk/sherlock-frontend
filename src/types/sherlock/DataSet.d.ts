@@ -1,6 +1,6 @@
-import { Meta } from './Meta';
+import Meta from './Meta';
 
-export interface DataSet {
+export default interface DataSet {
   structure: any;
   spectrum: any;
   assignment: any;

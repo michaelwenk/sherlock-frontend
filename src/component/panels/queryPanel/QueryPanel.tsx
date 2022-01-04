@@ -7,7 +7,7 @@ import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import Button from '../../elements/Button';
 import queryTypes from '../../../constants/queryTypes';
-import { QueryOptions } from '../../../types/QueryOptions';
+import QueryOptions from '../../../types/QueryOptions';
 import { useData } from '../../../context/DataContext';
 import capitalize from '../../../utils/capitalize';
 import ConfirmModal from '../../elements/modal/ConfirmModal';
@@ -106,7 +106,7 @@ function QueryPanel({ onSubmit, isRequesting, show }: InputProps) {
                       color: 'blue',
                     }}
                   >
-                    Usually, this leads to longer running time!
+                    This could lead to a long running time!
                   </p>
                 }
               />

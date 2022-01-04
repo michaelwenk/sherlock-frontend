@@ -9,7 +9,7 @@ import axios, {
 import { Types } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
-import { Result } from '../../types/Result';
+import Result from '../../types/Result';
 import Spinner from '../../component/elements/Spinner';
 import { HighlightProvider } from '../highlight';
 import QueryPanel from './queryPanel/QueryPanel';
@@ -22,14 +22,10 @@ import {
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
 } from '../../context/ActionTypes';
-import { QueryOptions } from '../../types/QueryOptions';
+import QueryOptions from '../../types/QueryOptions';
 import ResultRecord from '../../types/sherlock/ResultRecord';
 import retrievalActions from '../../constants/retrievalAction';
 import Button from '../elements/Button';
-import { Spectra } from '@michaelwenk/nmrium';
-import { Datum1D } from '@michaelwenk/nmrium/lib/data/types/data1d';
-import { Datum2D } from '@michaelwenk/nmrium/lib/data/types/data2d';
-import { NMRiumData } from '../../types/nmrium/NMRiumData';
 
 export interface onSubmitProps {
   queryOptions: QueryOptions;

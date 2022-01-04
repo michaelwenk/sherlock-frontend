@@ -5,7 +5,6 @@ import {
   Types,
 } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { NeighborsEntry } from '../../../../../types/sherlock/NeighborsEntry';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
@@ -20,6 +19,7 @@ import Highlight from '../../../../../types/Highlight';
 import capitalize from '../../../../../utils/capitalize';
 import { Tab, Tabs } from 'react-bootstrap';
 import EditFixedNeighbors from './EditFixedNeighbors';
+import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEntry';
 
 interface InputProps {
   correlation: Types.Correlation;
@@ -38,6 +38,12 @@ function NeighborsTableCell({
   const dispatch = useDispatch();
 
   const [show, setShow] = useState<boolean>(false);
+
+  const correlationIndex = useMemo(
+    () =>
+      getCorrelationIndex(nmriumData?.correlations?.values || [], correlation),
+    [correlation, nmriumData?.correlations?.values],
+  );
 
   const handleOnDelete = useCallback(
     (atomType: string, protonCount: number, hybridization: number) => {
@@ -120,22 +126,16 @@ function NeighborsTableCell({
       const _fixedNeighbors = lodashCloneDeep(
         resultData?.resultRecord.detections?.fixedNeighbors,
       );
-      if (_fixedNeighbors) {
-        const correlationIndex = getCorrelationIndex(
-          nmriumData?.correlations.values,
-          correlation,
+      if (
+        _fixedNeighbors?.[correlationIndex] &&
+        _fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
+      ) {
+        _fixedNeighbors[correlationIndex].splice(
+          _fixedNeighbors[correlationIndex].indexOf(neighborCorrelationIndex),
+          1,
         );
-        if (
-          _fixedNeighbors[correlationIndex] &&
-          _fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
-        ) {
-          _fixedNeighbors[correlationIndex].splice(
-            _fixedNeighbors[correlationIndex].indexOf(neighborCorrelationIndex),
-            1,
-          );
-          if (_fixedNeighbors[correlationIndex].length === 0) {
-            delete _fixedNeighbors[correlationIndex];
-          }
+        if (_fixedNeighbors[correlationIndex].length === 0) {
+          delete _fixedNeighbors[correlationIndex];
         }
       }
 
@@ -145,31 +145,24 @@ function NeighborsTableCell({
       });
     },
     [
-      correlation,
+      correlationIndex,
       dispatch,
-      nmriumData?.correlations.values,
       resultData?.resultRecord.detections?.fixedNeighbors,
     ],
   );
 
   const handleOnAddFixed = useCallback(
     (neighborCorrelationIndex: number) => {
-      const _fixedNeighbors = lodashCloneDeep(
-        resultData?.resultRecord.detections?.fixedNeighbors,
-      );
-      if (_fixedNeighbors) {
-        const correlationIndex = getCorrelationIndex(
-          nmriumData?.correlations.values,
-          correlation,
-        );
-        if (!_fixedNeighbors[correlationIndex]) {
-          _fixedNeighbors[correlationIndex] = [];
-        }
-        if (
-          !_fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
-        ) {
-          _fixedNeighbors[correlationIndex].push(neighborCorrelationIndex);
-        }
+      const _fixedNeighbors =
+        lodashCloneDeep(resultData?.resultRecord.detections?.fixedNeighbors) ||
+        {};
+      if (!_fixedNeighbors[correlationIndex]) {
+        _fixedNeighbors[correlationIndex] = [];
+      }
+      if (
+        !_fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
+      ) {
+        _fixedNeighbors[correlationIndex].push(neighborCorrelationIndex);
       }
 
       dispatch({
@@ -178,9 +171,8 @@ function NeighborsTableCell({
       });
     },
     [
-      correlation,
+      correlationIndex,
       dispatch,
-      nmriumData?.correlations.values,
       resultData?.resultRecord.detections?.fixedNeighbors,
     ],
   );
@@ -220,29 +212,24 @@ function NeighborsTableCell({
       })
       .flat();
 
-    if (mode === 'set') {
-      const correlationIndex = getCorrelationIndex(
-        nmriumData?.correlations.values,
-        correlation,
-      );
-      if (
-        resultData?.resultRecord.detections?.fixedNeighbors &&
-        resultData?.resultRecord.detections?.fixedNeighbors[correlationIndex]
-      ) {
-        resultData.resultRecord.detections.fixedNeighbors[
-          correlationIndex
-        ].forEach((neighborCorrelationIndex) => {
-          values.push(
-            nmriumData?.correlations.values[neighborCorrelationIndex].label
-              .origin,
-          );
-        });
-      }
+    if (
+      mode === 'set' &&
+      resultData?.resultRecord.detections?.fixedNeighbors &&
+      resultData?.resultRecord.detections?.fixedNeighbors[correlationIndex]
+    ) {
+      resultData?.resultRecord.detections.fixedNeighbors[
+        correlationIndex
+      ].forEach((neighborCorrelationIndex) => {
+        values.push(
+          nmriumData?.correlations.values[neighborCorrelationIndex].label
+            .origin,
+        );
+      });
     }
 
     return <label>{values.join(', ')}</label>;
   }, [
-    correlation,
+    correlationIndex,
     mode,
     neighbors,
     nmriumData?.correlations.values,
@@ -277,8 +264,7 @@ function NeighborsTableCell({
         <CustomModal
           show={show}
           title={`Edit ${capitalize(mode)} Neighbors: ${correlation.atomType}${
-            getCorrelationIndex(nmriumData?.correlations.values, correlation) +
-            1
+            correlationIndex + 1
           } (${
             getCorrelationDelta(correlation)
               ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
@@ -302,23 +288,18 @@ function NeighborsTableCell({
                     onAdd={handleOnAdd}
                   />
                 </Tab>
-                {resultData?.resultRecord.detections?.fixedNeighbors && (
-                  <Tab eventKey={'fixed'} title="Fixed">
-                    <EditFixedNeighbors
-                      fixedNeighborEntry={
-                        resultData.resultRecord.detections.fixedNeighbors[
-                          getCorrelationIndex(
-                            nmriumData?.correlations.values,
-                            correlation,
-                          )
-                        ]
-                      }
-                      correlations={nmriumData?.correlations.values}
-                      onDelete={handleOnDeleteFixed}
-                      onAdd={handleOnAddFixed}
-                    />
-                  </Tab>
-                )}
+                <Tab eventKey={'fixed'} title="Fixed">
+                  <EditFixedNeighbors
+                    fixedNeighborEntry={
+                      resultData?.resultRecord.detections?.fixedNeighbors?.[
+                        correlationIndex
+                      ] || []
+                    }
+                    correlations={nmriumData?.correlations.values}
+                    onDelete={handleOnDeleteFixed}
+                    onAdd={handleOnAddFixed}
+                  />
+                </Tab>
               </Tabs>
             )
           }

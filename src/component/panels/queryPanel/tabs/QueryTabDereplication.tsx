@@ -2,7 +2,7 @@ import './QueryTabDereplication.scss';
 
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';
-import { QueryOptions } from '../../../../types/QueryOptions';
+import QueryOptions from '../../../../types/QueryOptions';
 import FormikInput from '../../../elements/FormikInput';
 import ErrorSymbol from '../../../elements/ErrorSymbol';
 

@@ -9,13 +9,13 @@ import { DataProvider } from '../context/DataContext';
 import { State } from '@michaelwenk/nmrium/lib/component/reducer/Reducer';
 import {
   DataReducer,
-  DataState,
   dispatcher,
   initialState,
   initState,
 } from '../context/Reducer';
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
-import { NMRiumData } from '../types/nmrium/NMRiumData';
+import NMRiumData from '../types/nmrium/NMRiumData';
+import DataState from '../types/DataState';
 
 const preferences = {};
 

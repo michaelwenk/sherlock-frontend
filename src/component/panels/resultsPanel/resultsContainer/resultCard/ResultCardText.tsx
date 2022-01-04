@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultCardText.scss';
 import { useMemo } from 'react';
 
-import { ResultMolecule } from '../../../../../types/ResultMolecule';
+import ResultMolecule from '../../../../../types/ResultMolecule';
 
 type InputProps = {
   molecule: ResultMolecule;

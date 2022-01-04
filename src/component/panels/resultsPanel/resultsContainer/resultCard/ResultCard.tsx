@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
 import OCL from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
-import { ResultMolecule } from '../../../../../types/ResultMolecule';
+import ResultMolecule from '../../../../../types/ResultMolecule';
 import { CSSProperties, useMemo } from 'react';
 import { SmilesSvgRenderer } from 'react-ocl/base';
 

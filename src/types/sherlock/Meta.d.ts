@@ -1,4 +1,4 @@
-export interface Meta {
+export default interface Meta {
   source: string;
   id: string | number;
   querySpectrumSignalCount: number;

@@ -1,6 +1,6 @@
-import { DataSet } from './sherlock/DataSet';
+import DataSet from './sherlock/DataSet';
 
-export interface ResultMolecule {
+export default interface ResultMolecule {
   molfile?: string;
   dataSet: DataSet;
 }

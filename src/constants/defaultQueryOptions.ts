@@ -1,4 +1,4 @@
-import { QueryOptions } from '../types/QueryOptions';
+import QueryOptions from '../types/QueryOptions';
 import queryTypes from './queryTypes';
 import retrievalActions from './retrievalAction';
 

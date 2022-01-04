@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
-import { Result } from '../../../types/Result';
+import Result from '../../../types/Result';
 import { useData } from '../../../context/DataContext';
 import buildMolecules from '../../../utils/buildMolecules';
 import { useDispatch } from '../../../context/DispatchContext';
@@ -14,7 +14,7 @@ import {
   SET_RESULT_DB_ENTRIES,
 } from '../../../context/ActionTypes';
 import ConfirmModal from '../../elements/modal/ConfirmModal';
-import { ResultMolecule } from '../../../types/ResultMolecule';
+import ResultMolecule from '../../../types/ResultMolecule';
 import CustomModal from '../../elements/modal/CustomModal';
 
 type InputProps = {
