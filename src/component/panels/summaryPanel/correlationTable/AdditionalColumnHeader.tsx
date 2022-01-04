@@ -69,8 +69,8 @@ function AdditionalColumnHeader({ correlation }) {
                   (index) => index === correlationIndex,
                 )
               : 0) > 0
-              ? 'dashed 1px lightgrey'
-              : 'solid 2px lightgrey',
+              ? 'none'
+              : 'solid 1px lightgrey',
         },
         backgroundColor: highlightAdditionalColumn.isActive
           ? '#ff6f0057'

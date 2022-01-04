@@ -91,8 +91,8 @@ function CorrelationTableRow({
               groupIndex
             ].length -
               1
-            ? 'dashed 1px lightgrey'
-            : 'solid 2px lightgrey',
+            ? 'none'
+            : 'solid 1px lightgrey',
       },
       title:
         correlation.pseudo === false &&
