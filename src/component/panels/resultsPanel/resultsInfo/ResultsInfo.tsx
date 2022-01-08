@@ -42,7 +42,7 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
             </td>
             {resultData.time && (
               <td className="value">
-                {`${(resultData.time / 60).toFixed(0)}min, ${(
+                {`${Math.floor(resultData.time / 60).toFixed(0)}min, ${(
                   resultData.time % 60
                 ).toFixed(0)}s`}
               </td>
