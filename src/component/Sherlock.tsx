@@ -1,5 +1,5 @@
 import './Sherlock.scss';
-import logoMinimal from '../../public/Sherlock_minimal.png';
+import logoMinimal from '/Sherlock_minimal.png';
 
 import { Tab, Tabs } from 'react-bootstrap';
 import NMRium from '@michaelwenk/nmrium';
