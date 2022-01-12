@@ -1,6 +1,6 @@
 .results-panel {
   width: 100%;
-  height: 95%;
+  height: calc(100% - 40px);
   display: flex;
   flex-direction: column;
   display: var(--show);

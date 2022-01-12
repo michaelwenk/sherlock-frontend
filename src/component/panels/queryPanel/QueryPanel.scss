@@ -1,7 +1,7 @@
 .query-panel {
   display: var(--show);
   width: 100%;
-  height: 95%;
+  height: calc(100% - 40px);
   flex-direction: column;
   overflow-y: auto;
 

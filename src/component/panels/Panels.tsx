@@ -372,16 +372,13 @@ function Panels() {
             <Button
               type="button"
               className="collapsible"
-              style={
-                {
-                  '--sign': showQueryPanel ? '"\\2796"' : '"\\2795"',
-                } as React.CSSProperties
-              }
               onClick={() => {
                 setShowQueryPanel(!showQueryPanel);
               }}
               child={
-                showQueryPanel ? 'Hide query options' : 'Show query options'
+                showQueryPanel
+                  ? 'Switch to result panel'
+                  : 'Switch to query panel'
               }
             />
 

@@ -2,26 +2,27 @@
   width: 100%;
   height: 100%;
 
-  .sherlock-header {
-    width: 100%;
-    height: 40px;
-    text-align: center;
-    font-size: x-large;
+  .nav {
+    border: none;
+  }
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link {
+    height: 50px;
+    color: grey;
     font-weight: bold;
+    border: none;
   }
 
-  .sherlock-body {
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    height: 50px;
+    color: rgb(10, 97, 212);
+    border: none;
+  }
+
+  .nmrium-container {
     width: 100%;
-    height: calc(100% - 40px);
-
-    .tabs-bar {
-      height: 40px;
-    }
-
-    .nmrium-container {
-      width: 100%;
-      height: calc(100% - 40px - 40px);
-      position: absolute;
-    }
+    height: calc(100% - 50px);
+    position: absolute;
   }
 }

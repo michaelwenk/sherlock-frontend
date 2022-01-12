@@ -1,24 +1,19 @@
 .panels {
   width: 100%;
-  height: calc(100% - 40px - 40px);
+  height: calc(100% - 50px);
   position: fixed;
+  border-top: solid 0.1px #eee;
 
   .collapsible {
-    height: 5%;
+    height: 40px;
     background-color: #eee;
     padding: 5px;
     width: 100%;
-    text-align: left;
+    text-align: center;
     font-size: 14px;
 
     &:hover {
       background-color: #ccc;
-    }
-
-    &:after {
-      content: var(--sign);
-      float: right;
-      margin-left: 5px;
     }
   }
 

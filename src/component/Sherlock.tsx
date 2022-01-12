@@ -1,4 +1,5 @@
 import './Sherlock.scss';
+import logoMinimal from '../../public/Sherlock_minimal.png';
 
 import { Tab, Tabs } from 'react-bootstrap';
 import NMRium from '@michaelwenk/nmrium';
@@ -16,6 +17,7 @@ import {
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
+import Button from './elements/Button';
 
 const preferences = {};
 
@@ -46,11 +48,29 @@ function Sherlock() {
 
   return (
     <div className="sherlock">
-      <div className="sherlock-header">
-        <p>Sherlock</p>
-      </div>
       <div className="sherlock-body">
-        <Tabs defaultActiveKey="nmrium" className="tabs-bar">
+        <Tabs defaultActiveKey="nmrium" className="nav-justified">
+          <Tab
+            eventKey="logo"
+            title={
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    location.reload();
+                  }}
+                  child={<img src={logoMinimal} width="100%" />}
+                  style={{ border: 'none' }}
+                />
+              </div>
+            }
+          />
           <Tab eventKey="nmrium" title="Spectra">
             <div className="nmrium-container">
               <NMRium

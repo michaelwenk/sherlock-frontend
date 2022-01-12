@@ -5,7 +5,7 @@
   -webkit-user-select: none;
 
   overflow: auto;
-  height: 95%;
+  height: calc(100% - 30px);
   display: block;
   table {
     border-spacing: 0;
