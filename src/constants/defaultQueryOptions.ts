@@ -29,7 +29,7 @@ const defaultQueryOptions: QueryOptions = {
     useNeighborDetections: true,
     hybridizationDetectionThreshold: 0.01,
     lowerElementCountThreshold: 0.01,
-    upperElementCountThreshold: 0.8,
+    upperElementCountThreshold: 0.95,
   },
   retrievalOptions: {
     action: retrievalActions.fetch,
