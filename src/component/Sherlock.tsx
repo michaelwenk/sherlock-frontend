@@ -48,47 +48,45 @@ function Sherlock() {
 
   return (
     <div className="sherlock">
-      <div className="sherlock-body">
-        <Tabs defaultActiveKey="nmrium" className="nav-justified">
-          <Tab
-            eventKey="logo"
-            title={
-              <div
-                style={{
-                  width: '100%',
-                  maxWidth: '300px',
-                  display: 'flex',
-                  justifyContent: 'center',
+      <Tabs defaultActiveKey="nmrium" className="nav-justified">
+        <Tab
+          eventKey="logo"
+          title={
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '300px',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Button
+                onClick={() => {
+                  location.reload();
                 }}
-              >
-                <Button
-                  onClick={() => {
-                    location.reload();
-                  }}
-                  child={<img src={logoMinimal} width="100%" />}
-                  style={{ border: 'none' }}
-                />
-              </div>
-            }
-          />
-          <Tab eventKey="nmrium" title="Spectra">
-            <div className="nmrium-container">
-              <NMRium
-                preferences={preferences}
-                onDataChange={handleOnNMRiumDataChange}
+                child={<img src={logoMinimal} width="100%" />}
+                style={{ border: 'none' }}
               />
             </div>
-          </Tab>
-          <Tab eventKey="case" title="CASE">
-            <DispatchProvider value={dispatcherMemo}>
-              <DataProvider value={state}>
-                <Panels />
-              </DataProvider>
-            </DispatchProvider>
-          </Tab>
-          <Tab eventKey="about" title="About"></Tab>
-        </Tabs>
-      </div>
+          }
+        />
+        <Tab eventKey="nmrium" title="Spectra">
+          <div className="nmrium-container">
+            <NMRium
+              preferences={preferences}
+              onDataChange={handleOnNMRiumDataChange}
+            />
+          </div>
+        </Tab>
+        <Tab eventKey="case" title="CASE">
+          <DispatchProvider value={dispatcherMemo}>
+            <DataProvider value={state}>
+              <Panels />
+            </DataProvider>
+          </DispatchProvider>
+        </Tab>
+        <Tab eventKey="about" title="About"></Tab>
+      </Tabs>
     </div>
   );
 }
