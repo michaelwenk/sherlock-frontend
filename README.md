@@ -1,4 +1,4 @@
-<img width="100" alt="sherlock-logo" src="public/Sherlock.png" align="right">
+<img width="150" alt="sherlock-logo" src="public/Sherlock.png" align="right">
 
 # Sherlock (Frontend)
 
