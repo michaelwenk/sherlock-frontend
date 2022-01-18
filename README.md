@@ -1,3 +1,4 @@
+<img width="100" alt="sherlock-logo" src="public/Sherlock.png" style="width: 100px; float:right;">
 # Sherlock (Frontend)
 
 Frontend service for [Sherlock](https://github.com/michaelwenk/sherlock).
