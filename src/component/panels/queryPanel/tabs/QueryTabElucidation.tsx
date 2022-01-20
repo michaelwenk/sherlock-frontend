@@ -177,6 +177,22 @@ function QueryTabElucidation() {
             </td>
           </tr>
           <tr>
+            <td>Shift tolerance (ppm)</td>
+            <td>
+              <FormikInput
+                type="number"
+                name="elucidationOptions.shiftTolerance"
+              />
+            </td>
+            <td>
+              {errors.elucidationOptions?.shiftTolerance && (
+                <ErrorSymbol
+                  message={errors.elucidationOptions.shiftTolerance}
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
             <td>Maximum average deviation (ppm)</td>
             <td>
               <FormikInput

@@ -20,6 +20,7 @@ export interface ValidationErrors {
     useFilterLsdRing3?: string;
     useFilterLsdRing4?: string;
     timeLimitTotal?: string;
+    shiftTolerance?: string;
     maxAverageDeviation?: string;
   };
   detectionOptions?: {
@@ -83,7 +84,14 @@ function validateQueryOptions(values: QueryOptions) {
     }
     errors.elucidationOptions.timeLimitTotal = 'Must be at least 1';
   }
-  if (!isInRange(values.elucidationOptions.maxAverageDeviation, 1, undefined)) {
+
+  if (!isInRange(values.elucidationOptions.shiftTolerance, 0, undefined)) {
+    if (!errors.elucidationOptions) {
+      errors.elucidationOptions = {};
+    }
+    errors.elucidationOptions.shiftTolerance = 'Must be at least 0';
+  }
+  if (!isInRange(values.elucidationOptions.maxAverageDeviation, 0, undefined)) {
     if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }

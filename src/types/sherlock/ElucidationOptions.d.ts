@@ -9,5 +9,6 @@ export default interface ElucidationOptions {
   // elucidation process
   timeLimitTotal: number;
   // generated structures filter
+  shiftTolerance: number;
   maxAverageDeviation: number;
 }
