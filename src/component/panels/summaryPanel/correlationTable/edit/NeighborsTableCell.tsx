@@ -289,16 +289,24 @@ function NeighborsTableCell({
                   />
                 </Tab>
                 <Tab eventKey={'fixed'} title="Fixed">
-                  <EditFixedNeighbors
-                    fixedNeighborEntry={
-                      resultData?.resultRecord.detections?.fixedNeighbors?.[
-                        correlationIndex
-                      ] || []
-                    }
-                    correlations={nmriumData?.correlations.values}
-                    onDelete={handleOnDeleteFixed}
-                    onAdd={handleOnAddFixed}
-                  />
+                  {correlation.equivalence === undefined ||
+                  correlation.equivalence > 1 ? (
+                    <p style={{ color: 'blue' }}>
+                      Setting of directly bonded atom is not allowed for this
+                      atom with an equivalence higher than one!
+                    </p>
+                  ) : (
+                    <EditFixedNeighbors
+                      fixedNeighborEntry={
+                        resultData?.resultRecord.detections?.fixedNeighbors?.[
+                          correlationIndex
+                        ] || []
+                      }
+                      correlations={nmriumData?.correlations.values}
+                      onDelete={handleOnDeleteFixed}
+                      onAdd={handleOnAddFixed}
+                    />
+                  )}
                 </Tab>
               </Tabs>
             )
