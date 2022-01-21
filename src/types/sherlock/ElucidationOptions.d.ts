@@ -11,4 +11,5 @@ export default interface ElucidationOptions {
   // generated structures filter
   shiftTolerance: number;
   maxAverageDeviation: number;
+  useCombinatorics: boolean;
 }

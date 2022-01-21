@@ -24,6 +24,7 @@ const defaultQueryOptions: QueryOptions = {
     // generated structures filter
     shiftTolerance: 20,
     maxAverageDeviation: 5,
+    useCombinatorics: false,
   },
   detectionOptions: {
     useHybridizationDetections: true,

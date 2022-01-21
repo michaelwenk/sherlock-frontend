@@ -209,12 +209,18 @@ function QueryTabElucidation() {
             </td>
           </tr>
           <tr>
+            <td>Allow combinatorics</td>
+            <td>
+              <FormikCheckBox name="elucidationOptions.useCombinatorics" />
+            </td>
+          </tr>
+          <tr>
             <td colSpan={2} style={{ fontWeight: 'bold' }}>
               Further settings:
             </td>
           </tr>
           <tr>
-            <td>Allow Hetero-Hetero Bonds</td>
+            <td>Allow hetero-hetero bonds</td>
             <td>
               <FormikCheckBox name="elucidationOptions.allowHeteroHeteroBonds" />
             </td>
