@@ -52,22 +52,18 @@ function Sherlock() {
         <Tab
           eventKey="logo"
           title={
-            <div
-              style={{
-                width: '100%',
-                maxWidth: '300px',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Button
-                onClick={() => {
-                  location.reload();
+            <a href="http://localhost:3001">
+              <img
+                src={logoMinimal}
+                style={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  border: 'none',
                 }}
-                child={<img src={logoMinimal} width="100%" />}
-                style={{ border: 'none' }}
               />
-            </div>
+            </a>
           }
         />
         <Tab eventKey="nmrium" title="Spectra">
