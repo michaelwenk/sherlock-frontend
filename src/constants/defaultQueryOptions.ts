@@ -22,7 +22,7 @@ const defaultQueryOptions: QueryOptions = {
     // elucidation process
     timeLimitTotal: 5,
     // generated structures filter
-    shiftTolerance: 20,
+    shiftTolerance: 30,
     maxAverageDeviation: 5,
     useCombinatorics: false,
   },
