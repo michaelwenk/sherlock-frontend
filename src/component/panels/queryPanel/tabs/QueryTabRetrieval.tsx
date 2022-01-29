@@ -13,6 +13,13 @@ import Input from '../../../elements/Input';
 import ResultRecord from '../../../../types/sherlock/ResultRecord';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
 import { SmilesSvgRenderer } from 'react-ocl/base';
+import CustomPagination from '../../../elements/CustomPagination';
+
+interface Row {
+  id: string;
+  name: string;
+  rendered: JSX.Element;
+}
 
 function QueryTabRetrieval() {
   const { resultDataDB } = useData();
@@ -23,14 +30,14 @@ function QueryTabRetrieval() {
     useState<ResultRecord>();
 
   const rows = useMemo(
-    () =>
+    (): Row[] =>
       resultDataDB
         ? resultDataDB.map((resultRecord) => {
             const date = new Date(resultRecord.date || '');
 
             return {
-              id: resultRecord.id,
-              name: resultRecord.name,
+              id: resultRecord.id || '',
+              name: resultRecord.name || '',
               rendered: (
                 <tr key={`resultDataDB_${resultRecord.id}`}>
                   <td>{resultRecord.name || resultRecord.id}</td>
@@ -117,6 +124,34 @@ function QueryTabRetrieval() {
     setShowDeleteModal(false);
   }, [resultRecordToDelete, setFieldValue, submitForm]);
 
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const handleOnSelectIndex = useCallback((index: number) => {
+    setSelectedIndex(index);
+  }, []);
+
+  const retrievalData = useMemo(() => {
+    const _retrievalData: JSX.Element[][] = [];
+    let counter = 0;
+    let rows: JSX.Element[] = [];
+    const selectedPageLimit = 5;
+
+    for (let i = 0; i < filteredRows.length; i++) {
+      if (counter < selectedPageLimit) {
+        counter++;
+        rows.push(filteredRows[i]);
+      } else {
+        _retrievalData.push(rows);
+        rows = [filteredRows[i]];
+        counter = 1;
+      }
+    }
+    if (rows.length > 0) {
+      _retrievalData.push(rows);
+    }
+
+    return _retrievalData;
+  }, [filteredRows]);
+
   return (
     <div className="query-tab-retrieval-container">
       <div className="search-and-button-container">
@@ -144,6 +179,29 @@ function QueryTabRetrieval() {
           />
         </div>
       </div>
+      {filteredRows.length > 0 && (
+        <div className="table-with-pagination">
+          <CustomPagination
+            data={retrievalData}
+            selected={selectedIndex}
+            onSelect={handleOnSelectIndex}
+            maxPages={5}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th>Name/ID</th>
+                <th>Date</th>
+                <th>Count</th>
+                <th>Preview</th>
+                <th style={{ borderRight: 'none' }}></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>{retrievalData[selectedIndex]}</tbody>
+          </table>
+        </div>
+      )}
       {showDeleteModal && (
         <ConfirmModal
           show={showDeleteModal}
@@ -157,21 +215,6 @@ function QueryTabRetrieval() {
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={handleOnConfirmDelete}
         />
-      )}
-      {filteredRows.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Name/ID</th>
-              <th>Date</th>
-              <th>Count</th>
-              <th>Preview</th>
-              <th style={{ borderRight: 'none' }}></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>{filteredRows}</tbody>
-        </table>
       )}
     </div>
   );
