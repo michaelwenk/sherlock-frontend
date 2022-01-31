@@ -6,6 +6,9 @@ type InputProps = {
   selected: number;
   onSelect: Function;
   maxPages: number;
+  showFirst?: boolean;
+  showLast?: boolean;
+  showEllipsis?: boolean;
   className?: string;
 };
 
@@ -14,6 +17,9 @@ function CustomPagination({
   selected,
   onSelect,
   maxPages,
+  showFirst = false,
+  showLast = false,
+  showEllipsis = false,
   className = 'CustomPagination',
 }: InputProps) {
   const paginationItems = useMemo(() => {
@@ -94,21 +100,26 @@ function CustomPagination({
   return (
     <div className={className}>
       <Pagination className="Pagination">
-        <Pagination.First
-          onClick={handleOnClickFirst}
-          disabled={selected === 0}
-          className="PaginationFirst"
-        />
+        {showFirst && (
+          <Pagination.First
+            onClick={handleOnClickFirst}
+            disabled={selected === 0}
+            className="PaginationFirst"
+          />
+        )}
         <Pagination.Prev
           onClick={handleOnClickPrev}
           disabled={paginationItemListIndex === 0}
           className="PaginationPrev"
         />
-        {paginationItems.length > maxPages && paginationItemListIndex > 0 ? (
+        {showEllipsis &&
+        paginationItems.length > maxPages &&
+        paginationItemListIndex > 0 ? (
           <Pagination.Ellipsis disabled={true} />
         ) : null}
         {paginationItemLists[paginationItemListIndex]}
-        {paginationItems.length > maxPages &&
+        {showEllipsis &&
+        paginationItems.length > maxPages &&
         paginationItemListIndex + 1 < paginationItemLists.length ? (
           <Pagination.Ellipsis disabled={true} />
         ) : null}
@@ -117,11 +128,13 @@ function CustomPagination({
           disabled={paginationItemListIndex === paginationItemLists.length - 1}
           className="PaginationNext"
         />
-        <Pagination.Last
-          onClick={handleOnClickLast}
-          disabled={selected === paginationItems.length - 1}
-          className="PaginationLast"
-        />
+        {showLast && (
+          <Pagination.Last
+            onClick={handleOnClickLast}
+            disabled={selected === paginationItems.length - 1}
+            className="PaginationLast"
+          />
+        )}
       </Pagination>
     </div>
   );
