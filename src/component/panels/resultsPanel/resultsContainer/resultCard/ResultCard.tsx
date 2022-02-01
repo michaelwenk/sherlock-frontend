@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './ResultCard.scss';
 
 import Card from 'react-bootstrap/Card';
 import OCL from 'openchemlib/full';
@@ -42,12 +42,6 @@ function ResultCard({
     () =>
       molecule.dataSet.meta.id ? (
         <Card.Link
-          style={{
-            color: 'blue',
-            fontSize: 14,
-            textAlign: 'center',
-            marginBottom: '5px',
-          }}
           href={
             molecule.dataSet.meta.source === 'nmrshiftdb'
               ? `http://www.nmrshiftdb.org/molecule/${molecule.dataSet.meta.id}`

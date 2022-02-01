@@ -6,4 +6,5 @@ export default interface DataState {
   nmriumData?: NMRiumData;
   resultData?: Result;
   resultDataDB?: ResultRecord[];
+  isRequesting: boolean;
 }

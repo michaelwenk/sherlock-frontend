@@ -17,7 +17,6 @@ import {
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
-import Button from './elements/Button';
 
 const preferences = {};
 

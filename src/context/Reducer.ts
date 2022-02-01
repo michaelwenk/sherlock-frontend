@@ -8,6 +8,7 @@ import {
   editForbiddenNeighbors,
   editHybridizations,
   editSetNeighbors,
+  setIsRequesting,
   setNmriumData,
   setResultData,
   setResultDBEntries,
@@ -18,6 +19,7 @@ import {
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_HYBRIDIZATIONS,
   EDIT_SET_NEIGHBORS,
+  SET_IS_REQUESTING,
   SET_NMRIUM_DATA,
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
@@ -28,6 +30,7 @@ export const initialState: DataState = {
     queryType: queryTypes.dereplication,
     resultRecord: {},
   },
+  isRequesting: false,
 };
 
 export function initState(state: DataState): DataState {
@@ -58,6 +61,8 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return editHybridizations(draft, action);
     case SET_RESULT_DB_ENTRIES:
       return setResultDBEntries(draft, action);
+    case SET_IS_REQUESTING:
+      return setIsRequesting(draft, action);
 
     default:
       return;

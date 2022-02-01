@@ -22,7 +22,7 @@ interface Row {
 }
 
 function QueryTabRetrieval() {
-  const { resultDataDB } = useData();
+  const { resultDataDB, isRequesting } = useData();
   const { setFieldValue, submitForm } = useFormikContext<QueryOptions>();
   const [searchPattern, setSearchPattern] = useState<string>('');
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -49,16 +49,17 @@ function QueryTabRetrieval() {
                   <td>{resultRecord.dataSetListSize}</td>
                   <td>
                     {resultRecord.previewDataSet?.meta.smiles && (
-                      <SmilesSvgRenderer
-                        OCL={OCL}
-                        id={`molSVG${resultRecord.id}_preview`}
-                        smiles={resultRecord.previewDataSet.meta.smiles}
-                        width={120}
-                        height={120}
-                      />
+                      <div className="rendered-preview">
+                        <SmilesSvgRenderer
+                          OCL={OCL}
+                          id={`molSVG${resultRecord.id}_preview`}
+                          smiles={resultRecord.previewDataSet.meta.smiles}
+                          width={120}
+                        />
+                      </div>
                     )}
                   </td>
-                  <td style={{ borderRight: 'none' }}>
+                  <td>
                     <Button
                       child={<FaEye title="Load from Database" />}
                       onClick={() => {
@@ -73,15 +74,20 @@ function QueryTabRetrieval() {
                         );
                         submitForm();
                       }}
+                      disabled={isRequesting}
+                      style={{ color: isRequesting ? 'grey' : 'inherit' }}
                     />
-                  </td>
-                  <td>
                     <Button
                       child={<FaTrashAlt title="Delete in Database" />}
                       onClick={() => {
                         setResultRecordToDelete(resultRecord);
                         setShowDeleteModal(true);
                       }}
+                      style={{
+                        marginLeft: '10px',
+                        color: isRequesting ? 'grey' : 'inherit',
+                      }}
+                      disabled={isRequesting}
                     />
                   </td>
                 </tr>
@@ -89,7 +95,7 @@ function QueryTabRetrieval() {
             };
           })
         : [],
-    [resultDataDB, setFieldValue, submitForm],
+    [isRequesting, resultDataDB, setFieldValue, submitForm],
   );
 
   const filteredRows = useMemo(
@@ -133,7 +139,7 @@ function QueryTabRetrieval() {
     const _retrievalData: JSX.Element[][] = [];
     let counter = 0;
     let rows: JSX.Element[] = [];
-    const selectedPageLimit = 5;
+    const selectedPageLimit = 20;
 
     for (let i = 0; i < filteredRows.length; i++) {
       if (counter < selectedPageLimit) {
@@ -170,37 +176,44 @@ function QueryTabRetrieval() {
               setFieldValue('retrievalOptions.action', retrievalActions.fetch);
               submitForm();
             }}
+            disabled={isRequesting}
+            style={{ color: isRequesting ? 'grey' : 'inherit' }}
           />
           <Button
             child={<FaTrashAlt title="Delete all database entries" />}
             onClick={() => {
               setShowDeleteModal(true);
             }}
+            disabled={isRequesting}
+            style={{ color: isRequesting ? 'grey' : 'inherit' }}
           />
         </div>
       </div>
       {filteredRows.length > 0 && (
-        <div className="table-with-pagination">
-          <CustomPagination
-            data={retrievalData}
-            selected={selectedIndex}
-            onSelect={handleOnSelectIndex}
-            maxPages={5}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>Name/ID</th>
-                <th>Date</th>
-                <th>Count</th>
-                <th>Preview</th>
-                <th style={{ borderRight: 'none' }}></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>{retrievalData[selectedIndex]}</tbody>
-          </table>
-        </div>
+        <>
+          <div className="pagination-container">
+            <CustomPagination
+              data={retrievalData}
+              selected={selectedIndex}
+              onSelect={handleOnSelectIndex}
+              maxPages={5}
+            />
+          </div>
+          <div className="retrieval-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name/ID</th>
+                  <th>Date</th>
+                  <th>Count</th>
+                  <th>Preview</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>{retrievalData[selectedIndex]}</tbody>
+            </table>
+          </div>
+        </>
       )}
       {showDeleteModal && (
         <ConfirmModal

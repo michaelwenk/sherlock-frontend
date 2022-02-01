@@ -6,10 +6,16 @@ import QueryOptions from '../../../../types/QueryOptions';
 import queryTypes from '../../../../constants/queryTypes';
 import FormikInput from '../../../elements/FormikInput';
 import FormikCheckBox from '../../../elements/FormikCheckBox';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ErrorSymbol from '../../../elements/ErrorSymbol';
+import capitalize from '../../../../utils/capitalize';
+import ConfirmModal from '../../../elements/modal/ConfirmModal';
+import { useData } from '../../../../context/DataContext';
 
 function QueryTabElucidation() {
+  const { isRequesting } = useData();
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
   const { setFieldValue, submitForm, values, errors } =
     useFormikContext<QueryOptions>();
 
@@ -111,14 +117,20 @@ function QueryTabElucidation() {
             </td>
           </tr>
           <tr>
-            <td colSpan={2} style={{ textAlign: 'center' }}>
-              <Button
-                child={'Detect'}
-                onClick={() => {
-                  setFieldValue('queryType', queryTypes.detection);
-                  submitForm();
-                }}
-              />
+            <td colSpan={2}>
+              <div className="button-container">
+                <Button
+                  child={'Detect'}
+                  onClick={() => {
+                    setFieldValue('queryType', queryTypes.detection);
+                    submitForm();
+                  }}
+                  disabled={isRequesting}
+                  style={{
+                    color: isRequesting ? 'grey' : 'inherit',
+                  }}
+                />
+              </div>
             </td>
           </tr>
           <tr>
@@ -253,6 +265,46 @@ function QueryTabElucidation() {
           </tr>
         </tbody>
       </table>
+      <div className="button-container">
+        <Button
+          onClick={() => {
+            if (!values.detectionOptions.useHybridizationDetections) {
+              setShowConfirmDialog(true);
+            } else {
+              setFieldValue('queryType', queryTypes.elucidation);
+              submitForm();
+            }
+          }}
+          child={capitalize(queryTypes.elucidation)}
+          disabled={isRequesting || Object.keys(errors).length > 0}
+          style={{
+            color:
+              isRequesting || Object.keys(errors).length > 0
+                ? 'grey'
+                : 'inherit',
+          }}
+        />
+      </div>
+      <ConfirmModal
+        show={showConfirmDialog}
+        title="Start elucidation without set or detected hybridizations?"
+        onCancel={() => setShowConfirmDialog(false)}
+        onConfirm={() => {
+          setShowConfirmDialog(false);
+          setFieldValue('queryType', queryTypes.elucidation);
+          submitForm();
+        }}
+        body={
+          <p
+            style={{
+              fontSize: '15px',
+              color: 'blue',
+            }}
+          >
+            This could lead to a long running time!
+          </p>
+        }
+      />
     </div>
   );
 }

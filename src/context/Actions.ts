@@ -110,3 +110,8 @@ export function setResultDBEntries(draft: Draft<DataState>, action: Action) {
   const { resultRecordList } = action.payload;
   draft.resultDataDB = resultRecordList as ResultRecord[];
 }
+
+export function setIsRequesting(draft: Draft<DataState>, action: Action) {
+  const { isRequesting } = action.payload;
+  draft.isRequesting = isRequesting as boolean;
+}

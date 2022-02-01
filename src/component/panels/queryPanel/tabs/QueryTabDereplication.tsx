@@ -5,16 +5,22 @@ import CheckBox from '../../../elements/CheckBox';
 import QueryOptions from '../../../../types/QueryOptions';
 import FormikInput from '../../../elements/FormikInput';
 import ErrorSymbol from '../../../elements/ErrorSymbol';
+import queryTypes from '../../../../constants/queryTypes';
+import Button from '../../../elements/Button';
+import capitalize from '../../../../utils/capitalize';
+import { useData } from '../../../../context/DataContext';
 
 function QueryTabDereplication() {
-  const { errors, values, setFieldValue } = useFormikContext<QueryOptions>();
+  const { isRequesting } = useData();
+  const { errors, values, setFieldValue, submitForm } =
+    useFormikContext<QueryOptions>();
 
   return (
     <div className="query-options-tab-dereplication-container">
       <table>
         <tbody>
           <tr>
-            <td>Tolerance (ppm)</td>
+            <td>Shift tolerance (ppm)</td>
             <td>
               <FormikInput
                 type="number"
@@ -56,7 +62,6 @@ function QueryTabDereplication() {
                     isChecked,
                   )
                 }
-                // label="Check Multiplicity"
               />
             </td>
           </tr>
@@ -73,7 +78,6 @@ function QueryTabDereplication() {
                     isChecked,
                   )
                 }
-                // label="Check Equivalences Count"
               />
             </td>
           </tr>
@@ -85,12 +89,27 @@ function QueryTabDereplication() {
                 onChange={(isChecked) =>
                   setFieldValue('dereplicationOptions.useMF', isChecked)
                 }
-                // label="Check Molecular Formula"
               />
             </td>
           </tr>
         </tbody>
       </table>
+      <div className="button-container">
+        <Button
+          onClick={() => {
+            setFieldValue('queryType', queryTypes.dereplication);
+            submitForm();
+          }}
+          child={capitalize(queryTypes.dereplication)}
+          disabled={isRequesting || Object.keys(errors).length > 0}
+          style={{
+            color:
+              isRequesting || Object.keys(errors).length > 0
+                ? 'grey'
+                : 'inherit',
+          }}
+        />
+      </div>
     </div>
   );
 }

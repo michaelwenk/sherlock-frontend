@@ -6,59 +6,64 @@
 
   width: 100%;
   height: 100%;
-  text-align: center;
 
   .search-and-button-container {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+
     .Input {
+      width: calc(100% - 80px);
       input {
         text-align: center;
       }
-      margin-top: 15px;
     }
-
     .button-container {
-      margin-top: 5px;
-      margin-bottom: 5px;
+      width: 80px;
       .Button {
         border: none;
         background-color: transparent;
+        margin-left: 10px;
       }
     }
   }
 
-  .table-with-pagination {
+  .pagination-container {
+    margin-top: 10px;
+    width: 100%;
+    height: 35px;
     display: flex;
     flex-direction: column;
+    align-items: center;
 
-    .pagination {
-      font-size: 14px;
-      height: 35px;
-      justify-content: center;
-      margin-top: 5px;
-      margin-bottom: 5px;
-
-      .PaginationItem {
-        white-space: nowrap;
+    .CustomPagination {
+      .Pagination {
+        font-size: 12px;
       }
     }
+  }
+
+  .retrieval-table {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 155px);
+    border: 1px solid #dedede;
+    font-size: 13px;
+
+    overflow: scroll;
 
     table {
       width: 100%;
-      height: 100%;
-
-      background-color: transparent;
-      border-spacing: 0;
-      border: 1px solid #dedede;
-      font-size: 13px;
 
       th,
       td {
         white-space: nowrap;
         text-align: center;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        padding: 0.4rem;
+        padding: 5px;
         border-bottom: 1px solid #dedede;
         border-right: 1px solid #dedede;
 
@@ -66,6 +71,24 @@
           background-color: transparent;
           border: none;
         }
+      }
+
+      th {
+        background-color: lightgrey;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+      }
+
+      tr:hover {
+        background-color: mintcream;
+      }
+
+      .rendered-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
     }
   }

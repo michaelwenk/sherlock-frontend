@@ -19,6 +19,7 @@ import SplitPane from 'react-split-pane';
 import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
 import {
+  SET_IS_REQUESTING,
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
 } from '../../context/ActionTypes';
@@ -32,16 +33,15 @@ export interface onSubmitProps {
 }
 
 const minWidth = {
-  leftPanel: '25%',
-  rightPanel: '25%',
+  leftPanel: '200px',
+  rightPanel: '450px',
   resizer: '15px',
 };
 
 function Panels() {
   const dispatch = useDispatch();
-  const { nmriumData, resultData } = useData();
+  const { nmriumData, resultData, isRequesting } = useData();
 
-  const [isRequesting, setIsRequesting] = useState<boolean>(false);
   const [showQueryPanel, setShowQueryPanel] = useState<boolean>(true);
   const [requestError, setRequestError] = useState<AxiosError>();
   const [requestWasCancelled, setRequestWasCancelled] =
@@ -91,6 +91,16 @@ function Panels() {
     [isRequesting, requestError, requestWasCancelled, showQueryPanel],
   );
 
+  const handleSetIsRequesting = useCallback(
+    (value: boolean) => {
+      dispatch({
+        type: SET_IS_REQUESTING,
+        payload: { isRequesting: value },
+      });
+    },
+    [dispatch],
+  );
+
   const handleOnCancelRequest = useCallback(() => {
     if (cancelRequestRef.current)
       cancelRequestRef.current('User has cancelled the request!!!');
@@ -120,7 +130,7 @@ function Panels() {
             setRequestError(err);
           }
         })
-        .finally(() => setIsRequesting(false));
+        .finally(() => handleSetIsRequesting(false));
 
       if (response && response.data) {
         dispatch({
@@ -129,7 +139,7 @@ function Panels() {
         });
       }
     },
-    [dispatch],
+    [dispatch, handleSetIsRequesting],
   );
 
   useEffect(() => {
@@ -162,16 +172,16 @@ function Panels() {
             setRequestError(err);
           }
         })
-        .finally(() => setIsRequesting(false));
+        .finally(() => handleSetIsRequesting(false));
 
       return response;
     },
-    [],
+    [handleSetIsRequesting],
   );
 
   const handleOnSubmit = useCallback(
     async ({ queryOptions }: onSubmitProps) => {
-      setIsRequesting(true);
+      handleSetIsRequesting(true);
       setShowQueryPanel(false);
 
       const {
@@ -301,7 +311,14 @@ function Panels() {
         }
       }
     },
-    [dispatch, handleOnFetch, nmriumData, request, resultData?.resultRecord],
+    [
+      dispatch,
+      handleOnFetch,
+      handleSetIsRequesting,
+      nmriumData,
+      request,
+      resultData?.resultRecord,
+    ],
   );
 
   const handleOnDragFinished = useCallback((width) => {
@@ -382,11 +399,7 @@ function Panels() {
               }
             />
 
-            <QueryPanel
-              onSubmit={handleOnSubmit}
-              isRequesting={isRequesting}
-              show={showQueryPanel}
-            />
+            <QueryPanel onSubmit={handleOnSubmit} show={showQueryPanel} />
             <ResultsPanel show={showResultsPanel} />
             {!showQueryPanel &&
               !showResultsPanel &&

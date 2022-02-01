@@ -1,7 +1,6 @@
 .results-panel {
   width: 100%;
-  height: calc(100% - 40px);
-  display: flex;
-  flex-direction: column;
+  height: calc(100% - 40px); // - collapsible button
   display: var(--show);
+  flex-direction: column;
 }

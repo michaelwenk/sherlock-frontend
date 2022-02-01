@@ -1,6 +1,5 @@
 .correlation-table {
   user-select: none;
-  -ms-user-selec: none;
   -moz-user-select: none;
   -webkit-user-select: none;
 
@@ -25,6 +24,7 @@
     background-color: white !important;
   }
   th {
+    position: -webkit-sticky;
     position: sticky;
     background-color: white;
     top: 0;

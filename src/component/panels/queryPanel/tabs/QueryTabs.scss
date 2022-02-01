@@ -1,8 +1,38 @@
 .query-tabs {
   width: 100%;
   height: 100%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+  .nav {
+    border: none;
+  }
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link {
+    height: 40px;
+    color: grey;
+    border: none;
+  }
+
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    height: 40px;
+    color: orange;
+    border: none;
+  }
+
+  .query-tab-dereplication,
+  .query-tab-elucidation,
+  .query-tab-retrieval {
+    width: 100%;
+    height: calc(100% - 40px - 5px); // - tabs container - margin-top
+    margin-top: 5px;
+  }
+  .query-tab-dereplication,
+  .query-tab-elucidation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: auto;
+  }
 }
