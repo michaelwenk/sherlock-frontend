@@ -168,52 +168,55 @@ function QueryTabRetrieval() {
           placeholder="Search..."
           inputWidth="100%"
         />
-        <div className="button-container">
-          <Button
-            child={<FaSyncAlt title="Fetch database entries" />}
-            onClick={() => {
-              setFieldValue('queryType', queryTypes.retrieval);
-              setFieldValue('retrievalOptions.action', retrievalActions.fetch);
-              submitForm();
-            }}
-            disabled={isRequesting}
-            style={{ color: isRequesting ? 'grey' : 'inherit' }}
-          />
-          <Button
-            child={<FaTrashAlt title="Delete all database entries" />}
-            onClick={() => {
-              setShowDeleteModal(true);
-            }}
-            disabled={isRequesting}
-            style={{ color: isRequesting ? 'grey' : 'inherit' }}
-          />
-        </div>
-      </div>
-      {filteredRows.length > 0 && (
-        <>
+        <div className="button-and-pagination-container">
           <div className="pagination-container">
             <CustomPagination
               data={retrievalData}
               selected={selectedIndex}
               onSelect={handleOnSelectIndex}
-              maxPages={5}
+              maxPages={3}
             />
           </div>
-          <div className="retrieval-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Name/ID</th>
-                  <th>Date</th>
-                  <th>Count</th>
-                  <th>Preview</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>{retrievalData[selectedIndex]}</tbody>
-            </table>
+          <div className="button-container">
+            <Button
+              child={<FaSyncAlt title="Fetch database entries" />}
+              onClick={() => {
+                setFieldValue('queryType', queryTypes.retrieval);
+                setFieldValue(
+                  'retrievalOptions.action',
+                  retrievalActions.fetch,
+                );
+                submitForm();
+              }}
+              disabled={isRequesting}
+              style={{ color: isRequesting ? 'grey' : 'inherit' }}
+            />
+            <Button
+              child={<FaTrashAlt title="Delete all database entries" />}
+              onClick={() => {
+                setShowDeleteModal(true);
+              }}
+              disabled={isRequesting}
+              style={{ color: isRequesting ? 'grey' : 'inherit' }}
+            />
           </div>
-        </>
+        </div>
+      </div>
+      {filteredRows.length > 0 && (
+        <div className="retrieval-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Name/ID</th>
+                <th>Date</th>
+                <th>Count</th>
+                <th>Preview</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>{retrievalData[selectedIndex]}</tbody>
+          </table>
+        </div>
       )}
       {showDeleteModal && (
         <ConfirmModal

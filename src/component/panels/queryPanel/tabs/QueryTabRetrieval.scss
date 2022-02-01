@@ -9,7 +9,7 @@
 
   .search-and-button-container {
     width: 100%;
-    height: 20px;
+    height: 30px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -17,32 +17,43 @@
     margin-top: 10px;
 
     .Input {
-      width: calc(100% - 80px);
+      width: 100%;
       input {
         text-align: center;
       }
+      margin-left: 10px;
     }
-    .button-container {
-      width: 80px;
-      .Button {
-        border: none;
-        background-color: transparent;
-        margin-left: 10px;
+
+    .button-and-pagination-container {
+      width: 100%;
+      height: 30px;
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+
+      .pagination-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc(100% - 80px);
+        .CustomPagination {
+          .Pagination {
+            font-size: 11px;
+          }
+        }
       }
-    }
-  }
 
-  .pagination-container {
-    margin-top: 10px;
-    width: 100%;
-    height: 35px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .CustomPagination {
-      .Pagination {
-        font-size: 12px;
+      .button-container {
+        width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .Button {
+          border: none;
+          background-color: transparent;
+          margin-left: 10px;
+        }
+        margin-right: 10px;
       }
     }
   }
@@ -50,11 +61,11 @@
   .retrieval-table {
     position: absolute;
     width: 100%;
-    height: calc(100% - 155px);
+    height: calc(100% - 125px);
+    margin-top: 5px;
     border: 1px solid #dedede;
-    font-size: 13px;
-
     overflow: scroll;
+    font-size: 13px;
 
     table {
       width: 100%;
