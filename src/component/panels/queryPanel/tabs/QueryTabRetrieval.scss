@@ -16,12 +16,14 @@
     flex-wrap: nowrap;
     margin-top: 10px;
 
-    .Input {
+    .search-container {
       width: 100%;
-      input {
-        text-align: center;
+      .Input {
+        input {
+          text-align: center;
+        }
+        margin-left: 10px;
       }
-      margin-left: 10px;
     }
 
     .button-and-pagination-container {

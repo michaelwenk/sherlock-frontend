@@ -161,21 +161,25 @@ function QueryTabRetrieval() {
   return (
     <div className="query-tab-retrieval-container">
       <div className="search-and-button-container">
-        <Input
-          type="text"
-          defaultValue=""
-          onChange={(value: string) => setSearchPattern(value.trim())}
-          placeholder="Search..."
-          inputWidth="100%"
-        />
+        <div className="search-container">
+          <Input
+            type="text"
+            defaultValue=""
+            onChange={(value: string) => setSearchPattern(value.trim())}
+            placeholder="Search..."
+            inputWidth="100%"
+          />
+        </div>
         <div className="button-and-pagination-container">
           <div className="pagination-container">
-            <CustomPagination
-              data={retrievalData}
-              selected={selectedIndex}
-              onSelect={handleOnSelectIndex}
-              maxPages={3}
-            />
+            {filteredRows.length > 0 && (
+              <CustomPagination
+                data={retrievalData}
+                selected={selectedIndex}
+                onSelect={handleOnSelectIndex}
+                maxPages={3}
+              />
+            )}
           </div>
           <div className="button-container">
             <Button
