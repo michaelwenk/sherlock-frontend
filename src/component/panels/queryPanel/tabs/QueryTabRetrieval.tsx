@@ -162,13 +162,15 @@ function QueryTabRetrieval() {
     <div className="query-tab-retrieval-container">
       <div className="search-and-button-container">
         <div className="search-container">
-          <Input
-            type="text"
-            defaultValue=""
-            onChange={(value: string) => setSearchPattern(value.trim())}
-            placeholder="Search..."
-            inputWidth="100%"
-          />
+          {rows.length > 0 && (
+            <Input
+              type="text"
+              defaultValue=""
+              onChange={(value: string) => setSearchPattern(value.trim())}
+              placeholder="Search..."
+              inputWidth="100%"
+            />
+          )}
         </div>
         <div className="button-and-pagination-container">
           <div className="pagination-container">
