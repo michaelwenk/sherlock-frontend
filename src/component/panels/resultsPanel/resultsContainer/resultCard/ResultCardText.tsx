@@ -22,7 +22,7 @@ function ResultCardText({ molecule }: InputProps) {
       <tbody>
         <tr>
           <td>Formula</td>
-          <td>{molecule.dataSet.meta.mf}</td>
+          <td>{molecule.dataSet.meta.mfOriginal}</td>
         </tr>
         <tr>
           <td>RMSD</td>
