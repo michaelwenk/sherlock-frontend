@@ -97,6 +97,10 @@
         background-color: mintcream;
       }
 
+      tr:hover .rendered-preview {
+        transform: scale(1.05);
+      }
+
       .rendered-preview {
         display: flex;
         flex-direction: column;
