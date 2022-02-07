@@ -84,7 +84,7 @@ function QueryTabRetrieval() {
                         setShowDeleteModal(true);
                       }}
                       style={{
-                        marginLeft: '10px',
+                        marginLeft: '15px',
                         color: isRequesting ? 'grey' : 'inherit',
                       }}
                       disabled={isRequesting}
