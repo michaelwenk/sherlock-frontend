@@ -19,7 +19,7 @@ function buildSDFileContent({ resultMolecules }: InputProps) {
     content += '> <SMILES> \n';
     content += `${res.dataSet.meta.smiles}\n\n`;
     content += '> <Molecular_Formula> \n';
-    content += `${res.dataSet.meta.mf}\n\n`;
+    content += `${res.dataSet.meta.mfOriginal}\n\n`;
     content += '$$$$\n';
   });
 
