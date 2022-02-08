@@ -234,7 +234,20 @@ function QueryTabRetrieval() {
                 }?`
               : 'Delete all result database entries?'
           }
-          onCancel={() => setShowDeleteModal(false)}
+          body={
+            <p
+              style={{
+                fontSize: '15px',
+                color: 'blue',
+              }}
+            >
+              This can not be undone!
+            </p>
+          }
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setResultRecordToDelete(undefined);
+          }}
           onConfirm={handleOnConfirmDelete}
         />
       )}
