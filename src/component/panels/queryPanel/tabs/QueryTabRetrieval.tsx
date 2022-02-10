@@ -32,68 +32,70 @@ function QueryTabRetrieval() {
   const rows = useMemo(
     (): Row[] =>
       resultDataDB
-        ? resultDataDB.map((resultRecord) => {
-            const date = new Date(resultRecord.date || '');
+        ? resultDataDB
+            .map((resultRecord) => {
+              const date = new Date(resultRecord.date || '');
 
-            return {
-              id: resultRecord.id || '',
-              name: resultRecord.name || '',
-              rendered: (
-                <tr key={`resultDataDB_${resultRecord.id}`}>
-                  <td>{resultRecord.name || resultRecord.id}</td>
-                  <td>
-                    {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
-                    <br />
-                    {`${date.getHours()}:${date.getMinutes()}`}
-                  </td>
-                  <td>{resultRecord.dataSetListSize}</td>
-                  <td>
-                    {resultRecord.previewDataSet?.meta.smiles && (
-                      <div className="rendered-preview">
-                        <SmilesSvgRenderer
-                          OCL={OCL}
-                          id={`molSVG${resultRecord.id}_preview`}
-                          smiles={resultRecord.previewDataSet.meta.smiles}
-                          width={120}
-                        />
-                      </div>
-                    )}
-                  </td>
-                  <td>
-                    <Button
-                      child={<FaEye title="Load from Database" />}
-                      onClick={() => {
-                        setFieldValue('queryType', queryTypes.retrieval);
-                        setFieldValue(
-                          'retrievalOptions.action',
-                          retrievalActions.retrieve,
-                        );
-                        setFieldValue(
-                          'retrievalOptions.resultID',
-                          resultRecord.id,
-                        );
-                        submitForm();
-                      }}
-                      disabled={isRequesting}
-                      style={{ color: isRequesting ? 'grey' : 'inherit' }}
-                    />
-                    <Button
-                      child={<FaTrashAlt title="Delete in Database" />}
-                      onClick={() => {
-                        setResultRecordToDelete(resultRecord);
-                        setShowDeleteModal(true);
-                      }}
-                      style={{
-                        marginLeft: '15px',
-                        color: isRequesting ? 'grey' : 'inherit',
-                      }}
-                      disabled={isRequesting}
-                    />
-                  </td>
-                </tr>
-              ),
-            };
-          })
+              return {
+                id: resultRecord.id || '',
+                name: resultRecord.name || '',
+                rendered: (
+                  <tr key={`resultDataDB_${resultRecord.id}`}>
+                    <td>{resultRecord.name || resultRecord.id}</td>
+                    <td>
+                      {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
+                      <br />
+                      {`${date.getHours()}:${date.getMinutes()}`}
+                    </td>
+                    <td>{resultRecord.dataSetListSize}</td>
+                    <td>
+                      {resultRecord.previewDataSet?.meta.smiles && (
+                        <div className="rendered-preview">
+                          <SmilesSvgRenderer
+                            OCL={OCL}
+                            id={`molSVG${resultRecord.id}_preview`}
+                            smiles={resultRecord.previewDataSet.meta.smiles}
+                            width={120}
+                          />
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <Button
+                        child={<FaEye title="Load from Database" />}
+                        onClick={() => {
+                          setFieldValue('queryType', queryTypes.retrieval);
+                          setFieldValue(
+                            'retrievalOptions.action',
+                            retrievalActions.retrieve,
+                          );
+                          setFieldValue(
+                            'retrievalOptions.resultID',
+                            resultRecord.id,
+                          );
+                          submitForm();
+                        }}
+                        disabled={isRequesting}
+                        style={{ color: isRequesting ? 'grey' : 'inherit' }}
+                      />
+                      <Button
+                        child={<FaTrashAlt title="Delete in Database" />}
+                        onClick={() => {
+                          setResultRecordToDelete(resultRecord);
+                          setShowDeleteModal(true);
+                        }}
+                        style={{
+                          marginLeft: '15px',
+                          color: isRequesting ? 'grey' : 'inherit',
+                        }}
+                        disabled={isRequesting}
+                      />
+                    </td>
+                  </tr>
+                ),
+              };
+            })
+            .reverse()
         : [],
     [isRequesting, resultDataDB, setFieldValue, submitForm],
   );
@@ -167,7 +169,7 @@ function QueryTabRetrieval() {
               type="text"
               defaultValue=""
               onChange={(value: string) => setSearchPattern(value.trim())}
-              placeholder="Search..."
+              placeholder="Search by Name/ID ..."
               inputWidth="100%"
             />
           )}
@@ -180,6 +182,8 @@ function QueryTabRetrieval() {
                 selected={selectedIndex}
                 onSelect={handleOnSelectIndex}
                 maxPages={3}
+                showFirst={true}
+                showLast={true}
               />
             )}
           </div>
