@@ -51,19 +51,18 @@ function Sherlock() {
         <Tab
           eventKey="logo"
           title={
-            <a href="http://localhost:3001">
-              <img
-                src={logoMinimal}
-                style={{
-                  width: '100%',
-                  maxWidth: '300px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  border: 'none',
-                }}
-              />
-            </a>
+            <img
+              src={logoMinimal}
+              style={{
+                width: '100%',
+                maxWidth: '300px',
+                display: 'flex',
+                justifyContent: 'center',
+                border: 'none',
+              }}
+            />
           }
+          disabled={true}
         />
         <Tab eventKey="nmrium" title="Spectra">
           <div className="nmrium-container">
