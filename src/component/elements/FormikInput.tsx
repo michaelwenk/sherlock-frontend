@@ -1,6 +1,7 @@
 import './FormikInput.scss';
 import { useFormikContext } from 'formik';
 import { useCallback, useMemo } from 'react';
+import round from '../../utils/round';
 
 interface InputProps {
   type: 'number' | 'string';
@@ -60,6 +61,7 @@ function FormikInput({
       <input
         type={type === 'number' ? 'number' : 'text'}
         placeholder={placeholder}
+        pattern="([0-9]{1,2}).([0-9]{1})"
         style={
           {
             '--inputWidth': inputWidth,
@@ -70,7 +72,7 @@ function FormikInput({
             ? ''
             : type === 'number'
             ? inPercentage
-              ? ((fieldMeta.value as number) * 100).toFixed(0)
+              ? round((fieldMeta.value as number) * 100, 1)
               : (fieldMeta.value as number)
             : (fieldMeta.value as string)
         }
