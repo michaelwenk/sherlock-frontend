@@ -56,7 +56,7 @@ function FormikInput({
 
   return (
     <div className={className} style={{ color: hasErrors ? 'red' : 'inherit' }}>
-      {label && <label>{`${label}`}</label>}
+      {label && <label>{label}</label>}
       <input
         type={type === 'number' ? 'number' : 'text'}
         placeholder={placeholder}
@@ -70,7 +70,7 @@ function FormikInput({
             ? ''
             : type === 'number'
             ? inPercentage
-              ? (fieldMeta.value as number) * 100
+              ? ((fieldMeta.value as number) * 100).toFixed(0)
               : (fieldMeta.value as number)
             : (fieldMeta.value as string)
         }
