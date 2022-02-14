@@ -212,7 +212,7 @@ function QueryTabRetrieval() {
           </div>
         </div>
       </div>
-      {filteredRows.length > 0 && (
+      {
         <div className="retrieval-table">
           <table>
             <thead>
@@ -227,7 +227,7 @@ function QueryTabRetrieval() {
             <tbody>{retrievalData[selectedIndex]}</tbody>
           </table>
         </div>
-      )}
+      }
       {showDeleteModal && (
         <ConfirmModal
           show={showDeleteModal}
