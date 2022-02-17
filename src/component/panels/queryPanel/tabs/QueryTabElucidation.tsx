@@ -6,14 +6,15 @@ import QueryOptions from '../../../../types/QueryOptions';
 import queryTypes from '../../../../constants/queryTypes';
 import FormikInput from '../../../elements/FormikInput';
 import FormikCheckBox from '../../../elements/FormikCheckBox';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ErrorSymbol from '../../../elements/ErrorSymbol';
 import capitalize from '../../../../utils/capitalize';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
 import { useData } from '../../../../context/DataContext';
+import { getAtomCounts } from 'nmr-correlation';
 
 function QueryTabElucidation() {
-  const { isRequesting } = useData();
+  const { isRequesting, nmriumData } = useData();
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
   const { setFieldValue, submitForm, values, errors } =
@@ -31,6 +32,14 @@ function QueryTabElucidation() {
     values.detectionOptions.useHybridizationDetections,
     values.detectionOptions.useNeighborDetections,
   ]);
+
+  const containsHeteroAtoms = useMemo(
+    () =>
+      Object.keys(
+        getAtomCounts(nmriumData?.correlations.options.mf || ''),
+      ).some((atomType) => atomType !== 'C' && atomType !== 'H'),
+    [nmriumData?.correlations.options.mf],
+  );
 
   return (
     <div className="query-options-tab-elucidation-container">
@@ -234,7 +243,12 @@ function QueryTabElucidation() {
           <tr>
             <td>Allow hetero-hetero bonds</td>
             <td>
-              <FormikCheckBox name="elucidationOptions.allowHeteroHeteroBonds" />
+              <FormikCheckBox
+                name="elucidationOptions.allowHeteroHeteroBonds"
+                {...{
+                  disabled: !containsHeteroAtoms,
+                }}
+              />
             </td>
           </tr>
           <tr>
