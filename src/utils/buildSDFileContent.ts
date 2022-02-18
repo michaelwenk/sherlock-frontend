@@ -1,25 +1,22 @@
-import { Molecule } from 'openchemlib';
-import ResultMolecule from '../types/ResultMolecule';
+import DataSet from '../types/sherlock/DataSet';
 interface InputProps {
-  resultMolecules: ResultMolecule[];
+  dataSets: DataSet[];
 }
 
-function buildSDFileContent({ resultMolecules }: InputProps) {
+function buildSDFileContent({ dataSets }: InputProps) {
   let content = '';
-  resultMolecules.forEach((res, i) => {
-    const molfile = Molecule.fromSmiles(res.dataSet.meta.smiles).toMolfileV3();
-
-    content += molfile;
+  dataSets.forEach((dataSet, i) => {
+    content += dataSet.meta.molfile;
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
-    content += `${res.dataSet.meta.rmsd}\n\n`;
+    content += `${dataSet.meta.rmsd}\n\n`;
     content += '> <AVG_DEV_PPM> \n';
-    content += `${res.dataSet.meta.averageDeviation}\n\n`;
+    content += `${dataSet.meta.averageDeviation}\n\n`;
     content += '> <SMILES> \n';
-    content += `${res.dataSet.meta.smiles}\n\n`;
+    content += `${dataSet.meta.smiles}\n\n`;
     content += '> <Molecular_Formula> \n';
-    content += `${res.dataSet.meta.mfOriginal}\n\n`;
+    content += `${dataSet.meta.mfOriginal}\n\n`;
     content += '$$$$\n';
   });
 

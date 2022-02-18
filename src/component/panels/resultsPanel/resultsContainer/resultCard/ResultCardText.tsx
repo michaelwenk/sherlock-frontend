@@ -1,17 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultCardText.scss';
 import { useMemo } from 'react';
-
-import ResultMolecule from '../../../../../types/ResultMolecule';
+import DataSet from '../../../../../types/sherlock/DataSet';
 
 type InputProps = {
-  molecule: ResultMolecule;
+  dataSet: DataSet;
 };
 
-function ResultCardText({ molecule }: InputProps) {
+function ResultCardText({ dataSet }: InputProps) {
   const color = useMemo(
-    () => (molecule.dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red'),
-    [molecule.dataSet.meta.isCompleteSpectralMatch],
+    () => (dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red'),
+    [dataSet.meta.isCompleteSpectralMatch],
   );
 
   return (
@@ -22,15 +21,13 @@ function ResultCardText({ molecule }: InputProps) {
       <tbody>
         <tr>
           <td>Formula</td>
-          <td>{molecule.dataSet.meta.mfOriginal}</td>
+          <td>{dataSet.meta.mfOriginal}</td>
         </tr>
         <tr>
           <td>RMSD</td>
           <td>
             <span className="value-with-unit">
-              <label className="value">
-                {molecule.dataSet.meta.rmsd.toFixed(2)}
-              </label>
+              <label className="value">{dataSet.meta.rmsd.toFixed(2)}</label>
               <label className="unit">ppm</label>
             </span>
           </td>
@@ -40,7 +37,7 @@ function ResultCardText({ molecule }: InputProps) {
           <td>
             <span className="value-with-unit">
               <label className="value">
-                {molecule.dataSet.meta.averageDeviation.toFixed(2)}
+                {dataSet.meta.averageDeviation.toFixed(2)}
               </label>
               <label className="unit">ppm</label>
             </span>
@@ -48,14 +45,12 @@ function ResultCardText({ molecule }: InputProps) {
         </tr>
         <tr>
           <td>Tanimoto</td>
-          <td className="value-single">
-            {molecule.dataSet.meta.tanimoto.toFixed(2)}
-          </td>
+          <td className="value-single">{dataSet.meta.tanimoto.toFixed(2)}</td>
         </tr>
         <tr>
           <td>#Hits</td>
           <td className="value-single">
-            {`${molecule.dataSet.meta.setAssignmentsCount}/${molecule.dataSet.meta.querySpectrumSignalCount}`}
+            {`${dataSet.meta.setAssignmentsCount}/${dataSet.meta.querySpectrumSignalCount}`}
           </td>
         </tr>
       </tbody>

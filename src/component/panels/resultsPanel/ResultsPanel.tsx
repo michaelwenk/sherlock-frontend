@@ -6,7 +6,7 @@ import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
 import Result from '../../../types/Result';
 import { useData } from '../../../context/DataContext';
-import buildMolecules from '../../../utils/buildMolecules';
+import adoptDataSetValues from '../../../utils/adoptDataSetValues';
 import { useDispatch } from '../../../context/DispatchContext';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -14,8 +14,8 @@ import {
   SET_RESULT_DB_ENTRIES,
 } from '../../../context/ActionTypes';
 import ConfirmModal from '../../elements/modal/ConfirmModal';
-import ResultMolecule from '../../../types/ResultMolecule';
 import CustomModal from '../../elements/modal/CustomModal';
+import DataSet from '../../../types/sherlock/DataSet';
 
 type InputProps = {
   result?: Result;
@@ -29,16 +29,14 @@ function ResultsPanel({ show }: InputProps) {
   const [isPreparingDownload, setIsPreparingDownload] =
     useState<boolean>(false);
 
-  const molecules = useMemo((): ResultMolecule[] => {
+  const dataSets = useMemo((): DataSet[] => {
     return resultData && resultData.resultRecord
-      ? buildMolecules(resultData.resultRecord)
+      ? adoptDataSetValues(resultData.resultRecord)
       : [];
   }, [resultData]);
 
   const onDownload = useCallback(async () => {
-    new Promise<string>((resolve) =>
-      resolve(buildSDFileContent({ resultMolecules: molecules })),
-    )
+    new Promise<string>((resolve) => resolve(buildSDFileContent({ dataSets })))
       .then((fileContent) => {
         const blob = new Blob([fileContent], { type: 'text/plain' });
         saveAs(
@@ -53,7 +51,7 @@ function ResultsPanel({ show }: InputProps) {
         );
       })
       .finally(() => setIsPreparingDownload(false));
-  }, [molecules, resultData]);
+  }, [dataSets, resultData]);
 
   const handleOnClickDownload = useCallback(async () => {
     setIsPreparingDownload(true);
@@ -104,14 +102,14 @@ function ResultsPanel({ show }: InputProps) {
   const resultsView = useMemo(
     () => (
       <ResultsView
-        molecules={molecules}
+        dataSets={dataSets}
         maxPages={5}
         pageLimits={[10, 25, 50]}
         onClickDownload={handleOnClickDownload}
         onClickDelete={handleOnClickDelete}
       />
     ),
-    [handleOnClickDelete, handleOnClickDownload, molecules],
+    [handleOnClickDelete, handleOnClickDownload, dataSets],
   );
 
   return resultData ? (

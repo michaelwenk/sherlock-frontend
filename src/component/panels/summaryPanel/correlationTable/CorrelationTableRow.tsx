@@ -32,11 +32,18 @@ function CorrelationTableRow({
 }: InputProps) {
   const { nmriumData, resultData } = useData();
 
+  const correlationIndex = useMemo(
+    () =>
+      getCorrelationIndex(nmriumData?.correlations?.values || [], correlation),
+    [correlation, nmriumData?.correlations?.values],
+  );
+
   const highlightIDsRow = useMemo(() => {
     if (correlation.pseudo === true) {
       return [];
     }
     const ids: string[] = [];
+    ids.push(`correlation_signal_${correlationIndex}`);
 
     correlation.link.forEach((link) => {
       if (link.pseudo === false) {
@@ -45,7 +52,7 @@ function CorrelationTableRow({
     });
 
     return ids;
-  }, [correlation]);
+  }, [correlation.link, correlation.pseudo, correlationIndex]);
   const highlightRow = useHighlight(highlightIDsRow);
 
   const mouseEnterHandler = useCallback(
@@ -61,12 +68,6 @@ function CorrelationTableRow({
       highlightRow.hide();
     },
     [highlightRow],
-  );
-
-  const correlationIndex = useMemo(
-    () =>
-      getCorrelationIndex(nmriumData?.correlations?.values || [], correlation),
-    [correlation, nmriumData?.correlations?.values],
   );
 
   const groupIndex = useMemo(

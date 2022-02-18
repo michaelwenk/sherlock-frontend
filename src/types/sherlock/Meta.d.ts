@@ -11,6 +11,7 @@ export default interface Meta {
   setAssignmentsCount: number;
   setAssignmentsCountWithEquivalences: number;
   smiles: string;
+  molfile: string;
   mfOriginal: string;
   title?: string;
 }

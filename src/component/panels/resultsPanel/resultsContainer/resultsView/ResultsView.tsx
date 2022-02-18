@@ -5,10 +5,10 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
-import ResultMolecule from '../../../../../types/ResultMolecule';
 import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
+import DataSet from '../../../../../types/sherlock/DataSet';
 
 interface ImageSize {
   width: number;
@@ -23,7 +23,7 @@ const imageSizes: ImageSize[] = [
 ];
 
 type InputProps = {
-  molecules: Array<ResultMolecule>;
+  dataSets: DataSet[];
   maxPages: number;
   pageLimits: number[];
   onClickDownload: Function;
@@ -31,7 +31,7 @@ type InputProps = {
 };
 
 function ResultsView({
-  molecules,
+  dataSets,
   maxPages,
   pageLimits,
   onClickDownload,
@@ -56,40 +56,40 @@ function ResultsView({
     const sortByValue = Object.keys(sortOptions).filter(
       (sortOption) => sortOptions[sortOption].label === sortByLabel,
     )[0];
-    function sort(mol1: ResultMolecule, mol2: ResultMolecule) {
+    function sort(dataSet1: DataSet, dataSet2: DataSet) {
       if (sortByValue === sortOptions.tanimoto.value) {
-        return mol1.dataSet.meta[sortByValue] >= mol2.dataSet.meta[sortByValue]
+        return dataSet1.meta[sortByValue] >= dataSet2.meta[sortByValue]
           ? -1
           : 1;
       } else {
-        return mol1.dataSet.meta[sortByValue] <= mol2.dataSet.meta[sortByValue]
+        return dataSet1.meta[sortByValue] <= dataSet2.meta[sortByValue]
           ? -1
           : 1;
       }
     }
-    const _sortedMolecules = molecules.slice();
-    _sortedMolecules.sort(sort);
+    const _sortedDataSets = dataSets.slice();
+    _sortedDataSets.sort(sort);
 
-    return _sortedMolecules;
-  }, [molecules, sortByLabel]);
+    return _sortedDataSets;
+  }, [dataSets, sortByLabel]);
 
   const cardDeckData = useMemo(() => {
-    const _cardDeckData: ResultMolecule[][] = [];
+    const _cardDeckData: DataSet[][] = [];
     let counter = 0;
-    let resultMolecules: ResultMolecule[] = [];
+    let resultDataSets: DataSet[] = [];
 
     for (let i = 0; i < sortedMolecules.length; i++) {
       if (counter < selectedPageLimit) {
         counter++;
-        resultMolecules.push(sortedMolecules[i]);
+        resultDataSets.push(sortedMolecules[i]);
       } else {
-        _cardDeckData.push(resultMolecules);
-        resultMolecules = [sortedMolecules[i]];
+        _cardDeckData.push(resultDataSets);
+        resultDataSets = [sortedMolecules[i]];
         counter = 1;
       }
     }
-    if (resultMolecules.length > 0) {
-      _cardDeckData.push(resultMolecules);
+    if (resultDataSets.length > 0) {
+      _cardDeckData.push(resultDataSets);
     }
 
     return _cardDeckData;
@@ -105,9 +105,9 @@ function ResultsView({
     return cardDeckData.length > 0
       ? cardDeckData[cardDeckIndex].map((mol, i) => (
           <ResultCard
-            key={`resultCard${i}`}
+            key={`resultCard_${i}`}
             id={cardDeckIndex * selectedPageLimit + i + 1}
-            molecule={mol}
+            dataSet={mol}
             imageWidth={selectedImageSize.width}
             imageHeight={selectedImageSize.height}
             styles={{

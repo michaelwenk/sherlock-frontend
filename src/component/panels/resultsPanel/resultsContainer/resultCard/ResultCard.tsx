@@ -1,15 +1,23 @@
 import './ResultCard.scss';
 
 import Card from 'react-bootstrap/Card';
-import OCL from 'openchemlib/full';
+import { Molecule } from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
-import ResultMolecule from '../../../../../types/ResultMolecule';
-import { CSSProperties, useMemo } from 'react';
-import { SmilesSvgRenderer } from 'react-ocl/base';
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import DataSet from '../../../../../types/sherlock/DataSet';
+import { MolfileSvgRenderer } from 'react-ocl';
+import { useHighlightData } from '../../../../highlight';
+import Assignment from '../../../../../types/sherlock/Assignment';
 
 type InputProps = {
   id: string | number;
-  molecule: ResultMolecule;
+  dataSet: DataSet;
   imageWidth: number;
   imageHeight: number;
   styles?: CSSProperties;
@@ -17,52 +25,150 @@ type InputProps = {
 
 function ResultCard({
   id,
-  molecule,
+  dataSet,
   imageWidth,
   imageHeight,
   styles = {},
 }: InputProps) {
+  const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
+  const highlightData = useHighlightData();
+
+  useEffect(() => {
+    if (dataSet.assignment) {
+      const spectralMatchAssignment = dataSet.attachment
+        .spectralMatchAssignment as Assignment;
+      const ids: number[] = [];
+      dataSet.assignment.assignments[0].forEach((signalArray, i) => {
+        if (
+          highlightData.highlight.highlighted.some((highlightID) =>
+            spectralMatchAssignment.assignments[0][i]
+              .map(
+                (signalIndexInQuerySpectrum) =>
+                  `correlation_signal_${signalIndexInQuerySpectrum}`,
+              )
+              .includes(highlightID),
+          )
+        )
+          signalArray.forEach((atomIndex) => ids.push(atomIndex));
+      });
+
+      setAtomHighlights(ids);
+    }
+  }, [
+    dataSet.assignment,
+    dataSet.attachment.spectralMatchAssignment,
+    highlightData.highlight.highlighted,
+  ]);
+
+  const handleOnAtom = useCallback(
+    (atomIndex, action: 'enter' | 'leave') => {
+      if (dataSet.assignment) {
+        const signalIndexInPrediction =
+          dataSet.assignment.assignments[0].findIndex((signalArray) =>
+            signalArray.includes(atomIndex),
+          );
+        if (signalIndexInPrediction >= 0) {
+          const spectralMatchAssignment = dataSet.attachment
+            .spectralMatchAssignment as Assignment;
+          const toHighlight = spectralMatchAssignment.assignments[0][
+            signalIndexInPrediction
+          ]
+            .map((signalIndexInQuerySpectrum) => [
+              `correlation_signal_${signalIndexInQuerySpectrum}`,
+            ])
+            .flat();
+
+          highlightData.dispatch({
+            type: action === 'enter' ? 'SHOW' : 'HIDE',
+            payload: {
+              convertedHighlights: toHighlight,
+            },
+          });
+
+          const ids: number[] = [];
+          // add possible equivalent atoms from same group
+          const signalIndexInMolecule =
+            dataSet.assignment.assignments[0].findIndex((signalArray) =>
+              signalArray.includes(atomIndex),
+            );
+          if (signalIndexInMolecule >= 0) {
+            dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
+              (atomIndex) => {
+                ids.push(atomIndex);
+              },
+            );
+          }
+          setAtomHighlights(ids);
+        }
+      }
+    },
+    [
+      dataSet.assignment,
+      dataSet.attachment.spectralMatchAssignment,
+      highlightData,
+    ],
+  );
+
+  const molfile = useMemo((): string => {
+    const mol = Molecule.fromMolfile(dataSet.meta.molfile);
+    mol.inventCoordinates();
+
+    return mol.toMolfile();
+  }, [dataSet.meta.molfile]);
+
   const cardBody = useMemo(
     () => (
       <Card.Body>
-        <SmilesSvgRenderer
-          OCL={OCL}
-          id={`molSVG${id}`}
-          smiles={molecule.dataSet.meta.smiles}
+        <MolfileSvgRenderer
+          id={`molSVG_${id}`}
+          molfile={molfile}
           width={imageWidth}
           height={imageHeight}
+          atomHighlight={atomHighlights}
+          atomHighlightColor="orange"
+          atomHighlightOpacity={0.65}
+          onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
+          onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
         />
-        <ResultCardText molecule={molecule} />
+        <ResultCardText dataSet={dataSet} />
       </Card.Body>
     ),
-    [id, imageHeight, imageWidth, molecule],
+    [
+      atomHighlights,
+      dataSet,
+      handleOnAtom,
+      id,
+      imageHeight,
+      imageWidth,
+      molfile,
+    ],
   );
 
   const cardLink = useMemo(
     () =>
-      molecule.dataSet.meta.id ? (
+      dataSet.meta.id ? (
         <Card.Link
           href={
-            molecule.dataSet.meta.source === 'nmrshiftdb'
-              ? `http://www.nmrshiftdb.org/molecule/${molecule.dataSet.meta.id}`
-              : molecule.dataSet.meta.source === 'coconut'
-              ? `https://coconut.naturalproducts.net/compound/coconut_id/${molecule.dataSet.meta.id}`
+            dataSet.meta.source === 'nmrshiftdb'
+              ? `http://www.nmrshiftdb.org/molecule/${dataSet.meta.id}`
+              : dataSet.meta.source === 'coconut'
+              ? `https://coconut.naturalproducts.net/compound/coconut_id/${dataSet.meta.id}`
               : '?'
           }
           target="_blank"
           rel="noreferrer"
-          title={`Link to molecule ${molecule.dataSet.meta.id} in ${
-            molecule.dataSet.meta.source === 'nmrshiftdb'
+          title={`Link to molecule ${dataSet.meta.id} in ${
+            dataSet.meta.source === 'nmrshiftdb'
               ? 'NMRShiftDB'
-              : molecule.dataSet.meta.source === 'coconut'
+              : dataSet.meta.source === 'coconut'
               ? 'COCONUT'
               : '?'
           }`}
         >
-          {molecule.dataSet.meta.id}
+          {dataSet.meta.id}
         </Card.Link>
       ) : null,
-    [molecule.dataSet.meta.id, molecule.dataSet.meta.source],
+    [dataSet.meta.id, dataSet.meta.source],
   );
 
   return (
