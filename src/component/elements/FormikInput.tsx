@@ -72,7 +72,7 @@ function FormikInput({
             ? ''
             : type === 'number'
             ? inPercentage
-              ? round((fieldMeta.value as number) * 100, 1)
+              ? round((fieldMeta.value as number) * 100, 3)
               : (fieldMeta.value as number)
             : (fieldMeta.value as string)
         }
