@@ -134,6 +134,16 @@ function ResultsPanel({ show }: InputProps) {
         }?`}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={handleOnConfirmDelete}
+        body={
+          <p
+            style={{
+              fontSize: '15px',
+              color: 'blue',
+            }}
+          >
+            This can not be undone!
+          </p>
+        }
       />
     </div>
   ) : null;
