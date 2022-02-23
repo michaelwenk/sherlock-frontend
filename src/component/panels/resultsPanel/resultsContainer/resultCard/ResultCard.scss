@@ -16,4 +16,17 @@
     transform: scale(1.03);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
   }
+
+  .card-body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .molfile-svg-renderer {
+      height: 100%;
+    }
+  }
 }

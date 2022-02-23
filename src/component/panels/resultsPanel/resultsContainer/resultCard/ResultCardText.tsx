@@ -48,7 +48,7 @@ function ResultCardText({ dataSet }: InputProps) {
           <td className="value-single">{dataSet.meta.tanimoto.toFixed(2)}</td>
         </tr>
         <tr>
-          <td>#Hits</td>
+          <td>Hits</td>
           <td className="value-single">
             {`${dataSet.meta.setAssignmentsCount}/${dataSet.meta.querySpectrumSignalCount}`}
           </td>

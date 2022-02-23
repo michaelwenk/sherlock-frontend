@@ -118,18 +118,22 @@ function ResultCard({
 
   const cardBody = useMemo(
     () => (
-      <Card.Body>
-        <MolfileSvgRenderer
-          id={`molSVG_${id}`}
-          molfile={molfile}
-          width={imageWidth}
-          height={imageHeight}
-          atomHighlight={atomHighlights}
-          atomHighlightColor="orange"
-          atomHighlightOpacity={0.65}
-          onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
-          onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
-        />
+      <Card.Body className="card-body">
+        <div className="molfile-svg-renderer">
+          <MolfileSvgRenderer
+            id={`molSVG_${id}`}
+            molfile={molfile}
+            width={imageWidth}
+            height={imageHeight}
+            autoCrop={true}
+            autoCropMargin={10}
+            atomHighlight={atomHighlights}
+            atomHighlightColor="orange"
+            atomHighlightOpacity={0.65}
+            onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
+            onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
+          />
+        </div>
         <ResultCardText dataSet={dataSet} />
       </Card.Body>
     ),
