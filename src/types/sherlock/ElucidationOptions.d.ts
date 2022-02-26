@@ -10,6 +10,6 @@ export default interface ElucidationOptions {
   timeLimitTotal: number;
   // generated structures filter
   shiftTolerance: number;
-  maxAverageDeviation: number;
+  maximumAverageDeviation: number;
   useCombinatorics: boolean;
 }

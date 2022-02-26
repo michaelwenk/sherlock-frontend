@@ -1,6 +1,6 @@
 export default interface DereplicationOptions {
   shiftTolerance: number;
-  maxAverageDeviation: number;
+  maximumAverageDeviation: number;
   checkMultiplicity: boolean;
   checkEquivalencesCount: boolean;
   useMF: boolean;

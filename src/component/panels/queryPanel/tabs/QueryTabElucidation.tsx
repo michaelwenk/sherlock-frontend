@@ -220,13 +220,13 @@ function QueryTabElucidation() {
               <td>
                 <FormikInput
                   type="number"
-                  name="elucidationOptions.maxAverageDeviation"
+                  name="elucidationOptions.maximumAverageDeviation"
                 />
               </td>
               <td>
-                {errors.elucidationOptions?.maxAverageDeviation && (
+                {errors.elucidationOptions?.maximumAverageDeviation && (
                   <ErrorSymbol
-                    message={errors.elucidationOptions.maxAverageDeviation}
+                    message={errors.elucidationOptions.maximumAverageDeviation}
                   />
                 )}
               </td>

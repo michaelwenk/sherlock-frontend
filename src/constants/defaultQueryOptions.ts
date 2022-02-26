@@ -6,7 +6,7 @@ const defaultQueryOptions: QueryOptions = {
   queryType: queryTypes.dereplication,
   dereplicationOptions: {
     shiftTolerance: 2,
-    maxAverageDeviation: 1,
+    maximumAverageDeviation: 1,
     checkMultiplicity: true,
     checkEquivalencesCount: true,
     useMF: true,
@@ -23,7 +23,7 @@ const defaultQueryOptions: QueryOptions = {
     timeLimitTotal: 5,
     // generated structures filter
     shiftTolerance: 30,
-    maxAverageDeviation: 5,
+    maximumAverageDeviation: 5,
     useCombinatorics: true,
   },
   detectionOptions: {

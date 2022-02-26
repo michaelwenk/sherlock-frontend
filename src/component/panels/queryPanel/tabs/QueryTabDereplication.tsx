@@ -41,13 +41,15 @@ function QueryTabDereplication() {
               <td>
                 <FormikInput
                   type="number"
-                  name="dereplicationOptions.maxAverageDeviation"
+                  name="dereplicationOptions.maximumAverageDeviation"
                 />
               </td>
               <td>
-                {errors.dereplicationOptions?.maxAverageDeviation && (
+                {errors.dereplicationOptions?.maximumAverageDeviation && (
                   <ErrorSymbol
-                    message={errors.dereplicationOptions.maxAverageDeviation}
+                    message={
+                      errors.dereplicationOptions.maximumAverageDeviation
+                    }
                   />
                 )}
               </td>

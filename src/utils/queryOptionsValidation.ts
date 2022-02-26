@@ -7,7 +7,7 @@ export interface ShiftToleranceError {
 export interface ValidationErrors {
   dereplicationOptions?: {
     shiftTolerance?: string;
-    maxAverageDeviation?: string;
+    maximumAverageDeviation?: string;
     checkMultiplicity?: string;
     checkEquivalencesCount?: string;
     useMF?: string;
@@ -21,7 +21,7 @@ export interface ValidationErrors {
     useFilterLsdRing4?: string;
     timeLimitTotal?: string;
     shiftTolerance?: string;
-    maxAverageDeviation?: string;
+    maximumAverageDeviation?: string;
   };
   detectionOptions?: {
     useHybridizationDetections?: string;
@@ -55,12 +55,16 @@ function validateQueryOptions(values: QueryOptions) {
     errors.dereplicationOptions.shiftTolerance = 'Must be at least 0';
   }
   if (
-    !isInRange(values.dereplicationOptions.maxAverageDeviation, 0, undefined)
+    !isInRange(
+      values.dereplicationOptions.maximumAverageDeviation,
+      0,
+      undefined,
+    )
   ) {
     if (!errors.dereplicationOptions) {
       errors.dereplicationOptions = {};
     }
-    errors.dereplicationOptions.maxAverageDeviation = 'Must be at least 0';
+    errors.dereplicationOptions.maximumAverageDeviation = 'Must be at least 0';
   }
 
   if (!isInRange(values.elucidationOptions.elimP1, 1, undefined)) {
@@ -91,11 +95,13 @@ function validateQueryOptions(values: QueryOptions) {
     }
     errors.elucidationOptions.shiftTolerance = 'Must be at least 0';
   }
-  if (!isInRange(values.elucidationOptions.maxAverageDeviation, 0, undefined)) {
+  if (
+    !isInRange(values.elucidationOptions.maximumAverageDeviation, 0, undefined)
+  ) {
     if (!errors.elucidationOptions) {
       errors.elucidationOptions = {};
     }
-    errors.elucidationOptions.maxAverageDeviation = 'Must be at least 0';
+    errors.elucidationOptions.maximumAverageDeviation = 'Must be at least 0';
   }
 
   if (
