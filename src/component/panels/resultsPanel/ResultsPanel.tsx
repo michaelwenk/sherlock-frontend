@@ -6,7 +6,6 @@ import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
 import Result from '../../../types/Result';
 import { useData } from '../../../context/DataContext';
-import adoptDataSetValues from '../../../utils/adoptDataSetValues';
 import { useDispatch } from '../../../context/DispatchContext';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import {
@@ -30,8 +29,10 @@ function ResultsPanel({ show }: InputProps) {
     useState<boolean>(false);
 
   const dataSets = useMemo((): DataSet[] => {
-    return resultData && resultData.resultRecord
-      ? adoptDataSetValues(resultData.resultRecord)
+    return resultData &&
+      resultData.resultRecord &&
+      resultData.resultRecord.dataSetList
+      ? resultData.resultRecord.dataSetList
       : [];
   }, [resultData]);
 

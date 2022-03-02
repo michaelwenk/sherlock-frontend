@@ -58,16 +58,21 @@ function ResultsView({
     )[0];
     function sort(dataSet1: DataSet, dataSet2: DataSet) {
       if (sortByValue === sortOptions.tanimoto.value) {
-        return dataSet1.meta.tanimoto > dataSet2.meta.tanimoto ? -1 : 1;
+        return dataSet1.attachment.tanimoto > dataSet2.attachment.tanimoto
+          ? -1
+          : 1;
       } else if (sortByValue === sortOptions.hits.value) {
-        return dataSet1.meta.setAssignmentsCount /
-          dataSet1.meta.querySpectrumSignalCount >
-          dataSet2.meta.setAssignmentsCount /
-            dataSet2.meta.querySpectrumSignalCount
+        return dataSet1.attachment.setAssignmentsCount /
+          dataSet1.attachment.querySpectrumSignalCount >
+          dataSet2.attachment.setAssignmentsCount /
+            dataSet2.attachment.querySpectrumSignalCount
           ? -1
           : 1;
       }
-      return dataSet1.meta[sortByValue] <= dataSet2.meta[sortByValue] ? -1 : 1;
+      return dataSet1.attachment[sortByValue] <=
+        dataSet2.attachment[sortByValue]
+        ? -1
+        : 1;
     }
     const _sortedDataSets = dataSets.slice();
     _sortedDataSets.sort(sort);

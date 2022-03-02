@@ -1,4 +1,5 @@
 import Assignment from './Assignment';
+import Attachment from './Attachment';
 import Meta from './Meta';
 
 export default interface DataSet {
@@ -6,5 +7,5 @@ export default interface DataSet {
   spectrum: any;
   assignment: Assignment;
   meta: Meta;
-  attachment: any;
+  attachment: Attachment;
 }

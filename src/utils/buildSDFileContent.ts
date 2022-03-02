@@ -10,9 +10,13 @@ function buildSDFileContent({ dataSets }: InputProps) {
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
-    content += `${dataSet.meta.rmsd}\n\n`;
+    content += `${dataSet.attachment.rmsd}\n\n`;
     content += '> <AVG_DEV_PPM> \n';
-    content += `${dataSet.meta.averageDeviation}\n\n`;
+    content += `${dataSet.attachment.averageDeviation}\n\n`;
+    content += '> <TANIMOTO> \n';
+    content += `${dataSet.attachment.tanimoto}\n\n`;
+    content += '> <HITS> \n';
+    content += `${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}\n\n`;
     content += '> <SMILES> \n';
     content += `${dataSet.meta.smiles}\n\n`;
     content += '> <Molecular_Formula> \n';

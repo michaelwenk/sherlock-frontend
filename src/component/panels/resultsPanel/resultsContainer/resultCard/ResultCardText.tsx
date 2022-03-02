@@ -9,8 +9,8 @@ type InputProps = {
 
 function ResultCardText({ dataSet }: InputProps) {
   const color = useMemo(
-    () => (dataSet.meta.isCompleteSpectralMatch ? 'black' : 'red'),
-    [dataSet.meta.isCompleteSpectralMatch],
+    () => (dataSet.attachment.isCompleteSpectralMatch ? 'black' : 'red'),
+    [dataSet.attachment.isCompleteSpectralMatch],
   );
 
   return (
@@ -27,7 +27,9 @@ function ResultCardText({ dataSet }: InputProps) {
           <td>RMSD</td>
           <td>
             <span className="value-with-unit">
-              <label className="value">{dataSet.meta.rmsd.toFixed(2)}</label>
+              <label className="value">
+                {dataSet.attachment.rmsd.toFixed(2)}
+              </label>
               <label className="unit">ppm</label>
             </span>
           </td>
@@ -37,7 +39,7 @@ function ResultCardText({ dataSet }: InputProps) {
           <td>
             <span className="value-with-unit">
               <label className="value">
-                {dataSet.meta.averageDeviation.toFixed(2)}
+                {dataSet.attachment.averageDeviation.toFixed(2)}
               </label>
               <label className="unit">ppm</label>
             </span>
@@ -45,12 +47,14 @@ function ResultCardText({ dataSet }: InputProps) {
         </tr>
         <tr>
           <td>Tanimoto</td>
-          <td className="value-single">{dataSet.meta.tanimoto.toFixed(2)}</td>
+          <td className="value-single">
+            {dataSet.attachment.tanimoto.toFixed(2)}
+          </td>
         </tr>
         <tr>
           <td>Hits</td>
           <td className="value-single">
-            {`${dataSet.meta.setAssignmentsCount}/${dataSet.meta.querySpectrumSignalCount}`}
+            {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
           </td>
         </tr>
       </tbody>
