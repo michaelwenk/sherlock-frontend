@@ -42,7 +42,7 @@ function ResultsView({
     pageLimits[1],
   );
   const [sortByLabel, setSortByLabel] = useState<string>(
-    sortOptions.averageDeviation.label,
+    sortOptions.hits.label,
   );
   const [selectedImageSize, setSelectedImageSize] = useState<ImageSize>(
     imageSizes[0],
