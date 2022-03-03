@@ -1,3 +1,5 @@
+import Assignment from './Assignment';
+
 export default interface Attachment {
   querySpectrumSignalCount: number;
   querySpectrumSignalCountWithEquivalences: number;
@@ -8,4 +10,5 @@ export default interface Attachment {
   tanimoto: number;
   setAssignmentsCount: number;
   setAssignmentsCountWithEquivalences: number;
+  spectralMatchAssignment: Assignment;
 }
