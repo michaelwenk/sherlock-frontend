@@ -193,44 +193,36 @@ function Panels() {
       } = queryOptions;
 
       if (queryType !== queryTypes.retrieval) {
-        const data = {
-          // spectra: nmriumData ? processNMRiumData(nmriumData) : [],
-          correlations: nmriumData
-            ? {
-                ...nmriumData.correlations,
-                values: nmriumData.correlations.values.map(
-                  (value: Types.Correlation) => {
-                    return {
-                      ...value,
-                      hybridization:
-                        typeof value.hybridization == 'string' // @TODO remove the conversion at some point
-                          ? value.hybridization.trim().length === 0
-                            ? []
-                            : [value.hybridization]
-                          : value.hybridization,
-                    };
-                  },
-                ),
-              }
-            : {},
-        };
-
+        // const spectra = nmriumData ? processNMRiumData(nmriumData) : [],
+        const correlations = nmriumData
+          ? {
+              ...nmriumData.correlations,
+              values: nmriumData.correlations.values.map(
+                (value: Types.Correlation) => {
+                  return {
+                    ...value,
+                    hybridization:
+                      typeof value.hybridization == 'string' // @TODO remove the conversion at some point
+                        ? value.hybridization.trim().length === 0
+                          ? []
+                          : [value.hybridization]
+                        : value.hybridization,
+                  };
+                },
+              ),
+            }
+          : {};
         const requestData = {
           queryType,
           dereplicationOptions,
           resultRecord: {
             ...resultData?.resultRecord,
-            correlations: data.correlations,
+            correlations,
             elucidationOptions,
             detectionOptions,
-            // dataSetList: resultData?.resultRecord?.dataSetListOriginal,
-            // // id: retrievalOptions.resultID,
             name: retrievalOptions.resultName,
           } as ResultRecord,
         };
-        // // original dataset list is not yet used but here
-        // delete requestData.resultRecord.dataSetListOriginal;
-
         console.log(requestData);
 
         const t0 = performance.now();
@@ -254,15 +246,6 @@ function Panels() {
             resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };
-
-          // // use previously stored datasets as original after doing re-predictions
-          // if (queryType === queryTypes.prediction) {
-          //   result.resultRecord.dataSetListOriginal =
-          //     resultData?.resultRecord?.dataSetListOriginal;
-          // } else {
-          //   result.resultRecord.dataSetListOriginal =
-          //     result.resultRecord.dataSetList;
-          // }
           console.log(result);
 
           dispatch({

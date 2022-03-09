@@ -10,7 +10,6 @@ export default interface ResultRecord {
   name?: string;
   date?: string;
   dataSetList?: DataSet[];
-  // dataSetListOriginal?: DataSet[];
   dataSetListSize?: number;
   previewDataSet?: DataSet;
   correlations?: Types.CorrelationData;

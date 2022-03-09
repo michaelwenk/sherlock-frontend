@@ -265,32 +265,6 @@ function QueryTabElucidation() {
                 )}
               </td>
             </tr>
-            {/* <tr>
-              <td colSpan={2}>
-                <div className="button-container">
-                  <Button
-                    child={'Predict'}
-                    onClick={() => {
-                      setFieldValue('queryType', queryTypes.prediction);
-                      submitForm();
-                    }}
-                    disabled={
-                      isRequesting ||
-                      !resultData?.resultRecord?.dataSetListOriginal ||
-                      resultData.resultRecord.dataSetListOriginal.length === 0
-                    }
-                    style={{
-                      color:
-                        isRequesting ||
-                        !resultData?.resultRecord?.dataSetListOriginal ||
-                        resultData.resultRecord.dataSetListOriginal.length === 0
-                          ? 'grey'
-                          : 'inherit',
-                    }}
-                  />
-                </div>
-              </td>
-            </tr> */}
             <tr>
               <td colSpan={2} style={{ fontWeight: 'bold' }}>
                 Task name:
