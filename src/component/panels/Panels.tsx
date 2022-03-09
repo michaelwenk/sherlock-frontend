@@ -223,10 +223,14 @@ function Panels() {
             correlations: data.correlations,
             elucidationOptions,
             detectionOptions,
-            id: retrievalOptions.resultID,
+            // dataSetList: resultData?.resultRecord?.dataSetListOriginal,
+            // // id: retrievalOptions.resultID,
             name: retrievalOptions.resultName,
           } as ResultRecord,
         };
+        // // original dataset list is not yet used but here
+        // delete requestData.resultRecord.dataSetListOriginal;
+
         console.log(requestData);
 
         const t0 = performance.now();
@@ -244,15 +248,26 @@ function Panels() {
         const response = await request(requestConfig, queryType);
         if (response) {
           const t1 = performance.now();
-          console.log(response);
-          const resultData: Result = {
+          // console.log(response);
+          const result: Result = {
             queryType,
             resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };
+
+          // // use previously stored datasets as original after doing re-predictions
+          // if (queryType === queryTypes.prediction) {
+          //   result.resultRecord.dataSetListOriginal =
+          //     resultData?.resultRecord?.dataSetListOriginal;
+          // } else {
+          //   result.resultRecord.dataSetListOriginal =
+          //     result.resultRecord.dataSetList;
+          // }
+          console.log(result);
+
           dispatch({
             type: SET_RESULT_DATA,
-            payload: { queryType, resultData },
+            payload: { queryType, resultData: result },
           });
 
           if (queryType === queryTypes.detection) {

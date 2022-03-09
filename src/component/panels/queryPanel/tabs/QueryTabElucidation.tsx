@@ -200,6 +200,40 @@ function QueryTabElucidation() {
               </td>
             </tr>
             <tr>
+              <td>Allow combinatorics</td>
+              <td>
+                <FormikCheckBox name="elucidationOptions.useCombinatorics" />
+              </td>
+            </tr>
+            <tr>
+              <td>Allow hetero-hetero bonds</td>
+              <td>
+                <FormikCheckBox
+                  name="elucidationOptions.allowHeteroHeteroBonds"
+                  {...{
+                    disabled: !containsHeteroAtoms,
+                  }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Filter out 3-membered rings</td>
+              <td>
+                <FormikCheckBox name="elucidationOptions.useFilterLsdRing3" />
+              </td>
+            </tr>
+            <tr>
+              <td>Filter out 4-membered rings</td>
+              <td>
+                <FormikCheckBox name="elucidationOptions.useFilterLsdRing4" />
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2} style={{ fontWeight: 'bold' }}>
+                Spectra prediction:
+              </td>
+            </tr>
+            <tr>
               <td>Shift tolerance (ppm)</td>
               <td>
                 <FormikInput
@@ -231,40 +265,32 @@ function QueryTabElucidation() {
                 )}
               </td>
             </tr>
-            <tr>
-              <td>Allow combinatorics</td>
-              <td>
-                <FormikCheckBox name="elucidationOptions.useCombinatorics" />
+            {/* <tr>
+              <td colSpan={2}>
+                <div className="button-container">
+                  <Button
+                    child={'Predict'}
+                    onClick={() => {
+                      setFieldValue('queryType', queryTypes.prediction);
+                      submitForm();
+                    }}
+                    disabled={
+                      isRequesting ||
+                      !resultData?.resultRecord?.dataSetListOriginal ||
+                      resultData.resultRecord.dataSetListOriginal.length === 0
+                    }
+                    style={{
+                      color:
+                        isRequesting ||
+                        !resultData?.resultRecord?.dataSetListOriginal ||
+                        resultData.resultRecord.dataSetListOriginal.length === 0
+                          ? 'grey'
+                          : 'inherit',
+                    }}
+                  />
+                </div>
               </td>
-            </tr>
-            <tr>
-              <td colSpan={2} style={{ fontWeight: 'bold' }}>
-                Further settings:
-              </td>
-            </tr>
-            <tr>
-              <td>Allow hetero-hetero bonds</td>
-              <td>
-                <FormikCheckBox
-                  name="elucidationOptions.allowHeteroHeteroBonds"
-                  {...{
-                    disabled: !containsHeteroAtoms,
-                  }}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Filter out 3-membered rings</td>
-              <td>
-                <FormikCheckBox name="elucidationOptions.useFilterLsdRing3" />
-              </td>
-            </tr>
-            <tr>
-              <td>Filter out 4-membered rings</td>
-              <td>
-                <FormikCheckBox name="elucidationOptions.useFilterLsdRing4" />
-              </td>
-            </tr>
+            </tr> */}
             <tr>
               <td colSpan={2} style={{ fontWeight: 'bold' }}>
                 Task name:
