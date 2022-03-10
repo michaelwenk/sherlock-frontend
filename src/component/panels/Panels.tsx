@@ -6,7 +6,7 @@ import axios, {
   AxiosResponse,
   Canceler,
 } from 'axios';
-import { Types } from 'nmr-correlation';
+import { Correlation } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import Result from '../../types/Result';
@@ -198,7 +198,7 @@ function Panels() {
           ? {
               ...nmriumData.correlations,
               values: nmriumData.correlations.values.map(
-                (value: Types.Correlation) => {
+                (value: Correlation) => {
                   return {
                     ...value,
                     hybridization:

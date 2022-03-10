@@ -1,8 +1,8 @@
 import {
   getAtomCounts,
+  Correlation,
   getCorrelationDelta,
   getCorrelationIndex,
-  Types,
 } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import EditNeighbors from './EditNeighbors';
@@ -22,7 +22,7 @@ import EditFixedNeighbors from './EditFixedNeighbors';
 import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEntry';
 
 interface InputProps {
-  correlation: Types.Correlation;
+  correlation: Correlation;
   neighbors: NeighborsEntry;
   mode: 'forbidden' | 'set';
   highlight: Highlight;

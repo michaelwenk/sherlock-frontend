@@ -1,9 +1,10 @@
 import {
   buildLink,
+  Correlation,
   getCorrelationDelta,
   getCorrelationIndex,
   getLabel,
-  Types,
+  Link,
 } from 'nmr-correlation';
 import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
@@ -16,8 +17,8 @@ import HybridizationsTableCell from './edit/HybridizationsTableCell';
 import NeighborsTableCell from './edit/NeighborsTableCell';
 
 interface InputProps {
-  additionalColumnData: Types.Correlation[];
-  correlation: Types.Correlation;
+  additionalColumnData: Correlation[];
+  correlation: Correlation;
   styleRow;
   styleLabel;
   showAdditionalColumns: boolean;
@@ -130,9 +131,9 @@ function CorrelationTableRow({
 
   const additionalColumnFields = useMemo(() => {
     return additionalColumnData.map((_correlation) => {
-      const commonLinks: Types.Link[] = [];
-      correlation.link.forEach((link) => {
-        _correlation.link.forEach((_link) => {
+      const commonLinks: Link[] = [];
+      correlation.link.forEach((link: Link) => {
+        _correlation.link.forEach((_link: Link) => {
           if (
             link.axis !== _link.axis &&
             link.experimentID === _link.experimentID &&

@@ -1,7 +1,7 @@
 import {
+  Correlation,
   getCorrelationDelta,
   getCorrelationIndex,
-  Types,
 } from 'nmr-correlation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import lodashCloneDeep from 'lodash/cloneDeep';
@@ -13,7 +13,7 @@ import CustomModal from '../../../../elements/modal/CustomModal';
 import Highlight from '../../../../../types/Highlight';
 
 interface InputProps {
-  correlation: Types.Correlation;
+  correlation: Correlation;
   hybridizations: number[];
   highlight: Highlight;
 }

@@ -1,4 +1,4 @@
-import { Types } from 'nmr-correlation';
+import { CorrelationData } from 'nmr-correlation';
 import DataSet from './DataSet';
 import DetectionOptions from './DetectionOptions';
 import Detections from './Detections';
@@ -12,7 +12,7 @@ export default interface ResultRecord {
   dataSetList?: DataSet[];
   dataSetListSize?: number;
   previewDataSet?: DataSet;
-  correlations?: Types.CorrelationData;
+  correlations?: CorrelationData;
   detections?: Detections;
   detectionOptions?: DetectionOptions;
   elucidationOptions?: ElucidationOptions;

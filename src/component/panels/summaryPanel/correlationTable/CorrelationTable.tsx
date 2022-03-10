@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 import { getLabelColor } from '../Utilities';
 import AdditionalColumnHeader from './AdditionalColumnHeader';
 import CorrelationTableRow from './CorrelationTableRow';
-import { Types } from 'nmr-correlation';
+import { Correlation } from 'nmr-correlation';
 import { useData } from '../../../../context/DataContext';
 
 interface InputPros {
-  additionalColumnData: Types.Correlation[];
+  additionalColumnData: Correlation[];
   showAdditionalColumns: boolean;
   showProtonsAsRows: boolean;
 }

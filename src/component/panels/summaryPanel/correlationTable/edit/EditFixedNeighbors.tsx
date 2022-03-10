@@ -5,10 +5,10 @@ import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import generateID from '../../../../../utils/generateID';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
-import { getCorrelationDelta, Types } from 'nmr-correlation';
+import { getCorrelationDelta, Correlation } from 'nmr-correlation';
 
 function buildLabel(
-  correlations: Types.Correlation[],
+  correlations: Correlation[],
   correlationIndex: number,
 ): string {
   return `${correlations[correlationIndex].label.origin}: ${
@@ -18,14 +18,10 @@ function buildLabel(
       ? ', ' + getCorrelationDelta(correlations[correlationIndex])?.toFixed(2)
       : ''
   }`;
-  // SP${
-  //   correlations[neighborCorrelationIndex].hybridization.join(',') ||
-  //   '\u2217'
-  // }
 }
 interface InputProps {
   fixedNeighborEntry: number[];
-  correlations: Types.Correlation[];
+  correlations: Correlation[];
   onDelete: Function;
   onAdd: Function;
 }

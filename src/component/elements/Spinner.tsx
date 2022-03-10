@@ -1,7 +1,7 @@
 import './Spinner.scss';
-import Loader from 'react-loader-spinner';
 import Button from './Button';
 import { useEffect, useState } from 'react';
+import { TailSpin } from 'react-loader-spinner';
 
 type InputProps = {
   onClickCancel?: Function;
@@ -47,13 +47,7 @@ function Spinner({
 
   return (
     <div className={className}>
-      <Loader
-        type="TailSpin"
-        color="#00BFFF"
-        height="100px"
-        width="100px"
-        {...props}
-      />
+      <TailSpin color="#00BFFF" height="100px" width="100px" {...props} />
       {showTimer && (
         <p
           style={{ marginTop: 10 }}

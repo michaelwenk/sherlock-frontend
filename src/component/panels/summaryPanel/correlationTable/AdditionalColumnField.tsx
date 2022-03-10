@@ -1,4 +1,9 @@
-import { buildLink, getCorrelationIndex, Types } from 'nmr-correlation';
+import {
+  buildLink,
+  Correlation,
+  getCorrelationIndex,
+  Link,
+} from 'nmr-correlation';
 import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
@@ -6,8 +11,8 @@ import { useHighlight } from '../../../highlight';
 import { getAbbreviation, getGroupIndex } from '../Utilities';
 
 interface InputProps {
-  correlationDim1: Types.Correlation;
-  correlationDim2: Types.Correlation;
+  correlationDim1: Correlation;
+  correlationDim2: Correlation;
 }
 
 function AdditionalColumnField({
@@ -17,9 +22,9 @@ function AdditionalColumnField({
   const { resultData } = useData();
 
   const commonLinks = useMemo(() => {
-    const _commonLinks: Types.Link[] = [];
-    correlationDim2.link.forEach((link: Types.Link) => {
-      correlationDim1.link.forEach((_link: Types.Link) => {
+    const _commonLinks: Link[] = [];
+    correlationDim2.link.forEach((link: Link) => {
+      correlationDim1.link.forEach((_link: Link) => {
         if (
           link.axis !== _link.axis &&
           link.experimentID === _link.experimentID &&
@@ -49,7 +54,7 @@ function AdditionalColumnField({
 
   const highlightIDsCommonLinks = useMemo(() => {
     const ids: string[] = [];
-    commonLinks.forEach((link) => {
+    commonLinks.forEach((link: Link) => {
       if (link.pseudo === false) {
         ids.push(link.signal.id);
       }
