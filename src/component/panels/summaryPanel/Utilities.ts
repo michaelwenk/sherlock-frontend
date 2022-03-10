@@ -57,14 +57,14 @@ function getAbbreviation(link: Link): string {
     abbreviation = 'A';
   }
 
-  const pathLength = link.signal.pathLength;
+  const pathLength = link.signal.j?.pathLength;
   if (pathLength) {
     const isDefaultCorrelation =
       DefaultPathLengths[link.experimentType] &&
-      pathLength.min >= DefaultPathLengths[link.experimentType].min &&
-      pathLength.min <= DefaultPathLengths[link.experimentType].max &&
-      pathLength.max >= DefaultPathLengths[link.experimentType].min &&
-      pathLength.max <= DefaultPathLengths[link.experimentType].max;
+      pathLength.from >= DefaultPathLengths[link.experimentType].from &&
+      pathLength.from <= DefaultPathLengths[link.experimentType].to &&
+      pathLength.to >= DefaultPathLengths[link.experimentType].from &&
+      pathLength.to <= DefaultPathLengths[link.experimentType].to;
 
     return `${abbreviation}${isDefaultCorrelation ? '' : '*'}`;
   }
@@ -72,7 +72,7 @@ function getAbbreviation(link: Link): string {
   return abbreviation;
 }
 
-function buildNewLink1D(link) {
+function buildNewLink1D(link: Link) {
   return buildLink({
     ...link,
     edited: {
