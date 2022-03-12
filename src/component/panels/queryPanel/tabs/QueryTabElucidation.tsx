@@ -14,7 +14,7 @@ import { useData } from '../../../../context/DataContext';
 import { getAtomCounts } from 'nmr-correlation';
 
 function QueryTabElucidation() {
-  const { isRequesting, nmriumData } = useData();
+  const { isRequesting, nmriumData, resultData } = useData();
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
   const { setFieldValue, submitForm, values, errors } =
@@ -33,8 +33,23 @@ function QueryTabElucidation() {
     values.detectionOptions.useNeighborDetections,
   ]);
 
+  const disableAllowCombinatorics = useMemo((): boolean => {
+    if (resultData?.resultRecord?.grouping) {
+      return !Object.keys(resultData.resultRecord.grouping.groups).some(
+        (atomType) =>
+          Object.keys(
+            resultData?.resultRecord?.grouping
+              ? resultData?.resultRecord?.grouping.groups[atomType]
+              : {},
+          ).some((groupList) => groupList.length > 1),
+      );
+    }
+
+    return false;
+  }, [resultData?.resultRecord?.grouping]);
+
   const containsHeteroAtoms = useMemo(
-    () =>
+    (): boolean =>
       Object.keys(
         getAtomCounts(nmriumData?.correlations.options.mf || ''),
       ).some((atomType) => atomType !== 'C' && atomType !== 'H'),
@@ -202,7 +217,12 @@ function QueryTabElucidation() {
             <tr>
               <td>Allow combinatorics</td>
               <td>
-                <FormikCheckBox name="elucidationOptions.useCombinatorics" />
+                <FormikCheckBox
+                  name="elucidationOptions.useCombinatorics"
+                  {...{
+                    disabled: disableAllowCombinatorics,
+                  }}
+                />
               </td>
             </tr>
             <tr>
