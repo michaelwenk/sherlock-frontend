@@ -37,6 +37,7 @@ function QueryTabElucidation() {
     const grouping = resultData?.resultRecord?.grouping;
     return (
       grouping !== undefined &&
+      grouping !== null &&
       grouping.groups !== undefined &&
       Object.entries(grouping.groups).some((entryPerAtomType) =>
         Object.entries(entryPerAtomType[1]).some(
