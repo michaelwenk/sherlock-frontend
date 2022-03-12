@@ -6,8 +6,25 @@ import queryTypes from '../../../../constants/queryTypes';
 import QueryTabElucidation from './QueryTabElucidation';
 import { Tab, Tabs } from 'react-bootstrap';
 import capitalize from '../../../../utils/capitalize';
+import { useFormikContext } from 'formik';
+import { useEffect } from 'react';
 
-function QueryOptionsTabs() {
+interface InputProps {
+  reset: boolean;
+  // eslint-disable-next-line no-unused-vars
+  setReset: (reset: boolean) => void;
+}
+
+function QueryOptionsTabs({ reset, setReset }: InputProps) {
+  const { resetForm } = useFormikContext();
+
+  useEffect(() => {
+    if (reset) {
+      resetForm();
+      setReset(false);
+    }
+  }, [reset, resetForm, setReset]);
+
   return (
     <div className="query-tabs">
       <Tabs
