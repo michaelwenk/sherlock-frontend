@@ -33,28 +33,31 @@ function QueryTabElucidation() {
     values.detectionOptions.useNeighborDetections,
   ]);
 
-  const disableAllowCombinatorics = useMemo((): boolean => {
-    if (resultData?.resultRecord?.grouping) {
-      return !Object.keys(resultData.resultRecord.grouping.groups).some(
-        (atomType) =>
-          Object.keys(
-            resultData?.resultRecord?.grouping
-              ? resultData?.resultRecord?.grouping.groups[atomType]
-              : {},
-          ).some((groupList) => groupList.length > 1),
-      );
-    }
-
-    return false;
+  const allowUseCombinatorics = useMemo((): boolean => {
+    const grouping = resultData?.resultRecord?.grouping;
+    return (
+      grouping !== undefined &&
+      grouping.groups !== undefined &&
+      Object.entries(grouping.groups).some((entryPerAtomType) =>
+        Object.entries(entryPerAtomType[1]).some(
+          (entryPerGroup) => entryPerGroup[1].length > 1,
+        ),
+      )
+    );
   }, [resultData?.resultRecord?.grouping]);
 
-  const containsHeteroAtoms = useMemo(
-    (): boolean =>
-      Object.keys(
-        getAtomCounts(nmriumData?.correlations.options.mf || ''),
-      ).some((atomType) => atomType !== 'C' && atomType !== 'H'),
-    [nmriumData?.correlations.options.mf],
-  );
+  const allowUseHeteroHeteroBonds = useMemo((): boolean => {
+    let sumHeteroAtoms = 0;
+    Object.entries(
+      getAtomCounts(nmriumData?.correlations?.options?.mf || ''),
+    ).forEach(([atomType, count]) => {
+      if (atomType !== 'C' && atomType !== 'H') {
+        sumHeteroAtoms += count;
+      }
+    });
+
+    return sumHeteroAtoms >= 2;
+  }, [nmriumData?.correlations.options.mf]);
 
   return (
     <div className="query-options-tab-elucidation-container">
@@ -220,7 +223,7 @@ function QueryTabElucidation() {
                 <FormikCheckBox
                   name="elucidationOptions.useCombinatorics"
                   {...{
-                    disabled: disableAllowCombinatorics,
+                    disabled: !allowUseCombinatorics,
                   }}
                 />
               </td>
@@ -231,7 +234,7 @@ function QueryTabElucidation() {
                 <FormikCheckBox
                   name="elucidationOptions.allowHeteroHeteroBonds"
                   {...{
-                    disabled: !containsHeteroAtoms,
+                    disabled: !allowUseHeteroHeteroBonds,
                   }}
                 />
               </td>
