@@ -22,7 +22,9 @@ function QueryPanel({ onSubmit, show }: InputProps) {
   const queryOptions = useMemo((): QueryOptions => {
     const _queryOptions: QueryOptions = {
       queryType: resultData?.queryType || defaultQueryOptions.queryType,
-      dereplicationOptions: defaultQueryOptions.dereplicationOptions,
+      dereplicationOptions:
+        resultData?.dereplicationOptions ||
+        defaultQueryOptions.dereplicationOptions,
       detectionOptions:
         resultData?.resultRecord?.detectionOptions ||
         defaultQueryOptions.detectionOptions,

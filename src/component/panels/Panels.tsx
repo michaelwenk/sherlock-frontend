@@ -243,6 +243,7 @@ function Panels() {
           // console.log(response);
           const result: Result = {
             queryType,
+            dereplicationOptions: response.data.dereplicationOptions,
             resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };

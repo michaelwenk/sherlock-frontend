@@ -15,7 +15,7 @@ interface InputProps {
   setReset: (reset: boolean) => void;
 }
 
-function QueryOptionsTabs({ reset, setReset }: InputProps) {
+function QueryTabs({ reset, setReset }: InputProps) {
   const { resetForm } = useFormikContext();
 
   useEffect(() => {
@@ -61,4 +61,4 @@ function QueryOptionsTabs({ reset, setReset }: InputProps) {
   );
 }
 
-export default QueryOptionsTabs;
+export default QueryTabs;
