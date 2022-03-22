@@ -35,22 +35,27 @@ function ResultCard({
 
   useEffect(() => {
     if (dataSet.assignment) {
-      const spectralMatchAssignment = dataSet.attachment
-        .spectralMatchAssignment as Assignment;
+      const spectralMatchAssignment =
+        dataSet.attachment.spectralMatchAssignment;
       const ids: number[] = [];
-      dataSet.assignment.assignments[0].forEach((signalArray, i) => {
-        if (
-          highlightData.highlight.highlighted.some((highlightID) =>
-            spectralMatchAssignment.assignments[0][i]
-              .map(
-                (signalIndexInQuerySpectrum) =>
-                  `correlation_signal_${signalIndexInQuerySpectrum}`,
-              )
-              .includes(highlightID),
+      dataSet.assignment.assignments[0].forEach(
+        (signalArrayInPrediction, signalIndexInPrediction) => {
+          const signalIndexInQuerySpectrum =
+            spectralMatchAssignment.assignments[0].findIndex(
+              (signalArrayQuery) =>
+                signalArrayQuery.includes(signalIndexInPrediction),
+            );
+          if (
+            signalIndexInQuerySpectrum >= 0 &&
+            highlightData.highlight.highlighted.some(
+              (highlightID) =>
+                highlightID ===
+                `correlation_signal_${signalIndexInQuerySpectrum}`,
+            )
           )
-        )
-          signalArray.forEach((atomIndex) => ids.push(atomIndex));
-      });
+            signalArrayInPrediction.forEach((atomIndex) => ids.push(atomIndex));
+        },
+      );
 
       setAtomHighlights(ids);
     }
@@ -68,37 +73,40 @@ function ResultCard({
             signalArray.includes(atomIndex),
           );
         if (signalIndexInPrediction >= 0) {
-          const spectralMatchAssignment = dataSet.attachment
-            .spectralMatchAssignment as Assignment;
-          const toHighlight = spectralMatchAssignment.assignments[0][
-            signalIndexInPrediction
-          ]
-            .map((signalIndexInQuerySpectrum) => [
+          const spectralMatchAssignment =
+            dataSet.attachment.spectralMatchAssignment;
+          const signalIndexInQuerySpectrum =
+            spectralMatchAssignment.assignments[0].findIndex(
+              (signalArrayQuery) =>
+                signalArrayQuery.includes(signalIndexInPrediction),
+            );
+          if (signalIndexInQuerySpectrum >= 0) {
+            const toHighlight = [
               `correlation_signal_${signalIndexInQuerySpectrum}`,
-            ])
-            .flat();
+            ];
 
-          highlightData.dispatch({
-            type: action === 'enter' ? 'SHOW' : 'HIDE',
-            payload: {
-              convertedHighlights: toHighlight,
-            },
-          });
-
-          const ids: number[] = [];
-          // add possible equivalent atoms from same group
-          const signalIndexInMolecule =
-            dataSet.assignment.assignments[0].findIndex((signalArray) =>
-              signalArray.includes(atomIndex),
-            );
-          if (signalIndexInMolecule >= 0) {
-            dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
-              (atomIndex) => {
-                ids.push(atomIndex);
+            highlightData.dispatch({
+              type: action === 'enter' ? 'SHOW' : 'HIDE',
+              payload: {
+                convertedHighlights: toHighlight,
               },
-            );
+            });
+
+            const ids: number[] = [];
+            // add possible equivalent atoms from same group
+            const signalIndexInMolecule =
+              dataSet.assignment.assignments[0].findIndex((signalArray) =>
+                signalArray.includes(atomIndex),
+              );
+            if (signalIndexInMolecule >= 0) {
+              dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
+                (atomIndex) => {
+                  ids.push(atomIndex);
+                },
+              );
+            }
+            setAtomHighlights(ids);
           }
-          setAtomHighlights(ids);
         }
       }
     },
