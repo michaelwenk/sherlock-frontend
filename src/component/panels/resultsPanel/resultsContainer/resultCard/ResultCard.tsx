@@ -13,7 +13,6 @@ import {
 import DataSet from '../../../../../types/sherlock/DataSet';
 import { MolfileSvgRenderer } from 'react-ocl';
 import { useHighlightData } from '../../../../highlight';
-import Assignment from '../../../../../types/sherlock/Assignment';
 
 type InputProps = {
   id: string | number;
