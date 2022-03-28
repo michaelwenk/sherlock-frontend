@@ -2,7 +2,7 @@ import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
 import { Tab, Tabs } from 'react-bootstrap';
-import NMRium from '@michaelwenk/nmrium';
+import NMRium, { NMRiumPreferences } from '@michaelwenk/nmrium';
 import Panels from './panels/Panels';
 import { Reducer, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
@@ -18,7 +18,7 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
 
-const preferences = {};
+const preferences: NMRiumPreferences = {};
 
 function Sherlock() {
   const [state, dispatch] = useReducer<Reducer<DataState, any>, DataState>(
