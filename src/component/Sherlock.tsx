@@ -18,7 +18,24 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
 
-const preferences: NMRiumPreferences = {};
+const preferences: NMRiumPreferences = {
+  panels: {
+    // not necessarily needed
+    filtersPanel: { display: false },
+    integralsPanel: { display: false },
+    multipleSpectraAnalysisPanel: { display: false },
+    peaksPanel: { display: false },
+    structuresPanel: { display: false },
+    predictionPanel: { display: false },
+    // substantial for CASE
+    spectraPanel: { display: true, open: true },
+    informationPanel: { display: true },
+    rangesPanel: { display: true },
+    zonesPanel: { display: true },
+    summaryPanel: { display: true },
+    databasePanel: { display: false },
+  },
+};
 
 function Sherlock() {
   const [state, dispatch] = useReducer<Reducer<DataState, any>, DataState>(
