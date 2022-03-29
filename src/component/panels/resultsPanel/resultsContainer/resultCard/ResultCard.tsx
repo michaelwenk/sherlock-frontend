@@ -10,9 +10,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import DataSet from '../../../../../types/sherlock/DataSet';
 import { MolfileSvgRenderer } from 'react-ocl';
 import { useHighlightData } from '../../../../highlight';
+import PredictionTable from './PredictionTable';
+import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 
 type InputProps = {
   id: string | number;
@@ -68,8 +69,8 @@ function ResultCard({
     (atomIndex, action: 'enter' | 'leave') => {
       if (dataSet.assignment) {
         const signalIndexInPrediction =
-          dataSet.assignment.assignments[0].findIndex((signalArray) =>
-            signalArray.includes(atomIndex),
+          dataSet.assignment.assignments[0].findIndex((atomArray) =>
+            atomArray.includes(atomIndex),
           );
         if (signalIndexInPrediction >= 0) {
           const spectralMatchAssignment =
@@ -94,8 +95,8 @@ function ResultCard({
             const ids: number[] = [];
             // add possible equivalent atoms from same group
             const signalIndexInMolecule =
-              dataSet.assignment.assignments[0].findIndex((signalArray) =>
-                signalArray.includes(atomIndex),
+              dataSet.assignment.assignments[0].findIndex((atomArray) =>
+                atomArray.includes(atomIndex),
               );
             if (signalIndexInMolecule >= 0) {
               dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
@@ -141,7 +142,17 @@ function ResultCard({
             onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
           />
         </div>
-        <ResultCardText dataSet={dataSet} />
+        <div className="prediction-table-container">
+          {dataSet.attachment.predictionMeta && (
+            <PredictionTable
+              dataSet={dataSet}
+              atomHighlights={atomHighlights}
+            />
+          )}
+        </div>
+        <div className="result-card-text-container">
+          <ResultCardText dataSet={dataSet} />
+        </div>
       </Card.Body>
     ),
     [

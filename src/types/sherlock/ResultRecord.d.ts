@@ -1,5 +1,6 @@
 import { CorrelationData } from 'nmr-correlation';
 import DataSet from './DataSet';
+import SpectrumCompact from './dataSet/SpectrumCompact';
 import DetectionOptions from './DetectionOptions';
 import Detections from './Detections';
 import ElucidationOptions from './ElucidationOptions';
@@ -17,4 +18,5 @@ export default interface ResultRecord {
   detectionOptions?: DetectionOptions;
   elucidationOptions?: ElucidationOptions;
   grouping?: Grouping;
+  querySpectrum?: SpectrumCompact;
 }

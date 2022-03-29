@@ -11,4 +11,5 @@ export default interface Attachment {
   setAssignmentsCount: number;
   setAssignmentsCountWithEquivalences: number;
   spectralMatchAssignment: Assignment;
+  predictionMeta: { [signalIndex: number]: number[] };
 }

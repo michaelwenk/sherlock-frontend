@@ -8,7 +8,7 @@ import ResultCard from '../resultCard/ResultCard';
 import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
-import DataSet from '../../../../../types/sherlock/DataSet';
+import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 
 interface ImageSize {
   width: number;
@@ -16,10 +16,9 @@ interface ImageSize {
 }
 
 const imageSizes: ImageSize[] = [
-  { width: 150, height: 150 },
-  { width: 200, height: 200 },
   { width: 250, height: 250 },
   { width: 300, height: 300 },
+  { width: 350, height: 350 },
 ];
 
 type InputProps = {

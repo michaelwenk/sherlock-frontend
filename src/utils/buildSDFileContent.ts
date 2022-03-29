@@ -1,4 +1,5 @@
-import DataSet from '../types/sherlock/DataSet';
+import DataSet from '../types/sherlock/dataSet/DataSet';
+
 interface InputProps {
   dataSets: DataSet[];
 }

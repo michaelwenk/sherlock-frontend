@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ResultCardText.scss';
 import { useMemo } from 'react';
-import DataSet from '../../../../../types/sherlock/DataSet';
+import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 
 type InputProps = {
   dataSet: DataSet;
@@ -20,11 +20,11 @@ function ResultCardText({ dataSet }: InputProps) {
     >
       <tbody>
         <tr>
-          <td>Formula</td>
+          <td style={{ fontWeight: 'bold' }}>Formula</td>
           <td>{dataSet.meta.mfOriginal}</td>
         </tr>
         <tr>
-          <td>RMSD</td>
+          <td style={{ fontWeight: 'bold' }}>RMSD</td>
           <td>
             <span className="value-with-unit">
               <label className="value">
@@ -35,7 +35,7 @@ function ResultCardText({ dataSet }: InputProps) {
           </td>
         </tr>
         <tr>
-          <td>AvgDev</td>
+          <td style={{ fontWeight: 'bold' }}>AvgDev</td>
           <td>
             <span className="value-with-unit">
               <label className="value">
@@ -46,13 +46,13 @@ function ResultCardText({ dataSet }: InputProps) {
           </td>
         </tr>
         <tr>
-          <td>Tanimoto</td>
+          <td style={{ fontWeight: 'bold' }}>Tanimoto</td>
           <td className="value-single">
             {dataSet.attachment.tanimoto.toFixed(2)}
           </td>
         </tr>
         <tr>
-          <td>Hits</td>
+          <td style={{ fontWeight: 'bold' }}>Hits</td>
           <td className="value-single">
             {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
           </td>

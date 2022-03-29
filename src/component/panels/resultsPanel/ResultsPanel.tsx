@@ -14,7 +14,7 @@ import {
 } from '../../../context/ActionTypes';
 import ConfirmModal from '../../elements/modal/ConfirmModal';
 import CustomModal from '../../elements/modal/CustomModal';
-import DataSet from '../../../types/sherlock/DataSet';
+import DataSet from '../../../types/sherlock/dataSet/DataSet';
 
 type InputProps = {
   result?: Result;
