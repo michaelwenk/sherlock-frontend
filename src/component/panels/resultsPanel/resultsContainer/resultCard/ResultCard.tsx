@@ -131,7 +131,15 @@ function ResultCard({
   const cardBody = useMemo(
     () => (
       <Card.Body className="card-body">
-        <div className="molfile-svg-renderer">
+        <div
+          className="molfile-svg-renderer"
+          style={
+            {
+              '--imageHeight': `${imageHeight}px`,
+              '--imageWidth': `${imageWidth}px`,
+            } as React.CSSProperties
+          }
+        >
           <MolfileSvgRenderer
             id={`molSVG_${id}`}
             molfile={molfile}
@@ -150,24 +158,26 @@ function ResultCard({
         <div className="result-card-text-container">
           <ResultCardText dataSet={dataSet} />
         </div>
-        <div className="prediction-table-container">
-          <Button
-            onClick={() => setShowPredictionTable(!showPredictionTable)}
-            child={
-              showPredictionTable ? (
-                <FaAngleUp title="Hide predictions" />
-              ) : (
-                <FaAngleDown title="Show predictions" />
-              )
-            }
-          />
-          {showPredictionTable && dataSet.attachment.predictionMeta && (
-            <PredictionTable
-              dataSet={dataSet}
-              atomHighlights={atomHighlights}
+        {dataSet.attachment.predictionMeta && (
+          <div className="prediction-table-container">
+            <Button
+              onClick={() => setShowPredictionTable(!showPredictionTable)}
+              child={
+                showPredictionTable ? (
+                  <FaAngleUp title="Hide predictions" />
+                ) : (
+                  <FaAngleDown title="Show predictions" />
+                )
+              }
             />
-          )}
-        </div>
+            {showPredictionTable && (
+              <PredictionTable
+                dataSet={dataSet}
+                atomHighlights={atomHighlights}
+              />
+            )}
+          </div>
+        )}
       </Card.Body>
     ),
     [

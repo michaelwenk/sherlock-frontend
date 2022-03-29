@@ -154,7 +154,7 @@ function PredictionTable({ dataSet, atomHighlights }: InputProps) {
           <tr>
             <th>Shift</th>
             <th>Diff</th>
-            <th>Spheres</th>
+            <th>Sphere</th>
             <th>Count</th>
             <th>Range</th>
           </tr>
