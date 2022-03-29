@@ -126,18 +126,7 @@ function PredictionTable({ dataSet, atomHighlights }: InputProps) {
                       0,
                     )}
                   </td>
-                  <td
-                  // style={{
-                  //   color:
-                  //     signalIndexInQuerySpectrum >= 0
-                  //       ? range > 5
-                  //         ? 'red'
-                  //         : undefined
-                  //       : undefined,
-                  // }}
-                  >
-                    {range.toFixed(2)}
-                  </td>
+                  <td>{range.toFixed(2)}</td>
                 </tr>
               ),
             };

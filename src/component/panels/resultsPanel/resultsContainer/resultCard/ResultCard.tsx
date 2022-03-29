@@ -14,6 +14,8 @@ import { MolfileSvgRenderer } from 'react-ocl';
 import { useHighlightData } from '../../../../highlight';
 import PredictionTable from './PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
+import Button from '../../../../elements/Button';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 type InputProps = {
   id: string | number;
@@ -32,6 +34,8 @@ function ResultCard({
 }: InputProps) {
   const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
   const highlightData = useHighlightData();
+  const [showPredictionTable, setShowPredictionTable] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (dataSet.assignment) {
@@ -142,16 +146,27 @@ function ResultCard({
             onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
           />
         </div>
+
+        <div className="result-card-text-container">
+          <ResultCardText dataSet={dataSet} />
+        </div>
         <div className="prediction-table-container">
-          {dataSet.attachment.predictionMeta && (
+          <Button
+            onClick={() => setShowPredictionTable(!showPredictionTable)}
+            child={
+              showPredictionTable ? (
+                <FaAngleUp title="Hide predictions" />
+              ) : (
+                <FaAngleDown title="Show predictions" />
+              )
+            }
+          />
+          {showPredictionTable && dataSet.attachment.predictionMeta && (
             <PredictionTable
               dataSet={dataSet}
               atomHighlights={atomHighlights}
             />
           )}
-        </div>
-        <div className="result-card-text-container">
-          <ResultCardText dataSet={dataSet} />
         </div>
       </Card.Body>
     ),
@@ -163,6 +178,7 @@ function ResultCard({
       imageHeight,
       imageWidth,
       molfile,
+      showPredictionTable,
     ],
   );
 
