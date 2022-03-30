@@ -24,22 +24,22 @@ function ResultCardText({ dataSet }: InputProps) {
           <td>{dataSet.meta.mfOriginal}</td>
         </tr>
         <tr>
-          <td style={{ fontWeight: 'bold' }}>RMSD</td>
+          <td style={{ fontWeight: 'bold' }}>AvgDev</td>
           <td>
             <span className="value-with-unit">
               <label className="value">
-                {dataSet.attachment.rmsd.toFixed(2)}
+                {dataSet.attachment.averageDeviation.toFixed(2)}
               </label>
               <label className="unit">ppm</label>
             </span>
           </td>
         </tr>
         <tr>
-          <td style={{ fontWeight: 'bold' }}>AvgDev</td>
+          <td style={{ fontWeight: 'bold' }}>RMSD</td>
           <td>
             <span className="value-with-unit">
               <label className="value">
-                {dataSet.attachment.averageDeviation.toFixed(2)}
+                {dataSet.attachment.rmsd.toFixed(2)}
               </label>
               <label className="unit">ppm</label>
             </span>
