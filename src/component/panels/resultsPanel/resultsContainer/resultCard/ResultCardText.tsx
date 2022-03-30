@@ -9,7 +9,7 @@ type InputProps = {
 
 function ResultCardText({ dataSet }: InputProps) {
   const color = useMemo(
-    () => (dataSet.attachment.isCompleteSpectralMatch ? 'black' : 'red'),
+    () => (dataSet.attachment.isCompleteSpectralMatch ? 'inherit' : 'red'),
     [dataSet.attachment.isCompleteSpectralMatch],
   );
 

@@ -16,9 +16,9 @@ interface ImageSize {
 }
 
 const imageSizes: ImageSize[] = [
+  { width: 200, height: 200 },
   { width: 250, height: 250 },
   { width: 300, height: 300 },
-  { width: 350, height: 350 },
 ];
 
 type InputProps = {
@@ -118,7 +118,7 @@ function ResultsView({
             imageHeight={selectedImageSize.height}
             styles={{
               minWidth: selectedImageSize.width + 25,
-              maxWidth: selectedImageSize.height + 25,
+              maxWidth: selectedImageSize.height + 35,
               marginLeft: '4px',
               marginBottom: '4px',
               border: 'solid 1px lightgrey',
