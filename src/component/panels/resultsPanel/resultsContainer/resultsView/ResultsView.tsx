@@ -15,6 +15,8 @@ interface ImageSize {
   height: number;
 }
 
+const bufferImageWidth = 65;
+
 const imageSizes: ImageSize[] = [
   { width: 200, height: 200 },
   { width: 250, height: 250 },
@@ -117,8 +119,8 @@ function ResultsView({
             imageWidth={selectedImageSize.width}
             imageHeight={selectedImageSize.height}
             styles={{
-              minWidth: selectedImageSize.width + 25,
-              maxWidth: selectedImageSize.height + 65,
+              minWidth: selectedImageSize.width + bufferImageWidth,
+              maxWidth: selectedImageSize.width + bufferImageWidth,
               marginLeft: '4px',
               marginBottom: '4px',
               border: 'solid 1px lightgrey',
