@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useData } from '../../../../context/DataContext';
 import Button from '../../../elements/Button';
 import { FaFileDownload, FaTrashAlt } from 'react-icons/fa';
+import queryTypes from '../../../../constants/queryTypes';
 
 type InputProps = {
   onClickDownload: Function;
@@ -67,6 +68,13 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
                     ? false
                     : true
                 }
+                style={{
+                  display:
+                    resultData.queryType !== queryTypes.elucidation &&
+                    resultData.queryType !== queryTypes.retrieval
+                      ? 'none'
+                      : undefined,
+                }}
               />
             </td>
           </tr>
