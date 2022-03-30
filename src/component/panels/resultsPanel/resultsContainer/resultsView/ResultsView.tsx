@@ -118,7 +118,7 @@ function ResultsView({
             imageHeight={selectedImageSize.height}
             styles={{
               minWidth: selectedImageSize.width + 25,
-              maxWidth: selectedImageSize.height + 35,
+              maxWidth: selectedImageSize.height + 65,
               marginLeft: '4px',
               marginBottom: '4px',
               border: 'solid 1px lightgrey',
