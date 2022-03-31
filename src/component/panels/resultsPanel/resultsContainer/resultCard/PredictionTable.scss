@@ -4,12 +4,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 350px;
-  overflow-y: auto;
+  max-height: var(--custom-max-height);
+  overflow: auto;
   border: 1px solid #dedede;
 
   table {
-    font-size: 13px;
+    font-size: 12px;
     width: 100%;
 
     th {

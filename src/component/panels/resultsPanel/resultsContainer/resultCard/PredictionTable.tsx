@@ -1,5 +1,5 @@
 import './PredictionTable.scss';
-import { useCallback, useMemo } from 'react';
+import { CSSProperties, useCallback, useMemo } from 'react';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
 import { useData } from '../../../../../context/DataContext';
@@ -7,9 +7,10 @@ import { useData } from '../../../../../context/DataContext';
 type InputProps = {
   dataSet: DataSet;
   atomHighlights: number[];
+  isExtended: boolean;
 };
 
-function PredictionTable({ dataSet, atomHighlights }: InputProps) {
+function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
   const highlightData = useHighlightData();
   const { resultData } = useData();
 
@@ -147,7 +148,14 @@ function PredictionTable({ dataSet, atomHighlights }: InputProps) {
   );
 
   return (
-    <div className="prediction-table">
+    <div
+      className="prediction-table"
+      style={
+        {
+          '--custom-max-height': isExtended ? 'none' : '250px',
+        } as CSSProperties
+      }
+    >
       <table>
         <thead>
           <tr>

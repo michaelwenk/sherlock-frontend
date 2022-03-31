@@ -15,7 +15,7 @@ import { useHighlightData } from '../../../../highlight';
 import PredictionTable from './PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import Button from '../../../../elements/Button';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDoubleDown, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 type InputProps = {
   id: string | number;
@@ -23,6 +23,12 @@ type InputProps = {
   imageWidth: number;
   imageHeight: number;
   styles?: CSSProperties;
+};
+
+const showPredictionTableStates = {
+  hide: 'hide',
+  default: 'default',
+  extended: 'extended',
 };
 
 function ResultCard({
@@ -34,8 +40,8 @@ function ResultCard({
 }: InputProps) {
   const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
   const highlightData = useHighlightData();
-  const [showPredictionTable, setShowPredictionTable] =
-    useState<boolean>(false);
+  const [showPredictionTableState, setShowPredictionTableState] =
+    useState<string>(showPredictionTableStates.hide);
 
   useEffect(() => {
     if (dataSet.assignment) {
@@ -161,19 +167,35 @@ function ResultCard({
         {dataSet.attachment.predictionMeta && (
           <div className="prediction-table-container">
             <Button
-              onClick={() => setShowPredictionTable(!showPredictionTable)}
+              onClick={() => {
+                setShowPredictionTableState(
+                  showPredictionTableState === showPredictionTableStates.hide
+                    ? showPredictionTableStates.default
+                    : showPredictionTableState ===
+                      showPredictionTableStates.default
+                    ? showPredictionTableStates.extended
+                    : showPredictionTableStates.hide,
+                );
+              }}
               child={
-                showPredictionTable ? (
-                  <FaAngleUp title="Hide predictions" />
+                showPredictionTableState === showPredictionTableStates.hide ? (
+                  <FaAngleDown />
+                ) : showPredictionTableState ===
+                  showPredictionTableStates.default ? (
+                  <FaAngleDoubleDown />
                 ) : (
-                  <FaAngleDown title="Show predictions" />
+                  <FaAngleUp />
                 )
               }
             />
-            {showPredictionTable && (
+            {showPredictionTableState !== showPredictionTableStates.hide && (
               <PredictionTable
                 dataSet={dataSet}
                 atomHighlights={atomHighlights}
+                isExtended={
+                  showPredictionTableState ===
+                  showPredictionTableStates.extended
+                }
               />
             )}
           </div>
@@ -188,7 +210,7 @@ function ResultCard({
       imageHeight,
       imageWidth,
       molfile,
-      showPredictionTable,
+      showPredictionTableState,
     ],
   );
 
