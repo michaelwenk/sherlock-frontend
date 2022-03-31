@@ -89,9 +89,8 @@ function PredictionTable({ dataSet, atomHighlights }: InputProps) {
                   key={`${dataSet.meta.smiles}_${signalIndex}_${atomIndex}`}
                   style={{
                     backgroundColor: atomHighlights.includes(atomIndex)
-                      ? 'orange'
+                      ? '#ff6f0057'
                       : undefined,
-                    opacity: 0.65,
                     color: signalIndexInQuerySpectrum < 0 ? '#B5B5B5' : 'black',
                   }}
                   onMouseEnter={() => handleOnAtom(signalIndex, 'enter')}
