@@ -2,12 +2,11 @@ import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
 import { Tab, Tabs } from 'react-bootstrap';
-import NMRium, { NMRiumPreferences } from '@michaelwenk/nmrium';
+import NMRium, { NMRiumPreferences } from 'nmrium';
 import Panels from './panels/Panels';
 import { Reducer, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
-import { State } from '@michaelwenk/nmrium/lib/component/reducer/Reducer';
 import {
   DataReducer,
   dispatcher,
@@ -17,6 +16,7 @@ import {
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
+import { State } from 'nmrium/lib/component/reducer/Reducer';
 
 const preferences: NMRiumPreferences = {
   panels: {
