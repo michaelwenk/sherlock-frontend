@@ -107,7 +107,7 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
                     color:
                       dataSet.spectrum.signals[signalIndex].integers[1] === 1
                         ? 'lightgrey'
-                        : 'black',
+                        : 'inherit',
                   }}
                 >
                   {dataSet.spectrum.signals[signalIndex].integers[1]}
