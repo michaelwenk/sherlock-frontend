@@ -127,6 +127,7 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
                           ? 'red'
                           : undefined
                         : undefined,
+                    borderRight: '2px solid lightgrey',
                   }}
                 >
                   {difference === undefined ? '-' : difference.toFixed(2)}
@@ -172,7 +173,7 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
             <th>Shift</th>
             <th>Equ</th>
             <th>#H</th>
-            <th>Dev</th>
+            <th style={{ borderRight: '2px solid lightgrey' }}>Dev</th>
             <th>Sph</th>
             <th>Count</th>
             <th>Range</th>
