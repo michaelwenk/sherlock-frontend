@@ -61,10 +61,12 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
     () =>
       dataSet.assignment.assignments[0]
         .map((atomArray: number[], signalIndex) => {
-          const range = Math.abs(
-            dataSet.attachment.predictionMeta[signalIndex][2] -
-              dataSet.attachment.predictionMeta[signalIndex][3],
-          );
+          const range = dataSet.attachment.predictionMeta
+            ? Math.abs(
+                dataSet.attachment.predictionMeta[signalIndex][2] -
+                  dataSet.attachment.predictionMeta[signalIndex][3],
+              )
+            : undefined;
           const signalIndexInQuerySpectrum =
             getSignalIndexInQuerySpectrum(signalIndex);
           const querySpectrumShift =
@@ -123,8 +125,6 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
                       difference !== undefined
                         ? difference < 1
                           ? 'green'
-                          : difference >= 3
-                          ? 'red'
                           : undefined
                         : undefined,
                     borderRight: '2px solid lightgrey',
@@ -132,13 +132,21 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
                 >
                   {difference === undefined ? '-' : difference.toFixed(2)}
                 </td>
-                <td>
-                  {dataSet.attachment.predictionMeta[signalIndex][0].toFixed(0)}
-                </td>
-                <td>
-                  {dataSet.attachment.predictionMeta[signalIndex][1].toFixed(0)}
-                </td>
-                <td>{range.toFixed(2)}</td>
+                {dataSet.attachment.predictionMeta && (
+                  <>
+                    <td>
+                      {dataSet.attachment.predictionMeta[
+                        signalIndex
+                      ][0].toFixed(0)}
+                    </td>
+                    <td>
+                      {dataSet.attachment.predictionMeta[
+                        signalIndex
+                      ][1].toFixed(0)}
+                    </td>
+                    <td>{range && range.toFixed(2)}</td>
+                  </>
+                )}
               </tr>
             ),
           };
@@ -173,10 +181,16 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
             <th>Shift</th>
             <th>Equ</th>
             <th>#H</th>
-            <th style={{ borderRight: '2px solid lightgrey' }}>Dev</th>
-            <th>Sph</th>
-            <th>Count</th>
-            <th>Range</th>
+            {dataSet.attachment.predictionMeta ? (
+              <>
+                <th style={{ borderRight: '2px solid lightgrey' }}>Dev</th>
+                <th>Sph</th>
+                <th>Count</th>
+                <th>Range</th>
+              </>
+            ) : (
+              <th>Dev</th>
+            )}
           </tr>
         </thead>
         <tbody>{rows}</tbody>

@@ -164,7 +164,7 @@ function ResultCard({
         <div className="result-card-text-container">
           <ResultCardText dataSet={dataSet} />
         </div>
-        {dataSet.attachment.predictionMeta && (
+        {
           <div className="prediction-table-container">
             <Button
               onClick={() => {
@@ -199,7 +199,7 @@ function ResultCard({
               />
             )}
           </div>
-        )}
+        }
       </Card.Body>
     ),
     [
