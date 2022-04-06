@@ -9,14 +9,15 @@
   border: 1px solid #dedede;
 
   table {
-    font-size: 12px;
+    font-size: 11px;
     width: 100%;
 
-    th {
+    thead {
+      // font-size: 10px;
       background-color: #eee;
       position: -webkit-sticky;
       position: sticky;
-      top: 0;
+      top: 0px;
       z-index: 1;
     }
 

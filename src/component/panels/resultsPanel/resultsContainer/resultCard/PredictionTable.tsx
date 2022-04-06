@@ -3,6 +3,7 @@ import { CSSProperties, useCallback, useMemo } from 'react';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
 import { useData } from '../../../../../context/DataContext';
+import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
 
 type InputProps = {
   dataSet: DataSet;
@@ -82,55 +83,64 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
               )
             : undefined;
 
-          return atomArray.map((atomIndex) => {
-            return {
-              shift: dataSet.spectrum.signals[signalIndex].doubles[0],
-              element: (
-                <tr
-                  key={`${dataSet.meta.smiles}_${signalIndex}_${atomIndex}`}
+          const atomIndex = atomArray[0];
+
+          return {
+            shift: dataSet.spectrum.signals[signalIndex].doubles[0],
+            element: (
+              <tr
+                key={`${dataSet.meta.smiles}_${signalIndex}_${atomIndex}`}
+                style={{
+                  backgroundColor: atomHighlights.includes(atomIndex)
+                    ? '#ff6f0057'
+                    : undefined,
+                  color: signalIndexInQuerySpectrum < 0 ? '#B5B5B5' : 'black',
+                }}
+                onMouseEnter={() => handleOnAtom(signalIndex, 'enter')}
+                onMouseLeave={() => handleOnAtom(signalIndex, 'leave')}
+              >
+                <td>
+                  {dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)}
+                </td>
+                <td
                   style={{
-                    backgroundColor: atomHighlights.includes(atomIndex)
-                      ? '#ff6f0057'
-                      : undefined,
-                    color: signalIndexInQuerySpectrum < 0 ? '#B5B5B5' : 'black',
+                    color:
+                      dataSet.spectrum.signals[signalIndex].integers[1] === 1
+                        ? 'lightgrey'
+                        : 'black',
                   }}
-                  onMouseEnter={() => handleOnAtom(signalIndex, 'enter')}
-                  onMouseLeave={() => handleOnAtom(signalIndex, 'leave')}
                 >
-                  <td>
-                    {dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(
-                      2,
-                    )}
-                  </td>
-                  <td
-                    style={{
-                      color:
-                        difference !== undefined
-                          ? difference < 1
-                            ? 'green'
-                            : difference >= 3
-                            ? 'red'
-                            : undefined
-                          : undefined,
-                    }}
-                  >
-                    {difference === undefined ? '-' : difference.toFixed(2)}
-                  </td>
-                  <td>
-                    {dataSet.attachment.predictionMeta[signalIndex][0].toFixed(
-                      0,
-                    )}
-                  </td>
-                  <td>
-                    {dataSet.attachment.predictionMeta[signalIndex][1].toFixed(
-                      0,
-                    )}
-                  </td>
-                  <td>{range.toFixed(2)}</td>
-                </tr>
-              ),
-            };
-          });
+                  {dataSet.spectrum.signals[signalIndex].integers[1]}
+                </td>
+                <td>
+                  {convertMultiplicityStringToNumber(
+                    dataSet.spectrum.signals[signalIndex].strings[1],
+                  )}
+                </td>
+                <td
+                  style={{
+                    color:
+                      difference !== undefined
+                        ? difference < 1
+                          ? 'green'
+                          : difference >= 3
+                          ? 'red'
+                          : undefined
+                        : undefined,
+                  }}
+                >
+                  {difference === undefined ? '-' : difference.toFixed(2)}
+                </td>
+                <td>
+                  {dataSet.attachment.predictionMeta[signalIndex][0].toFixed(0)}
+                </td>
+                <td>
+                  {dataSet.attachment.predictionMeta[signalIndex][1].toFixed(0)}
+                </td>
+                <td>{range.toFixed(2)}</td>
+              </tr>
+            ),
+          };
         })
         .flat()
         .sort((row1, row2) => row1.shift - row2.shift)
@@ -160,8 +170,10 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
         <thead>
           <tr>
             <th>Shift</th>
+            <th>Equ</th>
+            <th>#H</th>
             <th>Dev</th>
-            <th>Sphere</th>
+            <th>Sph</th>
             <th>Count</th>
             <th>Range</th>
           </tr>
