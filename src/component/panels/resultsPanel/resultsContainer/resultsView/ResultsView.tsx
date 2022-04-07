@@ -53,7 +53,7 @@ function ResultsView({
     setSelectedCardDeckIndex(index);
   }, []);
 
-  const sortedMolecules = useMemo(() => {
+  const sortedDataSets = useMemo(() => {
     const sortByValue = Object.keys(sortOptions).filter(
       (sortOption) => sortOptions[sortOption].label === sortByLabel,
     )[0];
@@ -86,13 +86,13 @@ function ResultsView({
     let counter = 0;
     let resultDataSets: DataSet[] = [];
 
-    for (let i = 0; i < sortedMolecules.length; i++) {
+    for (let i = 0; i < sortedDataSets.length; i++) {
       if (counter < selectedPageLimit) {
         counter++;
-        resultDataSets.push(sortedMolecules[i]);
+        resultDataSets.push(sortedDataSets[i]);
       } else {
         _cardDeckData.push(resultDataSets);
-        resultDataSets = [sortedMolecules[i]];
+        resultDataSets = [sortedDataSets[i]];
         counter = 1;
       }
     }
@@ -101,7 +101,7 @@ function ResultsView({
     }
 
     return _cardDeckData;
-  }, [selectedPageLimit, sortedMolecules]);
+  }, [selectedPageLimit, sortedDataSets]);
 
   const cardDecks = useMemo(() => {
     let cardDeckIndex = selectedCardDeckIndex;

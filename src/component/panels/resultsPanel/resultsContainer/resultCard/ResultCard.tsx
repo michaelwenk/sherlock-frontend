@@ -43,6 +43,11 @@ function ResultCard({
   const [showPredictionTableState, setShowPredictionTableState] =
     useState<string>(showPredictionTableStates.hide);
 
+  useEffect(
+    () => setShowPredictionTableState(showPredictionTableStates.hide),
+    [dataSet],
+  );
+
   useEffect(() => {
     if (dataSet.assignment) {
       const spectralMatchAssignment =

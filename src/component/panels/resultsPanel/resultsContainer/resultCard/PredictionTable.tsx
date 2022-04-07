@@ -171,7 +171,7 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
       className="prediction-table"
       style={
         {
-          '--custom-max-height': isExtended ? 'none' : '250px',
+          '--custom-max-height': isExtended ? 'none' : '220px',
         } as CSSProperties
       }
     >
