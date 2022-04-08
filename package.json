@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "nmrium": "^0.24.1",
+    "nmrium": "^0.25.0",
     "axios": "^0.26.1",
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
