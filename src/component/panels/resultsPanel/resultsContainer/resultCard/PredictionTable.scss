@@ -1,16 +1,22 @@
-.prediction-table {
+.prediction-table-container {
   width: 100%;
+  max-height: var(--custom-max-height);
   margin-top: 7px;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   align-items: center;
-  max-height: var(--custom-max-height);
   overflow: auto;
-  border: 1px solid #dedede;
+
+  .Button {
+    width: 50px;
+    font-size: 11px;
+  }
 
   table {
     font-size: 11px;
     width: 100%;
+    border: 1px solid #dedede;
 
     thead {
       background-color: #eee;

@@ -1,27 +1,19 @@
 $value-color: var(--value-color);
 
-.result-card-text {
-  font-size: 12px;
+.result-card-text-container {
+  font-size: 13px;
   width: 100%;
-  text-align: left;
+  margin-top: 5px;
+  display: flex;
 
-  .value-with-unit {
-    display: flex;
+  table {
     width: 100%;
-
-    .value {
-      width: 100%;
-      justify-content: flex-start;
+    text-align: left;
+    .td-name {
+      font-weight: bold;
+    }
+    .td-value {
       color: $value-color;
     }
-    .unit {
-      justify-content: flex-end;
-    }
-  }
-
-  .value-single {
-    display: flex;
-    width: 100%;
-    color: $value-color;
   }
 }

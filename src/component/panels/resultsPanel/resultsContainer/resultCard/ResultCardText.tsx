@@ -14,51 +14,43 @@ function ResultCardText({ dataSet }: InputProps) {
   );
 
   return (
-    <table
-      className="result-card-text"
+    <div
+      className="result-card-text-container"
       style={{ '--value-color': color } as React.CSSProperties}
     >
-      <tbody>
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>Formula</td>
-          <td>{dataSet.meta.mfOriginal}</td>
-        </tr>
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>AvgDev</td>
-          <td>
-            <span className="value-with-unit">
-              <label className="value">
-                {dataSet.attachment.averageDeviation.toFixed(2)}
-              </label>
-              <label className="unit">ppm</label>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>RMSD</td>
-          <td>
-            <span className="value-with-unit">
-              <label className="value">
-                {dataSet.attachment.rmsd.toFixed(2)}
-              </label>
-              <label className="unit">ppm</label>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>Tanimoto</td>
-          <td className="value-single">
-            {dataSet.attachment.tanimoto.toFixed(2)}
-          </td>
-        </tr>
-        <tr>
-          <td style={{ fontWeight: 'bold' }}>Hits</td>
-          <td className="value-single">
-            {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <table>
+        <tbody>
+          <tr>
+            <td className="td-name">Formula</td>
+            <td>{dataSet.meta.mfOriginal}</td>
+          </tr>
+          <tr>
+            <td className="td-name">AvgDev</td>
+            <td className="td-value">{`${dataSet.attachment.averageDeviation.toFixed(
+              2,
+            )} ppm`}</td>
+          </tr>
+          <tr>
+            <td className="td-name">RMSD</td>
+            <td className="td-value">{`${dataSet.attachment.rmsd.toFixed(
+              2,
+            )} ppm`}</td>
+          </tr>
+          <tr>
+            <td className="td-name">Tanimoto</td>
+            <td className="td-value">
+              {dataSet.attachment.tanimoto.toFixed(2)}
+            </td>
+          </tr>
+          <tr>
+            <td className="td-name">Hits</td>
+            <td className="td-value">
+              {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -33,21 +33,5 @@
       justify-content: center;
       align-items: center;
     }
-    .result-card-text-container {
-      width: 100%;
-    }
-    .prediction-table-container {
-      margin-top: 7px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-grow: 1;
-
-      .Button {
-        width: 50px;
-        font-size: 11px;
-      }
-    }
   }
 }
