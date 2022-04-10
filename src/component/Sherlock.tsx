@@ -17,6 +17,7 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
+import Graph2D from './elements/Graph2D';
 
 const preferences: NMRiumPreferences = {
   panels: {
@@ -64,40 +65,43 @@ function Sherlock() {
 
   return (
     <div className="sherlock">
-      <Tabs defaultActiveKey="nmrium" className="nav-justified">
-        <Tab
-          eventKey="logo"
-          title={
-            <img
-              src={logoMinimal}
-              style={{
-                width: '100%',
-                maxWidth: '300px',
-                display: 'flex',
-                justifyContent: 'center',
-                border: 'none',
-              }}
+      <DispatchProvider value={dispatcherMemo}>
+        <DataProvider value={state}>
+          <Tabs defaultActiveKey="nmrium" className="nav-justified">
+            <Tab
+              eventKey="logo"
+              title={
+                <img
+                  src={logoMinimal}
+                  style={{
+                    width: '100%',
+                    maxWidth: '300px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    border: 'none',
+                  }}
+                />
+              }
+              disabled={true}
             />
-          }
-          disabled={true}
-        />
-        <Tab eventKey="nmrium" title="Spectra">
-          <div className="nmrium-container">
-            <NMRium
-              preferences={preferences}
-              onDataChange={handleOnNMRiumDataChange}
-            />
-          </div>
-        </Tab>
-        <Tab eventKey="case" title="CASE">
-          <DispatchProvider value={dispatcherMemo}>
-            <DataProvider value={state}>
+            <Tab eventKey="nmrium" title="Spectra">
+              <div className="nmrium-container">
+                <NMRium
+                  preferences={preferences}
+                  onDataChange={handleOnNMRiumDataChange}
+                />
+              </div>
+            </Tab>
+
+            <Tab eventKey="case" title="CASE">
               <Panels />
-            </DataProvider>
-          </DispatchProvider>
-        </Tab>
-        <Tab eventKey="about" title="About"></Tab>
-      </Tabs>
+            </Tab>
+            <Tab eventKey="about" title="About">
+              <Graph2D />
+            </Tab>
+          </Tabs>
+        </DataProvider>
+      </DispatchProvider>
     </div>
   );
 }

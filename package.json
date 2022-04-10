@@ -30,16 +30,17 @@
     ]
   },
   "dependencies": {
-    "nmrium": "^0.25.0",
     "axios": "^0.26.1",
     "file-saver": "^2.0.5",
     "formik": "^2.2.9",
     "immer": "^9.0.12",
     "lodash": "^4.17.21",
     "nmr-correlation": "^2.2.5",
+    "nmrium": "^0.25.0",
     "openchemlib": "^7.4.3",
     "react": ">=17.0.2",
     "react-dom": ">=17.0.2",
+    "react-force-graph-2d": "^1.23.10",
     "react-icons": "^4.3.1",
     "react-loader-spinner": "^5.1.4",
     "react-mf": "^2.0.1",
