@@ -19,7 +19,7 @@ interface ExtendedLinkObject extends LinkObject {
 
 const NODE_R = 8;
 
-function Graph2D() {
+function MCD() {
   const { nmriumData, resultData } = useData();
 
   const [highlightedNodes, setHighlightedNodes] = useState<NodeObject[]>([]);
@@ -47,17 +47,21 @@ function Graph2D() {
       correlations.values
         .filter((correlation: Correlation) => correlation.atomType !== 'H')
         .forEach((correlation: Correlation) => {
-          const newNode: ExtendedNodeObject = {
-            id: correlation.id,
-            title: correlation.label.origin || correlation.atomType,
-          };
-          if (
-            correlation.protonsCount !== undefined &&
-            correlation.protonsCount.length === 1
-          ) {
-            newNode.multiplicity = correlation.protonsCount[0];
+          for (let i = 0; i < correlation.equivalence; i++) {
+            const newNode: ExtendedNodeObject = {
+              id: correlation.id,
+              title: `${correlation.label.origin}${
+                correlation.equivalence > 1 ? `(${i + 1})` : ''
+              }`,
+            };
+            if (
+              correlation.protonsCount !== undefined &&
+              correlation.protonsCount.length === 1
+            ) {
+              newNode.multiplicity = correlation.protonsCount[0];
+            }
+            graphData.nodes.push(newNode);
           }
-          graphData.nodes.push(newNode);
         });
       correlations.values.forEach((correlation: Correlation) =>
         correlation.link.forEach((link: Link) => {
@@ -77,17 +81,24 @@ function Graph2D() {
                   otherProtonCorrelation.attachment[
                     correlations.values[hsqcLinksTarget[0].match[0]].atomType
                   ][0];
-                const newLink: ExtendedLinkObject = {
-                  id: link.id,
-                  source: graphData.nodes.find(
-                    (node) => node.id === correlation.id,
-                  ),
-                  target: graphData.nodes.find(
-                    (node) => node.id === correlations.values[targetIndex].id,
-                  ),
-                  experimentType: link.experimentType,
-                };
-                graphData.links.push(newLink);
+                graphData.nodes
+                  .filter((node) => node.id === correlation.id)
+                  .forEach((node) => {
+                    graphData.nodes
+                      .filter(
+                        (node2) =>
+                          node2.id === correlations.values[targetIndex].id,
+                      )
+                      .forEach((node2) => {
+                        const newLink: ExtendedLinkObject = {
+                          id: link.id,
+                          source: node,
+                          target: node2,
+                          experimentType: link.experimentType,
+                        };
+                        graphData.links.push(newLink);
+                      });
+                  });
               }
             } else if (
               link.experimentType === 'cosy' &&
@@ -116,17 +127,26 @@ function Graph2D() {
                   otherProtonCorrelation.attachment[
                     correlations.values[hsqcLinksTarget[0].match[0]].atomType
                   ][0];
-                const newLink: ExtendedLinkObject = {
-                  id: link.id,
-                  source: graphData.nodes.find(
+                graphData.nodes
+                  .filter(
                     (node) => node.id === correlations.values[sourceIndex].id,
-                  ),
-                  target: graphData.nodes.find(
-                    (node) => node.id === correlations.values[targetIndex].id,
-                  ),
-                  experimentType: link.experimentType,
-                };
-                graphData.links.push(newLink);
+                  )
+                  .forEach((node) => {
+                    graphData.nodes
+                      .filter(
+                        (node2) =>
+                          node2.id === correlations.values[targetIndex].id,
+                      )
+                      .forEach((node2) => {
+                        const newLink: ExtendedLinkObject = {
+                          id: link.id,
+                          source: node,
+                          target: node2,
+                          experimentType: link.experimentType,
+                        };
+                        graphData.links.push(newLink);
+                      });
+                  });
               }
             }
           }
@@ -196,7 +216,7 @@ function Graph2D() {
       ctx.arc(
         node.x as number,
         node.y as number,
-        NODE_R * 1.4,
+        NODE_R * 2,
         0,
         2 * Math.PI,
         false,
@@ -206,7 +226,7 @@ function Graph2D() {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      ctx.font = isHighlighted ? 'bold 11px arial' : 'normal 10px arial';
+      ctx.font = isHighlighted ? 'bold 9px arial' : 'normal 8px arial';
       ctx.fillStyle = isHighlighted ? 'red' : 'black';
       const text =
         // node.multiplicity !== undefined
@@ -255,7 +275,7 @@ function Graph2D() {
     <ForceGraph2D
       graphData={data}
       nodeRelSize={NODE_R}
-      autoPauseRedraw={false}
+      //   autoPauseRedraw={false}
       //   nodeCanvasObjectMode={(node: NodeObject) =>
       //     highlightNodes.find((_node) => _node === node) ? 'before' : undefined
       //   }
@@ -270,4 +290,4 @@ function Graph2D() {
   );
 }
 
-export default Graph2D;
+export default MCD;

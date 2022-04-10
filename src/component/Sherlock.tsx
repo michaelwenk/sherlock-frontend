@@ -17,7 +17,7 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
-import Graph2D from './elements/Graph2D';
+import MCD from './elements/MCD';
 
 const preferences: NMRiumPreferences = {
   panels: {
@@ -97,7 +97,7 @@ function Sherlock() {
               <Panels />
             </Tab>
             <Tab eventKey="about" title="About">
-              <Graph2D />
+              <MCD />
             </Tab>
           </Tabs>
         </DataProvider>
