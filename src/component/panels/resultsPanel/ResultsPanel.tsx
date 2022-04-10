@@ -15,6 +15,7 @@ import {
 import ConfirmModal from '../../elements/modal/ConfirmModal';
 import CustomModal from '../../elements/modal/CustomModal';
 import DataSet from '../../../types/sherlock/dataSet/DataSet';
+import SpectrumCompact from '../../../types/sherlock/dataSet/SpectrumCompact';
 
 type InputProps = {
   result?: Result;
@@ -104,13 +105,21 @@ function ResultsPanel({ show }: InputProps) {
     () => (
       <ResultsView
         dataSets={dataSets}
+        querySpectrum={
+          resultData?.resultRecord.querySpectrum as SpectrumCompact
+        }
         maxPages={5}
         pageLimits={[10, 25, 50]}
         onClickDownload={handleOnClickDownload}
         onClickDelete={handleOnClickDelete}
       />
     ),
-    [handleOnClickDelete, handleOnClickDownload, dataSets],
+    [
+      dataSets,
+      resultData?.resultRecord.querySpectrum,
+      handleOnClickDownload,
+      handleOnClickDelete,
+    ],
   );
 
   return resultData ? (

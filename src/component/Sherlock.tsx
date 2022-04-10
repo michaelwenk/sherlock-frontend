@@ -17,7 +17,6 @@ import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import NMRiumData from '../types/nmrium/NMRiumData';
 import DataState from '../types/DataState';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
-import MCD from './elements/MCD';
 
 const preferences: NMRiumPreferences = {
   panels: {
@@ -96,9 +95,7 @@ function Sherlock() {
             <Tab eventKey="case" title="CASE">
               <Panels />
             </Tab>
-            <Tab eventKey="about" title="About">
-              <MCD />
-            </Tab>
+            <Tab eventKey="about" title="About" />
           </Tabs>
         </DataProvider>
       </DispatchProvider>

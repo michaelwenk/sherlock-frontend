@@ -1,43 +1,27 @@
 import { Correlation, Link } from 'nmr-correlation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import ForceGraph2D, {
   LinkObject,
   NodeObject,
   GraphData,
+  ForceGraphMethods,
 } from 'react-force-graph-2d';
-import { useData } from '../../context/DataContext';
+import { useData } from '../../../context/DataContext';
+import { useHighlightData } from '../../highlight';
 
 interface ExtendedNodeObject extends NodeObject {
-  title?: string;
-  multiplicity?: number;
+  label: string;
 }
 interface ExtendedLinkObject extends LinkObject {
-  id: string | number;
+  id: string;
   experimentType: string;
-  //   title?: string;
 }
-
-const NODE_R = 8;
 
 function MCD() {
   const { nmriumData, resultData } = useData();
-
-  const [highlightedNodes, setHighlightedNodes] = useState<NodeObject[]>([]);
-  const [highlightedLinks, setHighlightedLinks] = useState<LinkObject[]>([]);
-  //   const highlights = useHighlight(
-  //     ([] as (string | number)[])
-  //       .concat(
-  //         highlightedNodes.map((node) => node.id as string | number),
-  //         highlightedLinks.map(
-  //           (link) => (link as ExtendedLinkObject).id as string | number,
-  //         ),
-  //       )
-  //       .flat(),
-  //   );
-
-  //   useEffect(() => {
-  //     console.log(highlights);
-  //   }, [highlights]);
+  const highlightData = useHighlightData();
+  const ref = useRef<HTMLDivElement>(null);
+  const mcdRef = useRef<ForceGraphMethods | undefined>();
 
   const data = useMemo((): GraphData => {
     const graphData: GraphData = { nodes: [], links: [] };
@@ -50,16 +34,16 @@ function MCD() {
           for (let i = 0; i < correlation.equivalence; i++) {
             const newNode: ExtendedNodeObject = {
               id: correlation.id,
-              title: `${correlation.label.origin}${
-                correlation.equivalence > 1 ? `(${i + 1})` : ''
-              }`,
+              label:
+                correlation.protonsCount.length === 1
+                  ? correlation.protonsCount[0] === 0
+                    ? correlation.atomType
+                    : `${correlation.atomType}H${correlation.protonsCount.join(
+                        ',',
+                      )}`
+                  : correlation.atomType,
             };
-            if (
-              correlation.protonsCount !== undefined &&
-              correlation.protonsCount.length === 1
-            ) {
-              newNode.multiplicity = correlation.protonsCount[0];
-            }
+
             graphData.nodes.push(newNode);
           }
         });
@@ -72,7 +56,7 @@ function MCD() {
             ) {
               const otherProtonCorrelation = correlations.values[link.match[0]];
               const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                (_link) =>
+                (_link: Link) =>
                   _link.experimentType === 'hsqc' ||
                   _link.experimentType === 'hmqc',
               );
@@ -105,13 +89,13 @@ function MCD() {
               correlation.atomType === 'H'
             ) {
               const hsqcLinksSource = correlation.link.filter(
-                (_link) =>
+                (_link: Link) =>
                   _link.experimentType === 'hsqc' ||
                   _link.experimentType === 'hmqc',
               );
               const otherProtonCorrelation = correlations.values[link.match[0]];
               const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                (_link) =>
+                (_link: Link) =>
                   _link.experimentType === 'hsqc' ||
                   _link.experimentType === 'hmqc',
               );
@@ -153,15 +137,16 @@ function MCD() {
         }),
       );
     }
-    console.log(graphData);
 
     return graphData;
   }, [nmriumData?.correlations, resultData?.resultRecord.correlations]);
 
   const handleOnHoverNode = useCallback(
-    (nodeOnHover: NodeObject | null) => {
+    (nodeOnHover: ExtendedNodeObject | null) => {
       const newHighlightNodes: NodeObject[] = [];
       const newHighlightLinks: LinkObject[] = [];
+      const toHighlight: string[] = [];
+
       if (nodeOnHover) {
         newHighlightNodes.push(nodeOnHover);
         const links = data.links.filter(
@@ -171,122 +156,123 @@ function MCD() {
         );
         links.forEach((link) => {
           newHighlightLinks.push(link as ExtendedLinkObject);
-          const neighborNode = data.nodes.find(
-            (node) =>
-              node.id !== nodeOnHover.id &&
-              ((link.source as NodeObject).id === node.id ||
-                (link.target as NodeObject).id === node.id),
-          );
-          if (neighborNode) {
-            newHighlightNodes.push(neighborNode);
-          }
+          toHighlight.push((link as ExtendedLinkObject).id);
+        });
+        toHighlight.push(nodeOnHover.id as string);
+
+        // set in highlight data
+        highlightData.dispatch({
+          type: 'SHOW',
+          payload: {
+            convertedHighlights: toHighlight,
+          },
+        });
+      } else {
+        // set in highlight data
+        highlightData.dispatch({
+          type: 'HIDE',
+          payload: { convertedHighlights: highlightData.highlight.highlighted },
         });
       }
-      setHighlightedNodes(newHighlightNodes);
-      setHighlightedLinks(newHighlightLinks);
     },
-    [data.links, data.nodes],
+    [data.links, highlightData],
   );
 
   const handleOnHoverLink = useCallback(
-    (link: LinkObject | null) => {
+    (linkOnHover: ExtendedLinkObject | null) => {
       const newHighlightNodes: ExtendedNodeObject[] = [];
       const newHighlightLinks: ExtendedLinkObject[] = [];
-      if (link) {
-        newHighlightLinks.push(link as ExtendedLinkObject);
+      if (linkOnHover) {
+        newHighlightLinks.push(linkOnHover as ExtendedLinkObject);
         data.nodes
           .filter(
             (node) =>
-              (link.source as NodeObject).id === node.id ||
-              (link.target as NodeObject).id === node.id,
+              (linkOnHover.source as NodeObject).id === node.id ||
+              (linkOnHover.target as NodeObject).id === node.id,
           )
-          .forEach((node) => newHighlightNodes.push(node));
+          .forEach((node) =>
+            newHighlightNodes.push(node as ExtendedNodeObject),
+          );
+        // set in highlight data
+        highlightData.dispatch({
+          type: 'SHOW',
+          payload: {
+            convertedHighlights: [linkOnHover.id],
+          },
+        });
+      } else {
+        // set in highlight data
+        highlightData.dispatch({
+          type: 'HIDE',
+          payload: { convertedHighlights: highlightData.highlight.highlighted },
+        });
       }
-      setHighlightedNodes(newHighlightNodes);
-      setHighlightedLinks(newHighlightLinks);
     },
-    [data.nodes],
+    [data.nodes, highlightData],
   );
+
+  useEffect(() => {}, []);
 
   const paintNode = useCallback(
     (node: ExtendedNodeObject, ctx: CanvasRenderingContext2D) => {
-      const isHighlighted =
-        highlightedNodes.find((_node) => _node.id === node.id) !== undefined;
-      ctx.beginPath();
-      ctx.arc(
-        node.x as number,
-        node.y as number,
-        NODE_R * 2,
-        0,
-        2 * Math.PI,
-        false,
+      const isHighlighted = highlightData.highlight.highlighted.includes(
+        node.id as string,
       );
-      ctx.stroke();
-      ctx.closePath();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
       ctx.font = isHighlighted ? 'bold 9px arial' : 'normal 8px arial';
       ctx.fillStyle = isHighlighted ? 'red' : 'black';
-      const text =
-        // node.multiplicity !== undefined
-        //   ? `${node.title} (${node.multiplicity})`:
-        node.title || '?';
-      ctx.fillText(text, node.x as number, node.y as number);
+      ctx.fillText(node.label, node.x as number, node.y as number);
     },
-    [highlightedNodes],
+    [highlightData.highlight.highlighted],
   );
 
   const paintLink = useCallback(
     (link: ExtendedLinkObject, ctx: CanvasRenderingContext2D) => {
-      const isHighlighted =
-        highlightedLinks.find(
-          (_link) =>
-            (_link as ExtendedLinkObject).id === link.id ||
-            (_link.target as ExtendedLinkObject).id === link.id,
-        ) !== undefined;
+      const isHighlighted = highlightData.highlight.highlighted.includes(
+        (link as ExtendedLinkObject).id as string,
+      );
+      ctx.lineWidth = isHighlighted ? 1.5 : 1;
+      ctx.strokeStyle = isHighlighted
+        ? 'red'
+        : link.experimentType === 'hmbc'
+        ? 'green'
+        : link.experimentType === 'cosy'
+        ? 'blue'
+        : 'black';
       ctx.beginPath();
-      ctx.lineWidth;
-      ctx.lineWidth = isHighlighted ? 2 : 1;
-      ctx.strokeStyle =
-        link.experimentType === 'hmbc'
-          ? 'green'
-          : link.experimentType === 'cosy'
-          ? 'blue'
-          : 'black';
       ctx.moveTo(
         (link.source as ExtendedNodeObject).x as number,
         (link.source as ExtendedNodeObject).y as number,
       );
       ctx.lineTo(
-        // (link.source as ExtendedNodeObject).x as number,
-        // (link.source as ExtendedNodeObject).y as number,
         (link.target as ExtendedNodeObject).x as number,
         (link.target as ExtendedNodeObject).y as number,
-        // 1,
       );
       ctx.stroke();
       ctx.closePath();
     },
-    [highlightedLinks],
+    [highlightData.highlight.highlighted],
   );
 
   return (
-    <ForceGraph2D
-      graphData={data}
-      nodeRelSize={NODE_R}
-      //   autoPauseRedraw={false}
-      //   nodeCanvasObjectMode={(node: NodeObject) =>
-      //     highlightNodes.find((_node) => _node === node) ? 'before' : undefined
-      //   }
-      linkDirectionalArrowLength={0}
-      nodeCanvasObject={(node, ctx) => paintNode(node, ctx)}
-      linkCanvasObject={(link, ctx) =>
-        paintLink(link as ExtendedLinkObject, ctx)
-      }
-      onNodeHover={handleOnHoverNode}
-      onLinkHover={handleOnHoverLink}
-    />
+    <div className="mcd-container" ref={ref}>
+      <ForceGraph2D
+        ref={mcdRef}
+        graphData={data}
+        nodeCanvasObject={(node, ctx) =>
+          paintNode(node as ExtendedNodeObject, ctx)
+        }
+        linkCanvasObject={(link, ctx) =>
+          paintLink(link as ExtendedLinkObject, ctx)
+        }
+        onNodeHover={(node) => handleOnHoverNode(node as ExtendedNodeObject)}
+        onLinkHover={(link) => handleOnHoverLink(link as ExtendedLinkObject)}
+        width={ref.current?.clientWidth}
+        height={ref.current?.clientHeight}
+      />
+    </div>
   );
 }
 

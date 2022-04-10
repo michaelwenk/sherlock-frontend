@@ -55,9 +55,8 @@ function AdditionalColumnField({
   const highlightIDsCommonLinks = useMemo(() => {
     const ids: string[] = [];
     commonLinks.forEach((link: Link) => {
-      if (link.pseudo === false) {
-        ids.push(link.signal.id);
-      }
+      link.id.split('_').forEach((_id: string) => ids.push(_id));
+      ids.push(link.signal.id);
     });
 
     return ids;

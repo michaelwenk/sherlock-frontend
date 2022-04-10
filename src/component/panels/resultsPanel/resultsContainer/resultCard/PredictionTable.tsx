@@ -4,14 +4,21 @@ import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
 import { useData } from '../../../../../context/DataContext';
 import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
+import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 
 type InputProps = {
   dataSet: DataSet;
+  querySpectrum: SpectrumCompact;
   atomHighlights: number[];
   isExtended: boolean;
 };
 
-function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
+function PredictionTable({
+  dataSet,
+  querySpectrum,
+  atomHighlights,
+  isExtended,
+}: InputProps) {
   const highlightData = useHighlightData();
   const { resultData } = useData();
 
@@ -40,21 +47,24 @@ function PredictionTable({ dataSet, atomHighlights, isExtended }: InputProps) {
             signalIndexInPrediction,
           );
           if (signalIndexInQuerySpectrum >= 0) {
-            const toHighlight = [
-              `correlation_signal_${signalIndexInQuerySpectrum}`,
-            ];
-
             highlightData.dispatch({
               type: action === 'enter' ? 'SHOW' : 'HIDE',
               payload: {
-                convertedHighlights: toHighlight,
+                convertedHighlights: [
+                  querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
+                ],
               },
             });
           }
         }
       }
     },
-    [dataSet.assignment, getSignalIndexInQuerySpectrum, highlightData],
+    [
+      dataSet.assignment,
+      getSignalIndexInQuerySpectrum,
+      highlightData,
+      querySpectrum.signals,
+    ],
   );
 
   const rows = useMemo(

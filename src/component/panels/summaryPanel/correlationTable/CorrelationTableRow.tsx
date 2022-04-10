@@ -40,20 +40,15 @@ function CorrelationTableRow({
   );
 
   const highlightIDsRow = useMemo(() => {
-    if (correlation.pseudo === true) {
-      return [];
-    }
     const ids: string[] = [];
-    ids.push(`correlation_signal_${correlationIndex}`);
+    ids.push(correlation.id);
 
-    correlation.link.forEach((link) => {
-      if (link.pseudo === false) {
-        ids.push(link.signal.id);
-      }
+    correlation.link.forEach((link: Link) => {
+      ids.push(link.signal.id);
     });
 
     return ids;
-  }, [correlation.link, correlation.pseudo, correlationIndex]);
+  }, [correlation.id, correlation.link]);
   const highlightRow = useHighlight(highlightIDsRow);
 
   const mouseEnterHandler = useCallback(

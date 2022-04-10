@@ -16,10 +16,12 @@ import PredictionTable from './PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import Button from '../../../../elements/Button';
 import { FaAngleDoubleDown, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 
 type InputProps = {
   id: string | number;
   dataSet: DataSet;
+  querySpectrum: SpectrumCompact;
   imageWidth: number;
   imageHeight: number;
   styles?: CSSProperties;
@@ -34,6 +36,7 @@ const showPredictionTableStates = {
 function ResultCard({
   id,
   dataSet,
+  querySpectrum,
   imageWidth,
   imageHeight,
   styles = {},
@@ -60,15 +63,19 @@ function ResultCard({
               (signalArrayQuery) =>
                 signalArrayQuery.includes(signalIndexInPrediction),
             );
-          if (
-            signalIndexInQuerySpectrum >= 0 &&
-            highlightData.highlight.highlighted.some(
-              (highlightID) =>
-                highlightID ===
-                `correlation_signal_${signalIndexInQuerySpectrum}`,
-            )
-          )
-            signalArrayInPrediction.forEach((atomIndex) => ids.push(atomIndex));
+          if (signalIndexInQuerySpectrum >= 0) {
+            if (
+              highlightData.highlight.highlighted.some(
+                (highlightID) =>
+                  highlightID ===
+                  querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
+              )
+            ) {
+              signalArrayInPrediction.forEach((atomIndex) =>
+                ids.push(atomIndex),
+              );
+            }
+          }
         },
       );
 
@@ -78,6 +85,7 @@ function ResultCard({
     dataSet.assignment,
     dataSet.attachment.spectralMatchAssignment,
     highlightData.highlight.highlighted,
+    querySpectrum.signals,
   ]);
 
   const handleOnAtom = useCallback(
@@ -96,14 +104,12 @@ function ResultCard({
                 signalArrayQuery.includes(signalIndexInPrediction),
             );
           if (signalIndexInQuerySpectrum >= 0) {
-            const toHighlight = [
-              `correlation_signal_${signalIndexInQuerySpectrum}`,
-            ];
-
             highlightData.dispatch({
               type: action === 'enter' ? 'SHOW' : 'HIDE',
               payload: {
-                convertedHighlights: toHighlight,
+                convertedHighlights: [
+                  querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
+                ],
               },
             });
 
@@ -129,6 +135,7 @@ function ResultCard({
       dataSet.assignment,
       dataSet.attachment.spectralMatchAssignment,
       highlightData,
+      querySpectrum.signals,
     ],
   );
 
@@ -196,6 +203,7 @@ function ResultCard({
             {showPredictionTableState !== showPredictionTableStates.hide && (
               <PredictionTable
                 dataSet={dataSet}
+                querySpectrum={querySpectrum}
                 atomHighlights={atomHighlights}
                 isExtended={
                   showPredictionTableState ===
@@ -215,6 +223,7 @@ function ResultCard({
       imageHeight,
       imageWidth,
       molfile,
+      querySpectrum,
       showPredictionTableState,
     ],
   );

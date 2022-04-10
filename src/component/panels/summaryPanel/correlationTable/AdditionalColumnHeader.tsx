@@ -1,4 +1,8 @@
-import { getCorrelationDelta, getCorrelationIndex } from 'nmr-correlation';
+import {
+  getCorrelationDelta,
+  getCorrelationIndex,
+  Link,
+} from 'nmr-correlation';
 import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
@@ -9,14 +13,9 @@ function AdditionalColumnHeader({ correlation }) {
   const { nmriumData, resultData } = useData();
 
   const highlightIDsAdditionalColumn = useMemo(() => {
-    if (correlation.pseudo === true) {
-      return [];
-    }
     const ids: string[] = [];
-    correlation.link.forEach((link) => {
-      if (link.pseudo === false) {
-        ids.push(link.signal.id);
-      }
+    correlation.link.forEach((link: Link) => {
+      ids.push(link.signal.id);
     });
 
     return ids;

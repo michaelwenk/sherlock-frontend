@@ -1,5 +1,7 @@
+import './SummaryPanel.scss';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useData } from '../../../context/DataContext';
+import MCD from './MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
 
@@ -49,23 +51,26 @@ function SummaryPanel() {
   return nmriumData?.correlations?.values &&
     nmriumData.correlations.values.length > 0 ? (
     <div className="summary-panel">
-      <Overview
-        mf={nmriumData ? nmriumData.correlations.options.mf : ''}
-        showAdditionalColumns={showAdditionalColumns}
-        onChangeShowAdditionalColumns={(value: boolean) =>
-          setShowAdditionalColumns(value)
-        }
-        additionalColumnTypes={additionalColumnTypes}
-        selectedAdditionalColumnsAtomType={selectedAdditionalColumnsAtomType}
-        onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
-          setSelectedAdditionalColumnsAtomType(value)
-        }
-      />
-      <CorrelationTable
-        additionalColumnData={additionalColumnData}
-        showAdditionalColumns={showAdditionalColumns}
-        showProtonsAsRows={showProtonsAsRows}
-      />
+      <div className="overview-table-container">
+        <Overview
+          mf={nmriumData ? nmriumData.correlations.options.mf : ''}
+          showAdditionalColumns={showAdditionalColumns}
+          onChangeShowAdditionalColumns={(value: boolean) =>
+            setShowAdditionalColumns(value)
+          }
+          additionalColumnTypes={additionalColumnTypes}
+          selectedAdditionalColumnsAtomType={selectedAdditionalColumnsAtomType}
+          onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
+            setSelectedAdditionalColumnsAtomType(value)
+          }
+        />
+        <CorrelationTable
+          additionalColumnData={additionalColumnData}
+          showAdditionalColumns={showAdditionalColumns}
+          showProtonsAsRows={showProtonsAsRows}
+        />
+      </div>
+      <MCD />
     </div>
   ) : (
     <p

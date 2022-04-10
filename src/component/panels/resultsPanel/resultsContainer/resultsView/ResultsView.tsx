@@ -9,6 +9,7 @@ import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
+import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 
 interface ImageSize {
   width: number;
@@ -25,6 +26,7 @@ const imageSizes: ImageSize[] = [
 
 type InputProps = {
   dataSets: DataSet[];
+  querySpectrum: SpectrumCompact;
   maxPages: number;
   pageLimits: number[];
   onClickDownload: Function;
@@ -33,6 +35,7 @@ type InputProps = {
 
 function ResultsView({
   dataSets,
+  querySpectrum,
   maxPages,
   pageLimits,
   onClickDownload,
@@ -111,11 +114,12 @@ function ResultsView({
     }
 
     return cardDeckData.length > 0
-      ? cardDeckData[cardDeckIndex].map((mol, i) => (
+      ? cardDeckData[cardDeckIndex].map((dataSet, i) => (
           <ResultCard
             key={`resultCard_${i}`}
             id={cardDeckIndex * selectedPageLimit + i + 1}
-            dataSet={mol}
+            dataSet={dataSet}
+            querySpectrum={querySpectrum}
             imageWidth={selectedImageSize.width}
             imageHeight={selectedImageSize.height}
             styles={{
@@ -130,6 +134,7 @@ function ResultsView({
       : [];
   }, [
     cardDeckData,
+    querySpectrum,
     selectedCardDeckIndex,
     selectedImageSize.height,
     selectedImageSize.width,
