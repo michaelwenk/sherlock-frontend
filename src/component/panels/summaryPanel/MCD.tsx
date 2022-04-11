@@ -7,6 +7,7 @@ import ForceGraph2D, {
   ForceGraphMethods,
 } from 'react-force-graph-2d';
 import { useData } from '../../../context/DataContext';
+import generateID from '../../../utils/generateID';
 import { useHighlightData } from '../../highlight';
 
 interface ExtendedNodeObject extends NodeObject {
@@ -47,99 +48,129 @@ function MCD() {
             graphData.nodes.push(newNode);
           }
         });
-      correlations.values.forEach((correlation: Correlation) =>
-        correlation.link.forEach((link: Link) => {
-          if (link.match && link.match.length === 1) {
-            if (
-              link.experimentType === 'hmbc' &&
-              correlation.atomType !== 'H'
-            ) {
-              const otherProtonCorrelation = correlations.values[link.match[0]];
-              const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                (_link: Link) =>
-                  _link.experimentType === 'hsqc' ||
-                  _link.experimentType === 'hmqc',
-              );
-              if (hsqcLinksTarget.length === 1) {
-                const targetIndex =
-                  otherProtonCorrelation.attachment[
-                    correlations.values[hsqcLinksTarget[0].match[0]].atomType
-                  ][0];
-                graphData.nodes
-                  .filter((node) => node.id === correlation.id)
-                  .forEach((node) => {
-                    graphData.nodes
-                      .filter(
-                        (node2) =>
-                          node2.id === correlations.values[targetIndex].id,
-                      )
-                      .forEach((node2) => {
-                        const newLink: ExtendedLinkObject = {
-                          id: link.id,
-                          source: node,
-                          target: node2,
-                          experimentType: link.experimentType,
-                        };
-                        graphData.links.push(newLink);
-                      });
-                  });
-              }
-            } else if (
-              link.experimentType === 'cosy' &&
-              correlation.atomType === 'H'
-            ) {
-              const hsqcLinksSource = correlation.link.filter(
-                (_link: Link) =>
-                  _link.experimentType === 'hsqc' ||
-                  _link.experimentType === 'hmqc',
-              );
-              const otherProtonCorrelation = correlations.values[link.match[0]];
-              const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                (_link: Link) =>
-                  _link.experimentType === 'hsqc' ||
-                  _link.experimentType === 'hmqc',
-              );
+      correlations.values.forEach(
+        (correlation: Correlation, correlationIndex: number) => {
+          if (
+            resultData?.resultRecord.detections.fixedNeighbors &&
+            resultData.resultRecord.detections.fixedNeighbors[correlationIndex]
+          ) {
+            resultData.resultRecord.detections.fixedNeighbors[
+              correlationIndex
+            ].forEach((fixedNeighborCorrelationIndex: number) => {
+              const newLink: ExtendedLinkObject = {
+                id: generateID(),
+                source: graphData.nodes.find(
+                  (node) => node.id === correlation.id,
+                ),
+                target: graphData.nodes.find(
+                  (node) =>
+                    node.id ===
+                    correlations.values[fixedNeighborCorrelationIndex].id,
+                ),
+                experimentType: 'bond',
+              };
+              graphData.links.push(newLink);
+            });
+          }
+          correlation.link.forEach((link: Link) => {
+            if (link.match && link.match.length === 1) {
               if (
-                hsqcLinksSource.length === 1 &&
-                hsqcLinksTarget.length === 1
+                link.experimentType === 'hmbc' &&
+                correlation.atomType !== 'H'
               ) {
-                const sourceIndex =
-                  correlation.attachment[
-                    correlations.values[hsqcLinksSource[0].match[0]].atomType
-                  ][0];
-                const targetIndex =
-                  otherProtonCorrelation.attachment[
-                    correlations.values[hsqcLinksTarget[0].match[0]].atomType
-                  ][0];
-                graphData.nodes
-                  .filter(
-                    (node) => node.id === correlations.values[sourceIndex].id,
-                  )
-                  .forEach((node) => {
-                    graphData.nodes
-                      .filter(
-                        (node2) =>
-                          node2.id === correlations.values[targetIndex].id,
-                      )
-                      .forEach((node2) => {
-                        const newLink: ExtendedLinkObject = {
-                          id: link.id,
-                          source: node,
-                          target: node2,
-                          experimentType: link.experimentType,
-                        };
-                        graphData.links.push(newLink);
-                      });
-                  });
+                const otherProtonCorrelation =
+                  correlations.values[link.match[0]];
+                const hsqcLinksTarget = otherProtonCorrelation.link.filter(
+                  (_link: Link) =>
+                    _link.experimentType === 'hsqc' ||
+                    _link.experimentType === 'hmqc',
+                );
+                if (hsqcLinksTarget.length === 1) {
+                  const targetIndex =
+                    otherProtonCorrelation.attachment[
+                      correlations.values[hsqcLinksTarget[0].match[0]].atomType
+                    ][0];
+                  graphData.nodes
+                    .filter((node) => node.id === correlation.id)
+                    .forEach((node) => {
+                      graphData.nodes
+                        .filter(
+                          (node2) =>
+                            node2.id === correlations.values[targetIndex].id,
+                        )
+                        .forEach((node2) => {
+                          const newLink: ExtendedLinkObject = {
+                            id: link.id,
+                            source: node,
+                            target: node2,
+                            experimentType: link.experimentType,
+                          };
+                          graphData.links.push(newLink);
+                        });
+                    });
+                }
+              } else if (
+                link.experimentType === 'cosy' &&
+                correlation.atomType === 'H'
+              ) {
+                const hsqcLinksSource = correlation.link.filter(
+                  (_link: Link) =>
+                    _link.experimentType === 'hsqc' ||
+                    _link.experimentType === 'hmqc',
+                );
+                const otherProtonCorrelation =
+                  correlations.values[link.match[0]];
+                const hsqcLinksTarget = otherProtonCorrelation.link.filter(
+                  (_link: Link) =>
+                    _link.experimentType === 'hsqc' ||
+                    _link.experimentType === 'hmqc',
+                );
+                if (
+                  hsqcLinksSource.length === 1 &&
+                  hsqcLinksTarget.length === 1
+                ) {
+                  const sourceIndex =
+                    correlation.attachment[
+                      correlations.values[hsqcLinksSource[0].match[0]].atomType
+                    ][0];
+                  const targetIndex =
+                    otherProtonCorrelation.attachment[
+                      correlations.values[hsqcLinksTarget[0].match[0]].atomType
+                    ][0];
+                  graphData.nodes
+                    .filter(
+                      (node) => node.id === correlations.values[sourceIndex].id,
+                    )
+                    .forEach((node) => {
+                      graphData.nodes
+                        .filter(
+                          (node2) =>
+                            node2.id === correlations.values[targetIndex].id,
+                        )
+                        .forEach((node2) => {
+                          const newLink: ExtendedLinkObject = {
+                            id: link.id,
+                            source: node,
+                            target: node2,
+                            experimentType: link.experimentType,
+                          };
+                          graphData.links.push(newLink);
+                        });
+                    });
+                }
               }
             }
-          }
-        }),
+          });
+        },
       );
     }
 
     return graphData;
-  }, [nmriumData?.correlations, resultData?.resultRecord.correlations]);
+  }, [
+    nmriumData?.correlations,
+    resultData?.resultRecord.correlations,
+    resultData?.resultRecord.detections.fixedNeighbors,
+  ]);
 
   const handleOnHoverNode = useCallback(
     (nodeOnHover: ExtendedNodeObject | null) => {

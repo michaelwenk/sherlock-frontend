@@ -8,6 +8,7 @@ import Detections from '../types/sherlock/detection/Detections';
 import FixedNeighbors from '../types/sherlock/detection/FixedNeighbors';
 import NeighborsEntry from '../types/sherlock/detection/NeighborsEntry';
 import ResultRecord from '../types/sherlock/ResultRecord';
+import lodashCloneDeep from 'lodash/cloneDeep';
 
 const initialDetections: Detections = {
   detectedHybridizations: {},
@@ -102,8 +103,13 @@ export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
   const { fixedNeighbors } = action.payload;
 
   initDetections(draft);
-  (draft.resultData as Result).resultRecord.detections.fixedNeighbors =
-    fixedNeighbors as FixedNeighbors;
+
+  const temp = lodashCloneDeep(draft.resultData);
+  if (temp) {
+    temp.resultRecord.detections.fixedNeighbors =
+      fixedNeighbors as FixedNeighbors;
+    draft.resultData = temp;
+  }
 }
 
 export function setResultDBEntries(draft: Draft<DataState>, action: Action) {
