@@ -211,8 +211,6 @@ function MCD() {
     [data.nodes, highlightData],
   );
 
-  useEffect(() => {}, []);
-
   const paintNode = useCallback(
     (node: ExtendedNodeObject, ctx: CanvasRenderingContext2D) => {
       const isHighlighted = highlightData.highlight.highlighted.includes(
@@ -221,7 +219,7 @@ function MCD() {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      ctx.font = isHighlighted ? 'bold 9px arial' : 'normal 8px arial';
+      ctx.font = isHighlighted ? 'bold 10px arial' : 'normal 8px arial';
       ctx.fillStyle = isHighlighted ? 'red' : 'black';
       ctx.fillText(node.label, node.x as number, node.y as number);
     },
@@ -233,13 +231,13 @@ function MCD() {
       const isHighlighted = highlightData.highlight.highlighted.includes(
         (link as ExtendedLinkObject).id as string,
       );
-      ctx.lineWidth = isHighlighted ? 1.5 : 1;
+      ctx.lineWidth = isHighlighted ? 2 : 1;
       ctx.strokeStyle = isHighlighted
         ? 'red'
         : link.experimentType === 'hmbc'
-        ? 'green'
+        ? 'magenta'
         : link.experimentType === 'cosy'
-        ? 'blue'
+        ? 'cyan'
         : 'black';
       ctx.beginPath();
       ctx.moveTo(
@@ -256,8 +254,28 @@ function MCD() {
     [highlightData.highlight.highlighted],
   );
 
-  return (
-    <div className="mcd-container" ref={ref}>
+  const handleOnClickAtom = useCallback(
+    (node: NodeObject) => {
+      if (mcdRef && mcdRef.current) {
+        mcdRef.current.zoomToFit(1000, 140, (_node) => _node.id === node.id);
+      }
+    },
+    [mcdRef],
+  );
+
+  const resetView = useCallback(() => {
+    if (mcdRef && mcdRef.current) {
+      mcdRef.current.zoomToFit(1000, 30);
+      mcdRef.current.centerAt(0, 0, 1000);
+    }
+  }, [mcdRef]);
+
+  const handleOnRightClickBackground = useCallback(() => {
+    resetView();
+  }, [resetView]);
+
+  const graph = useMemo(
+    () => (
       <ForceGraph2D
         ref={mcdRef}
         graphData={data}
@@ -271,7 +289,27 @@ function MCD() {
         onLinkHover={(link) => handleOnHoverLink(link as ExtendedLinkObject)}
         width={ref.current?.clientWidth}
         height={ref.current?.clientHeight}
+        onNodeClick={handleOnClickAtom}
+        onBackgroundRightClick={handleOnRightClickBackground}
+        minZoom={0}
+        maxZoom={10}
       />
+    ),
+    [
+      data,
+      handleOnClickAtom,
+      handleOnHoverLink,
+      handleOnHoverNode,
+      handleOnRightClickBackground,
+      mcdRef,
+      paintLink,
+      paintNode,
+      ref,
+    ],
+  );
+  return (
+    <div className="mcd-container" ref={ref}>
+      {graph}
     </div>
   );
 }
