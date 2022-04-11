@@ -51,6 +51,7 @@ function MCD() {
       correlations.values.forEach(
         (correlation: Correlation, correlationIndex: number) => {
           if (
+            resultData?.resultRecord.detections &&
             resultData?.resultRecord.detections.fixedNeighbors &&
             resultData.resultRecord.detections.fixedNeighbors[correlationIndex]
           ) {
@@ -169,7 +170,7 @@ function MCD() {
   }, [
     nmriumData?.correlations,
     resultData?.resultRecord.correlations,
-    resultData?.resultRecord.detections.fixedNeighbors,
+    resultData?.resultRecord.detections,
   ]);
 
   const handleOnHoverNode = useCallback(
