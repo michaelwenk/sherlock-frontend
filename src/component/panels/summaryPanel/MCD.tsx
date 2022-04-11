@@ -1,5 +1,5 @@
 import { Correlation, Link } from 'nmr-correlation';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import ForceGraph2D, {
   LinkObject,
   NodeObject,
