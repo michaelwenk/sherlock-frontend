@@ -16,6 +16,7 @@ function SummaryPanel() {
   const [showAdditionalColumns, setShowAdditionalColumns] =
     useState<boolean>(false);
   const [showProtonsAsRows, setShowProtonsAsRows] = useState<boolean>(false);
+  const [showMCD, setShowMCD] = useState<boolean>(false);
 
   useEffect(() => {
     const _selectedAdditionalColumnsAtomType =
@@ -51,7 +52,14 @@ function SummaryPanel() {
   return nmriumData?.correlations?.values &&
     nmriumData.correlations.values.length > 0 ? (
     <div className="summary-panel">
-      <div className="overview-table-container">
+      <div
+        className="overview-table-container"
+        style={
+          {
+            '--overview-table-container-height': showMCD ? '60%' : '100%',
+          } as React.CSSProperties
+        }
+      >
         <Overview
           mf={nmriumData ? nmriumData.correlations.options.mf : ''}
           showAdditionalColumns={showAdditionalColumns}
@@ -63,6 +71,8 @@ function SummaryPanel() {
           onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
             setSelectedAdditionalColumnsAtomType(value)
           }
+          showMCD={showMCD}
+          onClickButtonShowMCD={() => setShowMCD(!showMCD)}
         />
         <CorrelationTable
           additionalColumnData={additionalColumnData}
@@ -70,7 +80,7 @@ function SummaryPanel() {
           showProtonsAsRows={showProtonsAsRows}
         />
       </div>
-      <MCD />
+      {showMCD && <MCD />}
     </div>
   ) : (
     <p

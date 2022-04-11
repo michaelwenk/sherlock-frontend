@@ -5,6 +5,19 @@
   padding: 0px 5px;
   font-size: 14px;
 
+  .show-mcd-button-container {
+    font-size: 11px;
+    white-space: nowrap;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .Button {
+      width: 70px;
+    }
+  }
+
   .formula {
     display: flex;
     align-items: center;

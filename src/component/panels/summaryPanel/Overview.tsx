@@ -12,6 +12,8 @@ interface InputProps {
   onChangeShowAdditionalColumns: Function;
   selectedAdditionalColumnsAtomType: string;
   onChangeSelectedAdditionalColumnsAtomType: Function;
+  showMCD: boolean;
+  onClickButtonShowMCD: Function;
 }
 
 function Overview({
@@ -21,9 +23,17 @@ function Overview({
   onChangeShowAdditionalColumns,
   selectedAdditionalColumnsAtomType,
   onChangeSelectedAdditionalColumnsAtomType,
+  showMCD,
+  onClickButtonShowMCD,
 }: InputProps) {
   return (
     <div className="overview-container">
+      <div className="show-mcd-button-container">
+        <Button
+          child={showMCD ? 'Hide MCD' : 'Show MCD'}
+          onClick={onClickButtonShowMCD}
+        />
+      </div>
       <p className="formula">
         <MF mf={mf} />
       </p>
