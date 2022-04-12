@@ -1,9 +1,10 @@
 import './Overview.scss';
 
-import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { FaAngleDown, FaAngleRight, FaProjectDiagram } from 'react-icons/fa';
 import Button from '../../elements/Button';
 import SelectBox from '../../elements/SelectBox';
 import { MF } from 'react-mf';
+import { CSSProperties } from 'react';
 
 interface InputProps {
   mf: string;
@@ -30,7 +31,16 @@ function Overview({
     <div className="overview-container">
       <div className="show-mcd-button-container">
         <Button
-          child={showMCD ? 'Hide MCD' : 'Show MCD'}
+          style={
+            {
+              '--show-mcd-button-color': showMCD ? 'blue' : 'black',
+            } as CSSProperties
+          }
+          child={
+            <FaProjectDiagram
+              title={showMCD ? 'Hide MCD' : 'Show MCD (beta)'}
+            />
+          }
           onClick={onClickButtonShowMCD}
         />
       </div>
