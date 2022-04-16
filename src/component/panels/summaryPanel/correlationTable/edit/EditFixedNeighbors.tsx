@@ -32,8 +32,28 @@ function EditFixedNeighbors({
   onDelete,
   onAdd,
 }: InputProps) {
+  const values = useMemo(
+    () =>
+      correlations
+        .filter(
+          (correlation) =>
+            correlation.atomType !== 'H' && correlation.equivalence === 1,
+        )
+        .map((correlation) =>
+          buildLabel(
+            correlations,
+            correlations.findIndex((corr) => corr.id === correlation.id),
+          ),
+        ),
+    [correlations],
+  );
+
   const [newFixedCorrelationIndex, setNewFixedCorrelationIndex] =
-    useState<number>(0);
+    useState<number>(
+      correlations.findIndex(
+        (correlation) => correlation.label.origin === values[0].split(':')[0],
+      ),
+    );
 
   const handleOnDelete = useCallback(
     (fixedCorrelationIndex: number) => {
@@ -84,17 +104,7 @@ function EditFixedNeighbors({
                 ),
               )
             }
-            values={correlations
-              .filter(
-                (correlation) =>
-                  correlation.atomType !== 'H' && correlation.equivalence === 1,
-              )
-              .map((correlation) =>
-                buildLabel(
-                  correlations,
-                  correlations.findIndex((corr) => corr.id === correlation.id),
-                ),
-              )}
+            values={values}
           />
         </td>
         <td>
@@ -110,6 +120,7 @@ function EditFixedNeighbors({
     handleOnAdd,
     handleOnDelete,
     newFixedCorrelationIndex,
+    values,
   ]);
 
   const table = useMemo(() => {
