@@ -75,6 +75,7 @@ function AdditionalColumnHeader({ correlation }) {
           ? '#ff6f0057'
           : 'inherit',
       },
+      pStyle: { marginBottom: '0px' },
       title:
         correlation.pseudo === false &&
         correlation.link
@@ -115,17 +116,17 @@ function AdditionalColumnHeader({ correlation }) {
         };
   }, [correlation]);
 
-  const { title, ...thProps } = tableHeaderProps;
+  const { title, pStyle, ...thProps } = tableHeaderProps;
 
   return (
     <th {...thProps} title={title === false ? undefined : title}>
-      <p>{correlation.label.origin}</p>
-      <p>
+      <p style={pStyle}>{correlation.label.origin}</p>
+      <p style={pStyle}>
         {getCorrelationDelta(correlation)
           ? getCorrelationDelta(correlation)?.toFixed(2)
           : ''}
       </p>
-      <p style={equivalenceTextStyle}>
+      <p style={{ ...equivalenceTextStyle, ...pStyle }}>
         {Number.isInteger(correlation.equivalence)
           ? correlation.equivalence
           : correlation.equivalence.toFixed(2)}
