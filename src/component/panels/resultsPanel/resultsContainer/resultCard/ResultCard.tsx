@@ -65,10 +65,8 @@ function ResultCard({
             );
           if (signalIndexInQuerySpectrum >= 0) {
             if (
-              highlightData.highlight.highlighted.some(
-                (highlightID) =>
-                  highlightID ===
-                  querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
+              highlightData.highlight.highlighted.has(
+                querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
               )
             ) {
               signalArrayInPrediction.forEach((atomIndex) =>
@@ -114,17 +112,19 @@ function ResultCard({
             });
 
             const ids: number[] = [];
-            // add possible equivalent atoms from same group
-            const signalIndexInMolecule =
-              dataSet.assignment.assignments[0].findIndex((atomArray) =>
-                atomArray.includes(atomIndex),
-              );
-            if (signalIndexInMolecule >= 0) {
-              dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
-                (atomIndex) => {
+            if (action !== 'leave') {
+              // add possible equivalent atoms from same group
+              const signalIndexInMolecule =
+                dataSet.assignment.assignments[0].findIndex((atomArray) =>
+                  atomArray.includes(atomIndex),
+                );
+              if (signalIndexInMolecule >= 0) {
+                dataSet.assignment.assignments[0][
+                  signalIndexInMolecule
+                ].forEach((atomIndex) => {
                   ids.push(atomIndex);
-                },
-              );
+                });
+              }
             }
             setAtomHighlights(ids);
           }

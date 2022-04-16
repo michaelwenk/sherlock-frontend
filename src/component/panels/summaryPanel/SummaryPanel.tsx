@@ -1,7 +1,7 @@
 import './SummaryPanel.scss';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useData } from '../../../context/DataContext';
-import MCD from './MCD';
+import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
 

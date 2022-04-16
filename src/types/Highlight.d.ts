@@ -4,11 +4,8 @@ export default interface Highlight {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
   };
-  onClick: (e: any) => void;
   show: () => void;
   hide: () => void;
-  isActivePermanently: boolean;
-  click: (e: any) => void;
-  add: (id: any) => void;
-  remove: (id: any) => void;
+  add: (id: string) => void;
+  remove: (id: string) => void;
 }

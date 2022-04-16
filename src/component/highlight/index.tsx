@@ -8,12 +8,12 @@ import {
 } from 'react';
 import Highlight from '../../types/Highlight';
 
-type HighlightActions = 'HIDE' | 'SHOW' | 'SET_PERMANENT' | 'UNSET_PERMANENT';
+type HighlightActions = 'HIDE' | 'SHOW';
 
 interface HighlightState {
-  highlights: Record<string, number>;
-  highlighted: string[];
-  highlightedPermanently: string[];
+  highlights: Set<string>;
+  highlighted: Set<string>;
+  sourceData?: string;
 }
 
 interface HighlightContextProps {
@@ -22,12 +22,11 @@ interface HighlightContextProps {
   remove: () => void;
 }
 
-const emptyState = {
+const emptyState: HighlightContextProps = {
   highlight: {
-    highlights: {},
-    highlighted: [],
-    highlightedPermanently: [],
-    sourceData: null,
+    highlights: new Set<string>(),
+    highlighted: new Set<string>(),
+    sourceData: undefined,
   },
   dispatch: () => null,
   remove: () => null,
@@ -35,55 +34,34 @@ const emptyState = {
 
 const highlightContext = createContext<HighlightContextProps>(emptyState);
 
-function highlightReducer(state, action) {
+function highlightReducer(state: HighlightState, action) {
   switch (action.type) {
     case 'SHOW': {
       const { convertedHighlights } = action.payload;
 
-      const newState = {
+      const newState: HighlightState = {
         ...state,
-        highlights: { ...state.highlights },
+        // highlights: { ...state.highlights },
       };
       for (const value of convertedHighlights) {
-        if (!(value in newState.highlights)) {
-          newState.highlights[value] = 1;
-        }
+        newState.highlights.add(value);
       }
-      newState.highlighted = Object.keys(newState.highlights);
+      newState.highlighted = new Set(newState.highlights);
 
       return newState;
     }
     case 'HIDE': {
       const { convertedHighlights } = action.payload;
 
-      const newState = {
+      const newState: HighlightState = {
         ...state,
-        highlights: { ...state.highlights },
-        sourceData: null,
+        // highlights: { ...state.highlights },
+        sourceData: undefined,
       };
       for (const value of convertedHighlights) {
-        if (value in newState.highlights) {
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete newState.highlights[value];
-        }
+        newState.highlights.delete(value);
       }
-      newState.highlighted = Object.keys(newState.highlights);
-      return newState;
-    }
-    case 'SET_PERMANENT': {
-      const newState = {
-        ...state,
-        // allow just one permanent highlights group at same time
-        highlightedPermanently: action.payload,
-      };
-
-      return newState;
-    }
-    case 'UNSET_PERMANENT': {
-      const newState = {
-        ...state,
-        highlightedPermanently: [],
-      };
+      newState.highlighted = new Set(newState.highlights);
 
       return newState;
     }
@@ -131,13 +109,13 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
   const { dispatch, highlight } = useHighlightData();
 
   const convertedHighlights = useMemo(() => {
-    const newHighlights: Array<any> = [];
+    const newHighlights = new Set<string>();
     for (const highlight of highlights) {
       if (typeof highlight !== 'string' && typeof highlight !== 'number') {
         throw new Error(`highlight key must be a string or number`);
       }
       if (highlight !== '') {
-        newHighlights.push(String(highlight));
+        newHighlights.add(String(highlight));
       }
     }
     return newHighlights;
@@ -150,23 +128,17 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
         type: 'HIDE',
         payload: { convertedHighlights: [] },
       });
-      dispatch({
-        type: 'UNSET_PERMANENT',
-      });
     };
   }, [dispatch]);
 
   const isActive = useMemo(() => {
-    return highlight.highlighted.some((key) =>
-      convertedHighlights.includes(key),
-    );
+    for (const value of convertedHighlights) {
+      if (highlight.highlighted.has(value)) {
+        return true;
+      }
+    }
+    return false;
   }, [convertedHighlights, highlight.highlighted]);
-
-  const isActivePermanently = useMemo(() => {
-    return highlight.highlightedPermanently.some((key) =>
-      convertedHighlights.includes(key),
-    );
-  }, [convertedHighlights, highlight.highlightedPermanently]);
 
   const show = useCallback(() => {
     dispatch({
@@ -206,27 +178,6 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
     [dispatch],
   );
 
-  const click = useCallback(
-    (e) => {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      if (!isActivePermanently) {
-        dispatch({
-          type: 'SET_PERMANENT',
-          payload: convertedHighlights,
-        });
-      } else {
-        dispatch({
-          type: 'UNSET_PERMANENT',
-        });
-      }
-    },
-    [convertedHighlights, dispatch, isActivePermanently],
-  );
-
   return useMemo(() => {
     return {
       isActive,
@@ -234,13 +185,10 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
         onMouseEnter: show,
         onMouseLeave: hide,
       },
-      onClick: click,
       show,
       hide,
-      isActivePermanently,
-      click,
       add,
       remove,
     };
-  }, [add, click, hide, isActive, isActivePermanently, remove, show]);
+  }, [add, hide, isActive, remove, show]);
 }
