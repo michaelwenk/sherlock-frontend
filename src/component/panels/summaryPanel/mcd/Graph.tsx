@@ -82,10 +82,17 @@ function Graph({ graphData }: InputProps) {
 
   return (
     <CytoscapeComponent
+      ref={containerRef}
       elements={graphData}
       cy={(_cy) => setCY(_cy)}
+      layout={{
+        name: 'cose-bilkent',
+        fit: true,
+        padding: 30,
+      }}
+      autounselectify={true}
       style={{
-        width: outerHeight,
+        width: innerWidth,
         height: innerHeight,
       }}
       stylesheet={[
@@ -202,12 +209,6 @@ function Graph({ graphData }: InputProps) {
           },
         },
       ]}
-      layout={{
-        name: 'cose-bilkent',
-        fit: true,
-        padding: 30,
-      }}
-      ref={containerRef}
     />
   );
 }
