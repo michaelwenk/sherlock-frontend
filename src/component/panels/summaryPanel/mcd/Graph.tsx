@@ -202,7 +202,11 @@ function Graph({ graphData }: InputProps) {
           },
         },
       ]}
-      layout={{ name: 'cose-bilkent' }}
+      layout={{
+        name: 'cose-bilkent',
+        fit: true,
+        padding: 30,
+      }}
       ref={containerRef}
     />
   );

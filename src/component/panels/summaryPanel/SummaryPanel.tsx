@@ -56,7 +56,7 @@ function SummaryPanel() {
         className="overview-table-container"
         style={
           {
-            '--overview-table-container-height': showMCD ? '60%' : '100%',
+            '--overview-table-container-height': showMCD ? '50%' : '100%',
           } as React.CSSProperties
         }
       >
