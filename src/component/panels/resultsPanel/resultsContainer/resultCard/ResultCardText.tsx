@@ -25,7 +25,7 @@ function ResultCardText({ dataSet }: InputProps) {
             <td>{dataSet.meta.mfOriginal}</td>
           </tr>
           <tr>
-            <td className="td-name">AvgDev</td>
+            <td className="td-name">Average Deviation</td>
             <td className="td-value">{`${dataSet.attachment.averageDeviation.toFixed(
               2,
             )} ppm`}</td>
@@ -43,7 +43,7 @@ function ResultCardText({ dataSet }: InputProps) {
             </td>
           </tr>
           <tr>
-            <td className="td-name">Hits</td>
+            <td className="td-name">Matching Shifts</td>
             <td className="td-value">
               {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
             </td>

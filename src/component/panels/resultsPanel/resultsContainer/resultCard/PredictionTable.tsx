@@ -3,7 +3,6 @@ import { CSSProperties, useCallback, useMemo } from 'react';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
 import { useData } from '../../../../../context/DataContext';
-import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 
 type InputProps = {
@@ -124,11 +123,6 @@ function PredictionTable({
                 >
                   {dataSet.spectrum.signals[signalIndex].integers[1]}
                 </td>
-                <td>
-                  {convertMultiplicityStringToNumber(
-                    dataSet.spectrum.signals[signalIndex].strings[1],
-                  )}
-                </td>
                 <td
                   style={{
                     color:
@@ -188,9 +182,8 @@ function PredictionTable({
       <table>
         <thead>
           <tr>
-            <th>Shift</th>
-            <th>Equ</th>
-            <th>#H</th>
+            <th>Pred</th>
+            <th>Equiv</th>
             {dataSet.attachment.predictionMeta ? (
               <>
                 <th style={{ borderRight: '2px solid lightgrey' }}>Dev</th>
