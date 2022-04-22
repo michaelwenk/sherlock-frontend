@@ -27,9 +27,11 @@ function MCD() {
                   correlation.protonsCount.length === 1
                     ? correlation.protonsCount[0] === 0
                       ? correlation.atomType
-                      : `${
-                          correlation.atomType
-                        }H${correlation.protonsCount.join(',')}`
+                      : `${correlation.atomType}H${
+                          correlation.protonsCount[0] === 1
+                            ? ''
+                            : correlation.protonsCount.join(',')
+                        }`
                     : correlation.atomType,
                 atomType: correlation.atomType,
               },
@@ -61,7 +63,6 @@ function MCD() {
                       elem.data.originalID ===
                       correlations.values[fixedNeighborCorrelationIndex].id,
                   )?.data.id,
-                  experimentType: 'bond',
                 },
                 classes: 'bond',
               };
@@ -96,6 +97,7 @@ function MCD() {
                             correlations.values[targetIndex].id,
                         )
                         .forEach((elem2) => {
+                          // avoid loops
                           if (elem.data.id !== elem2.data.id) {
                             const newLink: ElementDefinition = {
                               data: {
@@ -108,7 +110,6 @@ function MCD() {
                                 originalID: link.id,
                                 source: elem.data.id,
                                 target: elem2.data.id,
-                                experimentType: link.experimentType,
                               },
                               classes: link.experimentType,
                             };
@@ -171,7 +172,6 @@ function MCD() {
                                 originalID: link.id,
                                 source: elem.data.id,
                                 target: elem2.data.id,
-                                experimentType: link.experimentType,
                               },
                               classes: link.experimentType,
                             };

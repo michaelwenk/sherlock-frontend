@@ -6,6 +6,121 @@ import { useHighlightData } from '../../../highlight';
 
 Cytoscape.use(CoseBilkent);
 
+const elementStyleSheet: Cytoscape.Stylesheet[] = [
+  {
+    selector: 'node',
+    css: {
+      content: 'data(label)',
+      'text-valign': 'center',
+      'text-halign': 'center',
+      'text-wrap': 'none',
+      width: '50px',
+      height: '50px',
+      color: 'pink',
+      'background-color': 'beige',
+      'border-width': '1px',
+      'border-style': 'solid',
+      'border-color': 'black',
+    },
+  },
+  {
+    selector: 'edge',
+    css: {
+      width: 2,
+      'target-arrow-shape': 'triangle',
+      'curve-style': 'bezier',
+    },
+  },
+  {
+    selector: '.bond',
+    css: {
+      width: 3,
+      'line-color': 'black',
+      'target-arrow-shape': 'none',
+      'curve-style': 'straight',
+    },
+  },
+  {
+    selector: '.hmbc',
+    css: {
+      'line-color': 'red',
+    },
+  },
+  {
+    selector: '.cosy',
+    css: {
+      'line-color': 'blue',
+      'target-arrow-shape': 'none',
+      'curve-style': 'straight',
+    },
+  },
+  {
+    selector: '.C',
+    css: {
+      color: 'black',
+    },
+  },
+  {
+    selector: '.O',
+    css: {
+      color: 'red',
+    },
+  },
+  {
+    selector: '.N',
+    css: {
+      color: 'blue',
+    },
+  },
+  {
+    selector: '.Cl',
+    css: {
+      color: 'green',
+    },
+  },
+  {
+    selector: '.Fl',
+    css: {
+      color: 'green',
+    },
+  },
+  {
+    selector: '.S',
+    css: {
+      color: 'yellow',
+    },
+  },
+  {
+    selector: '.P',
+    css: {
+      color: 'orange',
+    },
+  },
+  {
+    selector: '.Br',
+    css: {
+      color: 'darkred',
+    },
+  },
+  {
+    selector: '.I',
+    css: {
+      color: 'violet',
+    },
+  },
+  {
+    selector: '.highlighted',
+    css: {
+      color: 'red',
+      'font-weight': 'bold',
+      'font-size': '20px',
+      'background-color': 'cyan',
+      'line-color': 'black',
+      'line-style': 'dashed',
+    },
+  },
+];
+
 interface InputProps {
   graphData: ElementDefinition[];
 }
@@ -37,14 +152,12 @@ function Graph({ graphData }: InputProps) {
         cy.edges().forEach((edge) => {
           if (highlightData.highlight.highlighted.has(edge.data().originalID)) {
             edge.addClass('highlighted');
-            edge.connectedNodes().forEach((node) => {
-              node.addClass('highlighted');
-            });
+            edge.source().addClass('highlighted');
+            edge.target().addClass('highlighted');
           } else {
             edge.removeClass('highlighted');
-            edge.connectedNodes().forEach((node) => {
-              node.removeClass('highlighted');
-            });
+            edge.source().removeClass('highlighted');
+            edge.target().removeClass('highlighted');
           }
         });
       }
@@ -95,120 +208,7 @@ function Graph({ graphData }: InputProps) {
         width: innerWidth,
         height: innerHeight,
       }}
-      stylesheet={[
-        {
-          selector: 'node',
-          css: {
-            content: 'data(label)',
-            'text-valign': 'center',
-            'text-halign': 'center',
-            'text-wrap': 'none',
-            width: '50px',
-            height: '50px',
-            color: 'pink',
-            'background-color': 'beige',
-            'border-width': '1px',
-            'border-style': 'solid',
-            'border-color': 'black',
-          },
-        },
-        {
-          selector: 'edge',
-          css: {
-            width: 2,
-            'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier',
-          },
-        },
-        {
-          selector: '.bond',
-          css: {
-            width: 3,
-            'line-color': 'black',
-            'target-arrow-shape': 'none',
-            'curve-style': 'straight',
-          },
-        },
-        {
-          selector: '.hmbc',
-          css: {
-            'line-color': 'red',
-          },
-        },
-        {
-          selector: '.cosy',
-          css: {
-            'line-color': 'blue',
-            'target-arrow-shape': 'none',
-            'curve-style': 'straight',
-          },
-        },
-        {
-          selector: '.C',
-          css: {
-            color: 'black',
-          },
-        },
-        {
-          selector: '.O',
-          css: {
-            color: 'red',
-          },
-        },
-        {
-          selector: '.N',
-          css: {
-            color: 'blue',
-          },
-        },
-        {
-          selector: '.Cl',
-          css: {
-            color: 'green',
-          },
-        },
-        {
-          selector: '.Fl',
-          css: {
-            color: 'green',
-          },
-        },
-        {
-          selector: '.S',
-          css: {
-            color: 'yellow',
-          },
-        },
-        {
-          selector: '.P',
-          css: {
-            color: 'orange',
-          },
-        },
-        {
-          selector: '.Br',
-          css: {
-            color: 'darkred',
-          },
-        },
-        {
-          selector: '.I',
-          css: {
-            color: 'violet',
-          },
-        },
-        {
-          selector: '.highlighted',
-          css: {
-            color: 'red',
-            'font-weight': 'bold',
-            'font-size': '20px',
-            'background-color': 'cyan',
-            'line-color': 'black',
-            'line-style': 'dashed',
-          },
-        },
-      ]}
+      stylesheet={elementStyleSheet}
     />
   );
 }
