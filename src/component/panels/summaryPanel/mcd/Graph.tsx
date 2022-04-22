@@ -133,34 +133,32 @@ function Graph({ graphData }: InputProps) {
 
   useEffect(() => {
     if (cy) {
-      let foundInNodes = false;
-      cy.nodes().forEach((node) => {
-        if (highlightData.highlight.highlighted.has(node.data().originalID)) {
-          node.addClass('highlighted');
-          node.connectedEdges().forEach((edge) => {
-            edge.addClass('highlighted');
-          });
-          foundInNodes = true;
+      const onTheFlyAddedElementsToHighlight: (
+        | Cytoscape.NodeSingular
+        | Cytoscape.EdgeSingular
+      )[] = [];
+      cy.elements().forEach((elem) => {
+        if (highlightData.highlight.highlighted.has(elem.data().originalID)) {
+          elem.addClass('highlighted');
+          if (elem.isNode()) {
+            elem.connectedEdges().forEach((edge) => {
+              edge.addClass('highlighted');
+              onTheFlyAddedElementsToHighlight.push(edge);
+            });
+          }
+          if (elem.isEdge()) {
+            elem.connectedNodes().forEach((node) => {
+              node.addClass('highlighted');
+              onTheFlyAddedElementsToHighlight.push(node);
+            });
+          }
         } else {
-          node.removeClass('highlighted');
-          node.connectedEdges().forEach((edge) => {
-            edge.removeClass('highlighted');
-          });
+          elem.removeClass('highlighted');
         }
       });
-      if (!foundInNodes) {
-        cy.edges().forEach((edge) => {
-          if (highlightData.highlight.highlighted.has(edge.data().originalID)) {
-            edge.addClass('highlighted');
-            edge.source().addClass('highlighted');
-            edge.target().addClass('highlighted');
-          } else {
-            edge.removeClass('highlighted');
-            edge.source().removeClass('highlighted');
-            edge.target().removeClass('highlighted');
-          }
-        });
-      }
+      onTheFlyAddedElementsToHighlight.forEach((elem) => {
+        elem.addClass('highlighted');
+      });
     }
   }, [cy, highlightData.highlight.highlighted]);
 

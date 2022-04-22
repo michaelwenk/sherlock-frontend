@@ -41,10 +41,11 @@ function highlightReducer(state: HighlightState, action) {
 
       const newState: HighlightState = {
         ...state,
-        // highlights: { ...state.highlights },
       };
       for (const value of convertedHighlights) {
-        newState.highlights.add(value);
+        if (value !== undefined) {
+          newState.highlights.add(value);
+        }
       }
       newState.highlighted = new Set(newState.highlights);
 
@@ -55,11 +56,12 @@ function highlightReducer(state: HighlightState, action) {
 
       const newState: HighlightState = {
         ...state,
-        // highlights: { ...state.highlights },
         sourceData: undefined,
       };
       for (const value of convertedHighlights) {
-        newState.highlights.delete(value);
+        if (value !== undefined) {
+          newState.highlights.delete(value);
+        }
       }
       newState.highlighted = new Set(newState.highlights);
 
