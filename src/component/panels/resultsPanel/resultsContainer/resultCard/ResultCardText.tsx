@@ -43,7 +43,7 @@ function ResultCardText({ dataSet }: InputProps) {
             </td>
           </tr>
           <tr>
-            <td className="td-name">Matching Shifts</td>
+            <td className="td-name">Matching Signals</td>
             <td className="td-value">
               {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
             </td>
