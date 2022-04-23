@@ -17,7 +17,7 @@ const elementStyleSheet: Cytoscape.Stylesheet[] = [
       width: '50px',
       height: '50px',
       color: 'pink',
-      'background-color': 'beige',
+      'background-color': 'lightgrey',
       'border-width': '1px',
       'border-style': 'solid',
       'border-color': 'black',
