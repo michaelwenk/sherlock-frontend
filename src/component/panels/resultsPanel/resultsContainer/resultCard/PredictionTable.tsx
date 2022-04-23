@@ -4,6 +4,8 @@ import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
 import { useData } from '../../../../../context/DataContext';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
+import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
+import queryTypes from '../../../../../constants/queryTypes';
 
 type InputProps = {
   dataSet: DataSet;
@@ -113,6 +115,13 @@ function PredictionTable({
                 <td>
                   {dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)}
                 </td>
+                {resultData?.queryType === queryTypes.dereplication && (
+                  <td>
+                    {convertMultiplicityStringToNumber(
+                      dataSet.spectrum.signals[signalIndex].strings[1],
+                    )}
+                  </td>
+                )}
                 <td
                   style={{
                     color:
@@ -166,6 +175,7 @@ function PredictionTable({
       dataSet.spectrum.signals,
       getSignalIndexInQuerySpectrum,
       handleOnAtom,
+      resultData?.queryType,
       resultData?.resultRecord.querySpectrum?.signals,
     ],
   );
@@ -182,7 +192,12 @@ function PredictionTable({
       <table>
         <thead>
           <tr>
-            <th>Pred</th>
+            <th>
+              {resultData?.queryType === queryTypes.dereplication
+                ? 'Shift'
+                : 'Pred'}
+            </th>
+            {resultData?.queryType === queryTypes.dereplication && <th>#H</th>}
             <th>Equiv</th>
             {dataSet.attachment.predictionMeta ? (
               <>
