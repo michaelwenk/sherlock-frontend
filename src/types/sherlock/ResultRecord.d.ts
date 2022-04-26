@@ -19,4 +19,5 @@ export default interface ResultRecord {
   elucidationOptions?: ElucidationOptions;
   grouping?: Grouping;
   querySpectrum?: SpectrumCompact;
+  nmriumDataJsonParts?: string[];
 }

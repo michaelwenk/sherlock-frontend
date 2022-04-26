@@ -23,22 +23,55 @@ export interface Action {
   payload: { [key: string]: unknown };
 }
 
+function chunkSubstr(str: string, size: number) {
+  const numChunks = Math.ceil(str.length / size);
+  const chunks: string[] = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+}
+
 export function setNmriumData(draft: Draft<DataState>, action: Action) {
-  draft.nmriumData = action.payload.nmriumData as NMRiumData;
+  const { nmriumData } = action.payload;
+  draft.nmriumData = nmriumData as NMRiumData;
+
+  const nmriumDataJson = JSON.stringify({
+    spectra: draft.nmriumData.spectra,
+    correlations: draft.nmriumData.correlations,
+  });
+
+  console.log('Jo');
+  const nmriumDataJsonParts = chunkSubstr(nmriumDataJson, 200);
+  console.log('Jo2');
+
+  draft.resultData = {
+    queryType: draft.resultData?.queryType as string,
+    resultRecord: {
+      ...draft.resultData?.resultRecord,
+      nmriumDataJsonParts,
+    },
+  };
 }
 
 export function setResultData(draft: Draft<DataState>, action: Action) {
-  const { resultData } = action.payload;
+  const { queryType, resultData } = action.payload;
   draft.resultData = resultData as Result;
 
   if (!draft.nmriumData) {
     draft.nmriumData = {
       spectra: [],
-    };
+    } as NMRiumData;
   }
   draft.nmriumData.correlations = (
     resultData as Result
   ).resultRecord.correlations;
+
+  if (queryType === queryTypes.retrieval) {
+    draft.isRetrieving = true;
+  }
 }
 
 export function clearResultData(draft: Draft<DataState>) {
@@ -120,4 +153,9 @@ export function setResultDBEntries(draft: Draft<DataState>, action: Action) {
 export function setIsRequesting(draft: Draft<DataState>, action: Action) {
   const { isRequesting } = action.payload;
   draft.isRequesting = isRequesting as boolean;
+}
+
+export function setIsRetrieving(draft: Draft<DataState>, action: Action) {
+  const { isRetrieving } = action.payload;
+  draft.isRetrieving = isRetrieving as boolean;
 }

@@ -2,9 +2,19 @@ import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
 import { Tab, Tabs } from 'react-bootstrap';
-import NMRium, { NMRiumPreferences } from 'nmrium';
+import NMRium, {
+  NMRiumPreferences,
+  NMRiumData as NMRiumDataOriginal,
+} from 'nmrium';
 import Panels from './panels/Panels';
-import { Reducer, useCallback, useMemo, useReducer } from 'react';
+import {
+  Reducer,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
 import {
@@ -13,10 +23,10 @@ import {
   initialState,
   initState,
 } from '../context/Reducer';
-import { SET_NMRIUM_DATA } from '../context/ActionTypes';
-import NMRiumData from '../types/nmrium/NMRiumData';
+import { SET_IS_RETRIEVING, SET_NMRIUM_DATA } from '../context/ActionTypes';
 import DataState from '../types/DataState';
 import { State } from 'nmrium/lib/component/reducer/Reducer';
+import NMRiumData from '../types/nmrium/NMRiumData';
 
 const preferences: NMRiumPreferences = {
   panels: {
@@ -50,6 +60,8 @@ function Sherlock() {
 
   const handleOnNMRiumDataChange = useCallback(
     function (nmriumData: State) {
+      console.log('HUHU1');
+
       const _nmriumData: NMRiumData = {
         spectra: nmriumData.data,
         correlations: nmriumData.correlations,
@@ -60,6 +72,43 @@ function Sherlock() {
       });
     },
     [dispatcherMemo],
+  );
+
+  const [data, setData] = useState<NMRiumDataOriginal>({ spectra: [] });
+  useEffect(() => {
+    console.log(state.isRetrieving);
+
+    if (state.isRetrieving === true) {
+      console.log('HUHU2-1');
+      const nmriumDataJson =
+        state.resultData?.resultRecord.nmriumDataJsonParts?.join('');
+      const newNmriumData = JSON.parse(nmriumDataJson || '{}');
+      console.log('HUHU2-2');
+
+      setData({
+        spectra: newNmriumData?.spectra || [],
+        correlations: newNmriumData?.correlations,
+      });
+      dispatcherMemo({
+        type: SET_IS_RETRIEVING,
+        payload: { isRetrieving: false },
+      });
+    }
+  }, [
+    dispatcherMemo,
+    state.isRetrieving,
+    state.resultData?.resultRecord.nmriumDataJsonParts,
+  ]);
+
+  const nmrium = useMemo(
+    () => (
+      <NMRium
+        preferences={preferences}
+        onDataChange={async (d) => handleOnNMRiumDataChange(d)}
+        data={data}
+      />
+    ),
+    [data, handleOnNMRiumDataChange],
   );
 
   return (
@@ -84,12 +133,7 @@ function Sherlock() {
               disabled={true}
             />
             <Tab eventKey="nmrium" title="Spectra">
-              <div className="nmrium-container">
-                <NMRium
-                  preferences={preferences}
-                  onDataChange={handleOnNMRiumDataChange}
-                />
-              </div>
+              <div className="nmrium-container">{nmrium}</div>
             </Tab>
 
             <Tab eventKey="case" title="CASE">

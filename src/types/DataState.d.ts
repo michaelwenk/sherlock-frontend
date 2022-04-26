@@ -7,4 +7,5 @@ export default interface DataState {
   resultData?: Result;
   resultDataDB?: ResultRecord[];
   isRequesting: boolean;
+  isRetrieving: boolean;
 }
