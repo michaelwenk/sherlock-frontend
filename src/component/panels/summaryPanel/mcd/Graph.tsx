@@ -133,7 +133,7 @@ function Graph({ graphData }: InputProps) {
 
   useEffect(() => {
     if (cy) {
-      const onTheFlyAddedElementsToHighlight: (
+      const addedElementsToHighlight: (
         | Cytoscape.NodeSingular
         | Cytoscape.EdgeSingular
       )[] = [];
@@ -143,22 +143,20 @@ function Graph({ graphData }: InputProps) {
           if (elem.isNode()) {
             elem.connectedEdges().forEach((edge) => {
               edge.addClass('highlighted');
-              onTheFlyAddedElementsToHighlight.push(edge);
+              addedElementsToHighlight.push(edge);
             });
           }
           if (elem.isEdge()) {
             elem.connectedNodes().forEach((node) => {
               node.addClass('highlighted');
-              onTheFlyAddedElementsToHighlight.push(node);
+              addedElementsToHighlight.push(node);
             });
           }
         } else {
           elem.removeClass('highlighted');
         }
       });
-      onTheFlyAddedElementsToHighlight.forEach((elem) => {
-        elem.addClass('highlighted');
-      });
+      addedElementsToHighlight.forEach((elem) => elem.addClass('highlighted'));
     }
   }, [cy, highlightData.highlight.highlighted]);
 
