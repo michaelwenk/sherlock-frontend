@@ -74,21 +74,14 @@ function Sherlock() {
     [dispatcherMemo],
   );
 
-  const [data, setData] = useState<NMRiumDataOriginal>({ spectra: [] });
+  // const [data, setData] = useState<NMRiumDataOriginal>({ spectra: [] });
   useEffect(() => {
-    console.log(state.isRetrieving);
-
     if (state.isRetrieving === true) {
-      console.log('HUHU2-1');
-      const nmriumDataJson =
-        state.resultData?.resultRecord.nmriumDataJsonParts?.join('');
-      const newNmriumData = JSON.parse(nmriumDataJson || '{}');
-      console.log('HUHU2-2');
+      // const nmriumDataJson =
+      //   state.resultData?.resultRecord.nmriumDataJsonParts?.join('');
+      // const newNmriumData = JSON.parse(nmriumDataJson || '{}');
+      // setData(newNmriumData);
 
-      setData({
-        spectra: newNmriumData?.spectra || [],
-        correlations: newNmriumData?.correlations,
-      });
       dispatcherMemo({
         type: SET_IS_RETRIEVING,
         payload: { isRetrieving: false },
@@ -97,7 +90,7 @@ function Sherlock() {
   }, [
     dispatcherMemo,
     state.isRetrieving,
-    state.resultData?.resultRecord.nmriumDataJsonParts,
+    state.resultData?.resultRecord.correlations,
   ]);
 
   const nmrium = useMemo(
@@ -105,10 +98,10 @@ function Sherlock() {
       <NMRium
         preferences={preferences}
         onDataChange={async (d) => handleOnNMRiumDataChange(d)}
-        data={data}
+        // data={data}
       />
     ),
-    [data, handleOnNMRiumDataChange],
+    [handleOnNMRiumDataChange],
   );
 
   return (

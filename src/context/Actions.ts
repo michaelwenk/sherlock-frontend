@@ -23,37 +23,36 @@ export interface Action {
   payload: { [key: string]: unknown };
 }
 
-function chunkSubstr(str: string, size: number) {
-  const numChunks = Math.ceil(str.length / size);
-  const chunks: string[] = new Array(numChunks);
+// function chunkSubstr(str: string, size: number) {
+//   const numChunks = Math.ceil(str.length / size);
+//   const chunks: string[] = new Array(numChunks);
 
-  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substr(o, size);
-  }
+//   for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+//     const substr = str.substr(o, size);
+//     chunks[i] = substr; //new TextEncoder().encode(substr);
+//   }
 
-  return chunks;
-}
+//   return chunks;
+// }
 
 export function setNmriumData(draft: Draft<DataState>, action: Action) {
   const { nmriumData } = action.payload;
   draft.nmriumData = nmriumData as NMRiumData;
 
-  const nmriumDataJson = JSON.stringify({
-    spectra: draft.nmriumData.spectra,
-    correlations: draft.nmriumData.correlations,
-  });
+  // const nmriumDataJson = JSON.stringify({
+  //   spectra: draft.nmriumData.spectra,
+  //   correlations: draft.nmriumData.correlations,
+  // });
 
-  console.log('Jo');
-  const nmriumDataJsonParts = chunkSubstr(nmriumDataJson, 200);
-  console.log('Jo2');
+  // const nmriumDataJsonParts = chunkSubstr(nmriumDataJson, 10000);
 
-  draft.resultData = {
-    queryType: draft.resultData?.queryType as string,
-    resultRecord: {
-      ...draft.resultData?.resultRecord,
-      nmriumDataJsonParts,
-    },
-  };
+  // draft.resultData = {
+  //   queryType: draft.resultData?.queryType as string,
+  //   resultRecord: {
+  //     ...draft.resultData?.resultRecord,
+  //     nmriumDataJsonParts,
+  //   },
+  // };
 }
 
 export function setResultData(draft: Draft<DataState>, action: Action) {

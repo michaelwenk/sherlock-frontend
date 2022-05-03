@@ -188,22 +188,24 @@ function Panels() {
             elucidationOptions,
             detectionOptions,
             name: retrievalOptions.resultName,
-            nmriumDataJsonParts:
-              queryType === queryTypes.elucidation
-                ? resultData?.resultRecord.nmriumDataJsonParts
-                : undefined,
+            // nmriumDataJsonParts:
+            //   queryType === queryTypes.storage
+            //     ? resultData?.resultRecord.nmriumDataJsonParts
+            //     : undefined,
           } as ResultRecord,
         };
         console.log(requestData);
+        // const formData = new FormData();
+        // const blob = new Blob([JSON.stringify(requestData)], {
+        //   type: 'text/plain',
+        // });
+        // formData.append('data', blob);
 
         const t0 = performance.now();
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
           url: 'http://localhost:8081/sherlock-core/core',
           data: requestData,
-          headers: {
-            'Content-Type': 'application/json',
-          },
           cancelToken: new axios.CancelToken(
             (cancel) => (cancelRequestRef.current = cancel),
           ),
@@ -218,10 +220,10 @@ function Panels() {
             resultRecord: response.data.resultRecord,
             time: (t1 - t0) / 1000,
           };
-          if (queryType !== queryTypes.elucidation) {
-            result.resultRecord.nmriumDataJsonParts =
-              resultData?.resultRecord.nmriumDataJsonParts;
-          }
+          // if (queryType !== queryTypes.elucidation) {
+          //   result.resultRecord.nmriumDataJsonParts =
+          //     resultData?.resultRecord.nmriumDataJsonParts;
+          // }
           console.log(result);
 
           dispatch({
