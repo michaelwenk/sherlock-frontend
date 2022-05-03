@@ -18,6 +18,7 @@ import CustomPagination from '../../../elements/CustomPagination';
 interface Row {
   id: string;
   name: string;
+  date: Date;
   rendered: JSX.Element;
 }
 
@@ -32,89 +33,93 @@ function QueryTabRetrieval() {
   const rows = useMemo(
     (): Row[] =>
       resultDataDB
-        ? resultDataDB
-            .map((resultRecord) => {
-              const date = new Date(resultRecord.date || '');
-
-              return {
-                id: resultRecord.id || '',
-                name: resultRecord.name || '',
-                rendered: (
-                  <tr key={`resultDataDB_${resultRecord.id}`}>
-                    <td>{resultRecord.name || resultRecord.id}</td>
-                    <td>
-                      {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
-                      <br />
-                      {`${date.getHours()}:${date.getMinutes()}`}
-                    </td>
-                    <td>{resultRecord.dataSetListSize}</td>
-                    <td>
-                      {resultRecord.previewDataSet?.meta.smiles && (
-                        <div className="rendered-preview">
-                          <SmilesSvgRenderer
-                            OCL={OCL}
-                            id={`molSVG${resultRecord.id}_preview`}
-                            smiles={resultRecord.previewDataSet.meta.smiles}
-                            width={120}
-                          />
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      <Button
-                        child={<FaEye title="Load from Database" />}
-                        onClick={() => {
-                          setFieldValue('queryType', queryTypes.retrieval);
-                          setFieldValue(
-                            'retrievalOptions.action',
-                            retrievalActions.retrieve,
-                          );
-                          setFieldValue(
-                            'retrievalOptions.resultID',
-                            resultRecord.id,
-                          );
-                          submitForm();
-                        }}
-                        disabled={isRequesting}
-                        style={{ color: isRequesting ? 'grey' : 'inherit' }}
-                      />
-                      <Button
-                        child={<FaTrashAlt title="Delete in Database" />}
-                        onClick={() => {
-                          setResultRecordToDelete(resultRecord);
-                          setShowDeleteModal(true);
-                        }}
-                        style={{
-                          marginLeft: '15px',
-                          color: isRequesting ? 'grey' : 'inherit',
-                        }}
-                        disabled={isRequesting}
-                      />
-                    </td>
-                  </tr>
-                ),
-              };
-            })
-            .reverse()
+        ? resultDataDB.map((resultRecord) => {
+            const date = new Date(
+              resultRecord.id && resultRecord.id.length > 0
+                ? parseInt(resultRecord.id.slice(0, 8), 16) * 1000
+                : '',
+            );
+            return {
+              id: resultRecord.id || '',
+              name: resultRecord.name || '',
+              date,
+              rendered: (
+                <tr key={`resultDataDB_${resultRecord.id}`}>
+                  <td>{resultRecord.name || resultRecord.id}</td>
+                  <td>
+                    {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
+                    <br />
+                    {`${date.getHours()}:${date.getMinutes()}`}
+                  </td>
+                  <td>{resultRecord.dataSetListSize}</td>
+                  <td>
+                    {resultRecord.previewDataSet?.meta.smiles && (
+                      <div className="rendered-preview">
+                        <SmilesSvgRenderer
+                          OCL={OCL}
+                          id={`molSVG${resultRecord.id}_preview`}
+                          smiles={resultRecord.previewDataSet.meta.smiles}
+                          width={120}
+                        />
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <Button
+                      child={<FaEye title="Load from Database" />}
+                      onClick={() => {
+                        setFieldValue('queryType', queryTypes.retrieval);
+                        setFieldValue(
+                          'retrievalOptions.action',
+                          retrievalActions.retrieve,
+                        );
+                        setFieldValue(
+                          'retrievalOptions.resultID',
+                          resultRecord.id,
+                        );
+                        submitForm();
+                      }}
+                      disabled={isRequesting}
+                      style={{ color: isRequesting ? 'grey' : 'inherit' }}
+                    />
+                    <Button
+                      child={<FaTrashAlt title="Delete in Database" />}
+                      onClick={() => {
+                        setResultRecordToDelete(resultRecord);
+                        setShowDeleteModal(true);
+                      }}
+                      style={{
+                        marginLeft: '15px',
+                        color: isRequesting ? 'grey' : 'inherit',
+                      }}
+                      disabled={isRequesting}
+                    />
+                  </td>
+                </tr>
+              ),
+            };
+          })
         : [],
     [isRequesting, resultDataDB, setFieldValue, submitForm],
   );
 
-  const filteredRows = useMemo(
-    () =>
+  const filteredRows = useMemo(() => {
+    const _filteredRows =
       searchPattern.length > 0
-        ? rows.reduce((_filteredRows, row) => {
+        ? rows.reduce((_rows, row) => {
             if (
               row.name?.toLowerCase().includes(searchPattern) ||
               row.id?.toLowerCase().includes(searchPattern)
             ) {
-              _filteredRows.push(row.rendered);
+              _rows.push(row);
             }
-            return _filteredRows;
-          }, [] as JSX.Element[])
-        : rows.map((row) => row.rendered),
-    [rows, searchPattern],
-  );
+            return _rows;
+          }, [] as Row[])
+        : rows;
+    return _filteredRows
+      .sort((a, b) => -1 * (a.date.getTime() - b.date.getTime()))
+      .map((row) => row.rendered);
+  }, [rows, searchPattern]);
 
   const handleOnConfirmDelete = useCallback(() => {
     setFieldValue('queryType', queryTypes.retrieval);
