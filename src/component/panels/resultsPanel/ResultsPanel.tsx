@@ -74,31 +74,35 @@ function ResultsPanel({ show }: InputProps) {
       method: 'DELETE',
       url: 'http://localhost:8081/sherlock-db-service-result/deleteById',
       params: { id: resultData?.resultRecord.id },
-    }).catch(async (err: AxiosError) => {
-      if (axios.isCancel(err)) {
-        console.log(err);
-      }
-    });
-    dispatch({ type: CLEAR_RESULT_DATA });
-    await axios({
-      method: 'GET',
-      url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
     })
-      .then((res: AxiosResponse) => {
-        if (res && res.data) {
-          dispatch({
-            type: SET_RESULT_DB_ENTRIES,
-            payload: { resultRecordList: res.data },
-          });
-        }
-      })
+      .then()
       .catch(async (err: AxiosError) => {
         if (axios.isCancel(err)) {
           console.log(err);
         }
-      });
+      })
+      .finally(async () => {
+        dispatch({ type: CLEAR_RESULT_DATA });
+        await axios({
+          method: 'GET',
+          url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
+        })
+          .then((res: AxiosResponse) => {
+            if (res && res.data) {
+              dispatch({
+                type: SET_RESULT_DB_ENTRIES,
+                payload: { resultRecordList: res.data },
+              });
+            }
+          })
+          .catch(async (err: AxiosError) => {
+            if (axios.isCancel(err)) {
+              console.log(err);
+            }
+          });
 
-    setShowDeleteModal(false);
+        setShowDeleteModal(false);
+      });
   }, [dispatch, resultData?.resultRecord]);
 
   const resultsView = useMemo(
