@@ -34,11 +34,12 @@ function QueryTabRetrieval() {
     (): Row[] =>
       resultDataDB
         ? resultDataDB.map((resultRecord) => {
+            const offset = new Date().getTimezoneOffset();
             const date = new Date(
-              resultRecord.id && resultRecord.id.length > 0
-                ? parseInt(resultRecord.id.slice(0, 8), 16) * 1000
-                : '',
+              new Date(resultRecord.date as string).getTime() -
+                offset * 60 * 1000,
             );
+
             return {
               id: resultRecord.id || '',
               name: resultRecord.name || '',
@@ -47,9 +48,15 @@ function QueryTabRetrieval() {
                 <tr key={`resultDataDB_${resultRecord.id}`}>
                   <td>{resultRecord.name || resultRecord.id}</td>
                   <td>
-                    {`${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`}
+                    {`${date.getFullYear()}-${date.getMonth() + 1}-${
+                      date.getDay() + 1
+                    }`}
                     <br />
-                    {`${date.getHours()}:${date.getMinutes()}`}
+                    {`${date.getHours().toLocaleString(undefined, {
+                      minimumIntegerDigits: 2,
+                    })}:${date.getMinutes().toLocaleString(undefined, {
+                      minimumIntegerDigits: 2,
+                    })}`}
                   </td>
                   <td>{resultRecord.dataSetListSize}</td>
                   <td>
