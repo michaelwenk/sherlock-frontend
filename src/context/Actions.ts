@@ -25,6 +25,17 @@ export interface Action {
 
 export function setNmriumData(draft: Draft<DataState>, action: Action) {
   draft.nmriumData = action.payload.nmriumData as NMRiumData;
+
+  if (!draft.resultData) {
+    draft.resultData = {
+      queryType: queryTypes.dereplication,
+      resultRecord: {},
+    };
+  }
+  draft.resultData.resultRecord = {
+    ...draft.resultData?.resultRecord,
+    correlations: draft.nmriumData.correlations,
+  };
 }
 
 export function setResultData(draft: Draft<DataState>, action: Action) {
