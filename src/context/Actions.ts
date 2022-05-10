@@ -1,5 +1,5 @@
 import { Draft } from 'immer';
-import { getCorrelationIndex } from 'nmr-correlation';
+import { Correlation, getCorrelationIndex } from 'nmr-correlation';
 import queryTypes from '../constants/queryTypes';
 import DataState from '../types/DataState';
 import NMRiumData from '../types/nmrium/NMRiumData';
@@ -23,49 +23,65 @@ export interface Action {
   payload: { [key: string]: unknown };
 }
 
-export function setNmriumData(draft: Draft<DataState>, action: Action) {
-  draft.nmriumData = action.payload.nmriumData as NMRiumData;
+export function clearResultData(draft: Draft<DataState>) {
+  delete draft.resultData;
+}
 
+function initNMRiumData(draft: Draft<DataState>) {
+  if (!draft.nmriumData) {
+    draft.nmriumData = { spectra: [] };
+  }
+}
+
+function initResultData(draft: Draft<DataState>) {
   if (!draft.resultData) {
     draft.resultData = {
       queryType: queryTypes.dereplication,
       resultRecord: {},
     };
   }
-  draft.resultData.resultRecord = {
+}
+
+function initDetections(draft: Draft<DataState>) {
+  initResultData(draft);
+  if (!(draft.resultData as Result).resultRecord?.detections) {
+    (draft.resultData as Result).resultRecord.detections = initialDetections;
+  }
+}
+
+export function setNmriumData(draft: Draft<DataState>, action: Action) {
+  draft.nmriumData = action.payload.nmriumData as NMRiumData;
+
+  initResultData(draft);
+  (draft.resultData as Result).resultRecord = {
     ...draft.resultData?.resultRecord,
     correlations: draft.nmriumData.correlations,
   };
+  initDetections(draft);
+  (draft.nmriumData as NMRiumData).correlations.values.forEach(
+    (correlation: Correlation, i: number) => {
+      const _detections = (draft.resultData as Result).resultRecord
+        .detections as Detections;
+      if (!_detections.detectedHybridizations[i]) {
+        _detections.detectedHybridizations[i] = [];
+      }
+      correlation.hybridization.forEach((hybrid: number) => {
+        if (!_detections.detectedHybridizations[i].includes(hybrid)) {
+          _detections.detectedHybridizations[i].push(hybrid);
+        }
+      });
+    },
+  );
 }
 
 export function setResultData(draft: Draft<DataState>, action: Action) {
   const { resultData } = action.payload;
   draft.resultData = resultData as Result;
 
-  if (!draft.nmriumData) {
-    draft.nmriumData = {
-      spectra: [],
-    };
-  }
-  draft.nmriumData.correlations = (
+  initNMRiumData(draft);
+  (draft.nmriumData as NMRiumData).correlations = (
     resultData as Result
   ).resultRecord.correlations;
-}
-
-export function clearResultData(draft: Draft<DataState>) {
-  delete draft.resultData;
-}
-
-function initDetections(draft: Draft<DataState>) {
-  if (!draft.resultData) {
-    draft.resultData = {
-      queryType: queryTypes.dereplication,
-      resultRecord: {},
-    };
-  }
-  if (!draft.resultData?.resultRecord?.detections) {
-    draft.resultData.resultRecord.detections = initialDetections;
-  }
 }
 
 export function editForbiddenNeighbors(
@@ -105,16 +121,30 @@ export function editHybridizations(draft: Draft<DataState>, action: Action) {
     draft.nmriumData?.correlations.values,
     correlation,
   );
-  (draft.resultData as Result).resultRecord.detections.detectedHybridizations[
-    correlationIndex
-  ] = editedHybridizations as number[];
+  const tempDetections = lodashCloneDeep(
+    draft.resultData?.resultRecord.detections,
+  );
+  tempDetections.detectedHybridizations[correlationIndex] =
+    editedHybridizations as number[];
+
+  const tempCorrelations = lodashCloneDeep(
+    draft.resultData?.resultRecord.correlations,
+  );
+  tempCorrelations.values[correlationIndex].hybridization =
+    editedHybridizations as number[];
+
+  if (draft.resultData?.resultRecord) {
+    draft.resultData.resultRecord.detections = tempDetections;
+    draft.resultData.resultRecord.correlations = tempCorrelations;
+  }
+  initNMRiumData(draft);
+  (draft.nmriumData as NMRiumData).correlations = tempCorrelations;
 }
 
 export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
   const { fixedNeighbors } = action.payload;
 
   initDetections(draft);
-
   const temp = lodashCloneDeep(draft.resultData);
   if (temp) {
     temp.resultRecord.detections.fixedNeighbors =

@@ -1,6 +1,6 @@
 import './EditFixedNeighbors.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import generateID from '../../../../../utils/generateID';
 import Button from '../../../../elements/Button';
@@ -37,7 +37,10 @@ function EditFixedNeighbors({
       correlations
         .filter(
           (correlation) =>
-            correlation.atomType !== 'H' && correlation.equivalence === 1,
+            correlation.atomType !== 'H' &&
+            correlation.equivalence === 1 &&
+            correlation.protonsCount.length === 1 &&
+            correlation.hybridization.length === 1,
         )
         .map((correlation) =>
           buildLabel(
@@ -50,9 +53,12 @@ function EditFixedNeighbors({
 
   const [newFixedCorrelationIndex, setNewFixedCorrelationIndex] =
     useState<number>(
-      correlations.findIndex(
-        (correlation) => correlation.label.origin === values[0].split(':')[0],
-      ),
+      values.length > 0
+        ? correlations.findIndex(
+            (correlation) =>
+              correlation.label.origin === values[0].split(':')[0],
+          )
+        : 0,
     );
 
   const handleOnDelete = useCallback(

@@ -8,6 +8,7 @@ import {
 } from 'nmr-correlation';
 import { useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
+import NMRiumData from '../../../../types/nmrium/NMRiumData';
 
 import { useHighlight } from '../../../highlight';
 import { getGroupIndex } from '../Utilities';
@@ -223,10 +224,18 @@ function CorrelationTableRow({
             {correlation.atomType != 'H' ? (
               <HybridizationsTableCell
                 correlation={correlation}
-                hybridizations={
-                  resultData?.resultRecord?.detections
-                    ?.detectedHybridizations?.[correlationIndex] || []
-                }
+                hybridizations={Array.from(
+                  new Set<number>(
+                    (
+                      (nmriumData as NMRiumData).correlations.values[
+                        correlationIndex
+                      ].hybridization || []
+                    ).concat(
+                      resultData?.resultRecord?.detections
+                        ?.detectedHybridizations?.[correlationIndex] || [],
+                    ),
+                  ),
+                )}
                 highlight={highlightRow}
               />
             ) : (

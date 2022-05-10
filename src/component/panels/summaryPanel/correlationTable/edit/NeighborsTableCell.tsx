@@ -265,11 +265,13 @@ function NeighborsTableCell({
           show={show}
           title={`Edit ${capitalize(mode)} Neighbors: ${correlation.atomType}${
             correlationIndex + 1
-          } (${
+          } ${
             getCorrelationDelta(correlation)
-              ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
+              ? `(${(getCorrelationDelta(correlation) as number).toFixed(
+                  2,
+                )} ppm)`
               : ''
-          })`}
+          }`}
           body={
             mode === 'forbidden' ? (
               <EditNeighbors
@@ -290,10 +292,15 @@ function NeighborsTableCell({
                 </Tab>
                 <Tab eventKey={'fixed'} title="Fixed">
                   {correlation.equivalence === undefined ||
-                  correlation.equivalence > 1 ? (
+                  correlation.equivalence !== 1 ||
+                  !correlation.protonsCount ||
+                  correlation.protonsCount.length !== 1 ||
+                  !correlation.hybridization ||
+                  correlation.hybridization.length !== 1 ? (
                     <p style={{ color: 'blue' }}>
-                      Setting of directly bonded atom is not allowed for this
-                      atom with an equivalence higher than one!
+                      Setting of direct bond to another atom is not allowed for
+                      this atom with an equivalence higher than one or a
+                      non-unique proton count/hybridization!
                     </p>
                   ) : (
                     <EditFixedNeighbors

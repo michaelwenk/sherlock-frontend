@@ -53,38 +53,6 @@ function Panels() {
   const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
   const [hideRightPanel, setHideRightPanel] = useState<boolean>(false);
 
-  // function processNMRiumData(nmriumData: NMRiumData): (Datum1D | Datum2D)[] {
-  //   return nmriumData && nmriumData.spectra
-  //     ? (nmriumData.spectra as Spectra).reduce<Spectra>((acc, spectrum) => {
-  //         if (
-  //           spectrum &&
-  //           spectrum.id &&
-  //           spectrum.info &&
-  //           spectrum.info.isFid === false
-  //         ) {
-  //           if (spectrum.info.dimension === 1) {
-  //             const _spectrum = {
-  //               id: spectrum.id,
-  //               info: spectrum.info,
-  //               ranges: (spectrum as Datum1D).ranges,
-  //               data: (spectrum as Datum1D).data,
-  //             };
-  //             acc.push(_spectrum as Datum1D);
-  //           } else if (spectrum.info.dimension === 2) {
-  //             const _spectrum = {
-  //               id: spectrum.id,
-  //               info: spectrum.info,
-  //               zones: (spectrum as Datum2D).zones,
-  //               data: (spectrum as Datum2D).data,
-  //             };
-  //             acc.push(_spectrum as Datum2D);
-  //           }
-  //         }
-  //         return acc;
-  //       }, [])
-  //     : [];
-  // }
-
   const showResultsPanel = useMemo(
     () =>
       !showQueryPanel && !isRequesting && !requestError && !requestWasCancelled,
@@ -193,7 +161,6 @@ function Panels() {
       } = queryOptions;
 
       if (queryType !== queryTypes.retrieval) {
-        // const spectra = nmriumData ? processNMRiumData(nmriumData) : [],
         const correlations = nmriumData
           ? {
               ...nmriumData.correlations,
