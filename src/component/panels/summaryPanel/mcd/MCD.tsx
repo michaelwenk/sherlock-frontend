@@ -4,8 +4,9 @@ import { Correlation, Link } from 'nmr-correlation';
 import { useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 import generateID from '../../../../utils/generateID';
-import Graph from './Graph';
+import Graph from '../../../elements/Graph';
 import { ElementDefinition } from 'cytoscape';
+import styleSheet from './stylesheet';
 
 function MCD() {
   const { nmriumData, resultData } = useData();
@@ -196,7 +197,7 @@ function MCD() {
 
   return (
     <div className="mcd-container">
-      <Graph graphData={graphData} />
+      <Graph graphData={graphData} styleSheet={styleSheet} />
     </div>
   );
 }
