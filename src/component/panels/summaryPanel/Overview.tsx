@@ -36,11 +36,7 @@ function Overview({
               '--show-mcd-button-color': showMCD ? 'blue' : 'black',
             } as CSSProperties
           }
-          child={
-            <FaProjectDiagram
-              title={showMCD ? 'Hide MCD' : 'Show MCD (beta)'}
-            />
-          }
+          child={<FaProjectDiagram title={showMCD ? 'Hide MCD' : 'Show MCD'} />}
           onClick={onClickButtonShowMCD}
         />
       </div>
