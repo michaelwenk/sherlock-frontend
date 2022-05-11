@@ -201,11 +201,7 @@ function CorrelationTableRow({
           },
         }}
       >
-        {correlation.pseudo === false ? (
-          <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
-        ) : (
-          ''
-        )}
+        <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
       </td>
       {correlation.atomType != 'H' && (
         <>
