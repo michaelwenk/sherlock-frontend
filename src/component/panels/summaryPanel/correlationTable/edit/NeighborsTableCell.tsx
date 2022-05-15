@@ -159,10 +159,14 @@ function NeighborsTableCell({
       if (!_fixedNeighbors[correlationIndex]) {
         _fixedNeighbors[correlationIndex] = [];
       }
+      if (!_fixedNeighbors[neighborCorrelationIndex]) {
+        _fixedNeighbors[neighborCorrelationIndex] = [];
+      }
       if (
         !_fixedNeighbors[correlationIndex].includes(neighborCorrelationIndex)
       ) {
         _fixedNeighbors[correlationIndex].push(neighborCorrelationIndex);
+        _fixedNeighbors[neighborCorrelationIndex].push(correlationIndex);
       }
 
       dispatch({
