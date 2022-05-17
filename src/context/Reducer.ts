@@ -7,6 +7,7 @@ import {
   editFixedNeighbors,
   editForbiddenNeighbors,
   editHybridizations,
+  editIncludeFunctionalGroup,
   editSetNeighbors,
   setIsRequesting,
   setNmriumData,
@@ -18,6 +19,7 @@ import {
   EDIT_FIXED_NEIGHBORS,
   EDIT_FORBIDDEN_NEIGHBORS,
   EDIT_HYBRIDIZATIONS,
+  EDIT_INCLUDE_FUNCTIONAL_GROUP,
   EDIT_SET_NEIGHBORS,
   SET_IS_REQUESTING,
   SET_NMRIUM_DATA,
@@ -59,6 +61,8 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return editFixedNeighbors(draft, action);
     case EDIT_HYBRIDIZATIONS:
       return editHybridizations(draft, action);
+    case EDIT_INCLUDE_FUNCTIONAL_GROUP:
+      return editIncludeFunctionalGroup(draft, action);
     case SET_RESULT_DB_ENTRIES:
       return setResultDBEntries(draft, action);
     case SET_IS_REQUESTING:

@@ -4,6 +4,7 @@ import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
+import FunctionalGroupsView from './functionalGroups/FunctionGroupsView';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
@@ -80,7 +81,19 @@ function SummaryPanel() {
           showProtonsAsRows={showProtonsAsRows}
         />
       </div>
-      {showMCD && <MCD />}
+      {showMCD && (
+        <div
+          style={{
+            width: '100%',
+            height: '50%',
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <MCD />
+          <FunctionalGroupsView />
+        </div>
+      )}
     </div>
   ) : (
     <p

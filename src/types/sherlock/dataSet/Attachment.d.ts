@@ -12,4 +12,8 @@ export default interface Attachment {
   setAssignmentsCountWithEquivalences: number;
   spectralMatchAssignment: Assignment;
   predictionMeta: { [signalIndex: number]: number[] };
+  // functional groups
+  count: number;
+  total: number;
+  include: boolean;
 }

@@ -9,6 +9,7 @@ import FixedNeighbors from '../types/sherlock/detection/FixedNeighbors';
 import NeighborsEntry from '../types/sherlock/detection/NeighborsEntry';
 import ResultRecord from '../types/sherlock/ResultRecord';
 import lodashCloneDeep from 'lodash/cloneDeep';
+import DataSet from '../types/sherlock/dataSet/DataSet';
 
 const initialDetections: Detections = {
   detectedHybridizations: {},
@@ -16,6 +17,7 @@ const initialDetections: Detections = {
   forbiddenNeighbors: {},
   setNeighbors: {},
   fixedNeighbors: {},
+  functionalGroups: [],
 };
 
 export interface Action {
@@ -149,6 +151,21 @@ export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
   if (temp) {
     temp.resultRecord.detections.fixedNeighbors =
       fixedNeighbors as FixedNeighbors;
+    draft.resultData = temp;
+  }
+}
+
+export function editIncludeFunctionalGroup(
+  draft: Draft<DataState>,
+  action: Action,
+) {
+  const { functionalGroups } = action.payload;
+
+  initDetections(draft);
+  const temp = lodashCloneDeep(draft.resultData);
+  if (temp) {
+    temp.resultRecord.detections.functionalGroups =
+      functionalGroups as DataSet[];
     draft.resultData = temp;
   }
 }
