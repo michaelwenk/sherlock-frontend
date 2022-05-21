@@ -40,7 +40,7 @@ function FragmentsView() {
       mol.inventCoordinates();
       const molfile = mol.toMolfileV3();
       _rows.push(
-        <tr id={generateID()}>
+        <tr key={generateID()}>
           <td>{i + 1}</td>
           <td style={{ width: '50%' }}>
             <MolfileSvgRenderer
