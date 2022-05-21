@@ -9,5 +9,5 @@ export default interface Detections {
   forbiddenNeighbors: Neighbors;
   setNeighbors: Neighbors;
   fixedNeighbors: FixedNeighbors;
-  functionalGroups: DataSet[];
+  fragments: DataSet[];
 }

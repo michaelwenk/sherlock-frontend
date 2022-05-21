@@ -4,7 +4,7 @@ import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
-import FunctionalGroupsView from './functionalGroups/FunctionGroupsView';
+import FragmentsView from './fragments/FragmentsView';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
@@ -91,7 +91,7 @@ function SummaryPanel() {
           }}
         >
           <MCD />
-          <FunctionalGroupsView />
+          <FragmentsView />
         </div>
       )}
     </div>

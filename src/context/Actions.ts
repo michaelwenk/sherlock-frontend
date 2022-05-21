@@ -17,7 +17,7 @@ const initialDetections: Detections = {
   forbiddenNeighbors: {},
   setNeighbors: {},
   fixedNeighbors: {},
-  functionalGroups: [],
+  fragments: [],
 };
 
 export interface Action {
@@ -155,17 +155,13 @@ export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
   }
 }
 
-export function editIncludeFunctionalGroup(
-  draft: Draft<DataState>,
-  action: Action,
-) {
-  const { functionalGroups } = action.payload;
+export function editIncludeFragment(draft: Draft<DataState>, action: Action) {
+  const { fragments } = action.payload;
 
   initDetections(draft);
   const temp = lodashCloneDeep(draft.resultData);
   if (temp) {
-    temp.resultRecord.detections.functionalGroups =
-      functionalGroups as DataSet[];
+    temp.resultRecord.detections.fragments = fragments as DataSet[];
     draft.resultData = temp;
   }
 }
