@@ -74,7 +74,26 @@ function FragmentsView() {
             <th>include</th>
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        <tbody>
+          {rows.length > 0 ? (
+            rows
+          ) : (
+            <tr>
+              <td colSpan={4} style={{ border: 'none' }}>
+                <p
+                  style={{
+                    textAlign: 'center',
+                    fontSize: '14px',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  No fragments
+                </p>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );

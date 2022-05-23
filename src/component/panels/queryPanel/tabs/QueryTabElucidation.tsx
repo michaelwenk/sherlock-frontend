@@ -146,6 +146,57 @@ function QueryTabElucidation() {
                 )}
               </td>
             </tr>
+
+            <tr>
+              <td colSpan={2} style={{ fontWeight: 'bold' }}>
+                Fragment Detection:
+              </td>
+            </tr>
+            <tr>
+              <td>Search for fragments</td>
+              <td style={{ textAlign: 'center' }}>
+                <FormikCheckBox name="detectionOptions.detectFragments" />
+              </td>
+            </tr>
+            <tr>
+              <td>Shift tolerance (ppm)</td>
+              <td>
+                <FormikInput
+                  type="number"
+                  name="detectionOptions.shiftToleranceFragmentDetection"
+                />
+              </td>
+              <td>
+                {errors.detectionOptions?.shiftToleranceFragmentDetection && (
+                  <ErrorSymbol
+                    message={
+                      errors.detectionOptions.shiftToleranceFragmentDetection
+                    }
+                  />
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td>Maximum average deviation (ppm)</td>
+              <td>
+                <FormikInput
+                  type="number"
+                  name="detectionOptions.maximumAverageDeviationFragmentDetection"
+                />
+              </td>
+              <td>
+                {errors.detectionOptions
+                  ?.maximumAverageDeviationFragmentDetection && (
+                  <ErrorSymbol
+                    message={
+                      errors.detectionOptions
+                        .maximumAverageDeviationFragmentDetection
+                    }
+                  />
+                )}
+              </td>
+            </tr>
+
             <tr>
               <td colSpan={2}>
                 <div className="button-container">
@@ -163,6 +214,7 @@ function QueryTabElucidation() {
                 </div>
               </td>
             </tr>
+
             <tr>
               <td colSpan={2} style={{ fontWeight: 'bold' }}>
                 {' '}

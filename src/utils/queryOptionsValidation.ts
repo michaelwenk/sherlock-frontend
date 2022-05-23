@@ -29,6 +29,9 @@ export interface ValidationErrors {
     hybridizationDetectionThreshold?: string;
     lowerElementCountThreshold?: string;
     upperElementCountThreshold?: string;
+    detectFragments?: string;
+    shiftToleranceFragmentDetection?: string;
+    maximumAverageDeviationFragmentDetection?: string;
   };
   retrievalOptions?: { resultID?: string };
 }
@@ -126,6 +129,33 @@ function validateQueryOptions(values: QueryOptions) {
     }
     errors.detectionOptions.upperElementCountThreshold =
       'Must not be less than 0 and not more than 100';
+  }
+
+  if (
+    !isInRange(
+      values.detectionOptions.shiftToleranceFragmentDetection,
+      0,
+      undefined,
+    )
+  ) {
+    if (!errors.detectionOptions) {
+      errors.detectionOptions = {};
+    }
+    errors.detectionOptions.shiftToleranceFragmentDetection =
+      'Must be at least 0';
+  }
+  if (
+    !isInRange(
+      values.detectionOptions.maximumAverageDeviationFragmentDetection,
+      0,
+      undefined,
+    )
+  ) {
+    if (!errors.detectionOptions) {
+      errors.detectionOptions = {};
+    }
+    errors.detectionOptions.maximumAverageDeviationFragmentDetection =
+      'Must be at least 0';
   }
 
   // console.log(values);
