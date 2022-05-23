@@ -13,7 +13,22 @@
 
     .Button {
       border: none;
-      color: var(--show-mcd-button-color);
+      color: var(--show-mcd-button-text-color);
+      background-color: var(--show-mcd-button-background-color);
+    }
+  }
+
+  .show-fragments-button-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+
+    .Button {
+      border: none;
+      color: var(--show-fragments-button-text-color);
+      background-color: var(--show-fragments-button-background-color);
     }
   }
 

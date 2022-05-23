@@ -1,27 +1,24 @@
 import './ResultCard.scss';
 
 import Card from 'react-bootstrap/Card';
-import { Molecule } from 'openchemlib/full';
 import ResultCardText from './ResultCardText';
-import {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { MolfileSvgRenderer } from 'react-ocl';
-import { useHighlightData } from '../../../../highlight';
+import { CSSProperties, useEffect, useMemo, useState } from 'react';
 import PredictionTable from './PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import Button from '../../../../elements/Button';
-import { FaAngleDoubleDown, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faAngleDoubleDown,
+  faAngleDown,
+  faAngleUp,
+} from '@fortawesome/free-solid-svg-icons';
+import { useData } from '../../../../../context/DataContext';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
+import StructureView from '../../../../elements/StructureView';
 
 type InputProps = {
   id: string | number;
   dataSet: DataSet;
-  querySpectrum: SpectrumCompact;
   imageWidth: number;
   imageHeight: number;
   styles?: CSSProperties;
@@ -36,13 +33,13 @@ const showPredictionTableStates = {
 function ResultCard({
   id,
   dataSet,
-  querySpectrum,
   imageWidth,
   imageHeight,
   styles = {},
 }: InputProps) {
+  const { resultData } = useData();
+
   const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
-  const highlightData = useHighlightData();
   const [showPredictionTableState, setShowPredictionTableState] =
     useState<string>(showPredictionTableStates.hide);
 
@@ -51,100 +48,10 @@ function ResultCard({
     [dataSet],
   );
 
-  useEffect(() => {
-    if (dataSet.assignment) {
-      const spectralMatchAssignment =
-        dataSet.attachment.spectralMatchAssignment;
-      const ids: number[] = [];
-      dataSet.assignment.assignments[0].forEach(
-        (signalArrayInPrediction, signalIndexInPrediction) => {
-          const signalIndexInQuerySpectrum =
-            spectralMatchAssignment.assignments[0].findIndex(
-              (signalArrayQuery) =>
-                signalArrayQuery.includes(signalIndexInPrediction),
-            );
-          if (signalIndexInQuerySpectrum >= 0) {
-            if (
-              highlightData.highlight.highlighted.has(
-                querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
-              )
-            ) {
-              signalArrayInPrediction.forEach((atomIndex) =>
-                ids.push(atomIndex),
-              );
-            }
-          }
-        },
-      );
-
-      setAtomHighlights(ids);
-    }
-  }, [
-    dataSet.assignment,
-    dataSet.attachment.spectralMatchAssignment,
-    highlightData.highlight.highlighted,
-    querySpectrum.signals,
-  ]);
-
-  const handleOnAtom = useCallback(
-    (atomIndex, action: 'enter' | 'leave') => {
-      if (dataSet.assignment) {
-        const signalIndexInPrediction =
-          dataSet.assignment.assignments[0].findIndex((atomArray) =>
-            atomArray.includes(atomIndex),
-          );
-        if (signalIndexInPrediction >= 0) {
-          const spectralMatchAssignment =
-            dataSet.attachment.spectralMatchAssignment;
-          const signalIndexInQuerySpectrum =
-            spectralMatchAssignment.assignments[0].findIndex(
-              (signalArrayQuery) =>
-                signalArrayQuery.includes(signalIndexInPrediction),
-            );
-          if (signalIndexInQuerySpectrum >= 0) {
-            highlightData.dispatch({
-              type: action === 'enter' ? 'SHOW' : 'HIDE',
-              payload: {
-                convertedHighlights: [
-                  querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
-                ],
-              },
-            });
-
-            const ids: number[] = [];
-            if (action !== 'leave') {
-              // add possible equivalent atoms from same group
-              const signalIndexInMolecule =
-                dataSet.assignment.assignments[0].findIndex((atomArray) =>
-                  atomArray.includes(atomIndex),
-                );
-              if (signalIndexInMolecule >= 0) {
-                dataSet.assignment.assignments[0][
-                  signalIndexInMolecule
-                ].forEach((atomIndex) => {
-                  ids.push(atomIndex);
-                });
-              }
-            }
-            setAtomHighlights(ids);
-          }
-        }
-      }
-    },
-    [
-      dataSet.assignment,
-      dataSet.attachment.spectralMatchAssignment,
-      highlightData,
-      querySpectrum.signals,
-    ],
+  const querySpectrum = useMemo(
+    () => resultData?.resultRecord.querySpectrum as SpectrumCompact,
+    [resultData?.resultRecord.querySpectrum],
   );
-
-  const molfile = useMemo((): string => {
-    const mol = Molecule.fromMolfile(dataSet.meta.molfile);
-    mol.inventCoordinates();
-
-    return mol.toMolfile();
-  }, [dataSet.meta.molfile]);
 
   const cardBody = useMemo(
     () => (
@@ -158,18 +65,12 @@ function ResultCard({
             } as React.CSSProperties
           }
         >
-          <MolfileSvgRenderer
-            id={`molSVG_${id}`}
-            molfile={molfile}
-            width={imageWidth}
-            height={imageHeight}
-            autoCrop={true}
-            autoCropMargin={10}
-            atomHighlight={atomHighlights}
-            atomHighlightColor="orange"
-            atomHighlightOpacity={0.65}
-            onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
-            onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
+          <StructureView
+            dataSet={dataSet}
+            querySpectrum={querySpectrum}
+            onChangeAtomHighlights={(ids: number[]) => setAtomHighlights(ids)}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
           />
         </div>
 
@@ -191,12 +92,12 @@ function ResultCard({
               }}
               child={
                 showPredictionTableState === showPredictionTableStates.hide ? (
-                  <FaAngleDown />
+                  <FontAwesomeIcon icon={faAngleDown} />
                 ) : showPredictionTableState ===
                   showPredictionTableStates.default ? (
-                  <FaAngleDoubleDown />
+                  <FontAwesomeIcon icon={faAngleDoubleDown} />
                 ) : (
-                  <FaAngleUp />
+                  <FontAwesomeIcon icon={faAngleUp} />
                 )
               }
             />
@@ -218,11 +119,8 @@ function ResultCard({
     [
       atomHighlights,
       dataSet,
-      handleOnAtom,
-      id,
       imageHeight,
       imageWidth,
-      molfile,
       querySpectrum,
       showPredictionTableState,
     ],

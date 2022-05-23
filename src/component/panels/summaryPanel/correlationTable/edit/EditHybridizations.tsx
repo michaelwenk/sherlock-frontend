@@ -1,7 +1,8 @@
 import './EditHybridizations.scss';
 
 import { useCallback, useMemo, useState } from 'react';
-import { FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
 import generateID from '../../../../../utils/generateID';
@@ -38,7 +39,7 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
             <td>{`sp${hybridization}`}</td>
             <td>
               <Button
-                child={<FaTrashAlt />}
+                child={<FontAwesomeIcon icon={faTrashAlt} />}
                 onClick={() => handleOnDelete(hybridization)}
               />
             </td>
@@ -57,7 +58,10 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
           />
         </td>
         <td>
-          <Button child={<FaPlus />} onClick={handleOnAdd} />
+          <Button
+            child={<FontAwesomeIcon icon={faPlus} />}
+            onClick={handleOnAdd}
+          />
         </td>
       </tr>,
     );

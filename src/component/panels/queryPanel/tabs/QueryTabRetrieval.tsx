@@ -2,7 +2,13 @@ import './QueryTabRetrieval.scss';
 
 import { useFormikContext } from 'formik';
 import { useCallback, useMemo, useState } from 'react';
-import { FaEye, FaSyncAlt, FaTrashAlt } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+('@fortawesome/react-fontawesome');
+import {
+  faEye,
+  faSyncAlt,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import queryTypes from '../../../../constants/queryTypes';
 import retrievalActions from '../../../../constants/retrievalAction';
 import { useData } from '../../../../context/DataContext';
@@ -73,7 +79,12 @@ function QueryTabRetrieval() {
                   </td>
                   <td>
                     <Button
-                      child={<FaEye title="Load from Database" />}
+                      child={
+                        <FontAwesomeIcon
+                          icon={faEye}
+                          title="Load from Database"
+                        />
+                      }
                       onClick={() => {
                         setFieldValue('queryType', queryTypes.retrieval);
                         setFieldValue(
@@ -90,7 +101,12 @@ function QueryTabRetrieval() {
                       style={{ color: isRequesting ? 'grey' : 'inherit' }}
                     />
                     <Button
-                      child={<FaTrashAlt title="Delete in Database" />}
+                      child={
+                        <FontAwesomeIcon
+                          icon={faTrashAlt}
+                          title="Delete in Database"
+                        />
+                      }
                       onClick={() => {
                         setResultRecordToDelete(resultRecord);
                         setShowDeleteModal(true);
@@ -201,7 +217,12 @@ function QueryTabRetrieval() {
           </div>
           <div className="button-container">
             <Button
-              child={<FaSyncAlt title="Fetch database entries" />}
+              child={
+                <FontAwesomeIcon
+                  icon={faSyncAlt}
+                  title="Fetch database entries"
+                />
+              }
               onClick={() => {
                 setFieldValue('queryType', queryTypes.retrieval);
                 setFieldValue(
@@ -214,7 +235,12 @@ function QueryTabRetrieval() {
               style={{ color: isRequesting ? 'grey' : 'inherit' }}
             />
             <Button
-              child={<FaTrashAlt title="Delete all database entries" />}
+              child={
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  title="Delete all database entries"
+                />
+              }
               onClick={() => {
                 setShowDeleteModal(true);
               }}

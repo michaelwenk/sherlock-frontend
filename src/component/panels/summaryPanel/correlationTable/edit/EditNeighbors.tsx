@@ -1,7 +1,8 @@
 import './EditNeighbors.scss';
 
 import { useCallback, useMemo, useState } from 'react';
-import { FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
 import generateID from '../../../../../utils/generateID';
@@ -53,7 +54,7 @@ function EditNeighbors({
               {/* <td>{'\u2217'}</td> */}
               <td>
                 <Button
-                  child={<FaTrashAlt />}
+                  child={<FontAwesomeIcon icon={faTrashAlt} />}
                   onClick={() => handleOnDelete(atomType, -1, -1)}
                 />
               </td>
@@ -75,7 +76,7 @@ function EditNeighbors({
                   {/* <td>{'\u2217'}</td> */}
                   <td>
                     <Button
-                      child={<FaTrashAlt />}
+                      child={<FontAwesomeIcon icon={faTrashAlt} />}
                       onClick={() => handleOnDelete(atomType, -1, -1)}
                     />
                   </td>
@@ -90,7 +91,7 @@ function EditNeighbors({
                 {/* <td>{hybridization === -1 ? '\u2217' : hybridization}</td> */}
                 <td>
                   <Button
-                    child={<FaTrashAlt />}
+                    child={<FontAwesomeIcon icon={faTrashAlt} />}
                     onClick={() =>
                       handleOnDelete(atomType, protonCount, hybridization)
                     }
@@ -134,7 +135,10 @@ function EditNeighbors({
         </td> */}
 
         <td>
-          <Button child={<FaPlus />} onClick={handleOnAdd} />
+          <Button
+            child={<FontAwesomeIcon icon={faPlus} />}
+            onClick={handleOnAdd}
+          />
         </td>
       </tr>,
     );

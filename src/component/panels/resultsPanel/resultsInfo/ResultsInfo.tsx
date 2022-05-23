@@ -3,7 +3,8 @@ import './ResultsInfo.scss';
 import { useCallback } from 'react';
 import { useData } from '../../../../context/DataContext';
 import Button from '../../../elements/Button';
-import { FaFileDownload, FaTrashAlt } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import queryTypes from '../../../../constants/queryTypes';
 
 type InputProps = {
@@ -50,7 +51,9 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
             )}
             <td>
               <Button
-                child={<FaFileDownload title="Download" />}
+                child={
+                  <FontAwesomeIcon icon={faFileDownload} title="Download" />
+                }
                 onClick={handleOnClickDownload}
                 disabled={
                   resultData.resultRecord?.dataSetList &&
@@ -60,7 +63,12 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
                 }
               />
               <Button
-                child={<FaTrashAlt title="Delete result entry in database" />}
+                child={
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    title="Delete result entry in database"
+                  />
+                }
                 onClick={handleOnClickDelete}
                 disabled={
                   resultData.resultRecord?.dataSetList &&
