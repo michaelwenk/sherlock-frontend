@@ -28,16 +28,13 @@ function PredictionTable({
       const spectralMatchAssignment =
         dataSet.attachment.spectralMatchAssignment;
       const signalIndexInQuerySpectrum =
-        spectralMatchAssignment.assignments[0].findIndex((signalArrayQuery) =>
-          signalArrayQuery.includes(signalIndexInPrediction),
-        );
-
+        spectralMatchAssignment.assignments[0][signalIndexInPrediction][0];
       return signalIndexInQuerySpectrum;
     },
     [dataSet.attachment.spectralMatchAssignment],
   );
 
-  const handleOnAtom = useCallback(
+  const handleOnRow = useCallback(
     (signalIndexInPrediction, action: 'enter' | 'leave') => {
       if (dataSet.assignment) {
         if (
@@ -109,8 +106,8 @@ function PredictionTable({
                     : undefined,
                   color: signalIndexInQuerySpectrum < 0 ? '#B5B5B5' : 'black',
                 }}
-                onMouseEnter={() => handleOnAtom(signalIndex, 'enter')}
-                onMouseLeave={() => handleOnAtom(signalIndex, 'leave')}
+                onMouseEnter={() => handleOnRow(signalIndex, 'enter')}
+                onMouseLeave={() => handleOnRow(signalIndex, 'leave')}
               >
                 <td>
                   {dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)}
@@ -174,7 +171,7 @@ function PredictionTable({
       dataSet.meta.smiles,
       dataSet.spectrum.signals,
       getSignalIndexInQuerySpectrum,
-      handleOnAtom,
+      handleOnRow,
       resultData?.queryType,
       resultData?.resultRecord.querySpectrum?.signals,
     ],

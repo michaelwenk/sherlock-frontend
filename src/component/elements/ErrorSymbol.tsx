@@ -1,4 +1,5 @@
-import { FaExclamation } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 interface InputProps {
   message: string;
@@ -6,7 +7,8 @@ interface InputProps {
 
 function ErrorSymbol({ message }: InputProps) {
   return (
-    <FaExclamation
+    <FontAwesomeIcon
+      icon={faExclamation}
       className="error-icon"
       style={{ color: 'red' }}
       title={message}

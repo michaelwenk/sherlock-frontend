@@ -4,4 +4,7 @@ export default interface DetectionOptions {
   hybridizationDetectionThreshold: number;
   lowerElementCountThreshold: number;
   upperElementCountThreshold: number;
+  detectFragments: boolean;
+  shiftToleranceFragmentDetection: number;
+  maximumAverageDeviationFragmentDetection: number;
 }

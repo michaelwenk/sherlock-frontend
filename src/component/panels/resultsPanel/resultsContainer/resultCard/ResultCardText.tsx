@@ -37,12 +37,6 @@ function ResultCardText({ dataSet }: InputProps) {
             )} ppm`}</td>
           </tr>
           <tr>
-            <td className="td-name">Tanimoto</td>
-            <td className="td-value">
-              {dataSet.attachment.tanimoto.toFixed(2)}
-            </td>
-          </tr>
-          <tr>
             <td className="td-name">Matching Signals</td>
             <td className="td-value">
               {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}

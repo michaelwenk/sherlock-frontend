@@ -268,6 +268,8 @@ function Panels() {
               queryType,
               resultRecord: response.data,
             };
+            console.log(resultData);
+
             dispatch({
               type: SET_RESULT_DATA,
               payload: { queryType, resultData },

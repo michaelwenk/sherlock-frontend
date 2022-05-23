@@ -4,6 +4,7 @@ import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
+import FragmentsView from './fragments/FragmentsView';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
@@ -17,6 +18,7 @@ function SummaryPanel() {
     useState<boolean>(false);
   const [showProtonsAsRows, setShowProtonsAsRows] = useState<boolean>(false);
   const [showMCD, setShowMCD] = useState<boolean>(false);
+  const [showFragments, setShowFragments] = useState<boolean>(false);
 
   useEffect(() => {
     const _selectedAdditionalColumnsAtomType =
@@ -73,6 +75,8 @@ function SummaryPanel() {
           }
           showMCD={showMCD}
           onClickButtonShowMCD={() => setShowMCD(!showMCD)}
+          showFragments={showFragments}
+          onClickButtonShowFragments={() => setShowFragments(!showFragments)}
         />
         <CorrelationTable
           additionalColumnData={additionalColumnData}
@@ -80,7 +84,21 @@ function SummaryPanel() {
           showProtonsAsRows={showProtonsAsRows}
         />
       </div>
-      {showMCD && <MCD />}
+
+      {(showMCD || showFragments) && (
+        <div
+          style={{
+            width: '100%',
+            height: '50%',
+            display: 'flex',
+            flexDirection: 'row',
+            borderTop: '1px solid grey',
+          }}
+        >
+          {showMCD && <MCD />}
+          {showFragments && <FragmentsView />}
+        </div>
+      )}
     </div>
   ) : (
     <p

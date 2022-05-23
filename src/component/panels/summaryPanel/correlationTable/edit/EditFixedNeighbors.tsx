@@ -1,7 +1,8 @@
 import './EditFixedNeighbors.scss';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { useCallback, useMemo, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import generateID from '../../../../../utils/generateID';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
@@ -87,7 +88,7 @@ function EditFixedNeighbors({
               <td>{labelSplit2[1]}</td>
               <td>
                 <Button
-                  child={<FaTrashAlt />}
+                  child={<FontAwesomeIcon icon={faTrashAlt} />}
                   onClick={() => handleOnDelete(neighborCorrelationIndex)}
                 />
               </td>
@@ -114,7 +115,10 @@ function EditFixedNeighbors({
           />
         </td>
         <td>
-          <Button child={<FaPlus />} onClick={handleOnAdd} />
+          <Button
+            child={<FontAwesomeIcon icon={faPlus} />}
+            onClick={handleOnAdd}
+          />
         </td>
       </tr>,
     );
