@@ -70,8 +70,8 @@ function FragmentsView() {
           <tr>
             <th>#</th>
             <th>Fragment</th>
-            <th>Average Deviation</th>
-            <th>include</th>
+            <th>Average Deviation (ppm)</th>
+            <th>Include</th>
           </tr>
         </thead>
         <tbody>
