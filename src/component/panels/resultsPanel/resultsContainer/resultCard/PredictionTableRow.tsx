@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import queryTypes from '../../../../../constants/queryTypes';
+import { useInView } from 'react-intersection-observer';
 import { useData } from '../../../../../context/DataContext';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
@@ -20,6 +20,7 @@ function PredictionTableRow({
   querySpectrum,
 }: InputProps) {
   const { resultData } = useData();
+  const { ref, inView } = useInView({ threshold: 0.8 });
 
   const signalIndexInQuerySpectrum = useMemo(() => {
     const spectralMatchAssignment = dataSet.attachment.spectralMatchAssignment;
@@ -29,7 +30,7 @@ function PredictionTableRow({
   }, [dataSet.attachment.spectralMatchAssignment, signalIndex]);
 
   const highlightRow = useHighlight(
-    signalIndexInQuerySpectrum >= 0
+    inView && signalIndexInQuerySpectrum >= 0
       ? [querySpectrum.signals[signalIndexInQuerySpectrum].strings[3]]
       : [],
     highlightSources.predictionTable,
@@ -39,18 +40,20 @@ function PredictionTableRow({
     (e: any, action: 'enter' | 'leave') => {
       e.preventDefault();
       e.stopPropagation();
-      if (dataSet.assignment) {
-        if (signalIndexInQuerySpectrum >= 0) {
-          if (action === 'enter') {
-            highlightRow.show();
-          } else {
-            highlightRow.hide();
+      if (inView) {
+        if (dataSet.assignment) {
+          if (signalIndexInQuerySpectrum >= 0) {
+            if (action === 'enter') {
+              highlightRow.show();
+            } else {
+              highlightRow.hide();
+            }
           }
         }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dataSet.assignment, signalIndexInQuerySpectrum],
+    [dataSet.assignment, inView, signalIndexInQuerySpectrum],
   );
 
   const range = useMemo(
@@ -91,6 +94,7 @@ function PredictionTableRow({
     () => (
       <tr
         key={generateID()}
+        ref={ref}
         style={{
           backgroundColor: highlightRow.isActive ? '#ff6f0057' : undefined,
           color: signalIndexInQuerySpectrum < 0 ? '#B5B5B5' : 'black',
@@ -147,7 +151,7 @@ function PredictionTableRow({
       handleOnRow,
       highlightRow.isActive,
       range,
-      resultData?.queryType,
+      ref,
       signalIndex,
       signalIndexInQuerySpectrum,
     ],

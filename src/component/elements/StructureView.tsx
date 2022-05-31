@@ -1,5 +1,6 @@
 import { Molecule } from 'openchemlib';
 import { useCallback, useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { MolfileSvgRenderer } from 'react-ocl';
 import DataSet from '../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../types/sherlock/dataSet/SpectrumCompact';
@@ -20,39 +21,41 @@ function StructureView({
   imageHeight,
 }: InputProps) {
   const highlightData = useHighlightData();
-  // const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
 
-  // const querySpectrumSignalToAtomIndexAssignment = useMemo(() => {
-  //   const _querySpectrumSignalToAtomIndexAssignment: {
-  //     [signalID: string]: number[];
-  //   } = {};
-  //   const spectralMatchAssignment = dataSet.attachment.spectralMatchAssignment;
-  //   if (dataSet.assignment) {
-  //     dataSet.assignment.assignments[0].forEach(
-  //       (signalArrayInNonQuerySpectrum, signalIndexInNonQuerySpectrum) => {
-  //         const ids: number[] = [];
-  //         const signalIndexInQuerySpectrum =
-  //           spectralMatchAssignment.assignments[0][
-  //             signalIndexInNonQuerySpectrum
-  //           ][0];
-  //         if (signalIndexInQuerySpectrum >= 0) {
-  //           signalArrayInNonQuerySpectrum.forEach((atomIndex) =>
-  //             ids.push(atomIndex),
-  //           );
-  //           _querySpectrumSignalToAtomIndexAssignment[
-  //             querySpectrum.signals[signalIndexInQuerySpectrum].strings[3]
-  //           ] = ids;
-  //         }
-  //       },
-  //     );
-  //   }
+  const querySpectrumSignalToAtomIndexAssignment = useMemo(() => {
+    const _querySpectrumSignalToAtomIndexAssignment: {
+      [signalID: string]: number[];
+    } = {};
+    const spectralMatchAssignment = dataSet.attachment.spectralMatchAssignment;
+    if (dataSet.assignment) {
+      dataSet.assignment.assignments[0].forEach(
+        (signalArrayInNonQuerySpectrum, signalIndexInNonQuerySpectrum) => {
+          const ids: number[] = [];
+          const signalIndexInQuerySpectrum =
+            spectralMatchAssignment.assignments[0][
+              signalIndexInNonQuerySpectrum
+            ][0];
+          if (signalIndexInQuerySpectrum >= 0) {
+            signalArrayInNonQuerySpectrum.forEach((atomIndex) =>
+              ids.push(atomIndex),
+            );
+            _querySpectrumSignalToAtomIndexAssignment[
+              querySpectrum.signals[signalIndexInQuerySpectrum].strings[3]
+            ] = ids;
+          }
+        },
+      );
+    }
 
-  //   return _querySpectrumSignalToAtomIndexAssignment;
-  // }, [
-  //   dataSet.assignment,
-  //   dataSet.attachment.spectralMatchAssignment,
-  //   querySpectrum.signals,
-  // ]);
+    return _querySpectrumSignalToAtomIndexAssignment;
+  }, [
+    dataSet.assignment,
+    dataSet.attachment.spectralMatchAssignment,
+    querySpectrum.signals,
+  ]);
 
   const getSignalIndexInQuerySpectrum = useCallback(
     (atomIndex: number) => {
@@ -78,58 +81,29 @@ function StructureView({
     [dataSet.assignment, dataSet.attachment.spectralMatchAssignment],
   );
 
-  // useEffect(() => {
-  //   let ids: number[] = [];
-  //   for (let signalID in querySpectrumSignalToAtomIndexAssignment) {
-  //     if (highlightData.highlight.highlighted.has(signalID)) {
-  //       ids = ids.concat(querySpectrumSignalToAtomIndexAssignment[signalID]);
-  //     }
-  //   }
-  //   if (ids.length > 0) {
-  //     setAtomHighlights(ids);
-  //   }
-  // }, [
-  //   highlightData.highlight.highlighted,
-  //   querySpectrumSignalToAtomIndexAssignment,
-  // ]);
-
   const handleOnAtom = useCallback(
     (atomIndex: number, action: 'enter' | 'leave') => {
-      const signalIndexInQuerySpectrum =
-        getSignalIndexInQuerySpectrum(atomIndex);
-      if (signalIndexInQuerySpectrum >= 0) {
-        highlightData.dispatch({
-          type: action === 'enter' ? 'SHOW' : 'HIDE',
-          payload: {
-            convertedHighlights: new Set([
-              querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
-            ]),
-          },
-        });
-
-        // const ids: number[] = [];
-        // if (action !== 'leave') {
-        //   // add possible equivalent atoms from same group
-        //   const signalIndexInMolecule =
-        //     dataSet.assignment.assignments[0].findIndex((atomArray) =>
-        //       atomArray.includes(atomIndex),
-        //     );
-        //   if (signalIndexInMolecule >= 0) {
-        //     dataSet.assignment.assignments[0][signalIndexInMolecule].forEach(
-        //       (atomIndex) => {
-        //         ids.push(atomIndex);
-        //       },
-        //     );
-        //   }
-        // }
-        // setAtomHighlights(ids);
+      if (inView) {
+        const signalIndexInQuerySpectrum =
+          getSignalIndexInQuerySpectrum(atomIndex);
+        if (signalIndexInQuerySpectrum >= 0) {
+          highlightData.dispatch({
+            type: action === 'enter' ? 'SHOW' : 'HIDE',
+            payload: {
+              convertedHighlights: new Set([
+                querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
+              ]),
+            },
+          });
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       dataSet.assignment.assignments,
       getSignalIndexInQuerySpectrum,
-      // highlightData.dispatch,
+      highlightData.dispatch,
+      inView,
       querySpectrum.signals,
     ],
   );
@@ -141,23 +115,41 @@ function StructureView({
     return mol.toMolfile();
   }, [dataSet.meta.molfile]);
 
+  const atomHighlights = useMemo(() => {
+    if (inView) {
+      let ids: number[] = [];
+      for (let signalID in querySpectrumSignalToAtomIndexAssignment) {
+        if (highlightData.highlight.highlighted.has(signalID)) {
+          ids = ids.concat(querySpectrumSignalToAtomIndexAssignment[signalID]);
+        }
+      }
+      return ids;
+    }
+  }, [
+    highlightData.highlight.highlighted,
+    inView,
+    querySpectrumSignalToAtomIndexAssignment,
+  ]);
+
   return useMemo(
     () => (
-      <MolfileSvgRenderer
-        id={`molSVG_${generateID()}`}
-        molfile={molfile}
-        width={imageWidth}
-        height={imageHeight}
-        autoCrop={true}
-        autoCropMargin={10}
-        // atomHighlight={atomHighlights}
-        atomHighlightColor="orange"
-        atomHighlightOpacity={0.65}
-        onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
-        onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
-      />
+      <div ref={ref}>
+        <MolfileSvgRenderer
+          id={`molSVG_${generateID()}`}
+          molfile={molfile}
+          width={imageWidth}
+          height={imageHeight}
+          autoCrop={true}
+          autoCropMargin={10}
+          atomHighlight={atomHighlights}
+          atomHighlightColor="orange"
+          atomHighlightOpacity={0.65}
+          onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
+          onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
+        />
+      </div>
     ),
-    [handleOnAtom, imageHeight, imageWidth, molfile],
+    [atomHighlights, handleOnAtom, imageHeight, imageWidth, molfile, ref],
   );
 }
 

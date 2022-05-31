@@ -46,7 +46,7 @@ function ResultsView({
     sortOptions.hits.label,
   );
   const [selectedImageSize, setSelectedImageSize] = useState<ImageSize>(
-    imageSizes[0],
+    imageSizes[1],
   );
 
   const handleOnSelectCardIndex = useCallback((index: number) => {
