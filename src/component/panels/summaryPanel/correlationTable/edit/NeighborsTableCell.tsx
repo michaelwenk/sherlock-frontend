@@ -4,7 +4,7 @@ import {
   getCorrelationDelta,
   getCorrelationIndex,
 } from 'nmr-correlation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
@@ -256,77 +256,95 @@ function NeighborsTableCell({
     }
   }, [highlight, show]);
 
-  return (
-    <div
-      onDoubleClick={(e) => {
-        e.stopPropagation();
-        setShow(true);
-      }}
-    >
-      {label}
-      {show && (
-        <CustomModal
-          show={show}
-          title={`Edit ${capitalize(mode)} Neighbors: ${correlation.atomType}${
-            correlationIndex + 1
-          } ${
-            getCorrelationDelta(correlation)
-              ? `(${(getCorrelationDelta(correlation) as number).toFixed(
-                  2,
-                )} ppm)`
-              : ''
-          }`}
-          body={
-            mode === 'forbidden' ? (
-              <EditNeighbors
-                neighbors={neighbors}
-                possibleNeighbors={possibleNeighbors}
-                onDelete={handleOnDelete}
-                onAdd={handleOnAdd}
-              />
-            ) : (
-              <Tabs onSelect={() => {}} defaultActiveKey="general">
-                <Tab eventKey={'general'} title="General">
-                  <EditNeighbors
-                    neighbors={neighbors}
-                    possibleNeighbors={possibleNeighbors}
-                    onDelete={handleOnDelete}
-                    onAdd={handleOnAdd}
-                  />
-                </Tab>
-                <Tab eventKey={'fixed'} title="Fixed">
-                  {correlation.equivalence === undefined ||
-                  correlation.equivalence !== 1 ||
-                  !correlation.protonsCount ||
-                  correlation.protonsCount.length !== 1 ||
-                  !correlation.hybridization ||
-                  correlation.hybridization.length !== 1 ? (
-                    <p style={{ color: 'blue' }}>
-                      Setting of direct bond to another atom is not allowed for
-                      this atom with an equivalence higher than one or a
-                      non-unique proton count/hybridization!
-                    </p>
-                  ) : (
-                    <EditFixedNeighbors
-                      fixedNeighborEntry={
-                        resultData?.resultRecord.detections?.fixedNeighbors?.[
-                          correlationIndex
-                        ] || []
-                      }
-                      correlations={nmriumData?.correlations.values}
-                      onDelete={handleOnDeleteFixed}
-                      onAdd={handleOnAddFixed}
+  return useMemo(
+    () => (
+      <div
+        onDoubleClick={(e) => {
+          e.stopPropagation();
+          setShow(true);
+        }}
+      >
+        {label}
+        {show && (
+          <CustomModal
+            show={show}
+            title={`Edit ${capitalize(mode)} Neighbors: ${
+              correlation.atomType
+            }${correlationIndex + 1} ${
+              getCorrelationDelta(correlation)
+                ? `(${(getCorrelationDelta(correlation) as number).toFixed(
+                    2,
+                  )} ppm)`
+                : ''
+            }`}
+            body={
+              mode === 'forbidden' ? (
+                <EditNeighbors
+                  neighbors={neighbors}
+                  possibleNeighbors={possibleNeighbors}
+                  onDelete={handleOnDelete}
+                  onAdd={handleOnAdd}
+                />
+              ) : (
+                <Tabs onSelect={() => {}} defaultActiveKey="general">
+                  <Tab eventKey={'general'} title="General">
+                    <EditNeighbors
+                      neighbors={neighbors}
+                      possibleNeighbors={possibleNeighbors}
+                      onDelete={handleOnDelete}
+                      onAdd={handleOnAdd}
                     />
-                  )}
-                </Tab>
-              </Tabs>
-            )
-          }
-          onClose={handleOnClose}
-        />
-      )}
-    </div>
+                  </Tab>
+                  <Tab eventKey={'fixed'} title="Fixed">
+                    {correlation.equivalence === undefined ||
+                    correlation.equivalence !== 1 ||
+                    !correlation.protonsCount ||
+                    correlation.protonsCount.length !== 1 ||
+                    !correlation.hybridization ||
+                    correlation.hybridization.length !== 1 ? (
+                      <p style={{ color: 'blue' }}>
+                        Setting of direct bond to another atom is not allowed
+                        for this atom with an equivalence higher than one or a
+                        non-unique proton count/hybridization!
+                      </p>
+                    ) : (
+                      <EditFixedNeighbors
+                        fixedNeighborEntry={
+                          resultData?.resultRecord.detections?.fixedNeighbors?.[
+                            correlationIndex
+                          ] || []
+                        }
+                        correlations={nmriumData?.correlations.values}
+                        onDelete={handleOnDeleteFixed}
+                        onAdd={handleOnAddFixed}
+                      />
+                    )}
+                  </Tab>
+                </Tabs>
+              )
+            }
+            onClose={handleOnClose}
+          />
+        )}
+      </div>
+    ),
+    [
+      correlation,
+      correlationIndex,
+      handleOnAdd,
+      handleOnAddFixed,
+      handleOnClose,
+      handleOnDelete,
+      handleOnDeleteFixed,
+      label,
+      mode,
+      neighbors,
+      nmriumData?.correlations.values,
+      possibleNeighbors,
+      resultData?.resultRecord.detections?.fixedNeighbors,
+      show,
+    ],
   );
 }
 
-export default NeighborsTableCell;
+export default memo(NeighborsTableCell);

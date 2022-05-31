@@ -2,7 +2,7 @@ import './ResultCard.scss';
 
 import Card from 'react-bootstrap/Card';
 import ResultCardText from './ResultCardText';
-import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { CSSProperties, memo, useEffect, useMemo, useState } from 'react';
 import PredictionTable from './PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import Button from '../../../../elements/Button';
@@ -39,7 +39,6 @@ function ResultCard({
 }: InputProps) {
   const { resultData } = useData();
 
-  const [atomHighlights, setAtomHighlights] = useState<number[]>([]);
   const [showPredictionTableState, setShowPredictionTableState] =
     useState<string>(showPredictionTableStates.hide);
 
@@ -68,7 +67,6 @@ function ResultCard({
           <StructureView
             dataSet={dataSet}
             querySpectrum={querySpectrum}
-            onChangeAtomHighlights={(ids: number[]) => setAtomHighlights(ids)}
             imageWidth={imageWidth}
             imageHeight={imageHeight}
           />
@@ -105,7 +103,6 @@ function ResultCard({
               <PredictionTable
                 dataSet={dataSet}
                 querySpectrum={querySpectrum}
-                atomHighlights={atomHighlights}
                 isExtended={
                   showPredictionTableState ===
                   showPredictionTableStates.extended
@@ -116,14 +113,7 @@ function ResultCard({
         }
       </Card.Body>
     ),
-    [
-      atomHighlights,
-      dataSet,
-      imageHeight,
-      imageWidth,
-      querySpectrum,
-      showPredictionTableState,
-    ],
+    [dataSet, imageHeight, imageWidth, querySpectrum, showPredictionTableState],
   );
 
   const cardLink = useMemo(
@@ -153,13 +143,16 @@ function ResultCard({
     [dataSet.meta.id, dataSet.meta.source],
   );
 
-  return (
-    <Card style={styles}>
-      <Card.Header>{`#${id}`}</Card.Header>
-      {cardBody}
-      {cardLink}
-    </Card>
+  return useMemo(
+    () => (
+      <Card style={styles}>
+        <Card.Header>{`#${id}`}</Card.Header>
+        {cardBody}
+        {cardLink}
+      </Card>
+    ),
+    [cardBody, cardLink, id, styles],
   );
 }
 
-export default ResultCard;
+export default memo(ResultCard);

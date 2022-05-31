@@ -1,6 +1,6 @@
 import './Button.scss';
 
-import { CSSProperties, MouseEvent, useCallback } from 'react';
+import { CSSProperties, MouseEvent, useCallback, useMemo } from 'react';
 
 type InputProps = {
   onClick: Function;
@@ -30,17 +30,20 @@ function Button({
     [onClick],
   );
 
-  return (
-    <button
-      className={className}
-      onClick={handleOnClick}
-      disabled={disabled}
-      type={type}
-      title={title}
-      style={style}
-    >
-      {child}
-    </button>
+  return useMemo(
+    () => (
+      <button
+        className={className}
+        onClick={handleOnClick}
+        disabled={disabled}
+        type={type}
+        title={title}
+        style={style}
+      >
+        {child}
+      </button>
+    ),
+    [child, className, disabled, handleOnClick, style, title, type],
   );
 }
 

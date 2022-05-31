@@ -1,7 +1,7 @@
 import './QueryTabRetrieval.scss';
 
 import { useFormikContext } from 'formik';
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 ('@fortawesome/react-fontawesome');
 import {
@@ -188,113 +188,128 @@ function QueryTabRetrieval() {
     return _retrievalData;
   }, [filteredRows]);
 
-  return (
-    <div className="query-tab-retrieval-container">
-      <div className="search-and-button-container">
-        <div className="search-container">
-          {rows.length > 0 && (
-            <Input
-              type="text"
-              defaultValue=""
-              onChange={(value: string) => setSearchPattern(value.trim())}
-              placeholder="Search by Name/ID ..."
-              inputWidth="100%"
-            />
-          )}
-        </div>
-        <div className="button-and-pagination-container">
-          <div className="pagination-container">
-            {filteredRows.length > 0 && (
-              <CustomPagination
-                data={retrievalData}
-                selected={selectedIndex}
-                onSelect={handleOnSelectIndex}
-                maxPages={3}
-                showFirst={true}
-                showLast={true}
+  return useMemo(
+    () => (
+      <div className="query-tab-retrieval-container">
+        <div className="search-and-button-container">
+          <div className="search-container">
+            {rows.length > 0 && (
+              <Input
+                type="text"
+                defaultValue=""
+                onChange={(value: string) => setSearchPattern(value.trim())}
+                placeholder="Search by Name/ID ..."
+                inputWidth="100%"
               />
             )}
           </div>
-          <div className="button-container">
-            <Button
-              child={
-                <FontAwesomeIcon
-                  icon={faSyncAlt}
-                  title="Fetch database entries"
+          <div className="button-and-pagination-container">
+            <div className="pagination-container">
+              {filteredRows.length > 0 && (
+                <CustomPagination
+                  data={retrievalData}
+                  selected={selectedIndex}
+                  onSelect={handleOnSelectIndex}
+                  maxPages={3}
+                  showFirst={true}
+                  showLast={true}
                 />
-              }
-              onClick={() => {
-                setFieldValue('queryType', queryTypes.retrieval);
-                setFieldValue(
-                  'retrievalOptions.action',
-                  retrievalActions.fetch,
-                );
-                submitForm();
-              }}
-              disabled={isRequesting}
-              style={{ color: isRequesting ? 'grey' : 'inherit' }}
-            />
-            <Button
-              child={
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  title="Delete all database entries"
-                />
-              }
-              onClick={() => {
-                setShowDeleteModal(true);
-              }}
-              disabled={isRequesting}
-              style={{ color: isRequesting ? 'grey' : 'inherit' }}
-            />
+              )}
+            </div>
+            <div className="button-container">
+              <Button
+                child={
+                  <FontAwesomeIcon
+                    icon={faSyncAlt}
+                    title="Fetch database entries"
+                  />
+                }
+                onClick={() => {
+                  setFieldValue('queryType', queryTypes.retrieval);
+                  setFieldValue(
+                    'retrievalOptions.action',
+                    retrievalActions.fetch,
+                  );
+                  submitForm();
+                }}
+                disabled={isRequesting}
+                style={{ color: isRequesting ? 'grey' : 'inherit' }}
+              />
+              <Button
+                child={
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    title="Delete all database entries"
+                  />
+                }
+                onClick={() => {
+                  setShowDeleteModal(true);
+                }}
+                disabled={isRequesting}
+                style={{ color: isRequesting ? 'grey' : 'inherit' }}
+              />
+            </div>
           </div>
         </div>
+        {
+          <div className="retrieval-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name/ID</th>
+                  <th>Date</th>
+                  <th>Count</th>
+                  <th>Preview</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>{retrievalData[selectedIndex]}</tbody>
+            </table>
+          </div>
+        }
+        {showDeleteModal && (
+          <ConfirmModal
+            show={showDeleteModal}
+            title={
+              resultRecordToDelete
+                ? `Delete ${
+                    resultRecordToDelete.name || resultRecordToDelete.id
+                  }?`
+                : 'Delete all result database entries?'
+            }
+            body={
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: 'blue',
+                }}
+              >
+                This can not be undone!
+              </p>
+            }
+            onCancel={() => {
+              setShowDeleteModal(false);
+              setResultRecordToDelete(undefined);
+            }}
+            onConfirm={handleOnConfirmDelete}
+          />
+        )}
       </div>
-      {
-        <div className="retrieval-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Name/ID</th>
-                <th>Date</th>
-                <th>Count</th>
-                <th>Preview</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>{retrievalData[selectedIndex]}</tbody>
-          </table>
-        </div>
-      }
-      {showDeleteModal && (
-        <ConfirmModal
-          show={showDeleteModal}
-          title={
-            resultRecordToDelete
-              ? `Delete ${
-                  resultRecordToDelete.name || resultRecordToDelete.id
-                }?`
-              : 'Delete all result database entries?'
-          }
-          body={
-            <p
-              style={{
-                fontSize: '15px',
-                color: 'blue',
-              }}
-            >
-              This can not be undone!
-            </p>
-          }
-          onCancel={() => {
-            setShowDeleteModal(false);
-            setResultRecordToDelete(undefined);
-          }}
-          onConfirm={handleOnConfirmDelete}
-        />
-      )}
-    </div>
+    ),
+    [
+      filteredRows.length,
+      handleOnConfirmDelete,
+      handleOnSelectIndex,
+      isRequesting,
+      resultRecordToDelete,
+      retrievalData,
+      rows.length,
+      selectedIndex,
+      setFieldValue,
+      showDeleteModal,
+      submitForm,
+    ],
   );
 }
 
-export default QueryTabRetrieval;
+export default memo(QueryTabRetrieval);

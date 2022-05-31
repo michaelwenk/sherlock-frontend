@@ -1,6 +1,6 @@
 import './EditFixedNeighbors.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import generateID from '../../../../../utils/generateID';
@@ -133,26 +133,26 @@ function EditFixedNeighbors({
     values,
   ]);
 
-  const table = useMemo(() => {
-    return (
-      rows &&
-      rows.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Atom</th>
-              <th>#H</th>
-              <th>Shift</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </table>
-      )
-    );
-  }, [rows]);
-
-  return <div className="edit-fixed-neighbors">{table}</div>;
+  return useMemo(
+    () => (
+      <div className="edit-fixed-neighbors">
+        {rows && rows.length > 0 && (
+          <table>
+            <thead>
+              <tr>
+                <th>Atom</th>
+                <th>#H</th>
+                <th>Shift</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </table>
+        )}
+      </div>
+    ),
+    [rows],
+  );
 }
 
-export default EditFixedNeighbors;
+export default memo(EditFixedNeighbors);

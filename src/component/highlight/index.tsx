@@ -13,12 +13,20 @@ type HighlightActions = 'HIDE' | 'SHOW';
 interface HighlightState {
   highlights: Set<string>;
   highlighted: Set<string>;
-  sourceData?: string;
+  source?: string;
 }
 
 interface HighlightContextProps {
   highlight: HighlightState;
-  dispatch: (props: { type: HighlightActions; payload?: any }) => void;
+  // eslint-disable-next-line no-unused-vars
+  dispatch: (props: {
+    type: HighlightActions;
+    payload?: {
+      convertedHighlights: Set<string>;
+      id?: string;
+      source?: string;
+    };
+  }) => void;
   remove: () => void;
 }
 
@@ -26,7 +34,7 @@ const emptyState: HighlightContextProps = {
   highlight: {
     highlights: new Set<string>(),
     highlighted: new Set<string>(),
-    sourceData: undefined,
+    source: undefined,
   },
   dispatch: () => null,
   remove: () => null,
@@ -37,7 +45,7 @@ const highlightContext = createContext<HighlightContextProps>(emptyState);
 function highlightReducer(state: HighlightState, action) {
   switch (action.type) {
     case 'SHOW': {
-      const { convertedHighlights } = action.payload;
+      const { convertedHighlights, source } = action.payload;
 
       const newState: HighlightState = {
         ...state,
@@ -48,6 +56,7 @@ function highlightReducer(state: HighlightState, action) {
         }
       }
       newState.highlighted = new Set(newState.highlights);
+      newState.source = source;
 
       return newState;
     }
@@ -56,7 +65,6 @@ function highlightReducer(state: HighlightState, action) {
 
       const newState: HighlightState = {
         ...state,
-        sourceData: undefined,
       };
       for (const value of convertedHighlights) {
         if (value !== undefined) {
@@ -64,6 +72,7 @@ function highlightReducer(state: HighlightState, action) {
         }
       }
       newState.highlighted = new Set(newState.highlights);
+      newState.source = undefined;
 
       return newState;
     }
@@ -102,9 +111,11 @@ export function useHighlightData() {
 
 /**
  * @param {Array<string | number>}  highlights
- * @param {SourceData = null} sourceData
  */
-export function useHighlight(highlights: (string | number)[]): Highlight {
+export function useHighlight(
+  highlights: (string | number)[],
+  source?: string,
+): Highlight {
   if (!Array.isArray(highlights)) {
     throw new Error('highlights must be an array');
   }
@@ -128,7 +139,7 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
     return () => {
       dispatch({
         type: 'HIDE',
-        payload: { convertedHighlights: [] },
+        payload: { convertedHighlights: new Set() },
       });
     };
   }, [dispatch]);
@@ -147,9 +158,10 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
       type: 'SHOW',
       payload: {
         convertedHighlights,
+        source,
       },
     });
-  }, [dispatch, convertedHighlights]);
+  }, [dispatch, convertedHighlights, source]);
 
   const hide = useCallback(() => {
     dispatch({
@@ -164,7 +176,7 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
     (id) => {
       dispatch({
         type: 'SHOW',
-        payload: { convertedHighlights: [], id },
+        payload: { convertedHighlights: new Set(), id },
       });
     },
     [dispatch],
@@ -174,7 +186,7 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
     (id) => {
       dispatch({
         type: 'HIDE',
-        payload: { convertedHighlights: [], id },
+        payload: { convertedHighlights: new Set(), id },
       });
     },
     [dispatch],
@@ -182,6 +194,7 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
 
   return useMemo(() => {
     return {
+      source,
       isActive,
       onHover: {
         onMouseEnter: show,
@@ -192,5 +205,5 @@ export function useHighlight(highlights: (string | number)[]): Highlight {
       add,
       remove,
     };
-  }, [add, hide, isActive, remove, show]);
+  }, [add, hide, isActive, remove, show, source]);
 }

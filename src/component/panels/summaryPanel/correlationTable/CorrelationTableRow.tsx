@@ -6,11 +6,12 @@ import {
   getLabel,
   Link,
 } from 'nmr-correlation';
-import { useCallback, useMemo } from 'react';
+import { memo, MouseEvent, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 import NMRiumData from '../../../../types/nmrium/NMRiumData';
 
 import { useHighlight } from '../../../highlight';
+import highlightSources from '../../../highlight/highlightSources';
 import { getGroupIndex } from '../Utilities';
 
 import AdditionalColumnField from './AdditionalColumnField';
@@ -50,18 +51,24 @@ function CorrelationTableRow({
 
     return ids;
   }, [correlation.id, correlation.link]);
-  const highlightRow = useHighlight(highlightIDsRow);
+
+  const highlightRow = useHighlight(
+    highlightIDsRow,
+    highlightSources.correlationTable,
+  );
 
   const mouseEnterHandler = useCallback(
-    (event) => {
-      event.currentTarget.focus();
+    (event: MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
       highlightRow.show();
     },
     [highlightRow],
   );
   const mouseLeaveHandler = useCallback(
-    (event) => {
-      event.currentTarget.blur();
+    (event: MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
       highlightRow.hide();
     },
     [highlightRow],
@@ -172,124 +179,141 @@ function CorrelationTableRow({
         };
   }, [correlation]);
 
-  return (
-    <tr style={styleRow}>
-      <td
-        title={t}
-        {...{
-          ...otherTableDataProps,
-          style: { ...tableDataProps.style, styleLabel },
-        }}
-      >
-        {getLabel(nmriumData?.correlations.values, correlation)}
-      </td>
-      <td title={t} {...otherTableDataProps}>
-        {getCorrelationDelta(correlation)
-          ? getCorrelationDelta(correlation)?.toFixed(2)
-          : ''}
-      </td>
-      <td
-        title={t}
-        {...otherTableDataProps}
-        style={{
-          ...otherTableDataProps.style,
-          ...{
-            borderRight:
-              showAdditionalColumns && correlation.atomType === 'H'
-                ? '1px solid'
-                : undefined,
-          },
-        }}
-      >
-        <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
-      </td>
-      {correlation.atomType != 'H' && (
-        <>
-          <td title={t} {...otherTableDataProps}>
-            {correlation.protonsCount.join(',')}
-          </td>
-          <td
-            title={t}
-            {...{
-              ...otherTableDataProps,
-              style: {
-                ...tableDataProps.style,
-              },
-            }}
-          >
-            {correlation.atomType != 'H' ? (
-              <HybridizationsTableCell
-                correlation={correlation}
-                hybridizations={Array.from(
-                  new Set<number>(
-                    (
-                      (nmriumData as NMRiumData).correlations.values[
-                        correlationIndex
-                      ].hybridization || []
-                    ).concat(
-                      resultData?.resultRecord?.detections
-                        ?.detectedHybridizations?.[correlationIndex] || [],
+  return useMemo(
+    () => (
+      <tr style={styleRow}>
+        <td
+          title={t}
+          {...{
+            ...otherTableDataProps,
+            style: { ...tableDataProps.style, styleLabel },
+          }}
+        >
+          {getLabel(nmriumData?.correlations.values, correlation)}
+        </td>
+        <td title={t} {...otherTableDataProps}>
+          {getCorrelationDelta(correlation)
+            ? getCorrelationDelta(correlation)?.toFixed(2)
+            : ''}
+        </td>
+        <td
+          title={t}
+          {...otherTableDataProps}
+          style={{
+            ...otherTableDataProps.style,
+            ...{
+              borderRight:
+                showAdditionalColumns && correlation.atomType === 'H'
+                  ? '1px solid'
+                  : undefined,
+            },
+          }}
+        >
+          <label style={equivalenceCellStyle}>{correlation.equivalence}</label>
+        </td>
+        {correlation.atomType != 'H' && (
+          <>
+            <td title={t} {...otherTableDataProps}>
+              {correlation.protonsCount.join(',')}
+            </td>
+            <td
+              title={t}
+              {...{
+                ...otherTableDataProps,
+                style: {
+                  ...tableDataProps.style,
+                },
+              }}
+            >
+              {correlation.atomType != 'H' ? (
+                <HybridizationsTableCell
+                  correlation={correlation}
+                  hybridizations={Array.from(
+                    new Set<number>(
+                      (
+                        (nmriumData as NMRiumData).correlations.values[
+                          correlationIndex
+                        ].hybridization || []
+                      ).concat(
+                        resultData?.resultRecord?.detections
+                          ?.detectedHybridizations?.[correlationIndex] || [],
+                      ),
                     ),
-                  ),
-                )}
-                highlight={highlightRow}
-              />
-            ) : (
-              ''
-            )}
-          </td>
-          <td
-            title={t}
-            {...{
-              ...otherTableDataProps,
-              style: tableDataProps.style,
-            }}
-          >
-            {correlation.atomType != 'H' ? (
-              <NeighborsTableCell
-                correlation={correlation}
-                neighbors={
-                  resultData?.resultRecord?.detections?.forbiddenNeighbors[
-                    correlationIndex
-                  ] || {}
-                }
-                mode="forbidden"
-                highlight={highlightRow}
-              />
-            ) : (
-              ''
-            )}
-          </td>
-          <td
-            title={t}
-            {...{
-              ...otherTableDataProps,
-              style: {
-                ...tableDataProps.style,
-                borderRight: showAdditionalColumns ? '1px solid' : 'none',
-              },
-            }}
-          >
-            {resultData ? (
-              <NeighborsTableCell
-                correlation={correlation}
-                neighbors={
-                  resultData?.resultRecord?.detections?.setNeighbors[
-                    correlationIndex
-                  ] || {}
-                }
-                mode="set"
-                highlight={highlightRow}
-              />
-            ) : (
-              ''
-            )}
-          </td>
-        </>
-      )}
-      {showAdditionalColumns && additionalColumnFields}
-    </tr>
+                  )}
+                  highlight={highlightRow}
+                />
+              ) : (
+                ''
+              )}
+            </td>
+            <td
+              title={t}
+              {...{
+                ...otherTableDataProps,
+                style: tableDataProps.style,
+              }}
+            >
+              {correlation.atomType != 'H' ? (
+                <NeighborsTableCell
+                  correlation={correlation}
+                  neighbors={
+                    resultData?.resultRecord?.detections?.forbiddenNeighbors[
+                      correlationIndex
+                    ] || {}
+                  }
+                  mode="forbidden"
+                  highlight={highlightRow}
+                />
+              ) : (
+                ''
+              )}
+            </td>
+            <td
+              title={t}
+              {...{
+                ...otherTableDataProps,
+                style: {
+                  ...tableDataProps.style,
+                  borderRight: showAdditionalColumns ? '1px solid' : 'none',
+                },
+              }}
+            >
+              {resultData ? (
+                <NeighborsTableCell
+                  correlation={correlation}
+                  neighbors={
+                    resultData?.resultRecord?.detections?.setNeighbors[
+                      correlationIndex
+                    ] || {}
+                  }
+                  mode="set"
+                  highlight={highlightRow}
+                />
+              ) : (
+                ''
+              )}
+            </td>
+          </>
+        )}
+        {showAdditionalColumns && additionalColumnFields}
+      </tr>
+    ),
+    [
+      additionalColumnFields,
+      correlation,
+      correlationIndex,
+      equivalenceCellStyle,
+      highlightRow,
+      nmriumData,
+      otherTableDataProps,
+      resultData,
+      showAdditionalColumns,
+      styleLabel,
+      styleRow,
+      t,
+      tableDataProps.style,
+    ],
   );
 }
 
-export default CorrelationTableRow;
+export default memo(CorrelationTableRow);

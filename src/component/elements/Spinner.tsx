@@ -1,6 +1,6 @@
 import './Spinner.scss';
 import Button from './Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TailSpin } from 'react-loader-spinner';
 
 type InputProps = {
@@ -45,28 +45,41 @@ function Spinner({
     }
   }, [showTimer, timer]);
 
-  return (
-    <div className={className}>
-      <TailSpin color="#00BFFF" height="100px" width="100px" {...props} />
-      {showTimer && (
-        <p
-          style={{ marginTop: 10 }}
-        >{`${timer.minutes} min : ${timer.seconds} s`}</p>
-      )}
-      {buttonText && onClickCancel && (
-        <Button
-          child={buttonText}
-          onClick={onClickCancel}
-          className={classNameButton}
-          disabled={buttonDisabled}
-          style={
-            buttonDisabled
-              ? { border: 'none', backgroundColor: 'transparent' }
-              : {}
-          }
-        />
-      )}
-    </div>
+  return useMemo(
+    () => (
+      <div className={className}>
+        <TailSpin color="#00BFFF" height="100px" width="100px" {...props} />
+        {showTimer && (
+          <p
+            style={{ marginTop: 10 }}
+          >{`${timer.minutes} min : ${timer.seconds} s`}</p>
+        )}
+        {buttonText && onClickCancel && (
+          <Button
+            child={buttonText}
+            onClick={onClickCancel}
+            className={classNameButton}
+            disabled={buttonDisabled}
+            style={
+              buttonDisabled
+                ? { border: 'none', backgroundColor: 'transparent' }
+                : {}
+            }
+          />
+        )}
+      </div>
+    ),
+    [
+      buttonDisabled,
+      buttonText,
+      className,
+      classNameButton,
+      onClickCancel,
+      props,
+      showTimer,
+      timer.minutes,
+      timer.seconds,
+    ],
   );
 }
 

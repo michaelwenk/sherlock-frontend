@@ -3,7 +3,7 @@ import {
   getCorrelationIndex,
   Link,
 } from 'nmr-correlation';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
 import { useHighlight } from '../../../highlight';
@@ -118,21 +118,24 @@ function AdditionalColumnHeader({ correlation }) {
 
   const { title, pStyle, ...thProps } = tableHeaderProps;
 
-  return (
-    <th {...thProps} title={title === false ? undefined : title}>
-      <p style={pStyle}>{correlation.label.origin}</p>
-      <p style={pStyle}>
-        {getCorrelationDelta(correlation)
-          ? getCorrelationDelta(correlation)?.toFixed(2)
-          : ''}
-      </p>
-      <p style={{ ...equivalenceTextStyle, ...pStyle }}>
-        {Number.isInteger(correlation.equivalence)
-          ? correlation.equivalence
-          : correlation.equivalence.toFixed(2)}
-      </p>
-    </th>
+  return useMemo(
+    () => (
+      <th {...thProps} title={title === false ? undefined : title}>
+        <p style={pStyle}>{correlation.label.origin}</p>
+        <p style={pStyle}>
+          {getCorrelationDelta(correlation)
+            ? getCorrelationDelta(correlation)?.toFixed(2)
+            : ''}
+        </p>
+        <p style={{ ...equivalenceTextStyle, ...pStyle }}>
+          {Number.isInteger(correlation.equivalence)
+            ? correlation.equivalence
+            : correlation.equivalence.toFixed(2)}
+        </p>
+      </th>
+    ),
+    [correlation, equivalenceTextStyle, pStyle, thProps, title],
   );
 }
 
-export default AdditionalColumnHeader;
+export default memo(AdditionalColumnHeader);

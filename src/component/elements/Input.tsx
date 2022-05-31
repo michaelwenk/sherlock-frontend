@@ -1,6 +1,6 @@
 import './Input.scss';
 
-import { ChangeEvent, CSSProperties, useCallback } from 'react';
+import { ChangeEvent, CSSProperties, useCallback, useMemo } from 'react';
 
 type InputProps = {
   type: React.HTMLInputTypeAttribute;
@@ -37,19 +37,35 @@ function Input({
     [onChange],
   );
 
-  return (
-    <div className={className}>
-      {label && <label>{`${label}`}</label>}
-      <input
-        type={type}
-        onChange={handleOnChange}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        min={min}
-        max={max}
-        style={{ ...style, '--inputWidth': inputWidth } as React.CSSProperties}
-      />
-    </div>
+  return useMemo(
+    () => (
+      <div className={className}>
+        {label && <label>{`${label}`}</label>}
+        <input
+          type={type}
+          onChange={handleOnChange}
+          defaultValue={defaultValue}
+          placeholder={placeholder}
+          min={min}
+          max={max}
+          style={
+            { ...style, '--inputWidth': inputWidth } as React.CSSProperties
+          }
+        />
+      </div>
+    ),
+    [
+      className,
+      defaultValue,
+      handleOnChange,
+      inputWidth,
+      label,
+      max,
+      min,
+      placeholder,
+      style,
+      type,
+    ],
   );
 }
 

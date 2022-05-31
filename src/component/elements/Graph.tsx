@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Cytoscape, {
   ElementDefinition,
   EventObject,
@@ -14,9 +14,10 @@ Cytoscape.use(CoseBilkent);
 interface InputProps {
   graphData: ElementDefinition[];
   styleSheet: Stylesheet[];
+  source?: string;
 }
 
-function Graph({ graphData, styleSheet }: InputProps) {
+function Graph({ graphData, styleSheet, source }: InputProps) {
   const highlightData = useHighlightData();
   const containerRef = useRef<CytoscapeComponent>(null);
   const [cy, setCY] = useState<Cytoscape.Core | undefined>(undefined);
@@ -65,7 +66,8 @@ function Graph({ graphData, styleSheet }: InputProps) {
         highlightData.dispatch({
           type: 'SHOW',
           payload: {
-            convertedHighlights: [selectedElementID],
+            convertedHighlights: new Set([selectedElementID]),
+            source,
           },
         });
       });
@@ -76,7 +78,7 @@ function Graph({ graphData, styleSheet }: InputProps) {
         highlightData.dispatch({
           type: 'HIDE',
           payload: {
-            convertedHighlights: [selectedElementID],
+            convertedHighlights: new Set([selectedElementID]),
           },
         });
       });
@@ -84,18 +86,21 @@ function Graph({ graphData, styleSheet }: InputProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cy, highlightData.dispatch, graphData]);
 
-  return (
-    <CytoscapeComponent
-      ref={containerRef}
-      elements={graphData}
-      cy={(_cy) => setCY(_cy)}
-      autounselectify={true}
-      style={{
-        width: innerWidth,
-        height: innerHeight,
-      }}
-      stylesheet={styleSheet}
-    />
+  return useMemo(
+    () => (
+      <CytoscapeComponent
+        ref={containerRef}
+        elements={graphData}
+        cy={(_cy) => setCY(_cy)}
+        autounselectify={true}
+        style={{
+          width: innerWidth,
+          height: innerHeight,
+        }}
+        stylesheet={styleSheet}
+      />
+    ),
+    [graphData, styleSheet],
   );
 }
 

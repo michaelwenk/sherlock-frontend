@@ -1,6 +1,6 @@
 import './EditHybridizations.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
@@ -69,21 +69,24 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
     return _rows;
   }, [handleOnAdd, handleOnDelete, hybridizations, newHybridization]);
 
-  const table = useMemo(() => {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Hybridization</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    );
-  }, [rows]);
-
-  return <div className="edit-hybridizations">{table}</div>;
+  return useMemo(
+    () => (
+      <div className="edit-hybridizations">
+        {
+          <table>
+            <thead>
+              <tr>
+                <th>Hybridization</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+          </table>
+        }
+      </div>
+    ),
+    [rows],
+  );
 }
 
-export default EditHybridizations;
+export default memo(EditHybridizations);

@@ -7,7 +7,7 @@ import axios, {
   Canceler,
 } from 'axios';
 import { Correlation } from 'nmr-correlation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import Result from '../../types/Result';
 import Spinner from '../../component/elements/Spinner';
@@ -312,91 +312,107 @@ function Panels() {
     [hideLeftPanel, hideRightPanel, leftPanelWidth],
   );
 
-  return (
-    <div className="panels">
-      <HighlightProvider>
-        <SplitPane
-          split="vertical"
-          defaultSize="60%"
-          pane1Style={
-            hideLeftPanel
-              ? { display: 'none' }
-              : hideRightPanel
-              ? {
-                  maxWidth: '100%',
-                  width: `calc(100% - ${minWidth.resizer})`,
+  return useMemo(
+    () => (
+      <div className="panels">
+        <HighlightProvider>
+          <SplitPane
+            split="vertical"
+            defaultSize="60%"
+            pane1Style={
+              hideLeftPanel
+                ? { display: 'none' }
+                : hideRightPanel
+                ? {
+                    maxWidth: '100%',
+                    width: `calc(100% - ${minWidth.resizer})`,
+                  }
+                : {
+                    height: '100%',
+                    maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
+                    minWidth: minWidth.leftPanel,
+                  }
+            }
+            pane2Style={
+              hideRightPanel
+                ? { display: 'none' }
+                : hideLeftPanel
+                ? {
+                    maxWidth: '100%',
+                    width: `calc(100% - ${minWidth.resizer})`,
+                  }
+                : {
+                    height: '100%',
+                    minWidth: minWidth.rightPanel,
+                    maxWidth: `calc(100% - ${minWidth.leftPanel})`,
+                  }
+            }
+            onResizerDoubleClick={handleOnDoubleClickResizer}
+            // onDragStarted={() => {
+            //   console.log('onDragStarted');
+            // }}
+            onDragFinished={handleOnDragFinished}
+          >
+            <SummaryPanel />
+            <div className="query-and-result-panel">
+              <Button
+                type="button"
+                className="collapsible"
+                onClick={() => {
+                  setShowQueryPanel(!showQueryPanel);
+                }}
+                child={
+                  showQueryPanel
+                    ? 'Switch to result panel'
+                    : 'Switch to query panel'
                 }
-              : {
-                  height: '100%',
-                  maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
-                  minWidth: minWidth.leftPanel,
-                }
-          }
-          pane2Style={
-            hideRightPanel
-              ? { display: 'none' }
-              : hideLeftPanel
-              ? {
-                  maxWidth: '100%',
-                  width: `calc(100% - ${minWidth.resizer})`,
-                }
-              : {
-                  height: '100%',
-                  minWidth: minWidth.rightPanel,
-                  maxWidth: `calc(100% - ${minWidth.leftPanel})`,
-                }
-          }
-          onResizerDoubleClick={handleOnDoubleClickResizer}
-          // onDragStarted={() => {
-          //   console.log('onDragStarted');
-          // }}
-          onDragFinished={handleOnDragFinished}
-        >
-          <SummaryPanel />
-          <div className="query-and-result-panel">
-            <Button
-              type="button"
-              className="collapsible"
-              onClick={() => {
-                setShowQueryPanel(!showQueryPanel);
-              }}
-              child={
-                showQueryPanel
-                  ? 'Switch to result panel'
-                  : 'Switch to query panel'
-              }
-            />
+              />
 
-            <QueryPanel onSubmit={handleOnSubmit} show={showQueryPanel} />
-            <ResultsPanel show={showResultsPanel} />
-            {!showQueryPanel &&
-              !showResultsPanel &&
-              (isRequesting ? (
-                <Spinner
-                  onClickCancel={handleOnCancelRequest}
-                  buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
-                  buttonDisabled={isCanceling}
-                  showTimer={false}
-                />
-              ) : requestError ? (
-                <div className="request-error">
-                  <p>Request failed:</p>
-                  <p>
-                    {requestError.response?.data.errorMessage
-                      ? requestError.response?.data.errorMessage
-                      : 'Could not connect to Sherlock`s backend services'}
-                  </p>
-                </div>
-              ) : requestWasCancelled ? (
-                <div className="request-cancelled">
-                  <p>Request was cancelled by user!</p>
-                </div>
-              ) : null)}
-          </div>
-        </SplitPane>
-      </HighlightProvider>
-    </div>
+              <QueryPanel onSubmit={handleOnSubmit} show={showQueryPanel} />
+              <ResultsPanel show={showResultsPanel} />
+              {!showQueryPanel &&
+                !showResultsPanel &&
+                (isRequesting ? (
+                  <Spinner
+                    onClickCancel={handleOnCancelRequest}
+                    buttonText={isCanceling ? 'Canceling...' : 'Cancel'}
+                    buttonDisabled={isCanceling}
+                    showTimer={false}
+                  />
+                ) : requestError ? (
+                  <div className="request-error">
+                    <p>Request failed:</p>
+                    <p>
+                      {requestError.response?.data.errorMessage
+                        ? requestError.response?.data.errorMessage
+                        : 'Could not connect to Sherlock`s backend services'}
+                    </p>
+                  </div>
+                ) : requestWasCancelled ? (
+                  <div className="request-cancelled">
+                    <p>Request was cancelled by user!</p>
+                  </div>
+                ) : null)}
+            </div>
+          </SplitPane>
+        </HighlightProvider>
+      </div>
+    ),
+    [
+      handleOnCancelRequest,
+      handleOnDoubleClickResizer,
+      handleOnDragFinished,
+      handleOnSubmit,
+      hideLeftPanel,
+      hideRightPanel,
+      isCanceling,
+      isRequesting,
+      requestError,
+      requestWasCancelled,
+      showQueryPanel,
+      showResultsPanel,
+    ],
   );
 }
 
-export default Panels;
+export default memo(Panels);

@@ -1,6 +1,6 @@
 import './EditNeighbors.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
@@ -153,23 +153,24 @@ function EditNeighbors({
     possibleNeighbors,
   ]);
 
-  const table = useMemo(() => {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Atom</th>
-            <th>#H</th>
-            {/* <th>Hybrid</th> */}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    );
-  }, [rows]);
-
-  return <div className="edit-neighbors">{table}</div>;
+  return useMemo(
+    () => (
+      <div className="edit-neighbors">
+        <table>
+          <thead>
+            <tr>
+              <th>Atom</th>
+              <th>#H</th>
+              {/* <th>Hybrid</th> */}
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    ),
+    [rows],
+  );
 }
 
-export default EditNeighbors;
+export default memo(EditNeighbors);

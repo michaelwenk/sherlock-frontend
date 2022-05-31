@@ -1,6 +1,6 @@
 import './ResultsView.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import CardGroup from 'react-bootstrap/CardGroup';
 import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
@@ -58,11 +58,12 @@ function ResultsView({
       (sortOption) => sortOptions[sortOption].label === sortByLabel,
     )[0];
     function sort(dataSet1: DataSet, dataSet2: DataSet) {
-      if (sortByValue === sortOptions.tanimoto.value) {
-        return dataSet1.attachment.tanimoto > dataSet2.attachment.tanimoto
-          ? -1
-          : 1;
-      } else if (sortByValue === sortOptions.hits.value) {
+      // if (sortByValue === sortOptions.tanimoto.value) {
+      //   return dataSet1.attachment.tanimoto > dataSet2.attachment.tanimoto
+      //     ? -1
+      //     : 1;
+      // } else
+      if (sortByValue === sortOptions.hits.value) {
         return dataSet1.attachment.setAssignmentsCount /
           dataSet1.attachment.querySpectrumSignalCount >
           dataSet2.attachment.setAssignmentsCount /
@@ -136,79 +137,98 @@ function ResultsView({
     selectedPageLimit,
   ]);
 
-  return cardDeckData.length > 0 ? (
-    <div className="results-view">
-      <div className="results-view-header">
-        <div className="results-info">
-          <ResultsInfo
-            onClickDownload={onClickDownload}
-            onClickDelete={onClickDelete}
-          />
+  return useMemo(
+    () =>
+      cardDeckData.length > 0 ? (
+        <div className="results-view">
+          <div className="results-view-header">
+            <div className="results-info">
+              <ResultsInfo
+                onClickDownload={onClickDownload}
+                onClickDelete={onClickDelete}
+              />
+            </div>
+            <div className="view-settings">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>img. size</td>
+                    <td>
+                      <SelectBox
+                        values={imageSizes.map(
+                          (size) => `${size.width}x${size.height}`,
+                        )}
+                        defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
+                        onChange={(value: string) => {
+                          const split = value.split('x');
+                          setSelectedImageSize({
+                            width: Number(split[0]),
+                            height: Number(split[1]),
+                          });
+                        }}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>no. results</td>
+                    <td>
+                      <SelectBox
+                        values={pageLimits}
+                        defaultValue={selectedPageLimit}
+                        onChange={(value: number) =>
+                          setSelectedPageLimit(value)
+                        }
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>sort by</td>
+                    <td>
+                      <SelectBox
+                        values={Object.keys(sortOptions).map(
+                          (sortOption) => sortOptions[sortOption].label,
+                        )}
+                        defaultValue={sortByLabel}
+                        onChange={(label: string) => setSortByLabel(label)}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="pagination">
+            <CustomPagination
+              data={cardDeckData}
+              selected={selectedCardDeckIndex}
+              onSelect={handleOnSelectCardIndex}
+              maxPages={maxPages}
+            />
+          </div>
+          <div className="card-deck-container">
+            <Container>
+              <CardGroup>{cardDecks}</CardGroup>
+            </Container>
+          </div>
         </div>
-        <div className="view-settings">
-          <table>
-            <tbody>
-              <tr>
-                <td>img. size</td>
-                <td>
-                  <SelectBox
-                    values={imageSizes.map(
-                      (size) => `${size.width}x${size.height}`,
-                    )}
-                    defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
-                    onChange={(value: string) => {
-                      const split = value.split('x');
-                      setSelectedImageSize({
-                        width: Number(split[0]),
-                        height: Number(split[1]),
-                      });
-                    }}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>no. results</td>
-                <td>
-                  <SelectBox
-                    values={pageLimits}
-                    defaultValue={selectedPageLimit}
-                    onChange={(value: number) => setSelectedPageLimit(value)}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>sort by</td>
-                <td>
-                  <SelectBox
-                    values={Object.keys(sortOptions).map(
-                      (sortOption) => sortOptions[sortOption].label,
-                    )}
-                    defaultValue={sortByLabel}
-                    onChange={(label: string) => setSortByLabel(label)}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div className="pagination">
-        <CustomPagination
-          data={cardDeckData}
-          selected={selectedCardDeckIndex}
-          onSelect={handleOnSelectCardIndex}
-          maxPages={maxPages}
-        />
-      </div>
-      <div className="card-deck-container">
-        <Container>
-          <CardGroup>{cardDecks}</CardGroup>
-        </Container>
-      </div>
-    </div>
-  ) : (
-    <p className="no-results-text">No results</p>
+      ) : (
+        <p className="no-results-text">No results</p>
+      ),
+    [
+      cardDeckData,
+      cardDecks,
+      handleOnSelectCardIndex,
+      maxPages,
+      onClickDelete,
+      onClickDownload,
+      pageLimits,
+      selectedCardDeckIndex,
+      selectedImageSize.height,
+      selectedImageSize.width,
+      selectedPageLimit,
+      sortByLabel,
+    ],
   );
 }
 
-export default ResultsView;
+export default memo(ResultsView);

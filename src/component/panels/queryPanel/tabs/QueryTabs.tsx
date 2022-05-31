@@ -7,7 +7,7 @@ import QueryTabElucidation from './QueryTabElucidation';
 import { Tab, Tabs } from 'react-bootstrap';
 import capitalize from '../../../../utils/capitalize';
 import { useFormikContext } from 'formik';
-import { useEffect } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
 interface InputProps {
   reset: boolean;
@@ -25,40 +25,43 @@ function QueryTabs({ reset, setReset }: InputProps) {
     }
   }, [reset, resetForm, setReset]);
 
-  return (
-    <div className="query-tabs">
-      <Tabs
-        defaultActiveKey="dereplication"
-        className="custom-tabs nav-justified"
-        style={{ flexWrap: 'nowrap' }}
-      >
-        <Tab
-          eventKey={queryTypes.dereplication}
-          title={capitalize(queryTypes.dereplication)}
+  return useMemo(
+    () => (
+      <div className="query-tabs">
+        <Tabs
+          defaultActiveKey="dereplication"
+          className="custom-tabs nav-justified"
+          style={{ flexWrap: 'nowrap' }}
         >
-          <div className="query-tab-dereplication">
-            <QueryTabDereplication />
-          </div>
-        </Tab>
-        <Tab
-          eventKey={queryTypes.elucidation}
-          title={capitalize(queryTypes.elucidation)}
-        >
-          <div className="query-tab-elucidation">
-            <QueryTabElucidation />
-          </div>
-        </Tab>
-        <Tab
-          eventKey={queryTypes.retrieval}
-          title={capitalize(queryTypes.retrieval)}
-        >
-          <div className="query-tab-retrieval">
-            <QueryTabRetrieval />
-          </div>
-        </Tab>
-      </Tabs>
-    </div>
+          <Tab
+            eventKey={queryTypes.dereplication}
+            title={capitalize(queryTypes.dereplication)}
+          >
+            <div className="query-tab-dereplication">
+              <QueryTabDereplication />
+            </div>
+          </Tab>
+          <Tab
+            eventKey={queryTypes.elucidation}
+            title={capitalize(queryTypes.elucidation)}
+          >
+            <div className="query-tab-elucidation">
+              <QueryTabElucidation />
+            </div>
+          </Tab>
+          <Tab
+            eventKey={queryTypes.retrieval}
+            title={capitalize(queryTypes.retrieval)}
+          >
+            <div className="query-tab-retrieval">
+              <QueryTabRetrieval />
+            </div>
+          </Tab>
+        </Tabs>
+      </div>
+    ),
+    [],
   );
 }
 
-export default QueryTabs;
+export default memo(QueryTabs);

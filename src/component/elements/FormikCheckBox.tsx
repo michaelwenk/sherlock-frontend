@@ -1,5 +1,6 @@
 import './CheckBox.scss';
 import { useField } from 'formik';
+import { useMemo } from 'react';
 
 type InputProps = {
   name: string;
@@ -15,11 +16,14 @@ function FormikCheckBox({
 }: InputProps) {
   const [field] = useField(name);
 
-  return (
-    <div className={className}>
-      <input type="checkbox" {...field} checked={field.value} {...props} />
-      <label>{label}</label>
-    </div>
+  return useMemo(
+    () => (
+      <div className={className}>
+        <input type="checkbox" {...field} checked={field.value} {...props} />
+        <label>{label}</label>
+      </div>
+    ),
+    [className, field, label, props],
   );
 }
 

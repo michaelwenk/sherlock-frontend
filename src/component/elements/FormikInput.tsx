@@ -55,31 +55,48 @@ function FormikInput({
     [inPercentage, name, setFieldValue, type],
   );
 
-  return (
-    <div className={className} style={{ color: hasErrors ? 'red' : 'inherit' }}>
-      {label && <label>{label}</label>}
-      <input
-        type={type === 'number' ? 'number' : 'text'}
-        placeholder={placeholder}
-        pattern="([0-9]{1,2}).([0-9]{1})"
-        style={
-          {
-            '--inputWidth': inputWidth,
-          } as React.CSSProperties
-        }
-        value={
-          fieldMeta.value === ''
-            ? ''
-            : type === 'number'
-            ? inPercentage
-              ? round((fieldMeta.value as number) * 100, 3)
-              : (fieldMeta.value as number)
-            : (fieldMeta.value as string)
-        }
-        onChange={onChange}
-        {...props}
-      />
-    </div>
+  return useMemo(
+    () => (
+      <div
+        className={className}
+        style={{ color: hasErrors ? 'red' : 'inherit' }}
+      >
+        {label && <label>{label}</label>}
+        <input
+          type={type === 'number' ? 'number' : 'text'}
+          placeholder={placeholder}
+          pattern="([0-9]{1,2}).([0-9]{1})"
+          style={
+            {
+              '--inputWidth': inputWidth,
+            } as React.CSSProperties
+          }
+          value={
+            fieldMeta.value === ''
+              ? ''
+              : type === 'number'
+              ? inPercentage
+                ? round((fieldMeta.value as number) * 100, 3)
+                : (fieldMeta.value as number)
+              : (fieldMeta.value as string)
+          }
+          onChange={onChange}
+          {...props}
+        />
+      </div>
+    ),
+    [
+      className,
+      fieldMeta.value,
+      hasErrors,
+      inPercentage,
+      inputWidth,
+      label,
+      onChange,
+      placeholder,
+      props,
+      type,
+    ],
   );
 }
 
