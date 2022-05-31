@@ -56,10 +56,8 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
                   ? 'Shift'
                   : 'Pred'}
               </th>
-              {resultData?.queryType === queryTypes.dereplication && (
-                <th>#H</th>
-              )}
-              <th>Equiv</th>
+              {<th>#H</th>}
+              <th>Equ</th>
               {dataSet.attachment.predictionMeta ? (
                 <>
                   <th style={{ borderRight: '2px solid lightgrey' }}>Dev</th>

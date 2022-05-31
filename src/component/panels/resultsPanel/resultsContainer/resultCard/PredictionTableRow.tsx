@@ -99,13 +99,11 @@ function PredictionTableRow({
         onMouseLeave={(e) => handleOnRow(e, 'leave')}
       >
         <td>{dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)}</td>
-        {resultData?.queryType === queryTypes.dereplication && (
-          <td>
-            {convertMultiplicityStringToNumber(
-              dataSet.spectrum.signals[signalIndex].strings[1],
-            )}
-          </td>
-        )}
+        <td>
+          {convertMultiplicityStringToNumber(
+            dataSet.spectrum.signals[signalIndex].strings[1],
+          )}
+        </td>
         <td
           style={{
             color:
