@@ -4,6 +4,7 @@ import Button from '../Button';
 import CustomModal from './CustomModal';
 import { useDropzone } from 'react-dropzone';
 import { Molecule } from 'openchemlib';
+import { getAtomCounts } from 'nmr-correlation';
 
 interface InputProps {
   onClose: () => void;
@@ -17,44 +18,71 @@ function StructureEditorModal({
   onSave = () => {},
   initialMolfile,
 }: InputProps) {
-  // const [modifiedMolfile, setModifiedMolfile] = useState<string | undefined>();
-  const [molfileToExport, setMolfileToExport] = useState<string | undefined>();
+  const [molfile, setMolfile] = useState<string | undefined>(initialMolfile);
+  const [molfileToExport, setMolfileToExport] = useState<string | undefined>(
+    initialMolfile,
+  );
+  const [error, setError] = useState<string | undefined>();
 
   const handleOnChangeStructure = useCallback(
     (_molfile: string) => setMolfileToExport(_molfile),
     [],
   );
+
+  const molecule = useMemo(() => {
+    const molecule: Molecule = Molecule.fromMolfile(molfileToExport as string);
+    const atomCounts = getAtomCounts(molecule.getMolecularFormula().formula);
+    if (
+      Object.keys(atomCounts).length > 0 &&
+      !Object.keys(atomCounts).includes('R')
+    ) {
+      setError('Fragment should contain at least one R (open site)');
+    } else {
+      setError(undefined);
+    }
+
+    return molecule;
+  }, [molfileToExport]);
+
   const handleOnClose = useCallback(() => onClose(), [onClose]);
 
   const handleOnSave = useCallback(() => {
     if (molfileToExport) {
-      const molecule: Molecule = Molecule.fromMolfile(
-        molfileToExport as string,
-      );
       molecule.inventCoordinates();
       onSave(molecule.toMolfileV3());
     } else {
       onSave(molfileToExport);
     }
     handleOnClose();
-  }, [handleOnClose, onSave, molfileToExport]);
+  }, [molfileToExport, handleOnClose, molecule, onSave]);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        // setModifiedMolfile(result);
-        setMolfileToExport(result);
-      };
-      reader.readAsText(file);
-    });
+  const onDrop = useCallback((files: File[]) => {
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setMolfile(result);
+      setMolfileToExport(result);
+    };
+    reader.readAsText(file);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     noKeyboard: true,
   });
+
+  const structureEditor = useMemo(
+    () => (
+      <StructureEditor
+        width={500}
+        onChange={handleOnChangeStructure}
+        initialMolfile={molfile}
+        key={Math.random()}
+      />
+    ),
+    [handleOnChangeStructure, molfile],
+  );
 
   return useMemo(
     () => (
@@ -71,11 +99,7 @@ function StructureEditorModal({
             }}
           >
             <div style={{ border: '1px solid black', borderRadius: '10px' }}>
-              <StructureEditor
-                width={500}
-                onChange={handleOnChangeStructure}
-                initialMolfile={initialMolfile}
-              />
+              {structureEditor}
             </div>
             <label
               style={{
@@ -90,7 +114,7 @@ function StructureEditorModal({
               {...getRootProps()}
               style={{
                 width: '100%',
-                height: '50px',
+                height: '30px',
                 border: '1px solid black',
                 borderRadius: '10px',
                 display: 'flex',
@@ -103,9 +127,12 @@ function StructureEditorModal({
               {isDragActive ? (
                 <label>Drop the MOL file here ...</label>
               ) : (
-                <label>Drag & drop a MOL file to here</label>
+                <label>Drag & drop a MOL file or click here</label>
               )}
             </div>
+            {error && (
+              <label style={{ color: 'red', marginTop: '10px' }}>{error}</label>
+            )}
           </div>
         }
         footer={
@@ -114,7 +141,8 @@ function StructureEditorModal({
             <Button
               child="Save"
               onClick={handleOnSave}
-              style={{ marginLeft: '20px' }}
+              style={{ marginLeft: '20px', color: error ? 'grey' : 'inherit' }}
+              disabled={error !== undefined}
             />
           </div>
         }
@@ -122,13 +150,13 @@ function StructureEditorModal({
       />
     ),
     [
+      error,
       getInputProps,
       getRootProps,
-      handleOnChangeStructure,
       handleOnClose,
       handleOnSave,
-      initialMolfile,
       isDragActive,
+      structureEditor,
     ],
   );
 }

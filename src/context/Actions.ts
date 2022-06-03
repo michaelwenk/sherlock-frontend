@@ -170,7 +170,7 @@ export function editIncludeFragment(draft: Draft<DataState>, action: Action) {
   }
 }
 
-export function addNewFragment(draft: Draft<DataState>, action: Action) {
+export function addFragment(draft: Draft<DataState>, action: Action) {
   const { molfile } = action.payload;
 
   const newFragment: DataSet = {

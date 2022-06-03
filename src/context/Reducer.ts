@@ -3,7 +3,7 @@ import queryTypes from '../constants/queryTypes';
 import DataState from '../types/DataState';
 import {
   Action,
-  addNewFragment,
+  addFragment,
   clearResultData,
   deleteFragment,
   editFixedNeighbors,
@@ -74,7 +74,7 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
     case SET_IS_REQUESTING:
       return setIsRequesting(draft, action);
     case ADD_FRAGMENT:
-      return addNewFragment(draft, action);
+      return addFragment(draft, action);
     case EDIT_FRAGMENT:
       return editFragment(draft, action);
     case DELETE_FRAGMENT:

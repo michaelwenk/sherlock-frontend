@@ -64,7 +64,7 @@ function FragmentsTable() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Fragment</th>
+              <th>{`Fragment (${rows.length})`}</th>
               <th>Average Deviation (ppm)</th>
               <th>Include</th>
               <th>
