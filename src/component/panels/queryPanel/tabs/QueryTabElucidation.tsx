@@ -386,7 +386,7 @@ function QueryTabElucidation() {
           </div>
           <ConfirmModal
             show={showConfirmDialog}
-            title="Start elucidation without set or detected hybridizations?"
+            header="Start elucidation without set or detected hybridizations?"
             onCancel={() => setShowConfirmDialog(false)}
             onConfirm={() => {
               setShowConfirmDialog(false);

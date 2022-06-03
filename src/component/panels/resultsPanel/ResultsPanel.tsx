@@ -130,13 +130,13 @@ function ResultsPanel({ show }: InputProps) {
         >
           {resultsView}
           <CustomModal
-            title="Preparing Download..."
+            header="Preparing Download..."
             show={isPreparingDownload}
             showCloseButton={false}
           />
           <ConfirmModal
             show={showDeleteModal}
-            title={`Delete ${
+            header={`Delete ${
               resultData?.resultRecord.name || resultData?.resultRecord.id
             }?`}
             onCancel={() => setShowDeleteModal(false)}

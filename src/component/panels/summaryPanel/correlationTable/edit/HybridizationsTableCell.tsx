@@ -88,7 +88,7 @@ function HybridizationsTableCell({
         {show && (
           <CustomModal
             show={show}
-            title={`Edit Hybridization: ${correlation.atomType}${
+            header={`Edit Hybridization: ${correlation.atomType}${
               getCorrelationIndex(
                 nmriumData?.correlations.values,
                 correlation,

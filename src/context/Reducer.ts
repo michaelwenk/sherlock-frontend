@@ -3,9 +3,12 @@ import queryTypes from '../constants/queryTypes';
 import DataState from '../types/DataState';
 import {
   Action,
+  addNewFragment,
   clearResultData,
+  deleteFragment,
   editFixedNeighbors,
   editForbiddenNeighbors,
+  editFragment,
   editHybridizations,
   editIncludeFragment,
   editSetNeighbors,
@@ -15,9 +18,12 @@ import {
   setResultDBEntries,
 } from './Actions';
 import {
+  ADD_NEW_FRAGMENT,
   CLEAR_RESULT_DATA,
+  DELETE_FRAGMENT,
   EDIT_FIXED_NEIGHBORS,
   EDIT_FORBIDDEN_NEIGHBORS,
+  EDIT_FRAGMENT,
   EDIT_HYBRIDIZATIONS,
   EDIT_INCLUDE_FRAGMENT,
   EDIT_SET_NEIGHBORS,
@@ -67,6 +73,12 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return setResultDBEntries(draft, action);
     case SET_IS_REQUESTING:
       return setIsRequesting(draft, action);
+    case ADD_NEW_FRAGMENT:
+      return addNewFragment(draft, action);
+    case EDIT_FRAGMENT:
+      return editFragment(draft, action);
+    case DELETE_FRAGMENT:
+      return deleteFragment(draft, action);
 
     default:
       return;

@@ -1,7 +1,8 @@
 import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
-import { Tab, Tabs } from 'react-bootstrap';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import NMRium, { NMRiumPreferences } from 'nmrium';
 import Panels from './panels/Panels';
 import { memo, Reducer, useCallback, useMemo, useReducer } from 'react';

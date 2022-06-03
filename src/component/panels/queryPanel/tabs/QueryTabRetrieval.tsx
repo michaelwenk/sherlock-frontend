@@ -270,7 +270,7 @@ function QueryTabRetrieval() {
         {showDeleteModal && (
           <ConfirmModal
             show={showDeleteModal}
-            title={
+            header={
               resultRecordToDelete
                 ? `Delete ${
                     resultRecordToDelete.name || resultRecordToDelete.id

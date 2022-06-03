@@ -63,7 +63,13 @@ function ResultsView({
       //     ? -1
       //     : 1;
       // } else
-      if (sortByValue === sortOptions.hits.value) {
+      if (
+        sortByValue === sortOptions.hits.value &&
+        dataSet1.attachment.setAssignmentsCount &&
+        dataSet1.attachment.querySpectrumSignalCount &&
+        dataSet2.attachment.setAssignmentsCount &&
+        dataSet2.attachment.querySpectrumSignalCount
+      ) {
         return dataSet1.attachment.setAssignmentsCount /
           dataSet1.attachment.querySpectrumSignalCount >
           dataSet2.attachment.setAssignmentsCount /

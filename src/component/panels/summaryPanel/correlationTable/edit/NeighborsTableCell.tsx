@@ -268,7 +268,7 @@ function NeighborsTableCell({
         {show && (
           <CustomModal
             show={show}
-            title={`Edit ${capitalize(mode)} Neighbors: ${
+            header={`Edit ${capitalize(mode)} Neighbors: ${
               correlation.atomType
             }${correlationIndex + 1} ${
               getCorrelationDelta(correlation)

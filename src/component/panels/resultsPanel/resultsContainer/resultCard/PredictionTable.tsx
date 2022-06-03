@@ -18,20 +18,26 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
 
   const rows = useMemo(
     () =>
-      dataSet.assignment.assignments[0]
-        .map((_atomArray: number[], signalIndex) => {
-          return {
-            shift: dataSet.spectrum.signals[signalIndex].doubles[0],
-            element: (
-              <PredictionTableRow
-                signalIndex={signalIndex}
-                dataSet={dataSet}
-                querySpectrum={querySpectrum}
-                key={generateID()}
-              />
-            ),
-          };
-        })
+      (dataSet.spectrum && dataSet.assignment
+        ? dataSet.assignment.assignments[0].map(
+            (_atomArray: number[], signalIndex) => {
+              return {
+                shift: (dataSet.spectrum as SpectrumCompact).signals[
+                  signalIndex
+                ].doubles[0],
+                element: (
+                  <PredictionTableRow
+                    signalIndex={signalIndex}
+                    dataSet={dataSet}
+                    querySpectrum={querySpectrum}
+                    key={generateID()}
+                  />
+                ),
+              };
+            },
+          )
+        : []
+      )
         .flat()
         .sort((row1, row2) => row1.shift - row2.shift)
         .map((row) => row.element),

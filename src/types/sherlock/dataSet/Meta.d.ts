@@ -1,8 +1,8 @@
 export default interface Meta {
-  source: string;
-  id: string | number;
-  smiles: string;
   molfile: string;
-  mfOriginal: string;
+  id: string | number;
+  source?: string;
+  smiles?: string;
+  mfOriginal?: string;
   title?: string;
 }

@@ -1,27 +1,62 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CustomModal.scss';
 
-import { useCallback, useRef } from 'react';
+import { CSSProperties, useCallback, useRef } from 'react';
 import Button from '../../elements/Button';
-import Modal from 'react-bootstrap/Modal';
+import Modal from 'react-modal';
+import ReactModal from 'react-modal';
+
+Modal.setAppElement('#root');
+
+const defaultModalStyle: ReactModal.Styles = {
+  overlay: {},
+  content: {
+    width: '500px',
+    height: '300px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+const defaultElementStyle: CSSProperties = {
+  textAlign: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: '20px',
+};
+
 interface InputProps {
   show: boolean;
-  title: string;
+  header?: JSX.Element | string | undefined | null;
   showCloseButton?: boolean;
   onClose?: Function;
-  body?: JSX.Element;
+  body?: JSX.Element | string | undefined | null;
   footer?: JSX.Element | undefined | null;
+  modalStyle?: ReactModal.Styles;
+  headerStyle?: CSSProperties;
+  bodyStyle?: CSSProperties;
+  footerStyle?: CSSProperties;
 }
 
 function CustomModal({
   show,
-  title,
+  header,
   onClose,
   showCloseButton = onClose !== undefined,
   body,
   footer = showCloseButton ? (
     <Button child="Close" onClick={onClose ? onClose : () => {}} />
   ) : null,
+  modalStyle = defaultModalStyle,
+  headerStyle,
+  bodyStyle,
+  footerStyle,
 }: InputProps) {
   const modalRef = useRef<any>();
 
@@ -34,20 +69,22 @@ function CustomModal({
   return (
     <Modal
       ref={modalRef}
-      show={show}
-      onHide={handleOnClose}
-      animation={false}
-      dialogClassName="custom-modal"
+      isOpen={show}
+      style={{
+        content: { ...defaultModalStyle.content, ...modalStyle.content },
+        overlay: { ...defaultModalStyle.overlay, ...modalStyle.overlay },
+      }}
+      onRequestClose={handleOnClose}
     >
-      <Modal.Dialog>
-        <Modal.Header>
-          <Modal.Title>
-            <p>{title}</p>
-          </Modal.Title>
-        </Modal.Header>
-        {body && <Modal.Body>{body}</Modal.Body>}
-        {footer && <Modal.Footer>{<div>{footer}</div>}</Modal.Footer>}
-      </Modal.Dialog>
+      <div>
+        <div
+          style={{ ...defaultElementStyle, fontWeight: 'bold', ...headerStyle }}
+        >
+          {header}
+        </div>
+        <div style={{ ...defaultElementStyle, ...bodyStyle }}>{body}</div>
+        <div style={{ ...defaultElementStyle, ...footerStyle }}>{footer}</div>
+      </div>
     </Modal>
   );
 }

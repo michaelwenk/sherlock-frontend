@@ -22,12 +22,15 @@ function PredictionTableRow({
   const { resultData } = useData();
   const { ref, inView } = useInView({ threshold: 0.8 });
 
-  const signalIndexInQuerySpectrum = useMemo(() => {
-    const spectralMatchAssignment = dataSet.attachment.spectralMatchAssignment;
-    const _signalIndexInQuerySpectrum =
-      spectralMatchAssignment.assignments[0][signalIndex][0];
-    return _signalIndexInQuerySpectrum;
-  }, [dataSet.attachment.spectralMatchAssignment, signalIndex]);
+  const signalIndexInQuerySpectrum = useMemo(
+    () =>
+      dataSet.attachment.spectralMatchAssignment
+        ? dataSet.attachment.spectralMatchAssignment.assignments[0][
+            signalIndex
+          ][0]
+        : -1,
+    [dataSet.attachment.spectralMatchAssignment, signalIndex],
+  );
 
   const highlightRow = useHighlight(
     inView && signalIndexInQuerySpectrum >= 0
@@ -68,6 +71,9 @@ function PredictionTableRow({
   );
 
   const difference = useMemo(() => {
+    if (!dataSet.spectrum) {
+      return undefined;
+    }
     const querySpectrumShift =
       resultData?.resultRecord.querySpectrum?.signals &&
       resultData?.resultRecord.querySpectrum?.signals[
@@ -84,7 +90,7 @@ function PredictionTableRow({
         )
       : undefined;
   }, [
-    dataSet.spectrum.signals,
+    dataSet.spectrum,
     resultData?.resultRecord.querySpectrum?.signals,
     signalIndex,
     signalIndexInQuerySpectrum,
@@ -102,21 +108,30 @@ function PredictionTableRow({
         onMouseEnter={(e) => handleOnRow(e, 'enter')}
         onMouseLeave={(e) => handleOnRow(e, 'leave')}
       >
-        <td>{dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)}</td>
         <td>
-          {convertMultiplicityStringToNumber(
-            dataSet.spectrum.signals[signalIndex].strings[1],
-          )}
+          {dataSet.spectrum
+            ? dataSet.spectrum.signals[signalIndex].doubles[0].toFixed(2)
+            : ''}
+        </td>
+        <td>
+          {dataSet.spectrum
+            ? convertMultiplicityStringToNumber(
+                dataSet.spectrum.signals[signalIndex].strings[1],
+              )
+            : ''}
         </td>
         <td
           style={{
             color:
+              dataSet.spectrum &&
               dataSet.spectrum.signals[signalIndex].integers[1] === 1
                 ? 'lightgrey'
                 : 'inherit',
           }}
         >
-          {dataSet.spectrum.signals[signalIndex].integers[1]}
+          {dataSet.spectrum
+            ? dataSet.spectrum.signals[signalIndex].integers[1]
+            : ''}
         </td>
         <td
           style={{
@@ -146,7 +161,7 @@ function PredictionTableRow({
     ),
     [
       dataSet.attachment.predictionMeta,
-      dataSet.spectrum.signals,
+      dataSet.spectrum,
       difference,
       handleOnRow,
       highlightRow.isActive,

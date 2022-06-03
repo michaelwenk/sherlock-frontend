@@ -12,6 +12,7 @@ interface InputProps {
   querySpectrum: SpectrumCompact;
   imageWidth?: number;
   imageHeight?: number;
+  onDoubleClick?: () => void;
 }
 
 function StructureView({
@@ -19,6 +20,7 @@ function StructureView({
   querySpectrum,
   imageWidth,
   imageHeight,
+  onDoubleClick = () => {},
 }: InputProps) {
   const highlightData = useHighlightData();
   const { ref, inView } = useInView({
@@ -29,8 +31,9 @@ function StructureView({
     const _querySpectrumSignalToAtomIndexAssignment: {
       [signalID: string]: number[];
     } = {};
-    const spectralMatchAssignment = dataSet.attachment.spectralMatchAssignment;
-    if (dataSet.assignment) {
+    if (dataSet.assignment && dataSet.attachment.spectralMatchAssignment) {
+      const spectralMatchAssignment =
+        dataSet.attachment.spectralMatchAssignment;
       dataSet.assignment.assignments[0].forEach(
         (signalArrayInNonQuerySpectrum, signalIndexInNonQuerySpectrum) => {
           const ids: number[] = [];
@@ -54,12 +57,12 @@ function StructureView({
   }, [
     dataSet.assignment,
     dataSet.attachment.spectralMatchAssignment,
-    querySpectrum.signals,
+    querySpectrum?.signals,
   ]);
 
   const getSignalIndexInQuerySpectrum = useCallback(
     (atomIndex: number) => {
-      if (dataSet.assignment) {
+      if (dataSet.assignment && dataSet.attachment.spectralMatchAssignment) {
         const signalIndexInNonQuerySpectrum =
           dataSet.assignment.assignments[0].findIndex((atomArray) =>
             atomArray.includes(atomIndex),
@@ -100,11 +103,10 @@ function StructureView({
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      dataSet.assignment.assignments,
       getSignalIndexInQuerySpectrum,
       highlightData.dispatch,
       inView,
-      querySpectrum.signals,
+      querySpectrum?.signals,
     ],
   );
 
@@ -133,7 +135,7 @@ function StructureView({
 
   return useMemo(
     () => (
-      <div ref={ref}>
+      <div ref={ref} onDoubleClick={onDoubleClick}>
         <MolfileSvgRenderer
           id={`molSVG_${generateID()}`}
           molfile={molfile}
@@ -149,7 +151,15 @@ function StructureView({
         />
       </div>
     ),
-    [atomHighlights, handleOnAtom, imageHeight, imageWidth, molfile, ref],
+    [
+      atomHighlights,
+      handleOnAtom,
+      imageHeight,
+      imageWidth,
+      molfile,
+      onDoubleClick,
+      ref,
+    ],
   );
 }
 

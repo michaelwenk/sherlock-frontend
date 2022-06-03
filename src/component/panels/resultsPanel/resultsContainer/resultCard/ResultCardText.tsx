@@ -27,15 +27,19 @@ function ResultCardText({ dataSet }: InputProps) {
             </tr>
             <tr>
               <td className="td-name">Average Deviation</td>
-              <td className="td-value">{`${dataSet.attachment.averageDeviation.toFixed(
-                2,
-              )} ppm`}</td>
+              <td className="td-value">
+                {dataSet.attachment.averageDeviation
+                  ? `${dataSet.attachment.averageDeviation.toFixed(2)} ppm`
+                  : ''}
+              </td>
             </tr>
             <tr>
               <td className="td-name">RMSD</td>
-              <td className="td-value">{`${dataSet.attachment.rmsd.toFixed(
-                2,
-              )} ppm`}</td>
+              <td className="td-value">
+                {dataSet.attachment.rmsd
+                  ? `${dataSet.attachment.rmsd.toFixed(2)} ppm`
+                  : ''}
+              </td>
             </tr>
             <tr>
               <td className="td-name">Matching Signals</td>

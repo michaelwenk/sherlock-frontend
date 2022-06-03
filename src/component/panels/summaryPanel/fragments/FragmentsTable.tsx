@@ -1,35 +1,38 @@
 import './FragmentsTable.scss';
 
 import { useData } from '../../../../context/DataContext';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import DataSet from '../../../../types/sherlock/dataSet/DataSet';
-import lodashCloneDeep from 'lodash/cloneDeep';
-import { useDispatch } from '../../../../context/DispatchContext';
-import { EDIT_INCLUDE_FRAGMENT } from '../../../../context/ActionTypes';
 import SpectrumCompact from '../../../../types/sherlock/dataSet/SpectrumCompact';
 import FragmentTableRow from './FragmentTableRow';
 import generateID from '../../../../utils/generateID';
+import { ADD_NEW_FRAGMENT } from '../../../../context/ActionTypes';
+import { useDispatch } from '../../../../context/DispatchContext';
+import Button from '../../../elements/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import StructureEditorModal from '../../../elements/modal/StructureEditorModal';
 
 function FragmentsTable() {
   const { resultData } = useData();
   const dispatch = useDispatch();
+  const [showFragmentEditor, setShowFragmentEditor] = useState<boolean>(false);
 
-  const fragments = useMemo(
-    () => resultData?.resultRecord.detections.fragments || [],
-    [resultData?.resultRecord.detections.fragments],
+  const handleOnSaveNewFragment = useCallback(
+    (molfile: string | undefined) => {
+      if (molfile) {
+        dispatch({
+          type: ADD_NEW_FRAGMENT,
+          payload: { molfile },
+        });
+      }
+    },
+    [dispatch],
   );
 
-  const handleOnChange = useCallback(
-    (index: number, value: boolean) => {
-      const _fragments = lodashCloneDeep(fragments) as DataSet[];
-      _fragments[index].attachment.include = value;
-
-      dispatch({
-        type: EDIT_INCLUDE_FRAGMENT,
-        payload: { fragments: _fragments },
-      });
-    },
-    [dispatch, fragments],
+  const fragments: DataSet[] = useMemo(
+    () => resultData?.resultRecord.detections.fragments || [],
+    [resultData?.resultRecord.detections.fragments],
   );
 
   const rows = useMemo(() => {
@@ -42,14 +45,13 @@ function FragmentsTable() {
           querySpectrum={
             resultData?.resultRecord.querySpectrum as SpectrumCompact
           }
-          onChangeHandler={handleOnChange}
           key={`FragmentTableRow_${i}_${generateID()}`}
         />,
       );
     });
 
     return _rows;
-  }, [fragments, handleOnChange, resultData?.resultRecord.querySpectrum]);
+  }, [fragments, resultData?.resultRecord.querySpectrum]);
 
   return useMemo(
     () => (
@@ -61,6 +63,19 @@ function FragmentsTable() {
               <th>Fragment</th>
               <th>Average Deviation (ppm)</th>
               <th>Include</th>
+              <th>
+                <Button
+                  child={<FontAwesomeIcon icon={faPlus} title="Add fragment" />}
+                  onClick={() => {
+                    setShowFragmentEditor(!showFragmentEditor);
+                  }}
+                />
+                <StructureEditorModal
+                  show={showFragmentEditor}
+                  setShow={setShowFragmentEditor}
+                  onSave={handleOnSaveNewFragment}
+                />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -86,7 +101,7 @@ function FragmentsTable() {
         </table>
       </div>
     ),
-    [rows],
+    [handleOnSaveNewFragment, rows, showFragmentEditor],
   );
 }
 
