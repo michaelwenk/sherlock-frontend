@@ -7,11 +7,11 @@ import {
   Link,
 } from 'nmr-correlation';
 import { memo, MouseEvent, useCallback, useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useData } from '../../../../context/DataContext';
 import NMRiumData from '../../../../types/nmrium/NMRiumData';
 
 import { useHighlight } from '../../../highlight';
-import highlightSources from '../../../highlight/highlightSources';
 import { getGroupIndex } from '../Utilities';
 
 import AdditionalColumnField from './AdditionalColumnField';
@@ -34,6 +34,7 @@ function CorrelationTableRow({
   showAdditionalColumns,
 }: InputProps) {
   const { nmriumData, resultData } = useData();
+  const { ref, inView } = useInView({ threshold: 0.5 });
 
   const correlationIndex = useMemo(
     () =>
@@ -43,19 +44,18 @@ function CorrelationTableRow({
 
   const highlightIDsRow = useMemo(() => {
     const ids: string[] = [];
-    ids.push(correlation.id);
+    if (inView) {
+      ids.push(correlation.id);
 
-    correlation.link.forEach((link: Link) => {
-      ids.push(link.signal.id);
-    });
+      correlation.link.forEach((link: Link) => {
+        ids.push(link.signal.id);
+      });
+    }
 
     return ids;
-  }, [correlation.id, correlation.link]);
+  }, [correlation.id, correlation.link, inView]);
 
-  const highlightRow = useHighlight(
-    highlightIDsRow,
-    highlightSources.correlationTable,
-  );
+  const highlightRow = useHighlight(highlightIDsRow);
 
   const mouseEnterHandler = useCallback(
     (event: MouseEvent) => {
@@ -181,7 +181,7 @@ function CorrelationTableRow({
 
   return useMemo(
     () => (
-      <tr style={styleRow}>
+      <tr ref={ref} style={styleRow}>
         <td
           title={t}
           {...{
@@ -306,6 +306,7 @@ function CorrelationTableRow({
       highlightRow,
       nmriumData,
       otherTableDataProps,
+      ref,
       resultData,
       showAdditionalColumns,
       styleLabel,

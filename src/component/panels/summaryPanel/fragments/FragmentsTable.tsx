@@ -5,8 +5,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import DataSet from '../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../types/sherlock/dataSet/SpectrumCompact';
 import FragmentTableRow from './FragmentTableRow';
-import generateID from '../../../../utils/generateID';
-import { ADD_NEW_FRAGMENT } from '../../../../context/ActionTypes';
+import { ADD_FRAGMENT } from '../../../../context/ActionTypes';
 import { useDispatch } from '../../../../context/DispatchContext';
 import Button from '../../../elements/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,11 +17,16 @@ function FragmentsTable() {
   const dispatch = useDispatch();
   const [showFragmentEditor, setShowFragmentEditor] = useState<boolean>(false);
 
-  const handleOnSaveNewFragment = useCallback(
+  const handleOnCloseFragmentEditor = useCallback(
+    () => setShowFragmentEditor(false),
+    [],
+  );
+
+  const handleOnSaveFragmentEditor = useCallback(
     (molfile: string | undefined) => {
       if (molfile) {
         dispatch({
-          type: ADD_NEW_FRAGMENT,
+          type: ADD_FRAGMENT,
           payload: { molfile },
         });
       }
@@ -45,7 +49,7 @@ function FragmentsTable() {
           querySpectrum={
             resultData?.resultRecord.querySpectrum as SpectrumCompact
           }
-          key={`FragmentTableRow_${i}_${generateID()}`}
+          key={`FragmentTableRow_${i}`}
         />,
       );
     });
@@ -69,12 +73,14 @@ function FragmentsTable() {
                   onClick={() => {
                     setShowFragmentEditor(!showFragmentEditor);
                   }}
+                  style={{ color: 'blue', fontSize: '13px' }}
                 />
-                <StructureEditorModal
-                  show={showFragmentEditor}
-                  setShow={setShowFragmentEditor}
-                  onSave={handleOnSaveNewFragment}
-                />
+                {showFragmentEditor && (
+                  <StructureEditorModal
+                    onClose={handleOnCloseFragmentEditor}
+                    onSave={handleOnSaveFragmentEditor}
+                  />
+                )}
               </th>
             </tr>
           </thead>
@@ -101,7 +107,12 @@ function FragmentsTable() {
         </table>
       </div>
     ),
-    [handleOnSaveNewFragment, rows, showFragmentEditor],
+    [
+      handleOnCloseFragmentEditor,
+      handleOnSaveFragmentEditor,
+      rows,
+      showFragmentEditor,
+    ],
   );
 }
 

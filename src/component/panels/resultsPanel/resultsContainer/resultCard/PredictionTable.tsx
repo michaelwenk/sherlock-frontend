@@ -5,7 +5,6 @@ import { useData } from '../../../../../context/DataContext';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 import queryTypes from '../../../../../constants/queryTypes';
 import PredictionTableRow from './PredictionTableRow';
-import generateID from '../../../../../utils/generateID';
 
 type InputProps = {
   dataSet: DataSet;
@@ -30,7 +29,7 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
                     signalIndex={signalIndex}
                     dataSet={dataSet}
                     querySpectrum={querySpectrum}
-                    key={generateID()}
+                    key={`PredictionTable_${dataSet.meta.id}_${signalIndex}`}
                   />
                 ),
               };

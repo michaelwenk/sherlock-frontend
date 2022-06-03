@@ -61,6 +61,7 @@ function AdditionalColumnField({
 
     return ids;
   }, [commonLinks]);
+
   const highlightCommonLinks = useHighlight(highlightIDsCommonLinks);
 
   const mouseEnterHandler = useCallback(

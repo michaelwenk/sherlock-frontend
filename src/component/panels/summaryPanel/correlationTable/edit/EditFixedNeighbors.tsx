@@ -3,7 +3,6 @@ import './EditFixedNeighbors.scss';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import generateID from '../../../../../utils/generateID';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
 import { getCorrelationDelta, Correlation } from 'nmr-correlation';
@@ -75,14 +74,14 @@ function EditFixedNeighbors({
 
   const rows = useMemo(() => {
     const _rows = fixedNeighborEntry
-      ? fixedNeighborEntry.map((neighborCorrelationIndex) => {
+      ? fixedNeighborEntry.map((neighborCorrelationIndex, i) => {
           const labelSplit1 = buildLabel(
             correlations,
             neighborCorrelationIndex,
           ).split(':');
           const labelSplit2 = labelSplit1[1].split(',');
           return (
-            <tr key={`neighborCorrelation_${generateID()}`}>
+            <tr key={`fixed_neighbor_${i}`}>
               <td>{labelSplit1[0]}</td>
               <td>{labelSplit2[0].split('H')[1]}</td>
               <td>{labelSplit2[1]}</td>
@@ -98,7 +97,7 @@ function EditFixedNeighbors({
       : [];
 
     _rows.push(
-      <tr key={`edit_fixed_neighbors_${generateID()}`}>
+      <tr key={`new_fixed_neighbors`}>
         <td colSpan={3}>
           <SelectBox
             key={`selectBox_correlation_new`}

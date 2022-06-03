@@ -7,7 +7,6 @@ import generateID from '../../../../utils/generateID';
 import Graph from '../../../elements/Graph';
 import { ElementDefinition } from 'cytoscape';
 import styleSheet from './stylesheet';
-import highlightSources from '../../../highlight/highlightSources';
 
 function MCD() {
   const { nmriumData, resultData } = useData();
@@ -199,11 +198,7 @@ function MCD() {
   return useMemo(
     () => (
       <div className="mcd-container">
-        <Graph
-          graphData={graphData}
-          styleSheet={styleSheet}
-          source={highlightSources.mcd}
-        />
+        <Graph graphData={graphData} styleSheet={styleSheet} />
       </div>
     ),
     [graphData],

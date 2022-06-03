@@ -4,9 +4,7 @@ import { useData } from '../../../../../context/DataContext';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
 import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
-import generateID from '../../../../../utils/generateID';
 import { useHighlight } from '../../../../highlight';
-import highlightSources from '../../../../highlight/highlightSources';
 
 interface InputProps {
   signalIndex: number;
@@ -20,7 +18,7 @@ function PredictionTableRow({
   querySpectrum,
 }: InputProps) {
   const { resultData } = useData();
-  const { ref, inView } = useInView({ threshold: 0.8 });
+  const { ref, inView } = useInView({ threshold: 0.5 });
 
   const signalIndexInQuerySpectrum = useMemo(
     () =>
@@ -36,7 +34,6 @@ function PredictionTableRow({
     inView && signalIndexInQuerySpectrum >= 0
       ? [querySpectrum.signals[signalIndexInQuerySpectrum].strings[3]]
       : [],
-    highlightSources.predictionTable,
   );
 
   const handleOnRow = useCallback(
@@ -99,7 +96,7 @@ function PredictionTableRow({
   return useMemo(
     () => (
       <tr
-        key={generateID()}
+        key={`PredictionTableRow_${dataSet.meta.id}_${signalIndex}`}
         ref={ref}
         style={{
           backgroundColor: highlightRow.isActive ? '#ff6f0057' : undefined,
@@ -161,6 +158,7 @@ function PredictionTableRow({
     ),
     [
       dataSet.attachment.predictionMeta,
+      dataSet.meta.id,
       dataSet.spectrum,
       difference,
       handleOnRow,

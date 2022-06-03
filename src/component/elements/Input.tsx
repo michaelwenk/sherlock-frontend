@@ -1,11 +1,17 @@
 import './Input.scss';
 
-import { ChangeEvent, CSSProperties, useCallback, useMemo } from 'react';
+import {
+  ChangeEvent,
+  CSSProperties,
+  RefObject,
+  useCallback,
+  useMemo,
+} from 'react';
 
 type InputProps = {
   type: React.HTMLInputTypeAttribute;
-  defaultValue: string | number;
   onChange: Function;
+  defaultValue?: string | number;
   label?: string;
   min?: number;
   max?: number;
@@ -13,12 +19,13 @@ type InputProps = {
   className?: string;
   placeholder?: string;
   style?: CSSProperties;
+  ref?: RefObject<HTMLInputElement>;
 };
 
 function Input({
   type,
-  defaultValue,
   onChange,
+  defaultValue,
   label,
   min,
   max,
@@ -26,15 +33,19 @@ function Input({
   className = 'Input',
   placeholder = '',
   style,
+  ref,
 }: InputProps) {
   const handleOnChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
       e.stopPropagation();
-
-      onChange(e.target.value);
+      if (type === 'file') {
+        onChange(e.target.files);
+      } else {
+        onChange(e.target.value);
+      }
     },
-    [onChange],
+    [onChange, type],
   );
 
   return useMemo(
@@ -42,6 +53,7 @@ function Input({
       <div className={className}>
         {label && <label>{`${label}`}</label>}
         <input
+          ref={ref}
           type={type}
           onChange={handleOnChange}
           defaultValue={defaultValue}
@@ -63,6 +75,7 @@ function Input({
       max,
       min,
       placeholder,
+      ref,
       style,
       type,
     ],

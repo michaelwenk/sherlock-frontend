@@ -18,7 +18,7 @@ import {
   setResultDBEntries,
 } from './Actions';
 import {
-  ADD_NEW_FRAGMENT,
+  ADD_FRAGMENT,
   CLEAR_RESULT_DATA,
   DELETE_FRAGMENT,
   EDIT_FIXED_NEIGHBORS,
@@ -73,7 +73,7 @@ function dataReducer(draft: Draft<DataState>, action: Action) {
       return setResultDBEntries(draft, action);
     case SET_IS_REQUESTING:
       return setIsRequesting(draft, action);
-    case ADD_NEW_FRAGMENT:
+    case ADD_FRAGMENT:
       return addNewFragment(draft, action);
     case EDIT_FRAGMENT:
       return editFragment(draft, action);

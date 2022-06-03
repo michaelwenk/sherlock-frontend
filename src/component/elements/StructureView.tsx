@@ -4,7 +4,6 @@ import { useInView } from 'react-intersection-observer';
 import { MolfileSvgRenderer } from 'react-ocl';
 import DataSet from '../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../types/sherlock/dataSet/SpectrumCompact';
-import generateID from '../../utils/generateID';
 import { useHighlightData } from '../highlight';
 
 interface InputProps {
@@ -24,7 +23,7 @@ function StructureView({
 }: InputProps) {
   const highlightData = useHighlightData();
   const { ref, inView } = useInView({
-    threshold: 1,
+    threshold: 0.5,
   });
 
   const querySpectrumSignalToAtomIndexAssignment = useMemo(() => {
@@ -137,7 +136,6 @@ function StructureView({
     () => (
       <div ref={ref} onDoubleClick={onDoubleClick}>
         <MolfileSvgRenderer
-          id={`molSVG_${generateID()}`}
           molfile={molfile}
           width={imageWidth}
           height={imageHeight}

@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
-import generateID from '../../../../../utils/generateID';
 
 interface InputProps {
   hybridizations: number[];
@@ -33,9 +32,9 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
 
   const rows = useMemo(() => {
     const _rows = hybridizations
-      .map((hybridization) => {
+      .map((hybridization, i) => {
         return (
-          <tr key={`hybridization_${generateID()}`}>
+          <tr key={`hybridization_${i}`}>
             <td>{`sp${hybridization}`}</td>
             <td>
               <Button
@@ -49,7 +48,7 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
       .flat();
 
     _rows.push(
-      <tr key={`new_hybridization_${generateID()}`}>
+      <tr key={`new_hybridization}`}>
         <td>
           <SelectBox
             defaultValue={newHybridization}

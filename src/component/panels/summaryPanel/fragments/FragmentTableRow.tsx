@@ -7,7 +7,6 @@ import {
 import { useDispatch } from '../../../../context/DispatchContext';
 import DataSet from '../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../types/sherlock/dataSet/SpectrumCompact';
-import generateID from '../../../../utils/generateID';
 import CheckBox from '../../../elements/CheckBox';
 import StructureEditorModal from '../../../elements/modal/StructureEditorModal';
 import StructureView from '../../../elements/StructureView';
@@ -35,22 +34,6 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
     [dispatch, index],
   );
 
-  const handleOnDoubleClick = useCallback(() => {
-    setShowFragmentEditor(true);
-  }, []);
-
-  const handleOnSave = useCallback(
-    (molfile: string | undefined) => {
-      if (molfile) {
-        dispatch({
-          type: EDIT_FRAGMENT,
-          payload: { index, molfile },
-        });
-      }
-    },
-    [dispatch, index],
-  );
-
   const handleOnDelete = useCallback(() => {
     dispatch({
       type: DELETE_FRAGMENT,
@@ -58,9 +41,32 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
     });
   }, [dispatch, index]);
 
+  const handleOnDoubleClick = useCallback(() => {
+    setShowFragmentEditor(true);
+  }, []);
+
+  const handleOnCloseFragmentEditor = useCallback(
+    () => setShowFragmentEditor(false),
+    [],
+  );
+
+  const handleOnSaveFragmentEditor = useCallback(
+    (molfile: string | undefined) => {
+      if (molfile) {
+        dispatch({
+          type: EDIT_FRAGMENT,
+          payload: { index, molfile },
+        });
+      } else {
+        handleOnDelete();
+      }
+    },
+    [dispatch, handleOnDelete, index],
+  );
+
   return useMemo(
     () => (
-      <tr key={generateID()}>
+      <tr key={`fragment_table_row_${index}`}>
         <td style={{ width: '10%' }}>{index + 1}</td>
         <td style={{ width: '60%' }}>
           <StructureView
@@ -73,7 +79,7 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
           <p>
             {fragment.attachment.averageDeviation
               ? fragment.attachment.averageDeviation.toFixed(2)
-              : 'custom'}
+              : ''}
           </p>
         </td>
         <td style={{ width: '10%' }}>
@@ -93,12 +99,11 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
             }}
           />
         </td>
-        {fragment.attachment.custom && (
+        {fragment.attachment.custom && showFragmentEditor && (
           <StructureEditorModal
-            show={showFragmentEditor}
-            setShow={(value) => setShowFragmentEditor(value)}
-            onSave={handleOnSave}
-            molfile={fragment.meta.molfile}
+            onClose={handleOnCloseFragmentEditor}
+            onSave={handleOnSaveFragmentEditor}
+            initialMolfile={fragment.meta.molfile}
           />
         )}
       </tr>
@@ -106,9 +111,10 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
     [
       fragment,
       handleOnChangeInclude,
+      handleOnCloseFragmentEditor,
       handleOnDelete,
       handleOnDoubleClick,
-      handleOnSave,
+      handleOnSaveFragmentEditor,
       index,
       querySpectrum,
       showFragmentEditor,
