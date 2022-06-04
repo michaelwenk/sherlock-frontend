@@ -1,3 +1,5 @@
+import './StructureEditorModal.scss';
+
 import { useCallback, useMemo, useState } from 'react';
 import { StructureEditor } from 'react-ocl/full';
 import Button from '../Button';
@@ -90,39 +92,10 @@ function StructureEditorModal({
         show={true}
         header="Draw or edit a fragment"
         body={
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ border: '1px solid black', borderRadius: '10px' }}>
-              {structureEditor}
-            </div>
-            <label
-              style={{
-                fontWeight: 'bold',
-                marginTop: '10px',
-                marginBottom: '10px',
-              }}
-            >
-              OR
-            </label>
-            <div
-              {...getRootProps()}
-              style={{
-                width: '100%',
-                height: '30px',
-                border: '1px solid black',
-                borderRadius: '10px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+          <div className="structure-editor-modal-body">
+            <div className="structure-editor-container">{structureEditor}</div>
+            <label className="or-label">OR</label>
+            <div className="dropzone-container" {...getRootProps()}>
               <input {...getInputProps()} />
               {isDragActive ? (
                 <label>Drop the MOL file here ...</label>
@@ -130,13 +103,11 @@ function StructureEditorModal({
                 <label>Drag & drop a MOL file or click here</label>
               )}
             </div>
-            {error && (
-              <label style={{ color: 'red', marginTop: '10px' }}>{error}</label>
-            )}
+            {error && <label className="error-label">{error}</label>}
           </div>
         }
         footer={
-          <div>
+          <div className="structure-editor-modal-footer">
             <Button child="Cancel" onClick={handleOnClose} />
             <Button
               child="Save"

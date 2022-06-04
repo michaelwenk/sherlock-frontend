@@ -39,9 +39,9 @@ interface InputProps {
   body?: JSX.Element | string | undefined | null;
   footer?: JSX.Element | undefined | null;
   modalStyle?: ReactModal.Styles;
-  headerStyle?: CSSProperties;
-  bodyStyle?: CSSProperties;
-  footerStyle?: CSSProperties;
+  headerContainerStyle?: CSSProperties;
+  bodyContainerStyle?: CSSProperties;
+  footerContainerStyle?: CSSProperties;
 }
 
 function CustomModal({
@@ -54,9 +54,9 @@ function CustomModal({
     <Button child="Close" onClick={onClose ? onClose : () => {}} />
   ) : null,
   modalStyle = defaultModalStyle,
-  headerStyle,
-  bodyStyle,
-  footerStyle,
+  headerContainerStyle,
+  bodyContainerStyle,
+  footerContainerStyle,
 }: InputProps) {
   const modalRef = useRef<any>();
 
@@ -78,12 +78,20 @@ function CustomModal({
     >
       <div>
         <div
-          style={{ ...defaultElementStyle, fontWeight: 'bold', ...headerStyle }}
+          style={{
+            ...defaultElementStyle,
+            fontWeight: 'bold',
+            ...headerContainerStyle,
+          }}
         >
           {header}
         </div>
-        <div style={{ ...defaultElementStyle, ...bodyStyle }}>{body}</div>
-        <div style={{ ...defaultElementStyle, ...footerStyle }}>{footer}</div>
+        <div style={{ ...defaultElementStyle, ...bodyContainerStyle }}>
+          {body}
+        </div>
+        <div style={{ ...defaultElementStyle, ...footerContainerStyle }}>
+          {footer}
+        </div>
       </div>
     </Modal>
   );
