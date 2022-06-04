@@ -69,11 +69,13 @@ function FragmentsTableRow({ index, fragment, querySpectrum }: InputProps) {
       <tr key={`fragment_table_row_${index}`}>
         <td style={{ width: '10%' }}>{index + 1}</td>
         <td style={{ width: '60%' }}>
-          <StructureView
-            dataSet={fragment}
-            querySpectrum={querySpectrum}
-            onDoubleClick={handleOnDoubleClick}
-          />
+          <div className="structure-view">
+            <StructureView
+              dataSet={fragment}
+              querySpectrum={querySpectrum}
+              onDoubleClick={handleOnDoubleClick}
+            />
+          </div>
         </td>
         <td style={{ width: '10%' }}>
           <p>

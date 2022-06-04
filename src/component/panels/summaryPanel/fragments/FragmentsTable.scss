@@ -13,17 +13,36 @@
     th,
     td {
       white-space: nowrap;
-      text-align: center;
       padding: 5px;
-      border: 1px solid #dedede;
+      border-bottom: 1px solid #dedede;
+      border-right: 1px solid #dedede;
+
+      .Button {
+        background-color: transparent;
+        border: none;
+      }
     }
 
     th {
-      background-color: lightgray;
-      z-index: 10;
+      background-color: lightgrey;
       position: -webkit-sticky;
       position: sticky;
       top: 0;
+    }
+
+    tr:hover {
+      background-color: mintcream;
+    }
+
+    tr:hover .structure-view {
+      transform: scale(1.05);
+    }
+
+    .structure-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
