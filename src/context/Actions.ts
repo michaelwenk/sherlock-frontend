@@ -191,6 +191,9 @@ export function editFragment(draft: Draft<DataState>, action: Action) {
     draft.resultData?.resultRecord.detections.fragments[index as number],
   ) as DataSet;
   fragment.meta.molfile = molfile as string;
+  delete fragment.structure;
+  delete fragment.spectrum;
+  delete fragment.assignment;
 
   if (draft.resultData) {
     draft.resultData.resultRecord.detections.fragments[index as number] =
