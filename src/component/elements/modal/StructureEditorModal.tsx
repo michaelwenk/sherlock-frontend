@@ -90,15 +90,30 @@ function StructureEditorModal({
     () => (
       <CustomModal
         show={true}
-        header="Draw or edit a fragment"
+        header="Draw, edit or import a fragment"
         body={
-          <div className="structure-editor-modal-body">
+          <div
+            className="structure-editor-modal-body"
+            {...{ ...getRootProps(), onClick: () => {} }}
+          >
             <div className="structure-editor-container">{structureEditor}</div>
             <label className="or-label">OR</label>
-            <div className="dropzone-container" {...getRootProps()}>
+            <div
+              className="dropzone-container"
+              onClick={getRootProps().onClick}
+              style={
+                isDragActive
+                  ? {
+                      color: 'blue',
+                      border: '2px dashed orange',
+                      fontWeight: 'bold',
+                    }
+                  : {}
+              }
+            >
               <input {...getInputProps()} />
               {isDragActive ? (
-                <label>Drop the MOL file here ...</label>
+                <label>Drop the MOL file now</label>
               ) : (
                 <label>Drag & drop a MOL file or click here</label>
               )}
