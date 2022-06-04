@@ -38,7 +38,9 @@
         align-items: center;
         justify-content: center;
         width: calc(100% - 80px);
+
         .CustomPagination {
+          height: 30px;
           .Pagination {
             font-size: 11px;
           }
