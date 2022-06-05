@@ -4,7 +4,7 @@ import {
   getCorrelationIndex,
   Link,
 } from 'nmr-correlation';
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
 import { useHighlight } from '../../../highlight';
@@ -61,6 +61,7 @@ function AdditionalColumnField({
 
     return ids;
   }, [commonLinks]);
+
   const highlightCommonLinks = useHighlight(highlightIDsCommonLinks);
 
   const mouseEnterHandler = useCallback(
@@ -139,47 +140,65 @@ function AdditionalColumnField({
     [correlationDim2, resultData?.resultRecord],
   );
 
-  return (
-    <td
-      style={{
-        backgroundColor: highlightCommonLinks.isActive
-          ? '#ff6f0057'
-          : 'inherit',
-        borderBottom:
-          groupIndexDim2 !== -1 &&
-          resultData?.resultRecord.grouping?.groups[correlationDim2.atomType]?.[
-            groupIndexDim2
-          ] &&
-          resultData?.resultRecord.grouping?.groups[correlationDim2.atomType]?.[
-            groupIndexDim2
-          ]?.findIndex((index) => index === correlationIndexDim2) <
+  return useMemo(
+    () => (
+      <td
+        style={{
+          backgroundColor: highlightCommonLinks.isActive
+            ? '#ff6f0057'
+            : 'inherit',
+          borderBottom:
+            groupIndexDim2 !== -1 &&
             resultData?.resultRecord.grouping?.groups[
               correlationDim2.atomType
-            ]?.[groupIndexDim2].length -
-              1
-            ? 'none'
-            : 'solid 1px lightgrey',
-        borderRight:
-          groupIndexDim1 !== -1 &&
-          (resultData?.resultRecord.grouping?.groups[
-            correlationDim1.atomType
-          ]?.[groupIndexDim1]
-            ? resultData?.resultRecord.grouping?.groups[
-                correlationDim1.atomType
-              ]?.[groupIndexDim1]?.findIndex(
-                (index) => index === correlationIndexDim1,
-              )
-            : 0) > 0
-            ? 'none'
-            : 'solid 1px lightgrey',
-      }}
-      title={title}
-      onMouseEnter={mouseEnterHandler}
-      onMouseLeave={mouseLeaveHandler}
-    >
-      {contentLabel}
-    </td>
+            ]?.[groupIndexDim2] &&
+            resultData?.resultRecord.grouping?.groups[
+              correlationDim2.atomType
+            ]?.[groupIndexDim2]?.findIndex(
+              (index) => index === correlationIndexDim2,
+            ) <
+              resultData?.resultRecord.grouping?.groups[
+                correlationDim2.atomType
+              ]?.[groupIndexDim2].length -
+                1
+              ? 'none'
+              : 'solid 1px lightgrey',
+          borderRight:
+            groupIndexDim1 !== -1 &&
+            (resultData?.resultRecord.grouping?.groups[
+              correlationDim1.atomType
+            ]?.[groupIndexDim1]
+              ? resultData?.resultRecord.grouping?.groups[
+                  correlationDim1.atomType
+                ]?.[groupIndexDim1]?.findIndex(
+                  (index) => index === correlationIndexDim1,
+                )
+              : 0) > 0
+              ? 'none'
+              : 'solid 1px lightgrey',
+        }}
+        title={title}
+        onMouseEnter={mouseEnterHandler}
+        onMouseLeave={mouseLeaveHandler}
+      >
+        {contentLabel}
+      </td>
+    ),
+    [
+      contentLabel,
+      correlationDim1.atomType,
+      correlationDim2.atomType,
+      correlationIndexDim1,
+      correlationIndexDim2,
+      groupIndexDim1,
+      groupIndexDim2,
+      highlightCommonLinks.isActive,
+      mouseEnterHandler,
+      mouseLeaveHandler,
+      resultData?.resultRecord.grouping?.groups,
+      title,
+    ],
   );
 }
 
-export default AdditionalColumnField;
+export default memo(AdditionalColumnField);

@@ -3,7 +3,7 @@ import {
   getCorrelationDelta,
   getCorrelationIndex,
 } from 'nmr-correlation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
 import { useDispatch } from '../../../../../context/DispatchContext';
@@ -76,37 +76,53 @@ function HybridizationsTableCell({
     }
   }, [highlight, show]);
 
-  return (
-    <div
-      onDoubleClick={(e) => {
-        e.stopPropagation();
-        setShow(true);
-      }}
-    >
-      {label}
-      {show && (
-        <CustomModal
-          show={show}
-          title={`Edit Hybridization: ${correlation.atomType}${
-            getCorrelationIndex(nmriumData?.correlations.values, correlation) +
-            1
-          } (${
-            getCorrelationDelta(correlation)
-              ? `${(getCorrelationDelta(correlation) as number).toFixed(2)} ppm`
-              : ''
-          })`}
-          body={
-            <EditHybridizations
-              hybridizations={hybridizations}
-              onDelete={handleOnDelete}
-              onAdd={handleOnAdd}
-            />
-          }
-          onClose={handleOnClose}
-        />
-      )}
-    </div>
+  return useMemo(
+    () => (
+      <div
+        onDoubleClick={(e) => {
+          e.stopPropagation();
+          setShow(true);
+        }}
+      >
+        {label}
+        {show && (
+          <CustomModal
+            show={show}
+            header={`Edit Hybridization: ${correlation.atomType}${
+              getCorrelationIndex(
+                nmriumData?.correlations.values,
+                correlation,
+              ) + 1
+            } (${
+              getCorrelationDelta(correlation)
+                ? `${(getCorrelationDelta(correlation) as number).toFixed(
+                    2,
+                  )} ppm`
+                : ''
+            })`}
+            body={
+              <EditHybridizations
+                hybridizations={hybridizations}
+                onDelete={handleOnDelete}
+                onAdd={handleOnAdd}
+              />
+            }
+            onClose={handleOnClose}
+          />
+        )}
+      </div>
+    ),
+    [
+      correlation,
+      handleOnAdd,
+      handleOnClose,
+      handleOnDelete,
+      hybridizations,
+      label,
+      nmriumData?.correlations.values,
+      show,
+    ],
   );
 }
 
-export default HybridizationsTableCell;
+export default memo(HybridizationsTableCell);

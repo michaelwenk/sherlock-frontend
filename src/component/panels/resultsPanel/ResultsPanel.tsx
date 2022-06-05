@@ -1,6 +1,6 @@
 import './ResultsPanel.scss';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
 import ResultsView from './resultsContainer/resultsView/ResultsView';
 import buildSDFileContent from '../../../utils/buildSDFileContent';
@@ -117,41 +117,52 @@ function ResultsPanel({ show }: InputProps) {
     [dataSets, handleOnClickDownload, handleOnClickDelete],
   );
 
-  return resultData ? (
-    <div
-      className="results-panel"
-      style={
-        {
-          '--show': show ? 'flex' : 'none',
-        } as React.CSSProperties
-      }
-    >
-      {resultsView}
-      <CustomModal
-        title="Preparing Download..."
-        show={isPreparingDownload}
-        showCloseButton={false}
-      />
-      <ConfirmModal
-        show={showDeleteModal}
-        title={`Delete ${
-          resultData?.resultRecord.name || resultData?.resultRecord.id
-        }?`}
-        onCancel={() => setShowDeleteModal(false)}
-        onConfirm={handleOnConfirmDelete}
-        body={
-          <p
-            style={{
-              fontSize: '15px',
-              color: 'blue',
-            }}
-          >
-            This can not be undone!
-          </p>
-        }
-      />
-    </div>
-  ) : null;
+  return useMemo(
+    () =>
+      resultData ? (
+        <div
+          className="results-panel"
+          style={
+            {
+              '--show': show ? 'flex' : 'none',
+            } as React.CSSProperties
+          }
+        >
+          {resultsView}
+          <CustomModal
+            header="Preparing Download..."
+            show={isPreparingDownload}
+            showCloseButton={false}
+          />
+          <ConfirmModal
+            show={showDeleteModal}
+            header={`Delete ${
+              resultData?.resultRecord.name || resultData?.resultRecord.id
+            }?`}
+            onCancel={() => setShowDeleteModal(false)}
+            onConfirm={handleOnConfirmDelete}
+            body={
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: 'blue',
+                }}
+              >
+                This can not be undone!
+              </p>
+            }
+          />
+        </div>
+      ) : null,
+    [
+      handleOnConfirmDelete,
+      isPreparingDownload,
+      resultData,
+      resultsView,
+      show,
+      showDeleteModal,
+    ],
+  );
 }
 
-export default ResultsPanel;
+export default memo(ResultsPanel);

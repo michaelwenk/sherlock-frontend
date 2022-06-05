@@ -10,6 +10,7 @@ import NeighborsEntry from '../types/sherlock/detection/NeighborsEntry';
 import ResultRecord from '../types/sherlock/ResultRecord';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import DataSet from '../types/sherlock/dataSet/DataSet';
+import generateID from '../utils/generateID';
 
 const initialDetections: Detections = {
   detectedHybridizations: {},
@@ -156,13 +157,61 @@ export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {
 }
 
 export function editIncludeFragment(draft: Draft<DataState>, action: Action) {
-  const { fragments } = action.payload;
+  const { index, value } = action.payload;
 
   initDetections(draft);
-  const temp = lodashCloneDeep(draft.resultData);
-  if (temp) {
-    temp.resultRecord.detections.fragments = fragments as DataSet[];
-    draft.resultData = temp;
+  const fragment = lodashCloneDeep(
+    draft.resultData?.resultRecord.detections.fragments[index as number],
+  ) as DataSet;
+  fragment.attachment.include = value as boolean;
+  if (draft.resultData && fragment) {
+    draft.resultData.resultRecord.detections.fragments[index as number] =
+      fragment;
+  }
+}
+
+export function addFragment(draft: Draft<DataState>, action: Action) {
+  const { molfile } = action.payload;
+
+  const newFragment: DataSet = {
+    meta: { molfile: molfile as string, id: generateID() },
+    attachment: { include: true, custom: true },
+  };
+  initDetections(draft);
+  if (draft.resultData) {
+    draft.resultData.resultRecord.detections.fragments.unshift(newFragment);
+  }
+}
+
+export function editFragment(draft: Draft<DataState>, action: Action) {
+  const { index, molfile } = action.payload;
+
+  initDetections(draft);
+  const fragment = lodashCloneDeep(
+    draft.resultData?.resultRecord.detections.fragments[index as number],
+  ) as DataSet;
+  fragment.meta.molfile = molfile as string;
+  delete fragment.structure;
+  delete fragment.spectrum;
+  delete fragment.assignment;
+
+  if (draft.resultData) {
+    draft.resultData.resultRecord.detections.fragments[index as number] =
+      fragment;
+  }
+}
+
+export function deleteFragment(draft: Draft<DataState>, action: Action) {
+  const { index } = action.payload;
+
+  initDetections(draft);
+  const fragments = lodashCloneDeep(
+    draft.resultData?.resultRecord.detections.fragments,
+  ) as DataSet[];
+  fragments.splice(index as number, 1);
+
+  if (draft.resultData) {
+    draft.resultData.resultRecord.detections.fragments = fragments;
   }
 }
 

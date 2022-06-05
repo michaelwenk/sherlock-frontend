@@ -1,6 +1,6 @@
 import './QueryPanel.scss';
 
-import React, { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';
 import { Formik, Form } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
@@ -42,34 +42,37 @@ function QueryPanel({ onSubmit, show }: InputProps) {
     return _queryOptions;
   }, [resultData]);
 
-  return (
-    <div
-      className="query-panel"
-      style={
-        {
-          '--show': show ? 'flex' : 'none',
-        } as React.CSSProperties
-      }
-    >
-      <Formik
-        initialValues={queryOptions}
-        validate={validateQueryOptions}
-        onSubmit={(values, { setSubmitting }) => {
-          onSubmit({ queryOptions: values });
-          setSubmitting(false);
-        }}
-        enableReinitialize={true}
+  return useMemo(
+    () => (
+      <div
+        className="query-panel"
+        style={
+          {
+            '--show': show ? 'flex' : 'none',
+          } as React.CSSProperties
+        }
       >
-        {() => {
-          return (
-            <Form>
-              <QueryTabs reset={reset} setReset={setReset} />
-            </Form>
-          );
-        }}
-      </Formik>
-    </div>
+        <Formik
+          initialValues={queryOptions}
+          validate={validateQueryOptions}
+          onSubmit={(values, { setSubmitting }) => {
+            onSubmit({ queryOptions: values });
+            setSubmitting(false);
+          }}
+          enableReinitialize={true}
+        >
+          {() => {
+            return (
+              <Form>
+                <QueryTabs reset={reset} setReset={setReset} />
+              </Form>
+            );
+          }}
+        </Formik>
+      </div>
+    ),
+    [onSubmit, queryOptions, reset, show],
   );
 }
 
-export default QueryPanel;
+export default memo(QueryPanel);

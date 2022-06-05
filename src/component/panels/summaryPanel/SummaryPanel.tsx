@@ -4,7 +4,7 @@ import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
-import FragmentsView from './fragments/FragmentsView';
+import FragmentsTable from './fragments/FragmentsTable';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
@@ -51,68 +51,85 @@ function SummaryPanel() {
     );
   }, [nmriumData]);
 
-  return nmriumData?.correlations?.values &&
-    nmriumData.correlations.values.length > 0 ? (
-    <div className="summary-panel">
-      <div
-        className="overview-table-container"
-        style={
-          {
-            '--overview-table-container-height': showMCD ? '50%' : '100%',
-          } as React.CSSProperties
-        }
-      >
-        <Overview
-          mf={nmriumData ? nmriumData.correlations.options.mf : ''}
-          showAdditionalColumns={showAdditionalColumns}
-          onChangeShowAdditionalColumns={(value: boolean) =>
-            setShowAdditionalColumns(value)
-          }
-          additionalColumnTypes={additionalColumnTypes}
-          selectedAdditionalColumnsAtomType={selectedAdditionalColumnsAtomType}
-          onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
-            setSelectedAdditionalColumnsAtomType(value)
-          }
-          showMCD={showMCD}
-          onClickButtonShowMCD={() => setShowMCD(!showMCD)}
-          showFragments={showFragments}
-          onClickButtonShowFragments={() => setShowFragments(!showFragments)}
-        />
-        <CorrelationTable
-          additionalColumnData={additionalColumnData}
-          showAdditionalColumns={showAdditionalColumns}
-          showProtonsAsRows={showProtonsAsRows}
-        />
-      </div>
+  return useMemo(
+    () =>
+      nmriumData?.correlations?.values &&
+      nmriumData.correlations.values.length > 0 ? (
+        <div className="summary-panel">
+          <div
+            className="overview-table-container"
+            style={
+              {
+                '--overview-table-container-height': showMCD ? '50%' : '100%',
+              } as React.CSSProperties
+            }
+          >
+            <Overview
+              mf={nmriumData ? nmriumData.correlations.options.mf : ''}
+              showAdditionalColumns={showAdditionalColumns}
+              onChangeShowAdditionalColumns={(value: boolean) =>
+                setShowAdditionalColumns(value)
+              }
+              additionalColumnTypes={additionalColumnTypes}
+              selectedAdditionalColumnsAtomType={
+                selectedAdditionalColumnsAtomType
+              }
+              onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
+                setSelectedAdditionalColumnsAtomType(value)
+              }
+              showMCD={showMCD}
+              onClickButtonShowMCD={() => setShowMCD(!showMCD)}
+              showFragments={showFragments}
+              onClickButtonShowFragments={() =>
+                setShowFragments(!showFragments)
+              }
+            />
+            <CorrelationTable
+              additionalColumnData={additionalColumnData}
+              showAdditionalColumns={showAdditionalColumns}
+              showProtonsAsRows={showProtonsAsRows}
+            />
+          </div>
 
-      {(showMCD || showFragments) && (
-        <div
+          {(showMCD || showFragments) && (
+            <div
+              style={{
+                width: '100%',
+                height: '50%',
+                display: 'flex',
+                flexDirection: 'row',
+                borderTop: '1px solid grey',
+              }}
+            >
+              {showMCD && <MCD />}
+              {showFragments && <FragmentsTable />}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p
           style={{
             width: '100%',
-            height: '50%',
+            height: '100%',
             display: 'flex',
-            flexDirection: 'row',
-            borderTop: '1px solid grey',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontStyle: 'italic',
           }}
         >
-          {showMCD && <MCD />}
-          {showFragments && <FragmentsView />}
-        </div>
-      )}
-    </div>
-  ) : (
-    <p
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontStyle: 'italic',
-      }}
-    >
-      No data
-    </p>
+          No data
+        </p>
+      ),
+    [
+      additionalColumnData,
+      additionalColumnTypes,
+      nmriumData,
+      selectedAdditionalColumnsAtomType,
+      showAdditionalColumns,
+      showFragments,
+      showMCD,
+      showProtonsAsRows,
+    ],
   );
 }
 

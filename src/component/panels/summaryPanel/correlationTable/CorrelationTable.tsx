@@ -1,6 +1,6 @@
 import './CorrelationTable.scss';
 
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { getLabelColor } from '../Utilities';
 import AdditionalColumnHeader from './AdditionalColumnHeader';
 import CorrelationTableRow from './CorrelationTableRow';
@@ -68,43 +68,46 @@ function CorrelationTable({
     [additionalColumnData],
   );
 
-  return (
-    <div className="correlation-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Atom</th>
-            <th>δ (ppm)</th>
-            <th
-              style={
-                showAdditionalColumns && showProtonsAsRows
-                  ? { borderRight: '1px solid' }
-                  : {}
-              }
-            >
-              Equiv
-            </th>
-            {!showProtonsAsRows && (
-              <>
-                <th>#H</th>
-                <th>Hybrid</th>
-                <th>non-neighbor</th>
-                <th
-                  style={
-                    showAdditionalColumns ? { borderRight: '1px solid' } : {}
-                  }
-                >
-                  neighbor
-                </th>
-              </>
-            )}
-            {showAdditionalColumns && additionalColumnHeader}
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    </div>
+  return useMemo(
+    () => (
+      <div className="correlation-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Atom</th>
+              <th>δ (ppm)</th>
+              <th
+                style={
+                  showAdditionalColumns && showProtonsAsRows
+                    ? { borderRight: '1px solid' }
+                    : {}
+                }
+              >
+                Equiv
+              </th>
+              {!showProtonsAsRows && (
+                <>
+                  <th>#H</th>
+                  <th>Hybrid</th>
+                  <th>non-neighbor</th>
+                  <th
+                    style={
+                      showAdditionalColumns ? { borderRight: '1px solid' } : {}
+                    }
+                  >
+                    neighbor
+                  </th>
+                </>
+              )}
+              {showAdditionalColumns && additionalColumnHeader}
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    ),
+    [additionalColumnHeader, rows, showAdditionalColumns, showProtonsAsRows],
   );
 }
 
-export default CorrelationTable;
+export default memo(CorrelationTable);

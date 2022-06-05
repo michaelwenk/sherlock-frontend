@@ -1,5 +1,5 @@
 import './SelectBox.scss';
-import { CSSProperties, useCallback } from 'react';
+import { CSSProperties, useCallback, useMemo } from 'react';
 
 type InputProps = {
   values: string[] | number[];
@@ -23,19 +23,22 @@ function SelectBox({
     [onChange],
   );
 
-  return (
-    <select
-      className={className}
-      onChange={handleOnChanged}
-      defaultValue={defaultValue}
-      style={style}
-    >
-      {values.map((value: string | number) => (
-        <option key={value} value={value}>
-          {value}
-        </option>
-      ))}
-    </select>
+  return useMemo(
+    () => (
+      <select
+        className={className}
+        onChange={handleOnChanged}
+        defaultValue={defaultValue}
+        style={style}
+      >
+        {values.map((value: string | number) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </select>
+    ),
+    [className, defaultValue, handleOnChanged, style, values],
   );
 }
 

@@ -1,11 +1,10 @@
 import './EditNeighbors.scss';
 
-import { useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Button from '../../../../elements/Button';
 import SelectBox from '../../../../elements/SelectBox';
-import generateID from '../../../../../utils/generateID';
 import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEntry';
 
 interface InputProps {
@@ -44,11 +43,11 @@ function EditNeighbors({
     const protonCounts = ['\u2217', '0', '1', '2', '3'];
 
     const _rows = Object.keys(neighbors)
-      .map((atomType) => {
+      .map((atomType, i) => {
         const hybridizations = neighbors[atomType];
         if (Object.keys(hybridizations).length === 0) {
           return (
-            <tr key={generateID()}>
+            <tr key={`edit_neighbor_${i}`}>
               <td>{atomType}</td>
               <td>{'\u2217'}</td>
               {/* <td>{'\u2217'}</td> */}
@@ -64,13 +63,13 @@ function EditNeighbors({
 
         return Object.keys(hybridizations)
           .map((hybridization) => Number(hybridization))
-          .map((hybridization) => {
+          .map((hybridization, k) => {
             if (
               hybridization === -1 &&
               hybridizations[hybridization].length === 0
             ) {
               return (
-                <tr key={`hybridization_${generateID()}`}>
+                <tr key={`hybridization_${k}`}>
                   <td>{atomType}</td>
                   <td>{'\u2217'}</td>
                   {/* <td>{'\u2217'}</td> */}
@@ -84,8 +83,8 @@ function EditNeighbors({
               );
             }
 
-            return hybridizations[hybridization].map((protonCount) => (
-              <tr key={`hybridization_${generateID()}`}>
+            return hybridizations[hybridization].map((protonCount, l) => (
+              <tr key={`proton_count_${l}`}>
                 <td>{atomType}</td>
                 <td>{protonCount === -1 ? '\u2217' : protonCount}</td>
                 {/* <td>{hybridization === -1 ? '\u2217' : hybridization}</td> */}
@@ -104,10 +103,9 @@ function EditNeighbors({
       .flat();
 
     _rows.push(
-      <tr key={`edit_neighbors_${generateID()}`}>
+      <tr key="select_new_neighbor">
         <td>
           <SelectBox
-            key={`selectBox_atomType_new`}
             defaultValue={newAtomType}
             onChange={(value: string) => setNewAtomType(value)}
             values={possibleNeighbors}
@@ -115,7 +113,6 @@ function EditNeighbors({
         </td>
         <td>
           <SelectBox
-            key={`selectBox_protonCount_new`}
             defaultValue={newProtonCount}
             onChange={(value: string) =>
               setNewProtonCount(value === '\u2217' ? -1 : Number(value))
@@ -125,7 +122,6 @@ function EditNeighbors({
         </td>
         {/* <td>
           <SelectBox
-            key={`selectBox_hybridization_new`}
             defaultValue={newHybridization}
             onChange={(value: string) =>
               setNewHybridization(value === '\u2217' ? -1 : Number(value))
@@ -153,23 +149,24 @@ function EditNeighbors({
     possibleNeighbors,
   ]);
 
-  const table = useMemo(() => {
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Atom</th>
-            <th>#H</th>
-            {/* <th>Hybrid</th> */}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    );
-  }, [rows]);
-
-  return <div className="edit-neighbors">{table}</div>;
+  return useMemo(
+    () => (
+      <div className="edit-neighbors">
+        <table>
+          <thead>
+            <tr>
+              <th>Atom</th>
+              <th>#H</th>
+              {/* <th>Hybrid</th> */}
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
+    ),
+    [rows],
+  );
 }
 
-export default EditNeighbors;
+export default memo(EditNeighbors);

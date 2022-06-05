@@ -97,46 +97,65 @@ function CustomPagination({
     [onSelect, paginationItemListIndex, paginationItemLists],
   );
 
-  return (
-    <div className={className}>
-      <Pagination className="Pagination">
-        {showFirst && (
-          <Pagination.First
-            onClick={handleOnClickFirst}
-            disabled={selected === 0}
-            className="PaginationFirst"
+  return useMemo(
+    () => (
+      <div className={className}>
+        <Pagination className="Pagination">
+          {showFirst && (
+            <Pagination.First
+              onClick={handleOnClickFirst}
+              disabled={selected === 0}
+              className="PaginationFirst"
+            />
+          )}
+          <Pagination.Prev
+            onClick={handleOnClickPrev}
+            disabled={paginationItemListIndex === 0}
+            className="PaginationPrev"
           />
-        )}
-        <Pagination.Prev
-          onClick={handleOnClickPrev}
-          disabled={paginationItemListIndex === 0}
-          className="PaginationPrev"
-        />
-        {showEllipsis &&
-        paginationItems.length > maxPages &&
-        paginationItemListIndex > 0 ? (
-          <Pagination.Ellipsis disabled={true} />
-        ) : null}
-        {paginationItemLists[paginationItemListIndex]}
-        {showEllipsis &&
-        paginationItems.length > maxPages &&
-        paginationItemListIndex + 1 < paginationItemLists.length ? (
-          <Pagination.Ellipsis disabled={true} />
-        ) : null}
-        <Pagination.Next
-          onClick={handleOnClickNext}
-          disabled={paginationItemListIndex === paginationItemLists.length - 1}
-          className="PaginationNext"
-        />
-        {showLast && (
-          <Pagination.Last
-            onClick={handleOnClickLast}
-            disabled={selected === paginationItems.length - 1}
-            className="PaginationLast"
+          {showEllipsis &&
+          paginationItems.length > maxPages &&
+          paginationItemListIndex > 0 ? (
+            <Pagination.Ellipsis disabled={true} />
+          ) : null}
+          {paginationItemLists[paginationItemListIndex]}
+          {showEllipsis &&
+          paginationItems.length > maxPages &&
+          paginationItemListIndex + 1 < paginationItemLists.length ? (
+            <Pagination.Ellipsis disabled={true} />
+          ) : null}
+          <Pagination.Next
+            onClick={handleOnClickNext}
+            disabled={
+              paginationItemListIndex === paginationItemLists.length - 1
+            }
+            className="PaginationNext"
           />
-        )}
-      </Pagination>
-    </div>
+          {showLast && (
+            <Pagination.Last
+              onClick={handleOnClickLast}
+              disabled={selected === paginationItems.length - 1}
+              className="PaginationLast"
+            />
+          )}
+        </Pagination>
+      </div>
+    ),
+    [
+      className,
+      handleOnClickFirst,
+      handleOnClickLast,
+      handleOnClickNext,
+      handleOnClickPrev,
+      maxPages,
+      paginationItemListIndex,
+      paginationItemLists,
+      paginationItems.length,
+      selected,
+      showEllipsis,
+      showFirst,
+      showLast,
+    ],
   );
 }
 

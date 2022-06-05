@@ -1,10 +1,11 @@
 import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
-import { Tab, Tabs } from 'react-bootstrap';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import NMRium, { NMRiumPreferences } from 'nmrium';
 import Panels from './panels/Panels';
-import { Reducer, useCallback, useMemo, useReducer } from 'react';
+import { memo, Reducer, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
 import {
@@ -62,44 +63,47 @@ function Sherlock() {
     [dispatcherMemo],
   );
 
-  return (
-    <div className="sherlock">
-      <DispatchProvider value={dispatcherMemo}>
-        <DataProvider value={state}>
-          <Tabs defaultActiveKey="nmrium" className="nav-justified">
-            <Tab
-              eventKey="logo"
-              title={
-                <img
-                  src={logoMinimal}
-                  style={{
-                    width: '100%',
-                    maxWidth: '300px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    border: 'none',
-                  }}
-                />
-              }
-              disabled={true}
-            />
-            <Tab eventKey="nmrium" title="Spectra">
-              <div className="nmrium-container">
-                <NMRium
-                  preferences={preferences}
-                  onDataChange={handleOnNMRiumDataChange}
-                />
-              </div>
-            </Tab>
+  return useMemo(
+    () => (
+      <div className="sherlock">
+        <DispatchProvider value={dispatcherMemo}>
+          <DataProvider value={state}>
+            <Tabs defaultActiveKey="nmrium" className="nav-justified">
+              <Tab
+                eventKey="logo"
+                title={
+                  <img
+                    src={logoMinimal}
+                    style={{
+                      width: '100%',
+                      maxWidth: '300px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      border: 'none',
+                    }}
+                  />
+                }
+                disabled={true}
+              />
+              <Tab eventKey="nmrium" title="Spectra">
+                <div className="nmrium-container">
+                  <NMRium
+                    preferences={preferences}
+                    onDataChange={handleOnNMRiumDataChange}
+                  />
+                </div>
+              </Tab>
 
-            <Tab eventKey="case" title="CASE">
-              <Panels />
-            </Tab>
-            <Tab eventKey="about" title="About" />
-          </Tabs>
-        </DataProvider>
-      </DispatchProvider>
-    </div>
+              <Tab eventKey="case" title="CASE">
+                <Panels />
+              </Tab>
+              <Tab eventKey="about" title="About" />
+            </Tabs>
+          </DataProvider>
+        </DispatchProvider>
+      </div>
+    ),
+    [dispatcherMemo, handleOnNMRiumDataChange, state],
   );
 }
-export default Sherlock;
+export default memo(Sherlock);

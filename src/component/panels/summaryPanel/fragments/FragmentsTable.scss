@@ -1,0 +1,48 @@
+.fragments-view-div {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+
+  table {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+
+    th,
+    td {
+      white-space: nowrap;
+      padding: 5px;
+      border-bottom: 1px solid #dedede;
+      border-right: 1px solid #dedede;
+
+      .Button {
+        background-color: transparent;
+        border: none;
+      }
+    }
+
+    th {
+      background-color: lightgrey;
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background-color: mintcream;
+    }
+
+    tr:hover .structure-view {
+      transform: scale(1.05);
+    }
+
+    .structure-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

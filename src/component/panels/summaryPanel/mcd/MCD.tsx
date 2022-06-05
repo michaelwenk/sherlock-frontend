@@ -1,7 +1,7 @@
 import './MCD.scss';
 
 import { Correlation, Link } from 'nmr-correlation';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 import generateID from '../../../../utils/generateID';
 import Graph from '../../../elements/Graph';
@@ -195,11 +195,14 @@ function MCD() {
     resultData?.resultRecord.detections,
   ]);
 
-  return (
-    <div className="mcd-container">
-      <Graph graphData={graphData} styleSheet={styleSheet} />
-    </div>
+  return useMemo(
+    () => (
+      <div className="mcd-container">
+        <Graph graphData={graphData} styleSheet={styleSheet} />
+      </div>
+    ),
+    [graphData],
   );
 }
 
-export default MCD;
+export default memo(MCD);

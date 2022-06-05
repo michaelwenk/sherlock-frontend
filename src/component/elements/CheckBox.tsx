@@ -1,5 +1,5 @@
 import './CheckBox.scss';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 type InputProps = {
   defaultValue: boolean;
@@ -22,16 +22,19 @@ function CheckBox({
     onChange(!isChecked);
   }, [isChecked, onChange]);
 
-  return (
-    <div className={className}>
-      <input
-        type="checkbox"
-        checked={isChecked}
-        onChange={handleOnChange}
-        {...props}
-      />
-      <label>{label}</label>
-    </div>
+  return useMemo(
+    () => (
+      <div className={className}>
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={handleOnChange}
+          {...props}
+        />
+        <label>{label}</label>
+      </div>
+    ),
+    [className, handleOnChange, isChecked, label, props],
   );
 }
 
