@@ -89,7 +89,7 @@ function StructureView({
 
   const handleOnAtom = useCallback(
     (atomIndex: number, action: 'enter' | 'leave') => {
-      if (inView) {
+      if (inView && querySpectrum) {
         const signalIndexInQuerySpectrum =
           getSignalIndexInQuerySpectrum(atomIndex);
         if (signalIndexInQuerySpectrum >= 0) {
@@ -109,7 +109,7 @@ function StructureView({
       getSignalIndexInQuerySpectrum,
       highlightData.dispatch,
       inView,
-      querySpectrum?.signals,
+      querySpectrum,
     ],
   );
 
