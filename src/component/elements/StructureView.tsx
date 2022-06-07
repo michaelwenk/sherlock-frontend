@@ -30,7 +30,11 @@ function StructureView({
     const _querySpectrumSignalToAtomIndexAssignment: {
       [signalID: string]: number[];
     } = {};
-    if (dataSet.assignment && dataSet.attachment.spectralMatchAssignment) {
+    if (
+      querySpectrum &&
+      dataSet.assignment &&
+      dataSet.attachment.spectralMatchAssignment
+    ) {
       const spectralMatchAssignment =
         dataSet.attachment.spectralMatchAssignment;
       dataSet.assignment.assignments[0].forEach(
@@ -56,7 +60,7 @@ function StructureView({
   }, [
     dataSet.assignment,
     dataSet.attachment.spectralMatchAssignment,
-    querySpectrum?.signals,
+    querySpectrum,
   ]);
 
   const getSignalIndexInQuerySpectrum = useCallback(
