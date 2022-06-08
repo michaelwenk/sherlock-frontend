@@ -1,10 +1,10 @@
 import { memo, useCallback, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useData } from '../../../../../context/DataContext';
-import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
-import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
-import convertMultiplicityStringToNumber from '../../../../../utils/convertMultiplicityStringToNumber';
-import { useHighlight } from '../../../../highlight';
+import { useData } from '../../../../../../context/DataContext';
+import DataSet from '../../../../../../types/sherlock/dataSet/DataSet';
+import SpectrumCompact from '../../../../../../types/sherlock/dataSet/SpectrumCompact';
+import convertMultiplicityStringToNumber from '../../../../../../utils/convertMultiplicityStringToNumber';
+import { useHighlight } from '../../../../../highlight';
 
 interface InputProps {
   signalIndex: number;

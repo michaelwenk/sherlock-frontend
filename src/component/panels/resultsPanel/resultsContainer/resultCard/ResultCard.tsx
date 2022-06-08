@@ -3,7 +3,7 @@ import './ResultCard.scss';
 import Card from 'react-bootstrap/Card';
 import ResultCardText from './ResultCardText';
 import { CSSProperties, memo, useEffect, useMemo, useState } from 'react';
-import PredictionTable from './PredictionTable';
+import PredictionTable from './predictionTable/PredictionTable';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import Button from '../../../../elements/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

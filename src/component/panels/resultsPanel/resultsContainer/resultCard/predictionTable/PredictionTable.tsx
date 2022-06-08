@@ -1,9 +1,9 @@
 import './PredictionTable.scss';
 import { CSSProperties, memo, useMemo } from 'react';
-import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
-import { useData } from '../../../../../context/DataContext';
-import SpectrumCompact from '../../../../../types/sherlock/dataSet/SpectrumCompact';
-import queryTypes from '../../../../../constants/queryTypes';
+import DataSet from '../../../../../../types/sherlock/dataSet/DataSet';
+import { useData } from '../../../../../../context/DataContext';
+import SpectrumCompact from '../../../../../../types/sherlock/dataSet/SpectrumCompact';
+import queryTypes from '../../../../../../constants/queryTypes';
 import PredictionTableRow from './PredictionTableRow';
 
 type InputProps = {
