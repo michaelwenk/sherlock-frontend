@@ -286,41 +286,42 @@ function NeighborsTableCell({
                   onAdd={handleOnAdd}
                 />
               ) : (
-                <Tabs onSelect={() => {}} defaultActiveKey="general">
-                  <Tab eventKey={'general'} title="General">
-                    <EditNeighbors
-                      neighbors={neighbors}
-                      possibleNeighbors={possibleNeighbors}
-                      onDelete={handleOnDelete}
-                      onAdd={handleOnAdd}
-                    />
-                  </Tab>
-                  <Tab eventKey={'fixed'} title="Fixed">
-                    {correlation.equivalence === undefined ||
-                    correlation.equivalence !== 1 ||
-                    !correlation.protonsCount ||
-                    correlation.protonsCount.length !== 1 ||
-                    !correlation.hybridization ||
-                    correlation.hybridization.length !== 1 ? (
-                      <p style={{ color: 'blue' }}>
-                        Setting of direct bond to another atom is not allowed
-                        for this atom with an equivalence higher than one or a
-                        non-unique proton count/hybridization!
-                      </p>
-                    ) : (
-                      <EditFixedNeighbors
-                        fixedNeighborEntry={
-                          resultData?.resultRecord.detections?.fixedNeighbors?.[
-                            correlationIndex
-                          ] || []
-                        }
-                        correlations={nmriumData?.correlations.values}
-                        onDelete={handleOnDeleteFixed}
-                        onAdd={handleOnAddFixed}
+                <div style={{ width: '100%' }}>
+                  <Tabs onSelect={() => {}} defaultActiveKey="general">
+                    <Tab eventKey={'general'} title="General">
+                      <EditNeighbors
+                        neighbors={neighbors}
+                        possibleNeighbors={possibleNeighbors}
+                        onDelete={handleOnDelete}
+                        onAdd={handleOnAdd}
                       />
-                    )}
-                  </Tab>
-                </Tabs>
+                    </Tab>
+                    <Tab eventKey={'fixed'} title="Fixed">
+                      {correlation.equivalence === undefined ||
+                      correlation.equivalence !== 1 ||
+                      !correlation.protonsCount ||
+                      correlation.protonsCount.length !== 1 ||
+                      !correlation.hybridization ||
+                      correlation.hybridization.length !== 1 ? (
+                        <p style={{ color: 'blue' }}>
+                          Setting of direct bond to another atom is not allowed
+                          for this atom with an equivalence higher than one or a
+                          non-unique proton count/hybridization!
+                        </p>
+                      ) : (
+                        <EditFixedNeighbors
+                          fixedNeighborEntry={
+                            resultData?.resultRecord.detections
+                              ?.fixedNeighbors?.[correlationIndex] || []
+                          }
+                          correlations={nmriumData?.correlations.values}
+                          onDelete={handleOnDeleteFixed}
+                          onAdd={handleOnAddFixed}
+                        />
+                      )}
+                    </Tab>
+                  </Tabs>
+                </div>
               )
             }
             onClose={handleOnClose}
