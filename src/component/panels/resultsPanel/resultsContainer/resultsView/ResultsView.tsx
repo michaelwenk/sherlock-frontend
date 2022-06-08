@@ -9,6 +9,7 @@ import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
+import { useHighlightData } from '../../../../highlight';
 
 interface ImageSize {
   width: number;
@@ -38,6 +39,7 @@ function ResultsView({
   onClickDownload,
   onClickDelete,
 }: InputProps) {
+  const highlightData = useHighlightData();
   const [selectedCardDeckIndex, setSelectedCardDeckIndex] = useState<number>(0);
   const [selectedPageLimit, setSelectedPageLimit] = useState<number>(
     pageLimits[1],
@@ -143,6 +145,16 @@ function ResultsView({
     selectedPageLimit,
   ]);
 
+  const handleOnScroll = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      highlightData.remove();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [highlightData.remove],
+  );
+
   return useMemo(
     () =>
       cardDeckData.length > 0 ? (
@@ -211,7 +223,7 @@ function ResultsView({
               maxPages={maxPages}
             />
           </div>
-          <div className="card-deck-container">
+          <div className="card-deck-container" onScroll={handleOnScroll}>
             <Container>
               <CardGroup>{cardDecks}</CardGroup>
             </Container>
@@ -223,6 +235,7 @@ function ResultsView({
     [
       cardDeckData,
       cardDecks,
+      handleOnScroll,
       handleOnSelectCardIndex,
       maxPages,
       onClickDelete,

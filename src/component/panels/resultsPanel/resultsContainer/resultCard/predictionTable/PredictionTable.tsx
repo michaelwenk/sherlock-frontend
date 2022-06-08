@@ -1,10 +1,11 @@
 import './PredictionTable.scss';
-import { CSSProperties, memo, useMemo } from 'react';
+import { CSSProperties, memo, useCallback, useMemo } from 'react';
 import DataSet from '../../../../../../types/sherlock/dataSet/DataSet';
 import { useData } from '../../../../../../context/DataContext';
 import SpectrumCompact from '../../../../../../types/sherlock/dataSet/SpectrumCompact';
 import queryTypes from '../../../../../../constants/queryTypes';
 import PredictionTableRow from './PredictionTableRow';
+import { useHighlightData } from '../../../../../highlight';
 
 type InputProps = {
   dataSet: DataSet;
@@ -14,6 +15,7 @@ type InputProps = {
 
 function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
   const { resultData } = useData();
+  const highlightData = useHighlightData();
 
   const rows = useMemo(
     () =>
@@ -43,6 +45,16 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
     [dataSet, querySpectrum],
   );
 
+  const handleOnScroll = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      highlightData.remove();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [highlightData.remove],
+  );
+
   return useMemo(
     () => (
       <div
@@ -52,6 +64,7 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
             '--custom-max-height': isExtended ? 'none' : '220px',
           } as CSSProperties
         }
+        onScroll={handleOnScroll}
       >
         <table>
           <thead>
@@ -81,6 +94,7 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
     ),
     [
       dataSet.attachment.predictionMeta,
+      handleOnScroll,
       isExtended,
       resultData?.queryType,
       rows,

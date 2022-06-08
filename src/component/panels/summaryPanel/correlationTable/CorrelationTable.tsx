@@ -1,11 +1,12 @@
 import './CorrelationTable.scss';
 
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { getLabelColor } from '../Utilities';
 import AdditionalColumnHeader from './AdditionalColumnHeader';
 import CorrelationTableRow from './CorrelationTableRow';
 import { Correlation } from 'nmr-correlation';
 import { useData } from '../../../../context/DataContext';
+import { useHighlightData } from '../../../highlight';
 
 interface InputPros {
   additionalColumnData: Correlation[];
@@ -19,6 +20,7 @@ function CorrelationTable({
   showProtonsAsRows,
 }: InputPros) {
   const { nmriumData } = useData();
+  const highlightData = useHighlightData();
 
   const rows = useMemo(
     () =>
@@ -68,9 +70,19 @@ function CorrelationTable({
     [additionalColumnData],
   );
 
+  const handleOnScroll = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      highlightData.remove();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [highlightData.remove],
+  );
+
   return useMemo(
     () => (
-      <div className="correlation-table">
+      <div className="correlation-table" onScroll={handleOnScroll}>
         <table>
           <thead>
             <tr>
@@ -106,7 +118,13 @@ function CorrelationTable({
         </table>
       </div>
     ),
-    [additionalColumnHeader, rows, showAdditionalColumns, showProtonsAsRows],
+    [
+      additionalColumnHeader,
+      handleOnScroll,
+      rows,
+      showAdditionalColumns,
+      showProtonsAsRows,
+    ],
   );
 }
 

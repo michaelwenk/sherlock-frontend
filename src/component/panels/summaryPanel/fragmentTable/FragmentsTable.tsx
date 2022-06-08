@@ -11,10 +11,12 @@ import Button from '../../../elements/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import StructureEditorModal from '../../../elements/modal/StructureEditorModal';
+import { useHighlightData } from '../../../highlight';
 
 function FragmentsTable() {
   const { resultData } = useData();
   const dispatch = useDispatch();
+  const highlightData = useHighlightData();
   const [showFragmentEditor, setShowFragmentEditor] = useState<boolean>(false);
 
   const handleOnCloseFragmentEditor = useCallback(
@@ -57,9 +59,19 @@ function FragmentsTable() {
     return _rows;
   }, [fragments, resultData?.resultRecord.querySpectrum]);
 
+  const handleOnScroll = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      highlightData.remove();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [highlightData.remove],
+  );
+
   return useMemo(
     () => (
-      <div className="fragments-view-div">
+      <div className="fragments-view-div" onScroll={handleOnScroll}>
         <table>
           <thead>
             <tr>
@@ -110,6 +122,7 @@ function FragmentsTable() {
     [
       handleOnCloseFragmentEditor,
       handleOnSaveFragmentEditor,
+      handleOnScroll,
       rows,
       showFragmentEditor,
     ],
