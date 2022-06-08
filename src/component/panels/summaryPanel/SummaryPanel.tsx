@@ -4,7 +4,7 @@ import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
-import FragmentsTable from './fragments/FragmentsTable';
+import FragmentsTable from './fragmentTable/FragmentsTable';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
