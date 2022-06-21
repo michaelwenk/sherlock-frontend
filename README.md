@@ -2,7 +2,7 @@
 
 # Sherlock (Frontend)
 
-Frontend service for [Sherlock](https://github.com/michaelwenk/sherlock).
+Frontend service for [Sherlock](https://github.com/michaelwenk/sherlock). A manual is available [here](/public/Sherlock_manual.pdf).
 
 ## Main Components
 
