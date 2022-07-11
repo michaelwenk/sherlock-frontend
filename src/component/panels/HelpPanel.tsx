@@ -47,7 +47,7 @@ function HelpPanel() {
         <br />
         <br />
         This tool is developed and maintained by the Steinbeck group at the
-        University Friedrich-Schiller in Jena, Germany. The code is released
+        Friedrich-Schiller-University in Jena, Germany. The code is released
         under the MIT license. <br />
         Copyright © CC-BY-SA 2022
       </p>
