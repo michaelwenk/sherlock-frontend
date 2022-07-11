@@ -53,7 +53,7 @@ function HelpPanel() {
       </p>
 
       <iframe
-        src="/public/Sherlock_manual.pdf"
+        src="Sherlock_manual.pdf"
         width="100%"
         height="1000px"
         style={{ marginTop: '30px' }}
