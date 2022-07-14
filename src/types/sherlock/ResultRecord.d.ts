@@ -14,6 +14,7 @@ export default interface ResultRecord {
   dataSetListSize?: number;
   previewDataSet?: DataSet;
   correlations?: CorrelationData;
+  detected?: boolean;
   detections?: Detections;
   detectionOptions?: DetectionOptions;
   elucidationOptions?: ElucidationOptions;
