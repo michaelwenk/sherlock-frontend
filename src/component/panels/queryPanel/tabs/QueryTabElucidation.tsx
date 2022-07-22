@@ -158,7 +158,7 @@ function QueryTabElucidation() {
                 </td>
               </tr>
               <tr>
-                <td>Search for fragments</td>
+                <td>Search for fragments (might take a moment)</td>
                 <td style={{ textAlign: 'center' }}>
                   <FormikCheckBox name="detectionOptions.detectFragments" />
                 </td>
