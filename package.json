@@ -42,7 +42,7 @@
     "immer": "^9.0.12",
     "lodash": "^4.17.21",
     "nmr-correlation": "^2.2.5",
-    "nmrium": "^0.28.0",
+    "nmrium": "^0.29.0",
     "openchemlib": "^7.4.3",
     "react": ">=17.0.2",
     "react-cytoscapejs": "^1.2.1",
