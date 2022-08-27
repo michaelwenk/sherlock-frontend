@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7027668.svg)](https://doi.org/10.5281/zenodo.7027668) [![License](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://opensource.org/licenses/MIt) [![GitHub contributors](https://img.shields.io/github/contributors/michaelwenk/sherlock-frontend.svg)](https://github.com/michaelwenk/sherlock-frontend/graphs/contributors/) [![GitHub issues](https://img.shields.io/github/issues/michaelwenk/sherlock-frontend.svg)](https://github.com/michaelwenk/sherlock-frontend/issues/) [![GitHub release](https://img.shields.io/github/release/michaelwenk/sherlock-frontend.svg)](https://github.com/michaelwenk/sherlock-frontend/releases/)
+
 <img width="150" alt="sherlock-logo" src="public/Sherlock.png" align="right">
 
 # Sherlock (Frontend)
