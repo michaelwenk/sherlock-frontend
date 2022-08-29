@@ -11,9 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: exit if not on master branch
-        if: github.ref_name != 'master'
-        run: exit -1
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
