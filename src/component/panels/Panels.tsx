@@ -316,6 +316,7 @@ function Panels() {
     () => (
       <div className="panels">
         <HighlightProvider>
+          {/* @ts-ignore */}
           <SplitPane
             split="vertical"
             defaultSize="60%"
@@ -383,9 +384,33 @@ function Panels() {
                   <div className="request-error">
                     <p>Request failed:</p>
                     <p>
-                      {requestError.response?.data.errorMessage
-                        ? requestError.response?.data.errorMessage
-                        : 'Could not connect to Sherlock`s backend services'}
+                      {axios.isAxiosError(requestError) ? (
+                        (
+                          requestError.response?.data as {
+                            errorMessage: string;
+                          }
+                        ).errorMessage ? (
+                          (
+                            requestError.response?.data as {
+                              errorMessage: string;
+                            }
+                          ).errorMessage
+                        ) : (
+                          <p>
+                            <label>
+                              Could not connect to Sherlock`s backend services:
+                            </label>
+                            <br />
+                            <label>
+                              {JSON.stringify(
+                                requestError.response?.data as {},
+                              )}
+                            </label>
+                          </p>
+                        )
+                      ) : (
+                        'Could not connect to Sherlock`s backend services'
+                      )}
                     </p>
                   </div>
                 ) : requestWasCancelled ? (
