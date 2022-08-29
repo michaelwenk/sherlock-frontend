@@ -25,5 +25,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/sherlock-frontend:${{github.ref_name}}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/sherlock-frontend:${{ github.ref_name }}
           push: true
