@@ -3,8 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: ['master']
-  pull_request:
-    branches: ['master']
+    tags:
+      - 'v*'
 
 jobs:
   build-and-push:
@@ -25,5 +25,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/sherlock-frontend:${{github.ref_name}}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/sherlock-frontend:latest
