@@ -4,7 +4,9 @@
 
 # Sherlock (Frontend)
 
-Frontend service for [Sherlock](https://github.com/michaelwenk/sherlock). A manual is available [here](/public/Sherlock_manual.pdf).
+Frontend service for [Sherlock](https://github.com/michaelwenk/sherlock).
+
+A [user manual](/public/Sherlock_manual.pdf) and [publication](https://doi.org/10.3390/molecules28031448) are available.
 
 ## Main Components
 
