@@ -77,9 +77,7 @@ To start this service (in detached mode) use:
 
     docker run -d -p 3001:5000 --name sherlock-frontend michaelwenk/sherlock-frontend
 
-As configured above, the backend service does allow requests from port 3001 only.
-
-The web service is now accessible via:
+The web service is now accessible through the web browser. The localhost and selected port is used as address:
 
     http://localhost:3001/
 
