@@ -1,3 +1,4 @@
+import { Molecule } from 'openchemlib';
 import DataSet from '../types/sherlock/dataSet/DataSet';
 
 interface InputProps {
@@ -7,7 +8,10 @@ interface InputProps {
 function buildSDFileContent({ dataSets }: InputProps) {
   let content = '';
   dataSets.forEach((dataSet, i) => {
-    content += dataSet.meta.molfile;
+    const mol = Molecule.fromMolfile(dataSet.meta.molfile);
+    mol.inventCoordinates();
+
+    content += mol.toMolfile();
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
