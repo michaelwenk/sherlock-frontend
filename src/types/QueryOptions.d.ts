@@ -9,4 +9,5 @@ export default interface QueryOptions {
   elucidationOptions: ElucidationOptions;
   detectionOptions: DetectionOptions;
   retrievalOptions: RetrievalOptions;
+  predictionOptions: PredictionOptions;
 }

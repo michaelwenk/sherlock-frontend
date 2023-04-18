@@ -2,6 +2,7 @@ import QueryOptions from '../types/QueryOptions';
 import DereplicationOptions from '../types/sherlock/DereplicationOptions';
 import DetectionOptions from '../types/sherlock/detection/DetectionOptions';
 import ElucidationOptions from '../types/sherlock/ElucidationOptions';
+import PredictionOptions from '../types/sherlock/PredictionOptions';
 import RetrievalOptions from '../types/sherlock/RetrievalOptions';
 import queryTypes from './queryTypes';
 import retrievalActions from './retrievalAction';
@@ -25,9 +26,7 @@ const defaultQueryOptions: QueryOptions = {
     useFilterLsdRing4: false,
     // elucidation process
     timeLimitTotal: 5,
-    // generated structures filter
-    shiftTolerance: 10,
-    maximumAverageDeviation: 5,
+    //
     useCombinatorics: false,
   } as ElucidationOptions,
   detectionOptions: {
@@ -40,6 +39,12 @@ const defaultQueryOptions: QueryOptions = {
     shiftToleranceFragmentDetection: 1,
     maximumAverageDeviationFragmentDetection: 1,
   } as DetectionOptions,
+  predictionOptions: {
+    // generated structures filter
+    shiftTolerance: 10,
+    maximumAverageDeviation: 5,
+    predictWithStereo: false,
+  } as PredictionOptions,
   retrievalOptions: {
     action: retrievalActions.fetch,
     resultID: '',

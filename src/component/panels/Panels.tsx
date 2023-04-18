@@ -157,6 +157,7 @@ function Panels() {
         dereplicationOptions,
         elucidationOptions,
         detectionOptions,
+        predictionOptions,
         retrievalOptions,
       } = queryOptions;
 
@@ -187,6 +188,7 @@ function Panels() {
             correlations,
             elucidationOptions,
             detectionOptions,
+            predictionOptions,
             name: retrievalOptions.resultName,
           } as ResultRecord,
         };

@@ -5,6 +5,7 @@ import DetectionOptions from './DetectionOptions';
 import Detections from './Detections';
 import ElucidationOptions from './ElucidationOptions';
 import Grouping from './Grouping';
+import PredictionOptions from './PredictionOptions';
 
 export default interface ResultRecord {
   id?: string;
@@ -18,6 +19,7 @@ export default interface ResultRecord {
   detections?: Detections;
   detectionOptions?: DetectionOptions;
   elucidationOptions?: ElucidationOptions;
+  predictionOptions?: PredictionOptions;
   grouping?: Grouping;
   querySpectrum?: SpectrumCompact;
 }

@@ -11,5 +11,7 @@ export default interface ElucidationOptions {
   // generated structures filter
   shiftTolerance: number;
   maximumAverageDeviation: number;
+  predictWithStereo: boolean;
+
   useCombinatorics: boolean;
 }

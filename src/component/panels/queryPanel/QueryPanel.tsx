@@ -31,6 +31,9 @@ function QueryPanel({ onSubmit, show }: InputProps) {
       elucidationOptions:
         resultData?.resultRecord?.elucidationOptions ||
         defaultQueryOptions.elucidationOptions,
+      predictionOptions:
+        resultData?.resultRecord?.predictionOptions ||
+        defaultQueryOptions.predictionOptions,
       retrievalOptions: {
         action: '',
         resultID: resultData?.resultRecord.id || '',

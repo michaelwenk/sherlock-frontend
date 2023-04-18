@@ -319,13 +319,13 @@ function QueryTabElucidation() {
                 <td>
                   <FormikInput
                     type="number"
-                    name="elucidationOptions.shiftTolerance"
+                    name="predictionOptions.shiftTolerance"
                   />
                 </td>
                 <td>
-                  {errors.elucidationOptions?.shiftTolerance && (
+                  {errors.predictionOptions?.shiftTolerance && (
                     <ErrorSymbol
-                      message={errors.elucidationOptions.shiftTolerance}
+                      message={errors.predictionOptions.shiftTolerance}
                     />
                   )}
                 </td>
@@ -335,17 +335,21 @@ function QueryTabElucidation() {
                 <td>
                   <FormikInput
                     type="number"
-                    name="elucidationOptions.maximumAverageDeviation"
+                    name="predictionOptions.maximumAverageDeviation"
                   />
                 </td>
                 <td>
-                  {errors.elucidationOptions?.maximumAverageDeviation && (
+                  {errors.predictionOptions?.maximumAverageDeviation && (
                     <ErrorSymbol
-                      message={
-                        errors.elucidationOptions.maximumAverageDeviation
-                      }
+                      message={errors.predictionOptions.maximumAverageDeviation}
                     />
                   )}
+                </td>
+              </tr>
+              <tr>
+                <td>Allow stereo</td>
+                <td>
+                  <FormikCheckBox name="predictionOptions.predictWithStereo" />
                 </td>
               </tr>
               <tr>

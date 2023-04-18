@@ -33,6 +33,11 @@ export interface ValidationErrors {
     shiftToleranceFragmentDetection?: string;
     maximumAverageDeviationFragmentDetection?: string;
   };
+  predictionOptions?: {
+    shiftTolerance?: string;
+    maximumAverageDeviation?: string;
+    predictWithStereo?: string;
+  };
   retrievalOptions?: { resultID?: string };
 }
 
@@ -92,19 +97,19 @@ function validateQueryOptions(values: QueryOptions) {
     errors.elucidationOptions.timeLimitTotal = 'Must be at least 1';
   }
 
-  if (!isInRange(values.elucidationOptions.shiftTolerance, 0, undefined)) {
-    if (!errors.elucidationOptions) {
-      errors.elucidationOptions = {};
+  if (!isInRange(values.predictionOptions.shiftTolerance, 0, undefined)) {
+    if (!errors.predictionOptions) {
+      errors.predictionOptions = {};
     }
-    errors.elucidationOptions.shiftTolerance = 'Must be at least 0';
+    errors.predictionOptions.shiftTolerance = 'Must be at least 0';
   }
   if (
-    !isInRange(values.elucidationOptions.maximumAverageDeviation, 0, undefined)
+    !isInRange(values.predictionOptions.maximumAverageDeviation, 0, undefined)
   ) {
-    if (!errors.elucidationOptions) {
-      errors.elucidationOptions = {};
+    if (!errors.predictionOptions) {
+      errors.predictionOptions = {};
     }
-    errors.elucidationOptions.maximumAverageDeviation = 'Must be at least 0';
+    errors.predictionOptions.maximumAverageDeviation = 'Must be at least 0';
   }
 
   if (
