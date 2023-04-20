@@ -37,6 +37,7 @@ export interface ValidationErrors {
     shiftTolerance?: string;
     maximumAverageDeviation?: string;
     predictWithStereo?: string;
+    stereoPredictionLimit?: string;
   };
   retrievalOptions?: { resultID?: string };
 }
@@ -110,6 +111,14 @@ function validateQueryOptions(values: QueryOptions) {
       errors.predictionOptions = {};
     }
     errors.predictionOptions.maximumAverageDeviation = 'Must be at least 0';
+  }
+  if (
+    !isInRange(values.predictionOptions.stereoPredictionLimit, 1, undefined)
+  ) {
+    if (!errors.predictionOptions) {
+      errors.predictionOptions = {};
+    }
+    errors.predictionOptions.stereoPredictionLimit = 'Must be at least 1';
   }
 
   if (

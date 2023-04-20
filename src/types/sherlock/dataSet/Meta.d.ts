@@ -5,4 +5,5 @@ export default interface Meta {
   smiles?: string;
   mfOriginal?: string;
   title?: string;
+  withStereo?: string;
 }

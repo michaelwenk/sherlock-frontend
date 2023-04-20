@@ -44,6 +44,7 @@ const defaultQueryOptions: QueryOptions = {
     shiftTolerance: 10,
     maximumAverageDeviation: 5,
     predictWithStereo: false,
+    stereoPredictionLimit: 10,
   } as PredictionOptions,
   retrievalOptions: {
     action: retrievalActions.fetch,

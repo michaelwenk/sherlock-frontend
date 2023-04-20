@@ -89,6 +89,10 @@ function QueryTabElucidation() {
                     type="number"
                     name="detectionOptions.hybridizationDetectionThreshold"
                     inPercentage={true}
+                    {...{
+                      disabled:
+                        !values.detectionOptions.useHybridizationDetections,
+                    }}
                   />
                 </td>
                 <td>
@@ -120,6 +124,9 @@ function QueryTabElucidation() {
                     type="number"
                     name="detectionOptions.lowerElementCountThreshold"
                     inPercentage={true}
+                    {...{
+                      disabled: !values.detectionOptions.useNeighborDetections,
+                    }}
                   />
                 </td>
                 <td>
@@ -139,6 +146,9 @@ function QueryTabElucidation() {
                     type="number"
                     name="detectionOptions.upperElementCountThreshold"
                     inPercentage={true}
+                    {...{
+                      disabled: !values.detectionOptions.useNeighborDetections,
+                    }}
                   />
                 </td>
                 <td>
@@ -169,6 +179,9 @@ function QueryTabElucidation() {
                   <FormikInput
                     type="number"
                     name="detectionOptions.shiftToleranceFragmentDetection"
+                    {...{
+                      disabled: !values.detectionOptions.detectFragments,
+                    }}
                   />
                 </td>
                 <td>
@@ -187,6 +200,9 @@ function QueryTabElucidation() {
                   <FormikInput
                     type="number"
                     name="detectionOptions.maximumAverageDeviationFragmentDetection"
+                    {...{
+                      disabled: !values.detectionOptions.detectFragments,
+                    }}
                   />
                 </td>
                 <td>
@@ -235,7 +251,13 @@ function QueryTabElucidation() {
               <tr>
                 <td>Number of eliminations</td>
                 <td>
-                  <FormikInput type="number" name="elucidationOptions.elimP1" />
+                  <FormikInput
+                    type="number"
+                    name="elucidationOptions.elimP1"
+                    {...{
+                      disabled: !values.elucidationOptions.useElim,
+                    }}
+                  />
                 </td>
                 <td>
                   {errors.elucidationOptions?.elimP1 && (
@@ -246,7 +268,13 @@ function QueryTabElucidation() {
               <tr>
                 <td>Maximal path length</td>
                 <td>
-                  <FormikInput type="number" name="elucidationOptions.elimP2" />
+                  <FormikInput
+                    type="number"
+                    name="elucidationOptions.elimP2"
+                    {...{
+                      disabled: !values.elucidationOptions.useElim,
+                    }}
+                  />
                 </td>
                 <td>
                   {errors.elucidationOptions?.elimP2 && (
@@ -347,9 +375,29 @@ function QueryTabElucidation() {
                 </td>
               </tr>
               <tr>
-                <td>Allow stereo</td>
+                <td>Allow stereo prediction and re-ranking</td>
                 <td>
                   <FormikCheckBox name="predictionOptions.predictWithStereo" />
+                </td>
+              </tr>
+
+              <tr>
+                <td>Number of top-ranked candidates:</td>
+                <td>
+                  <FormikInput
+                    type="number"
+                    name="predictionOptions.stereoPredictionLimit"
+                    {...{
+                      disabled: !values.predictionOptions.predictWithStereo,
+                    }}
+                  />
+                </td>
+                <td>
+                  {errors.predictionOptions?.stereoPredictionLimit && (
+                    <ErrorSymbol
+                      message={errors.predictionOptions.stereoPredictionLimit}
+                    />
+                  )}
                 </td>
               </tr>
               <tr>
@@ -419,8 +467,11 @@ function QueryTabElucidation() {
       setFieldValue,
       showConfirmDialog,
       submitForm,
+      values.detectionOptions.detectFragments,
       values.detectionOptions.useHybridizationDetections,
       values.detectionOptions.useNeighborDetections,
+      values.elucidationOptions.useElim,
+      values.predictionOptions.predictWithStereo,
     ],
   );
 }
