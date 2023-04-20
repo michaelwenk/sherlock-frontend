@@ -55,11 +55,9 @@ function ResultCard({
   const cardBody = useMemo(
     () => (
       <Card.Body className="card-body">
-        <div>
-          <label style={{ fontWeight: 'bold' }}>
-            {dataSet.meta.withStereo == 'true' ? '3D' : '2D'}
-          </label>
-        </div>
+        <label style={{ fontWeight: 'bold', fontSize: 12 }}>
+          {dataSet.meta.withStereo == 'true' ? 'Stereo' : ''}
+        </label>
         <div
           className="molfile-svg-renderer"
           style={
