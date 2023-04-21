@@ -114,10 +114,17 @@ function StructureView({
   );
 
   const molfile = useMemo((): string => {
-    const mol = Molecule.fromMolfile(dataSet.meta.molfile);
+    const str = dataSet.meta.molfile;
+    const beginCollection = '\nM  V30 BEGIN COLLECTION';
+    const endCollection = '\nM  V30 END COLLECTION';
+    const splitBegin = str.split(beginCollection)[0];
+    const splitEnd = str.split(endCollection)[1];
+    const str2 = splitBegin + splitEnd;
+
+    const mol = Molecule.fromMolfile(str2);
     mol.inventCoordinates();
 
-    return mol.toMolfile();
+    return mol.toMolfileV3();
   }, [dataSet.meta.molfile]);
 
   const atomHighlights = useMemo(() => {
