@@ -1,5 +1,6 @@
 import { Molecule } from 'openchemlib';
 import DataSet from '../types/sherlock/dataSet/DataSet';
+import removeCollectionPartFromMolfile from './removeCollectionPartFromMolfile';
 
 interface InputProps {
   dataSets: DataSet[];
@@ -8,10 +9,10 @@ interface InputProps {
 function buildSDFileContent({ dataSets }: InputProps) {
   let content = '';
   dataSets.forEach((dataSet, i) => {
-    const mol = Molecule.fromMolfile(dataSet.meta.molfile);
-    mol.inventCoordinates();
+    const molfile = removeCollectionPartFromMolfile(dataSet.meta.molfile);
+    const mol = Molecule.fromMolfile(molfile);
 
-    content += mol.toMolfile();
+    content += mol.toMolfileV3();
     content += '\n> <Rank> \n';
     content += `${i + 1}\n\n`;
     content += '> <RMSD_PPM> \n';
@@ -23,7 +24,7 @@ function buildSDFileContent({ dataSets }: InputProps) {
     content += '> <HITS> \n';
     content += `${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}\n\n`;
     content += '> <SMILES> \n';
-    content += `${dataSet.meta.smiles}\n\n`;
+    content += `${mol.toIsomericSmiles()}\n\n`;
     content += '> <Molecular_Formula> \n';
     content += `${dataSet.meta.mfOriginal}\n\n`;
     content += '$$$$\n';

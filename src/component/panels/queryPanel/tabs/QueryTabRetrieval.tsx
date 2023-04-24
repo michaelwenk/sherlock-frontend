@@ -18,8 +18,9 @@ import OCL from 'openchemlib/full';
 import Input from '../../../elements/Input';
 import ResultRecord from '../../../../types/sherlock/ResultRecord';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
-import { SmilesSvgRenderer } from 'react-ocl/base';
+import { MolfileSvgRenderer } from 'react-ocl/base';
 import CustomPagination from '../../../elements/CustomPagination';
+import removeCollectionPartFromMolfile from '../../../../utils/removeCollectionPartFromMolfile';
 
 interface Row {
   id: string;
@@ -66,12 +67,14 @@ function QueryTabRetrieval() {
                   </td>
                   <td>{resultRecord.dataSetListSize}</td>
                   <td>
-                    {resultRecord.previewDataSet?.meta.smiles && (
+                    {resultRecord.previewDataSet?.meta.molfile && (
                       <div className="rendered-preview">
-                        <SmilesSvgRenderer
+                        <MolfileSvgRenderer
                           OCL={OCL}
                           id={`molSVG${resultRecord.id}_preview`}
-                          smiles={resultRecord.previewDataSet.meta.smiles}
+                          molfile={removeCollectionPartFromMolfile(
+                            resultRecord.previewDataSet.meta.molfile,
+                          )}
                           width={120}
                         />
                       </div>

@@ -375,7 +375,7 @@ function QueryTabElucidation() {
                 </td>
               </tr>
               <tr>
-                <td>Allow stereo prediction and re-ranking</td>
+                <td>Allow diastereotopic prediction and re-ranking</td>
                 <td>
                   <FormikCheckBox name="predictionOptions.predictWithStereo" />
                 </td>
