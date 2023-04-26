@@ -16,7 +16,7 @@ interface ImageSize {
   height: number;
 }
 
-const bufferImageWidth = 75;
+const bufferImageWidth = 125;
 
 const imageSizes: ImageSize[] = [
   { width: 200, height: 200 },
