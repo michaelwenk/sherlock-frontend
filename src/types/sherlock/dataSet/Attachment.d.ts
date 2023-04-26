@@ -12,5 +12,5 @@ export default interface Attachment {
   tanimoto?: number;
   setAssignmentsCount?: number;
   spectralMatchAssignment?: Assignment;
-  predictionMeta?: { [signalIndex: number]: number[] };
+  predictionMeta?: { [signalIndex: number]: string[] };
 }

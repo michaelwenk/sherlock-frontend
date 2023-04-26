@@ -60,9 +60,17 @@ function PredictionTableRow({
     () =>
       dataSet.attachment.predictionMeta
         ? Math.abs(
-            dataSet.attachment.predictionMeta[signalIndex][2] -
-              dataSet.attachment.predictionMeta[signalIndex][3],
+            Number(dataSet.attachment.predictionMeta[signalIndex][2]) -
+              Number(dataSet.attachment.predictionMeta[signalIndex][3]),
           )
+        : undefined,
+    [dataSet.attachment.predictionMeta, signalIndex],
+  );
+
+  const predictionMode = useMemo(
+    () =>
+      dataSet.attachment.predictionMeta
+        ? dataSet.attachment.predictionMeta[signalIndex][4]
         : undefined,
     [dataSet.attachment.predictionMeta, signalIndex],
   );
@@ -146,12 +154,17 @@ function PredictionTableRow({
         {dataSet.attachment.predictionMeta && (
           <>
             <td>
-              {dataSet.attachment.predictionMeta[signalIndex][0].toFixed(0)}
+              {Number(
+                dataSet.attachment.predictionMeta[signalIndex][0],
+              ).toFixed(0)}
             </td>
             <td>
-              {dataSet.attachment.predictionMeta[signalIndex][1].toFixed(0)}
+              {Number(
+                dataSet.attachment.predictionMeta[signalIndex][1],
+              ).toFixed(0)}
             </td>
             <td>{range && range.toFixed(2)}</td>
+            <td>{predictionMode && predictionMode}</td>
           </>
         )}
       </tr>
@@ -163,6 +176,7 @@ function PredictionTableRow({
       difference,
       handleOnRow,
       highlightRow.isActive,
+      predictionMode,
       range,
       ref,
       signalIndex,

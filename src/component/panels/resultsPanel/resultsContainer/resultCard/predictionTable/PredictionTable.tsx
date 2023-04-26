@@ -82,6 +82,7 @@ function PredictionTable({ dataSet, querySpectrum, isExtended }: InputProps) {
                   <th>Sph</th>
                   <th>Count</th>
                   <th>Range</th>
+                  <th>Mode</th>
                 </>
               ) : (
                 <th>Dev</th>
