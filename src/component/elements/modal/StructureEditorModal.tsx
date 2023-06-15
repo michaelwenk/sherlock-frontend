@@ -34,11 +34,18 @@ function StructureEditorModal({
   const molecule = useMemo(() => {
     const molecule: Molecule = Molecule.fromMolfile(molfileToExport as string);
     const atomCounts = getAtomCounts(molecule.getMolecularFormula().formula);
+
+    // const _molfile = molecule.toMolfileV3();
+
     if (
-      Object.keys(atomCounts).length > 0 &&
-      !Object.keys(atomCounts).includes('R')
+      Object.keys(atomCounts).length === 0
+      // Object.keys(atomCounts).length > 0
+      // &&
+      // !Object.keys(atomCounts).includes('R')
+      // _molfile.includes('?', _molfile.length)
     ) {
-      setError('Fragment should contain at least one R (open site)');
+      // setError('Fragment should contain at least one R (open site)');
+      setError('Fragment should contain at least one atom');
     } else {
       setError(undefined);
     }
