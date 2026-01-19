@@ -79,7 +79,7 @@ function Panels() {
       let response: AxiosResponse | undefined;
       await axios({
         method: 'GET',
-        url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
+        url: 'http://localhost:8080/result/getAllMeta',
         cancelToken: new axios.CancelToken(
           (cancel) => (cancelRequestRef.current = cancel),
         ),
@@ -131,7 +131,7 @@ function Panels() {
           if (axios.isCancel(err)) {
             setIsCanceling(true);
             if (queryType === queryTypes.elucidation) {
-              await axios.get('http://localhost:8081/sherlock-core/cancel');
+              await axios.get('http://localhost:8080/cancel');
             }
             setIsCanceling(false);
             setRequestWasCancelled(true);
@@ -195,7 +195,7 @@ function Panels() {
         const t0 = performance.now();
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
-          url: 'http://localhost:8081/sherlock-core/core',
+          url: 'http://localhost:8080/core',
           data: requestData,
           headers: {
             'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deleteAll) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8081/sherlock-db-service-result/deleteAll',
+            url: 'http://localhost:8080/result/deleteAll',
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
@@ -244,7 +244,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deletion) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8081/sherlock-db-service-result/deleteById',
+            url: 'http://localhost:8080/result/deleteById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
@@ -256,7 +256,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.retrieve) {
           const requestConfig: AxiosRequestConfig = {
             method: 'GET',
-            url: 'http://localhost:8081/sherlock-db-service-result/getById',
+            url: 'http://localhost:8080/result/getById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
@@ -324,29 +324,29 @@ function Panels() {
               hideLeftPanel
                 ? { display: 'none' }
                 : hideRightPanel
-                ? {
-                    maxWidth: '100%',
-                    width: `calc(100% - ${minWidth.resizer})`,
-                  }
-                : {
-                    height: '100%',
-                    maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
-                    minWidth: minWidth.leftPanel,
-                  }
+                  ? {
+                      maxWidth: '100%',
+                      width: `calc(100% - ${minWidth.resizer})`,
+                    }
+                  : {
+                      height: '100%',
+                      maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
+                      minWidth: minWidth.leftPanel,
+                    }
             }
             pane2Style={
               hideRightPanel
                 ? { display: 'none' }
                 : hideLeftPanel
-                ? {
-                    maxWidth: '100%',
-                    width: `calc(100% - ${minWidth.resizer})`,
-                  }
-                : {
-                    height: '100%',
-                    minWidth: minWidth.rightPanel,
-                    maxWidth: `calc(100% - ${minWidth.leftPanel})`,
-                  }
+                  ? {
+                      maxWidth: '100%',
+                      width: `calc(100% - ${minWidth.resizer})`,
+                    }
+                  : {
+                      height: '100%',
+                      minWidth: minWidth.rightPanel,
+                      maxWidth: `calc(100% - ${minWidth.leftPanel})`,
+                    }
             }
             onResizerDoubleClick={handleOnDoubleClickResizer}
             // onDragStarted={() => {

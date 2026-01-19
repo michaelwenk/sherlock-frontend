@@ -71,7 +71,7 @@ function ResultsPanel({ show }: InputProps) {
   const handleOnConfirmDelete = useCallback(async () => {
     await axios({
       method: 'DELETE',
-      url: 'http://localhost:8081/sherlock-db-service-result/deleteById',
+      url: 'http://localhost:8080/result/deleteById',
       params: { id: resultData?.resultRecord.id },
     })
       .then()
@@ -84,7 +84,7 @@ function ResultsPanel({ show }: InputProps) {
         dispatch({ type: CLEAR_RESULT_DATA });
         await axios({
           method: 'GET',
-          url: 'http://localhost:8081/sherlock-db-service-result/getAllMeta',
+          url: 'http://localhost:8080/result/getAllMeta',
         })
           .then((res: AxiosResponse) => {
             if (res && res.data) {
