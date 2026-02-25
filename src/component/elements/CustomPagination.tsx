@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { JSX, useCallback, useMemo } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
 type InputProps = {

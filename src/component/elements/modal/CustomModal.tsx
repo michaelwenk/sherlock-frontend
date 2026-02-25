@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CustomModal.scss';
 
-import { CSSProperties, useCallback, useRef } from 'react';
+import { CSSProperties, JSX, useCallback, useRef } from 'react';
 import Button from '../../elements/Button';
 import Modal from 'react-modal';
 import ReactModal from 'react-modal';
@@ -58,7 +58,7 @@ function CustomModal({
   bodyContainerStyle,
   footerContainerStyle,
 }: InputProps) {
-  const modalRef = useRef<any>();
+  const modalRef = useRef(null);
 
   const handleOnClose = useCallback(() => {
     if (onClose) {

@@ -3,60 +3,46 @@ import logoMinimal from '/Sherlock_minimal.png';
 
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import NMRium, { NMRiumDataReturn, NMRiumPreferences } from 'nmrium';
+import {
+  NMRiumChangeCb,
+  NMRiumData,
+  NMRium,
+  NMRiumPreferences,
+  NMRiumState,
+} from 'nmrium';
 import Panels from './panels/Panels';
-import { memo, Reducer, useCallback, useMemo, useReducer } from 'react';
+import { memo, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
-import {
-  DataReducer,
-  dispatcher,
-  initialState,
-  initState,
-} from '../context/Reducer';
+import { DataReducer, dispatcher, initialState } from '../context/Reducer';
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
-import NMRiumData from '../types/nmrium/NMRiumData';
-import DataState from '../types/DataState';
 import HelpPanel from './panels/HelpPanel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 ('@fortawesome/react-fontawesome');
 import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 
 const preferences: NMRiumPreferences = {
-  panels: {
-    // not necessarily needed
-    filtersPanel: { display: false },
-    integralsPanel: { display: false },
-    multipleSpectraAnalysisPanel: { display: false },
-    peaksPanel: { display: false },
-    structuresPanel: { display: false },
-    predictionPanel: { display: false },
-    // substantial for CASE
-    spectraPanel: { display: true, open: true },
-    informationPanel: { display: true },
-    rangesPanel: { display: true },
-    zonesPanel: { display: true },
-    summaryPanel: { display: true },
-    databasePanel: { display: false },
+  display: {
+    toolBarButtons: { import: true },
+    panels: {
+      spectraPanel: { display: true, visible: true },
+      rangesPanel: { display: true, visible: true },
+      zonesPanel: { display: true, visible: true },
+      summaryPanel: { display: true, visible: true },
+    },
   },
 };
 
 function Sherlock() {
-  const [state, dispatch] = useReducer<Reducer<DataState, any>, DataState>(
-    DataReducer,
-    initialState,
-    initState,
-  );
+  const [state, dispatch] = useReducer(DataReducer, initialState);
 
-  const dispatcherMemo = useMemo(() => {
-    return dispatcher(dispatch);
-  }, []);
+  const dispatcherMemo = useMemo(() => dispatcher(dispatch), []);
 
-  const handleOnNMRiumDataChange = useCallback(
-    function (nmriumData: NMRiumDataReturn) {
+  const handleOnNMRiumChange: NMRiumChangeCb = useCallback(
+    function (nmriumState: NMRiumState) {
       const _nmriumData: NMRiumData = {
-        spectra: nmriumData.spectra,
-        correlations: nmriumData.correlations,
+        spectra: nmriumState.data.spectra,
+        correlations: nmriumState.data.correlations,
       };
       dispatcherMemo({
         type: SET_NMRIUM_DATA,
@@ -92,7 +78,7 @@ function Sherlock() {
                 <div className="nmrium-container">
                   <NMRium
                     preferences={preferences}
-                    onDataChange={handleOnNMRiumDataChange}
+                    onChange={handleOnNMRiumChange}
                   />
                 </div>
               </Tab>
@@ -111,7 +97,7 @@ function Sherlock() {
         </DispatchProvider>
       </div>
     ),
-    [dispatcherMemo, handleOnNMRiumDataChange, state],
+    [dispatcherMemo, handleOnNMRiumChange, state],
   );
 }
 export default memo(Sherlock);

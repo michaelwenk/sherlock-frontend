@@ -13,7 +13,7 @@ function buildLabel(
 ): string {
   return `${correlations[correlationIndex].label.origin}: ${
     correlations[correlationIndex].atomType
-  }H${correlations[correlationIndex].protonsCount.join(',') || '\u2217'}${
+  }H${correlations[correlationIndex].protonsCount.join(',') ?? '\u2217'}${
     getCorrelationDelta(correlations[correlationIndex])
       ? ', ' + getCorrelationDelta(correlations[correlationIndex])?.toFixed(2)
       : ''

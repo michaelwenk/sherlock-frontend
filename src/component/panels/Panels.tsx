@@ -15,7 +15,7 @@ import { HighlightProvider } from '../highlight';
 import QueryPanel from './queryPanel/QueryPanel';
 import ResultsPanel from './resultsPanel/ResultsPanel';
 import SummaryPanel from './summaryPanel/SummaryPanel';
-import SplitPane from 'react-split-pane';
+import { SplitPane } from 'react-split-pane';
 import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
 import {
@@ -47,7 +47,7 @@ function Panels() {
   const [requestWasCancelled, setRequestWasCancelled] =
     useState<boolean>(false);
   const [isCanceling, setIsCanceling] = useState<boolean>(false);
-  const cancelRequestRef = useRef<Canceler>();
+  const cancelRequestRef = useRef<Canceler>(null);
 
   const [leftPanelWidth, setLeftPanelWidth] = useState<number>();
   const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
@@ -164,15 +164,15 @@ function Panels() {
         const correlations = nmriumData
           ? {
               ...nmriumData.correlations,
-              values: nmriumData.correlations.values.map(
+              values: nmriumData.correlations?.values.map(
                 (value: Correlation) => {
                   return {
                     ...value,
                     hybridization:
                       typeof value.hybridization == 'string' // @TODO remove the conversion at some point
-                        ? value.hybridization.trim().length === 0
+                        ? String(value.hybridization).trim().length === 0
                           ? []
-                          : [value.hybridization]
+                          : [String(value.hybridization)]
                         : value.hybridization,
                   };
                 },
@@ -316,46 +316,81 @@ function Panels() {
     () => (
       <div className="panels">
         <HighlightProvider>
-          {/* @ts-ignore */}
           <SplitPane
-            split="vertical"
-            defaultSize="60%"
-            pane1Style={
-              hideLeftPanel
-                ? { display: 'none' }
-                : hideRightPanel
-                  ? {
-                      maxWidth: '100%',
-                      width: `calc(100% - ${minWidth.resizer})`,
-                    }
-                  : {
-                      height: '100%',
-                      maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
-                      minWidth: minWidth.leftPanel,
-                    }
-            }
-            pane2Style={
-              hideRightPanel
-                ? { display: 'none' }
-                : hideLeftPanel
-                  ? {
-                      maxWidth: '100%',
-                      width: `calc(100% - ${minWidth.resizer})`,
-                    }
-                  : {
-                      height: '100%',
-                      minWidth: minWidth.rightPanel,
-                      maxWidth: `calc(100% - ${minWidth.leftPanel})`,
-                    }
-            }
-            onResizerDoubleClick={handleOnDoubleClickResizer}
-            // onDragStarted={() => {
-            //   console.log('onDragStarted');
-            // }}
-            onDragFinished={handleOnDragFinished}
+            direction="vertical"
+            // resizable
+            style={{ width: '100%', height: '100%' }}
+            onResizeEnd={handleOnDragFinished}
+            dividerStyle={{ width: minWidth.resizer }}
+
+            // defaultSize="60%"
+            // pane1Style={
+            //   hideLeftPanel
+            //     ? { display: 'none' }
+            //     : hideRightPanel
+            //       ? {
+            //           maxWidth: '100%',
+            //           width: `calc(100% - ${minWidth.resizer})`,
+            //         }
+            //       : {
+            //           height: '100%',
+            //           maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
+            //           minWidth: minWidth.leftPanel,
+            //         }
+            // }
+            // pane2Style={
+            //   hideRightPanel
+            //     ? { display: 'none' }
+            //     : hideLeftPanel
+            //       ? {
+            //           maxWidth: '100%',
+            //           width: `calc(100% - ${minWidth.resizer})`,
+            //         }
+            //       : {
+            //           height: '100%',
+            //           minWidth: minWidth.rightPanel,
+            //           maxWidth: `calc(100% - ${minWidth.leftPanel})`,
+            //         }
+            // }
+            // onResizerDoubleClick={handleOnDoubleClickResizer}
+            // onDragFinished={handleOnDragFinished}
           >
-            <SummaryPanel />
-            <div className="query-and-result-panel">
+            <div
+              style={
+                hideLeftPanel
+                  ? { display: 'none' }
+                  : hideRightPanel
+                    ? {
+                        maxWidth: '100%',
+                        width: `calc(100% - ${minWidth.resizer})`,
+                      }
+                    : {
+                        height: '100%',
+                        maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
+                        minWidth: minWidth.leftPanel,
+                      }
+              }
+            >
+              <SummaryPanel />
+            </div>
+
+            <div
+              className="query-and-result-panel"
+              style={
+                hideRightPanel
+                  ? { display: 'none' }
+                  : hideLeftPanel
+                    ? {
+                        maxWidth: '100%',
+                        width: `calc(100% - ${minWidth.resizer})`,
+                      }
+                    : {
+                        height: '100%',
+                        minWidth: minWidth.rightPanel,
+                        maxWidth: `calc(100% - ${minWidth.leftPanel})`,
+                      }
+              }
+            >
               <Button
                 type="button"
                 className="collapsible"

@@ -3,7 +3,7 @@ import Cytoscape, {
   ElementDefinition,
   EventObject,
   LayoutOptions,
-  Stylesheet,
+  StylesheetJsonBlock,
 } from 'cytoscape';
 import CytoscapeComponent from 'react-cytoscapejs';
 import CoseBilkent from 'cytoscape-cose-bilkent';
@@ -13,7 +13,7 @@ Cytoscape.use(CoseBilkent);
 
 interface InputProps {
   graphData: ElementDefinition[];
-  styleSheet: Stylesheet[];
+  styleSheet: StylesheetJsonBlock[];
   source?: string;
 }
 

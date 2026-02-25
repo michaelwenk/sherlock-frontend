@@ -1,6 +1,6 @@
-import { Stylesheet } from 'cytoscape';
+import { StylesheetJsonBlock } from 'cytoscape';
 
-const styleSheet: Stylesheet[] = [
+const styleSheet: StylesheetJsonBlock[] = [
   {
     selector: 'node',
     css: {

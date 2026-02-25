@@ -58,7 +58,7 @@ function QueryTabElucidation() {
     });
 
     return sumHeteroAtoms >= 2;
-  }, [nmriumData?.correlations.options.mf]);
+  }, [nmriumData?.correlations?.options.mf]);
 
   return useMemo(
     () => (

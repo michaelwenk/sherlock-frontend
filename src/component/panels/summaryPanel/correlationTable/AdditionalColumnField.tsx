@@ -3,6 +3,7 @@ import {
   Correlation,
   getCorrelationIndex,
   Link,
+  Signal2D,
 } from 'nmr-correlation';
 import { memo, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
@@ -34,8 +35,9 @@ function AdditionalColumnField({
           )
         ) {
           let experimentLabel = link.experimentType;
-          if (link.signal && link.signal.sign !== 0) {
-            experimentLabel += link.signal.sign === 1 ? ' (+)' : ' (-)';
+          const signal = link.signal as Signal2D;
+          if (signal && signal.sign !== 0) {
+            experimentLabel += signal.sign === 1 ? ' (+)' : ' (-)';
           }
           _commonLinks.push(
             buildLink({
@@ -102,7 +104,7 @@ function AdditionalColumnField({
   const title = useMemo(
     () =>
       commonLinks
-        .reduce((arr, link) => {
+        .reduce((arr: string[], link) => {
           if (!arr.includes(link.experimentType.toUpperCase())) {
             arr.push(link.experimentType.toUpperCase());
           }
@@ -115,7 +117,7 @@ function AdditionalColumnField({
   const correlationIndexDim1 = useMemo(
     () =>
       getCorrelationIndex(
-        resultData?.resultRecord?.correlations?.values || [],
+        resultData?.resultRecord?.correlations?.values ?? [],
         correlationDim1,
       ),
     [correlationDim1, resultData?.resultRecord?.correlations?.values],
@@ -129,7 +131,7 @@ function AdditionalColumnField({
   const correlationIndexDim2 = useMemo(
     () =>
       getCorrelationIndex(
-        resultData?.resultRecord?.correlations?.values || [],
+        resultData?.resultRecord?.correlations?.values ?? [],
         correlationDim2,
       ),
     [correlationDim2, resultData?.resultRecord?.correlations?.values],

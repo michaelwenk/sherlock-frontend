@@ -1,7 +1,7 @@
 import './QueryTabRetrieval.scss';
 
 import { useFormikContext } from 'formik';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { JSX, memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 ('@fortawesome/react-fontawesome');
 import {
@@ -14,11 +14,10 @@ import retrievalActions from '../../../../constants/retrievalAction';
 import { useData } from '../../../../context/DataContext';
 import QueryOptions from '../../../../types/QueryOptions';
 import Button from '../../../elements/Button';
-import OCL from 'openchemlib/full';
 import Input from '../../../elements/Input';
 import ResultRecord from '../../../../types/sherlock/ResultRecord';
 import ConfirmModal from '../../../elements/modal/ConfirmModal';
-import { SmilesSvgRenderer } from 'react-ocl/base';
+import { SmilesSvgRenderer } from 'react-ocl';
 import CustomPagination from '../../../elements/CustomPagination';
 
 interface Row {
@@ -69,7 +68,6 @@ function QueryTabRetrieval() {
                     {resultRecord.previewDataSet?.meta.smiles && (
                       <div className="rendered-preview">
                         <SmilesSvgRenderer
-                          OCL={OCL}
                           id={`molSVG${resultRecord.id}_preview`}
                           smiles={resultRecord.previewDataSet.meta.smiles}
                           width={120}

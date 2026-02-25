@@ -14,7 +14,7 @@ function MCD() {
   const graphData = useMemo(() => {
     const _graphData: ElementDefinition[] = [];
     const correlations =
-      resultData?.resultRecord.correlations || nmriumData?.correlations;
+      resultData?.resultRecord.correlations ?? nmriumData?.correlations;
     if (correlations) {
       correlations.values
         .filter((correlation: Correlation) => correlation.atomType !== 'H')

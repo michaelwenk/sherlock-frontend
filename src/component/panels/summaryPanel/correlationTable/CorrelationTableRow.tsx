@@ -5,6 +5,7 @@ import {
   getCorrelationIndex,
   getLabel,
   Link,
+  Signal2D,
 } from 'nmr-correlation';
 import { memo, MouseEvent, useCallback, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -38,7 +39,7 @@ function CorrelationTableRow({
 
   const correlationIndex = useMemo(
     () =>
-      getCorrelationIndex(nmriumData?.correlations?.values || [], correlation),
+      getCorrelationIndex(nmriumData?.correlations?.values ?? [], correlation),
     [correlation, nmriumData?.correlations?.values],
   );
 
@@ -102,7 +103,7 @@ function CorrelationTableRow({
       title:
         correlation.pseudo === false &&
         correlation.link
-          .reduce((arr, link) => {
+          .reduce((arr: string[], link) => {
             if (
               link.pseudo === false &&
               !arr.includes(link.experimentType.toUpperCase())
@@ -136,18 +137,19 @@ function CorrelationTableRow({
     return additionalColumnData.map((_correlation) => {
       const commonLinks: Link[] = [];
       correlation.link.forEach((link: Link) => {
+        const signal = link.signal as Signal2D;
         _correlation.link.forEach((_link: Link) => {
           if (
             link.axis !== _link.axis &&
             link.experimentID === _link.experimentID &&
-            link.signal.id === _link.signal.id &&
+            signal.id === _link.signal.id &&
             !commonLinks.some(
-              (_commonLink) => _commonLink.signal.id === link.signal.id,
+              (_commonLink) => _commonLink.signal.id === signal.id,
             )
           ) {
             let experimentLabel = link.experimentType;
-            if (link.signal && link.signal.sign !== 0) {
-              experimentLabel += link.signal.sign === 1 ? ' (+)' : ' (-)';
+            if (signal && signal.sign !== 0) {
+              experimentLabel += signal.sign === 1 ? ' (+)' : ' (-)';
             }
             commonLinks.push(
               buildLink({
@@ -189,7 +191,7 @@ function CorrelationTableRow({
             style: { ...tableDataProps.style, styleLabel },
           }}
         >
-          {getLabel(nmriumData?.correlations.values, correlation)}
+          {getLabel(nmriumData?.correlations?.values ?? [], correlation)}
         </td>
         <td title={t} {...otherTableDataProps}>
           {getCorrelationDelta(correlation)
@@ -231,12 +233,12 @@ function CorrelationTableRow({
                   hybridizations={Array.from(
                     new Set<number>(
                       (
-                        (nmriumData as NMRiumData).correlations.values[
+                        (nmriumData as NMRiumData).correlations?.values[
                           correlationIndex
-                        ].hybridization || []
+                        ].hybridization ?? []
                       ).concat(
                         resultData?.resultRecord?.detections
-                          ?.detectedHybridizations?.[correlationIndex] || [],
+                          ?.detectedHybridizations?.[correlationIndex] ?? [],
                       ),
                     ),
                   )}
@@ -259,7 +261,7 @@ function CorrelationTableRow({
                   neighbors={
                     resultData?.resultRecord?.detections?.forbiddenNeighbors[
                       correlationIndex
-                    ] || {}
+                    ] ?? {}
                   }
                   mode="forbidden"
                   highlight={highlightRow}
@@ -284,7 +286,7 @@ function CorrelationTableRow({
                   neighbors={
                     resultData?.resultRecord?.detections?.setNeighbors[
                       correlationIndex
-                    ] || {}
+                    ] ?? {}
                   }
                   mode="set"
                   highlight={highlightRow}

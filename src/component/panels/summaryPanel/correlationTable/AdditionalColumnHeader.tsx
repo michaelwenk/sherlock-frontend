@@ -40,7 +40,7 @@ function AdditionalColumnHeader({ correlation }) {
   const correlationIndex = useMemo(
     () =>
       getCorrelationIndex(
-        resultData?.resultRecord?.correlations?.values || [],
+        resultData?.resultRecord?.correlations?.values ?? [],
         correlation,
       ),
     [correlation, resultData?.resultRecord?.correlations?.values],
@@ -56,7 +56,7 @@ function AdditionalColumnHeader({ correlation }) {
       style: {
         ...{
           color:
-            getLabelColor(nmriumData?.correlations, correlation) || undefined,
+            getLabelColor(nmriumData?.correlations, correlation) ?? undefined,
           borderRight:
             groupIndex !== -1 &&
             (resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[

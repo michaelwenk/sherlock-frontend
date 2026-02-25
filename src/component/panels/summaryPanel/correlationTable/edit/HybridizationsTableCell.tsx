@@ -90,7 +90,7 @@ function HybridizationsTableCell({
             show={show}
             header={`Edit Hybridization: ${correlation.atomType}${
               getCorrelationIndex(
-                nmriumData?.correlations.values,
+                nmriumData?.correlations?.values ?? [],
                 correlation,
               ) + 1
             } (${
@@ -119,7 +119,7 @@ function HybridizationsTableCell({
       handleOnDelete,
       hybridizations,
       label,
-      nmriumData?.correlations.values,
+      nmriumData?.correlations?.values ?? [],
       show,
     ],
   );

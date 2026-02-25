@@ -1,7 +1,7 @@
 import './StructureEditorModal.scss';
 
 import { useCallback, useMemo, useState } from 'react';
-import { StructureEditor } from 'react-ocl/full';
+import { CanvasEditorOnChangeMolecule, CanvasMoleculeEditor } from 'react-ocl';
 import Button from '../Button';
 import CustomModal from './CustomModal';
 import { useDropzone } from 'react-dropzone';
@@ -76,12 +76,22 @@ function StructureEditorModal({
 
   const structureEditor = useMemo(
     () => (
-      <StructureEditor
+      <CanvasMoleculeEditor
         width={500}
-        onChange={handleOnChangeStructure}
-        initialMolfile={molfile}
+        // height={editorHeight}
+        inputFormat="molfile"
+        inputValue={molfile ?? ''}
+        onChange={(e: CanvasEditorOnChangeMolecule) =>
+          handleOnChangeStructure(e.getMolfile())
+        }
         key={Math.random()}
       />
+      // <StructureEditor
+      //   width={500}
+      //   onChange={handleOnChangeStructure}
+      //   initialMolfile={molfile}
+      //   key={Math.random()}
+      // />
     ),
     [handleOnChangeStructure, molfile],
   );

@@ -1,7 +1,7 @@
 import './FragmentsTable.scss';
 
 import { useData } from '../../../../context/DataContext';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { JSX, memo, useCallback, useMemo, useState } from 'react';
 import DataSet from '../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../types/sherlock/dataSet/SpectrumCompact';
 import FragmentTableRow from './FragmentTableRow';
@@ -37,7 +37,7 @@ function FragmentsTable() {
   );
 
   const fragments: DataSet[] = useMemo(
-    () => resultData?.resultRecord.detections.fragments || [],
+    () => resultData?.resultRecord.detections.fragments ?? [],
     [resultData?.resultRecord.detections.fragments],
   );
 

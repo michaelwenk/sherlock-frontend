@@ -4,6 +4,7 @@ import {
   Correlation,
   getCorrelationIndex,
   Link,
+  Signal2D,
 } from 'nmr-correlation';
 import ResultRecord from '../../../types/sherlock/ResultRecord';
 
@@ -34,12 +35,13 @@ function getLabelColor(correlationData, correlation) {
 }
 
 function getAbbreviation(link: Link): string {
+  const signal = link.signal as Signal2D;
   let abbreviation = 'X';
   if (link.experimentType === 'hsqc' || link.experimentType === 'hmqc') {
     abbreviation =
-      !link.signal || link.signal.sign === 0
+      !link.signal || signal.sign === 0
         ? 'S'
-        : `S${link.signal.sign === 1 ? '+' : '-'}`;
+        : `S${signal.sign === 1 ? '+' : '-'}`;
   } else if (
     link.experimentType === 'hmbc' ||
     link.experimentType === 'cosy' ||
@@ -57,8 +59,13 @@ function getAbbreviation(link: Link): string {
     abbreviation = 'A';
   }
 
-  const pathLength = link.signal.j?.pathLength;
-  if (pathLength) {
+  const pathLength = signal.j?.pathLength;
+  if (
+    pathLength &&
+    typeof pathLength === 'object' &&
+    'from' in pathLength &&
+    'to' in pathLength
+  ) {
     const isDefaultCorrelation =
       DefaultPathLengths[link.experimentType] &&
       pathLength.from >= DefaultPathLengths[link.experimentType].from &&

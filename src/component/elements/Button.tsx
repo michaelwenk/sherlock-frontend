@@ -1,6 +1,6 @@
 import './Button.scss';
 
-import { CSSProperties, MouseEvent, useCallback, useMemo } from 'react';
+import { CSSProperties, JSX, MouseEvent, useCallback, useMemo } from 'react';
 
 type InputProps = {
   onClick: Function;

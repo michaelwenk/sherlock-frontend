@@ -5,11 +5,14 @@ import MCD from './mcd/MCD';
 import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
 import FragmentsTable from './fragmentTable/FragmentsTable';
+import { Correlation } from 'nmr-correlation';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
 
-  const [additionalColumnData, setAdditionalColumnData] = useState([]);
+  const [additionalColumnData, setAdditionalColumnData] = useState<
+    Correlation[]
+  >([]);
   const [
     selectedAdditionalColumnsAtomType,
     setSelectedAdditionalColumnsAtomType,
@@ -65,7 +68,7 @@ function SummaryPanel() {
             }
           >
             <Overview
-              mf={nmriumData ? nmriumData.correlations.options.mf : ''}
+              mf={nmriumData ? (nmriumData.correlations.options.mf ?? '') : ''}
               showAdditionalColumns={showAdditionalColumns}
               onChangeShowAdditionalColumns={(value: boolean) =>
                 setShowAdditionalColumns(value)

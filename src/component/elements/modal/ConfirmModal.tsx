@@ -1,5 +1,6 @@
 import CustomModal from './CustomModal';
 import Button from '../Button';
+import { JSX } from 'react';
 
 interface InputProps {
   show: boolean;

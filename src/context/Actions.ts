@@ -23,7 +23,18 @@ const initialDetections: Detections = {
 
 export interface Action {
   type: string;
-  payload: { [key: string]: unknown };
+  payload: {
+    [key: string]:
+      | Correlation
+      | FixedNeighbors
+      | NeighborsEntry
+      | NMRiumData
+      | Result
+      | boolean
+      | number
+      | number[]
+      | string;
+  };
 }
 
 export function clearResultData(draft: Draft<DataState>) {
@@ -61,7 +72,7 @@ export function setNmriumData(draft: Draft<DataState>, action: Action) {
     correlations: draft.nmriumData.correlations,
   };
   initDetections(draft);
-  (draft.nmriumData as NMRiumData).correlations.values.forEach(
+  (draft.nmriumData as NMRiumData).correlations?.values.forEach(
     (correlation: Correlation, i: number) => {
       const _detections = (draft.resultData as Result).resultRecord
         .detections as Detections;
@@ -95,8 +106,8 @@ export function editForbiddenNeighbors(
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations.values,
-    correlation,
+    draft.nmriumData?.correlations?.values ?? [],
+    correlation as Correlation,
   );
   (draft.resultData as Result).resultRecord.detections.forbiddenNeighbors[
     correlationIndex
@@ -108,8 +119,8 @@ export function editSetNeighbors(draft: Draft<DataState>, action: Action) {
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations.values,
-    correlation,
+    draft.nmriumData?.correlations?.values ?? [],
+    correlation as Correlation,
   );
   (draft.resultData as Result).resultRecord.detections.setNeighbors[
     correlationIndex
@@ -121,8 +132,8 @@ export function editHybridizations(draft: Draft<DataState>, action: Action) {
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations.values,
-    correlation,
+    draft.nmriumData?.correlations?.values ?? [],
+    correlation as Correlation,
   );
   const tempDetections = lodashCloneDeep(
     draft.resultData?.resultRecord.detections,
