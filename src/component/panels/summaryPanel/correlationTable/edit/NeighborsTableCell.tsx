@@ -4,7 +4,14 @@ import {
   getCorrelationDelta,
   getCorrelationIndex,
 } from 'nmr-correlation';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  memo,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import EditNeighbors from './EditNeighbors';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import { useData } from '../../../../../context/DataContext';
@@ -17,9 +24,10 @@ import {
 import CustomModal from '../../../../elements/modal/CustomModal';
 import Highlight from '../../../../../types/Highlight';
 import capitalize from '../../../../../utils/capitalize';
-import { Tab, Tabs } from 'react-bootstrap';
 import EditFixedNeighbors from './EditFixedNeighbors';
 import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEntry';
+import Tabs from '../../../../elements/Tabs';
+import TabData from '../../../../../types/TabData';
 
 interface InputProps {
   correlation: Correlation;
@@ -256,95 +264,127 @@ function NeighborsTableCell({
     }
   }, [highlight, show]);
 
-  return useMemo(
-    () => (
-      <div
-        onDoubleClick={(e) => {
-          e.stopPropagation();
-          setShow(true);
-        }}
-      >
-        {label}
-        {show && (
-          <CustomModal
-            show={show}
-            header={`Edit ${capitalize(mode)} Neighbors: ${
-              correlation.atomType
-            }${correlationIndex + 1} ${
-              getCorrelationDelta(correlation)
-                ? `(${(getCorrelationDelta(correlation) as number).toFixed(
-                    2,
-                  )} ppm)`
-                : ''
-            }`}
-            body={
-              mode === 'forbidden' ? (
-                <EditNeighbors
-                  neighbors={neighbors}
-                  possibleNeighbors={possibleNeighbors}
-                  onDelete={handleOnDelete}
-                  onAdd={handleOnAdd}
-                />
-              ) : (
-                <div style={{ width: '100%' }}>
-                  <Tabs onSelect={() => {}} defaultActiveKey="general">
-                    <Tab eventKey={'general'} title="General">
-                      <EditNeighbors
-                        neighbors={neighbors}
-                        possibleNeighbors={possibleNeighbors}
-                        onDelete={handleOnDelete}
-                        onAdd={handleOnAdd}
-                      />
-                    </Tab>
-                    <Tab eventKey={'fixed'} title="Fixed">
-                      {correlation.equivalence === undefined ||
-                      correlation.equivalence !== 1 ||
-                      !correlation.protonsCount ||
-                      correlation.protonsCount.length !== 1 ||
-                      !correlation.hybridization ||
-                      correlation.hybridization.length !== 1 ? (
-                        <p style={{ color: 'blue' }}>
-                          Setting of direct bond to another atom is not allowed
-                          for this atom with an equivalence higher than one or a
-                          non-unique proton count/hybridization!
-                        </p>
-                      ) : (
-                        <EditFixedNeighbors
-                          fixedNeighborEntry={
-                            resultData?.resultRecord.detections
-                              ?.fixedNeighbors?.[correlationIndex] ?? []
-                          }
-                          correlations={nmriumData?.correlations?.values ?? []}
-                          onDelete={handleOnDeleteFixed}
-                          onAdd={handleOnAddFixed}
-                        />
-                      )}
-                    </Tab>
-                  </Tabs>
-                </div>
-              )
-            }
-            onClose={handleOnClose}
+  const tabsData: TabData[] = useMemo(
+    () => [
+      {
+        label: 'General',
+        elem: (
+          <EditNeighbors
+            neighbors={neighbors}
+            possibleNeighbors={possibleNeighbors}
+            onDelete={handleOnDelete}
+            onAdd={handleOnAdd}
           />
-        )}
-      </div>
-    ),
+        ),
+      },
+      {
+        label: 'Fixed',
+        elem:
+          correlation.equivalence === undefined ||
+          correlation.equivalence !== 1 ||
+          !correlation.protonsCount ||
+          correlation.protonsCount.length !== 1 ||
+          !correlation.hybridization ||
+          correlation.hybridization.length !== 1 ? (
+            <p style={{ color: 'blue' }}>
+              Setting of direct bond to another atom is not allowed for this
+              atom with an equivalence higher than one or a non-unique proton
+              count/hybridization!
+            </p>
+          ) : (
+            <EditFixedNeighbors
+              fixedNeighborEntry={
+                resultData?.resultRecord.detections?.fixedNeighbors?.[
+                  correlationIndex
+                ] ?? []
+              }
+              correlations={nmriumData?.correlations?.values ?? []}
+              onDelete={handleOnDeleteFixed}
+              onAdd={handleOnAddFixed}
+            />
+          ),
+      },
+    ],
     [
-      correlation,
+      correlation.equivalence,
+      correlation.hybridization,
+      correlation.protonsCount,
       correlationIndex,
       handleOnAdd,
       handleOnAddFixed,
-      handleOnClose,
       handleOnDelete,
       handleOnDeleteFixed,
-      label,
-      mode,
       neighbors,
       nmriumData?.correlations?.values,
       possibleNeighbors,
       resultData?.resultRecord.detections?.fixedNeighbors,
-      show,
     ],
+  );
+
+  const handleOnDoubleClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      if (!show) setShow(true);
+    },
+    [show],
+  );
+
+  const modal = useMemo(
+    () =>
+      show && (
+        <CustomModal
+          show={show}
+          header={`Edit ${capitalize(mode)} Neighbors: ${
+            correlation.atomType
+          }${correlationIndex + 1} ${
+            getCorrelationDelta(correlation)
+              ? `(${(getCorrelationDelta(correlation) as number).toFixed(
+                  2,
+                )} ppm)`
+              : ''
+          }`}
+          body={
+            mode === 'forbidden' ? (
+              <EditNeighbors
+                neighbors={neighbors}
+                possibleNeighbors={possibleNeighbors}
+                onDelete={handleOnDelete}
+                onAdd={handleOnAdd}
+              />
+            ) : (
+              <Tabs
+                tabsData={tabsData}
+                width={'100%'}
+                height={'50px'}
+                initialActiveTabIndex={0}
+              />
+            )
+          }
+          onClose={handleOnClose}
+        />
+      ),
+    [
+      correlation,
+      correlationIndex,
+      handleOnAdd,
+      handleOnClose,
+      handleOnDelete,
+      mode,
+      neighbors,
+      possibleNeighbors,
+      show,
+      tabsData,
+    ],
+  );
+
+  return useMemo(
+    () => (
+      <div onDoubleClick={handleOnDoubleClick}>
+        {label}
+        {modal}
+      </div>
+    ),
+    [handleOnDoubleClick, label, modal],
   );
 }
 

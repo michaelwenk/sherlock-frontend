@@ -1,44 +1,44 @@
-import { JSX, useCallback, useMemo } from 'react';
-import Pagination from 'react-bootstrap/Pagination';
+import './CustomPagination.scss';
+
+import { JSX, MouseEvent, useCallback, useMemo } from 'react';
 
 type InputProps = {
   data: any;
   selected: number;
-  onSelect: Function;
+  onSelect: (page: number) => void;
   maxPages: number;
   showFirst?: boolean;
   showLast?: boolean;
   showEllipsis?: boolean;
-  className?: string;
 };
 
-function CustomPagination({
-  data,
-  selected,
-  onSelect,
-  maxPages,
-  showFirst = false,
-  showLast = false,
-  showEllipsis = false,
-  className = 'CustomPagination',
-}: InputProps) {
+function CustomPagination({ data, selected, onSelect, maxPages }: InputProps) {
   const paginationItems = useMemo(() => {
     const items: Array<JSX.Element> = [];
     for (let i = 0; i < data.length; i++) {
       const isActive = selected === i;
       items.push(
-        <Pagination.Item
+        <button
+          aria-label={`Go to page ${i + 1}`}
           key={i}
-          active={isActive}
-          disabled={isActive}
-          onClick={(e: any) => {
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
-            onSelect(Number(e.target.text) - 1);
+            onSelect(i);
           }}
-          className="PaginationItem"
+          style={
+            isActive
+              ? {
+                  color: 'blue',
+                  fontWeight: 'bold',
+                  fontSize: '1.2em',
+                  backgroundColor: '#e3e3e3',
+                }
+              : {}
+          }
+          disabled={isActive}
         >
           {i + 1}
-        </Pagination.Item>,
+        </button>,
       );
     }
 
@@ -46,8 +46,8 @@ function CustomPagination({
   }, [data.length, onSelect, selected]);
 
   const paginationItemLists = useMemo(() => {
-    const paginationItemLists: Array<Array<JSX.Element>> = [];
-    let paginationItemList: Array<JSX.Element> = [];
+    const paginationItemLists: JSX.Element[][] = [];
+    let paginationItemList: JSX.Element[] = [];
     for (let i = 0; i < paginationItems.length; i++) {
       if (i > 0 && i % maxPages === 0) {
         paginationItemLists.push(paginationItemList);
@@ -66,7 +66,7 @@ function CustomPagination({
   );
 
   const handleOnClickFirst = useCallback(
-    (e) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onSelect(0);
     },
@@ -74,7 +74,7 @@ function CustomPagination({
   );
 
   const handleOnClickLast = useCallback(
-    (e) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onSelect(paginationItems.length - 1);
     },
@@ -82,7 +82,7 @@ function CustomPagination({
   );
 
   const handleOnClickPrev = useCallback(
-    (e) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onSelect(Number(paginationItemLists[paginationItemListIndex - 1][0].key));
     },
@@ -90,73 +90,102 @@ function CustomPagination({
   );
 
   const handleOnClickNext = useCallback(
-    (e) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onSelect(Number(paginationItemLists[paginationItemListIndex + 1][0].key));
     },
     [onSelect, paginationItemListIndex, paginationItemLists],
   );
 
-  return useMemo(
-    () => (
-      <div className={className}>
-        <Pagination className="Pagination">
-          {showFirst && (
-            <Pagination.First
-              onClick={handleOnClickFirst}
-              disabled={selected === 0}
-              className="PaginationFirst"
-            />
-          )}
-          <Pagination.Prev
-            onClick={handleOnClickPrev}
-            disabled={paginationItemListIndex === 0}
-            className="PaginationPrev"
-          />
-          {showEllipsis &&
-          paginationItems.length > maxPages &&
-          paginationItemListIndex > 0 ? (
-            <Pagination.Ellipsis disabled={true} />
-          ) : null}
-          {paginationItemLists[paginationItemListIndex]}
-          {showEllipsis &&
-          paginationItems.length > maxPages &&
-          paginationItemListIndex + 1 < paginationItemLists.length ? (
-            <Pagination.Ellipsis disabled={true} />
-          ) : null}
-          <Pagination.Next
-            onClick={handleOnClickNext}
-            disabled={
-              paginationItemListIndex === paginationItemLists.length - 1
-            }
-            className="PaginationNext"
-          />
-          {showLast && (
-            <Pagination.Last
-              onClick={handleOnClickLast}
-              disabled={selected === paginationItems.length - 1}
-              className="PaginationLast"
-            />
-          )}
-        </Pagination>
+  const goToFirstListElement = useMemo(() => {
+    if (paginationItemLists.length > 0) {
+      return (
+        <button
+          aria-label={`Go to page 1`}
+          key={'go_to_first_page'}
+          onClick={handleOnClickFirst}
+          disabled={paginationItemLists.length === 1}
+        >
+          {'<<'}
+        </button>
+      );
+    }
+    return null;
+  }, [handleOnClickFirst, paginationItemLists.length]);
+
+  const gotoLastListElement = useMemo(() => {
+    if (paginationItemLists.length > 0) {
+      return (
+        <button
+          aria-label={`Go to last page`}
+          key={'go_to_last_page'}
+          onClick={handleOnClickLast}
+          disabled={paginationItemLists.length === 1}
+        >
+          {'>>'}
+        </button>
+      );
+    }
+    return null;
+  }, [handleOnClickLast, paginationItemLists.length]);
+
+  const goToPrevListElement = useMemo(() => {
+    if (paginationItemListIndex > 0) {
+      return (
+        <button
+          aria-label={`Go to previous page`}
+          key={'go_to_prev_page'}
+          onClick={handleOnClickPrev}
+        >
+          {'<'}
+        </button>
+      );
+    }
+    return null;
+  }, [handleOnClickPrev, paginationItemListIndex]);
+
+  const goToNextListElement = useMemo(() => {
+    if (paginationItemListIndex + 1 < paginationItemLists.length) {
+      return (
+        <button
+          aria-label={`Go to next page`}
+          key={'go_to_next_page'}
+          onClick={handleOnClickNext}
+        >
+          {'>'}
+        </button>
+      );
+    }
+    return null;
+  }, [handleOnClickNext, paginationItemListIndex, paginationItemLists.length]);
+
+  return useMemo(() => {
+    const listElements = [
+      goToFirstListElement,
+      goToPrevListElement,
+      ...paginationItemLists.map((list, index: number) => (
+        <li key={'pagination_item_list_' + index}>
+          {list.map((paginationItem) => paginationItem)}
+        </li>
+      )),
+      goToNextListElement,
+      gotoLastListElement,
+    ];
+
+    return (
+      <div className={'pagination'}>
+        <nav>
+          <ul className="pagination">{listElements}</ul>
+        </nav>
       </div>
-    ),
-    [
-      className,
-      handleOnClickFirst,
-      handleOnClickLast,
-      handleOnClickNext,
-      handleOnClickPrev,
-      maxPages,
-      paginationItemListIndex,
-      paginationItemLists,
-      paginationItems.length,
-      selected,
-      showEllipsis,
-      showFirst,
-      showLast,
-    ],
-  );
+    );
+  }, [
+    goToFirstListElement,
+    goToNextListElement,
+    goToPrevListElement,
+    gotoLastListElement,
+    paginationItemLists,
+  ]);
 }
 
 export default CustomPagination;

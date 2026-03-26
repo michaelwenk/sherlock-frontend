@@ -10,7 +10,6 @@ import { getAtomCounts } from 'nmr-correlation';
 
 interface InputProps {
   onClose: () => void;
-  // eslint-disable-next-line no-unused-vars
   onSave: (molfile: string | undefined) => void;
   initialMolfile?: string;
 }

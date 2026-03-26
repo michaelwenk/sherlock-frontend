@@ -1,8 +1,6 @@
 import './ResultsView.scss';
 
 import { memo, useCallback, useMemo, useState } from 'react';
-import CardGroup from 'react-bootstrap/CardGroup';
-import Container from 'react-bootstrap/Container';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
 import SelectBox from '../../../../elements/SelectBox';
@@ -10,6 +8,7 @@ import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 import { useHighlightData } from '../../../../highlight';
+import ResultRecord from '../../../../../types/sherlock/ResultRecord';
 
 interface ImageSize {
   width: number;
@@ -28,8 +27,8 @@ type InputProps = {
   dataSets: DataSet[];
   maxPages: number;
   pageLimits: number[];
-  onClickDownload: Function;
-  onClickDelete: Function;
+  onClickDownload: () => void;
+  onClickDelete: (resultRecord: ResultRecord | undefined) => void;
 };
 
 function ResultsView({
@@ -60,11 +59,6 @@ function ResultsView({
       (sortOption) => sortOptions[sortOption].label === sortByLabel,
     )[0];
     function sort(dataSet1: DataSet, dataSet2: DataSet) {
-      // if (sortByValue === sortOptions.tanimoto.value) {
-      //   return dataSet1.attachment.tanimoto > dataSet2.attachment.tanimoto
-      //     ? -1
-      //     : 1;
-      // } else
       if (
         sortByValue === sortOptions.hits.value &&
         dataSet1.attachment.setAssignmentsCount &&
@@ -224,9 +218,11 @@ function ResultsView({
             />
           </div>
           <div className="card-deck-container" onScroll={handleOnScroll}>
-            <Container>
-              <CardGroup>{cardDecks}</CardGroup>
-            </Container>
+            {cardDecks.length > 0 ? (
+              <div className="card-group">{cardDecks}</div>
+            ) : (
+              <p className="no-results-text">No results</p>
+            )}
           </div>
         </div>
       ) : (

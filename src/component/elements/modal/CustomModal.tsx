@@ -35,7 +35,7 @@ interface InputProps {
   show: boolean;
   header?: JSX.Element | string | undefined | null;
   showCloseButton?: boolean;
-  onClose?: Function;
+  onClose?: () => void;
   body?: JSX.Element | string | undefined | null;
   footer?: JSX.Element | undefined | null;
   modalStyle?: ReactModal.Styles;

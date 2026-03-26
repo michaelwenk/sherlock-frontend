@@ -15,7 +15,7 @@ import { HighlightProvider } from '../highlight';
 import QueryPanel from './queryPanel/QueryPanel';
 import ResultsPanel from './resultsPanel/ResultsPanel';
 import SummaryPanel from './summaryPanel/SummaryPanel';
-import { SplitPane } from 'react-split-pane';
+import { Pane, SplitPane } from 'react-split-pane';
 import { useData } from '../../context/DataContext';
 import { useDispatch } from '../../context/DispatchContext';
 import {
@@ -32,12 +32,6 @@ export interface onSubmitProps {
   queryOptions: QueryOptions;
 }
 
-const minWidth = {
-  leftPanel: '200px',
-  rightPanel: '450px',
-  resizer: '15px',
-};
-
 function Panels() {
   const dispatch = useDispatch();
   const { nmriumData, resultData, isRequesting } = useData();
@@ -48,10 +42,6 @@ function Panels() {
     useState<boolean>(false);
   const [isCanceling, setIsCanceling] = useState<boolean>(false);
   const cancelRequestRef = useRef<Canceler>(null);
-
-  const [leftPanelWidth, setLeftPanelWidth] = useState<number>();
-  const [hideLeftPanel, setHideLeftPanel] = useState<boolean>(false);
-  const [hideRightPanel, setHideRightPanel] = useState<boolean>(false);
 
   const showResultsPanel = useMemo(
     () =>
@@ -289,108 +279,19 @@ function Panels() {
     ],
   );
 
-  const handleOnDragFinished = useCallback((width) => {
-    setLeftPanelWidth(width);
-  }, []);
-
-  const handleOnDoubleClickResizer = useCallback(
-    (e) => {
-      e.stopPropagation();
-      if (!hideLeftPanel && !hideRightPanel) {
-        if (leftPanelWidth && leftPanelWidth < 0.5 * window.innerWidth) {
-          setHideLeftPanel(true);
-          setHideRightPanel(false);
-        } else {
-          setHideLeftPanel(false);
-          setHideRightPanel(true);
-        }
-      } else {
-        setHideLeftPanel(false);
-        setHideRightPanel(false);
-      }
-    },
-    [hideLeftPanel, hideRightPanel, leftPanelWidth],
-  );
-
   return useMemo(
     () => (
-      <div className="panels">
-        <HighlightProvider>
+      <HighlightProvider>
+        <div className="panels">
           <SplitPane
-            direction="vertical"
-            // resizable
-            style={{ width: '100%', height: '100%' }}
-            onResizeEnd={handleOnDragFinished}
-            dividerStyle={{ width: minWidth.resizer }}
-
-            // defaultSize="60%"
-            // pane1Style={
-            //   hideLeftPanel
-            //     ? { display: 'none' }
-            //     : hideRightPanel
-            //       ? {
-            //           maxWidth: '100%',
-            //           width: `calc(100% - ${minWidth.resizer})`,
-            //         }
-            //       : {
-            //           height: '100%',
-            //           maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
-            //           minWidth: minWidth.leftPanel,
-            //         }
-            // }
-            // pane2Style={
-            //   hideRightPanel
-            //     ? { display: 'none' }
-            //     : hideLeftPanel
-            //       ? {
-            //           maxWidth: '100%',
-            //           width: `calc(100% - ${minWidth.resizer})`,
-            //         }
-            //       : {
-            //           height: '100%',
-            //           minWidth: minWidth.rightPanel,
-            //           maxWidth: `calc(100% - ${minWidth.leftPanel})`,
-            //         }
-            // }
-            // onResizerDoubleClick={handleOnDoubleClickResizer}
-            // onDragFinished={handleOnDragFinished}
+            className="SplitPane"
+            dividerClassName="SplitPane-Divider"
+            direction="horizontal"
           >
-            <div
-              style={
-                hideLeftPanel
-                  ? { display: 'none' }
-                  : hideRightPanel
-                    ? {
-                        maxWidth: '100%',
-                        width: `calc(100% - ${minWidth.resizer})`,
-                      }
-                    : {
-                        height: '100%',
-                        maxWidth: `calc(100% - ${minWidth.rightPanel} - ${minWidth.resizer})`,
-                        minWidth: minWidth.leftPanel,
-                      }
-              }
-            >
+            <Pane className="summary-split-pane">
               <SummaryPanel />
-            </div>
-
-            <div
-              className="query-and-result-panel"
-              style={
-                hideRightPanel
-                  ? { display: 'none' }
-                  : hideLeftPanel
-                    ? {
-                        maxWidth: '100%',
-                        width: `calc(100% - ${minWidth.resizer})`,
-                      }
-                    : {
-                        height: '100%',
-                        minWidth: minWidth.rightPanel,
-                        maxWidth: `calc(100% - ${minWidth.leftPanel})`,
-                      }
-              }
-            >
+            </Pane>
+            <Pane className="query-and-result-split-pane">
               <Button
                 type="button"
                 className="collapsible"
@@ -438,7 +339,8 @@ function Panels() {
                             <br />
                             <label>
                               {JSON.stringify(
-                                requestError.response?.data as {},
+                                requestError.response?.data ??
+                                  requestError.message,
                               )}
                             </label>
                           </p>
@@ -453,18 +355,14 @@ function Panels() {
                     <p>Request was cancelled by user!</p>
                   </div>
                 ) : null)}
-            </div>
+            </Pane>
           </SplitPane>
-        </HighlightProvider>
-      </div>
+        </div>
+      </HighlightProvider>
     ),
     [
       handleOnCancelRequest,
-      handleOnDoubleClickResizer,
-      handleOnDragFinished,
       handleOnSubmit,
-      hideLeftPanel,
-      hideRightPanel,
       isCanceling,
       isRequesting,
       requestError,

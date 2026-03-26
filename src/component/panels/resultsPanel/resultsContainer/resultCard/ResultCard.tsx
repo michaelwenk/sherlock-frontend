@@ -1,6 +1,5 @@
 import './ResultCard.scss';
 
-import Card from 'react-bootstrap/Card';
 import ResultCardText from './ResultCardText';
 import { CSSProperties, memo, useEffect, useMemo, useState } from 'react';
 import PredictionTable from './predictionTable/PredictionTable';
@@ -42,10 +41,12 @@ function ResultCard({
   const [showPredictionTableState, setShowPredictionTableState] =
     useState<string>(showPredictionTableStates.hide);
 
-  useEffect(
-    () => setShowPredictionTableState(showPredictionTableStates.hide),
-    [dataSet],
-  );
+  useEffect(() => {
+    function setToHide() {
+      setShowPredictionTableState(showPredictionTableStates.hide);
+    }
+    setToHide();
+  }, [dataSet]);
 
   const querySpectrum = useMemo(
     () => resultData?.resultRecord.querySpectrum as SpectrumCompact,
@@ -54,14 +55,14 @@ function ResultCard({
 
   const cardBody = useMemo(
     () => (
-      <Card.Body className="card-body">
+      <div className="card-body">
         <div
           className="molfile-svg-renderer"
           style={
             {
               '--imageHeight': `${imageHeight}px`,
               '--imageWidth': `${imageWidth}px`,
-            } as React.CSSProperties
+            } as CSSProperties
           }
         >
           <StructureView
@@ -83,9 +84,9 @@ function ResultCard({
                   showPredictionTableState === showPredictionTableStates.hide
                     ? showPredictionTableStates.default
                     : showPredictionTableState ===
-                      showPredictionTableStates.default
-                    ? showPredictionTableStates.extended
-                    : showPredictionTableStates.hide,
+                        showPredictionTableStates.default
+                      ? showPredictionTableStates.extended
+                      : showPredictionTableStates.hide,
                 );
               }}
               child={
@@ -111,7 +112,7 @@ function ResultCard({
             )}
           </div>
         }
-      </Card.Body>
+      </div>
     ),
     [dataSet, imageHeight, imageWidth, querySpectrum, showPredictionTableState],
   );
@@ -119,13 +120,14 @@ function ResultCard({
   const cardLink = useMemo(
     () =>
       dataSet.meta.id ? (
-        <Card.Link
+        <a
+          className="card-link"
           href={
             dataSet.meta.source === 'nmrshiftdb'
               ? `http://www.nmrshiftdb.org/molecule/${dataSet.meta.id}`
               : dataSet.meta.source === 'coconut'
-              ? `https://coconut.naturalproducts.net/compound/coconut_id/${dataSet.meta.id}`
-              : '?'
+                ? `https://coconut.naturalproducts.net/compound/coconut_id/${dataSet.meta.id}`
+                : '?'
           }
           target="_blank"
           rel="noreferrer"
@@ -133,23 +135,23 @@ function ResultCard({
             dataSet.meta.source === 'nmrshiftdb'
               ? 'NMRShiftDB'
               : dataSet.meta.source === 'coconut'
-              ? 'COCONUT'
-              : '?'
+                ? 'COCONUT'
+                : '?'
           }`}
         >
           {dataSet.meta.id}
-        </Card.Link>
+        </a>
       ) : null,
     [dataSet.meta.id, dataSet.meta.source],
   );
 
   return useMemo(
     () => (
-      <Card style={styles}>
-        <Card.Header>{`#${id}`}</Card.Header>
+      <div className="card" style={styles}>
+        <label className="card-label">{`#${id}`}</label>
         {cardBody}
         {cardLink}
-      </Card>
+      </div>
     ),
     [cardBody, cardLink, id, styles],
   );

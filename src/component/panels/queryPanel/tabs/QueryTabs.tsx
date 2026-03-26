@@ -4,14 +4,14 @@ import QueryTabDereplication from './QueryTabDereplication';
 import QueryTabRetrieval from './QueryTabRetrieval';
 import queryTypes from '../../../../constants/queryTypes';
 import QueryTabElucidation from './QueryTabElucidation';
-import { Tab, Tabs } from 'react-bootstrap';
 import capitalize from '../../../../utils/capitalize';
 import { useFormikContext } from 'formik';
 import { memo, useEffect, useMemo } from 'react';
+import Tabs from '../../../elements/Tabs';
+import TabData from '../../../../types/TabData';
 
 interface InputProps {
   reset: boolean;
-  // eslint-disable-next-line no-unused-vars
   setReset: (reset: boolean) => void;
 }
 
@@ -25,42 +25,44 @@ function QueryTabs({ reset, setReset }: InputProps) {
     }
   }, [reset, resetForm, setReset]);
 
+  const tabsData: TabData[] = useMemo(
+    () => [
+      {
+        label: capitalize(queryTypes.dereplication),
+        elem: (
+          <div className="query-tab-dereplication">
+            <QueryTabDereplication />
+          </div>
+        ),
+      },
+
+      {
+        label: capitalize(queryTypes.elucidation),
+        elem: (
+          <div className="query-tab-elucidation">
+            <QueryTabElucidation />
+          </div>
+        ),
+      },
+      {
+        label: capitalize(queryTypes.retrieval),
+        elem: (
+          <div className="query-tab-retrieval">
+            <QueryTabRetrieval />
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
+
   return useMemo(
     () => (
       <div className="query-tabs">
-        <Tabs
-          defaultActiveKey="dereplication"
-          className="custom-tabs nav-justified"
-          style={{ flexWrap: 'nowrap' }}
-        >
-          <Tab
-            eventKey={queryTypes.dereplication}
-            title={capitalize(queryTypes.dereplication)}
-          >
-            <div className="query-tab-dereplication">
-              <QueryTabDereplication />
-            </div>
-          </Tab>
-          <Tab
-            eventKey={queryTypes.elucidation}
-            title={capitalize(queryTypes.elucidation)}
-          >
-            <div className="query-tab-elucidation">
-              <QueryTabElucidation />
-            </div>
-          </Tab>
-          <Tab
-            eventKey={queryTypes.retrieval}
-            title={capitalize(queryTypes.retrieval)}
-          >
-            <div className="query-tab-retrieval">
-              <QueryTabRetrieval />
-            </div>
-          </Tab>
-        </Tabs>
+        <Tabs tabsData={tabsData} width="100%" height="50px" />
       </div>
     ),
-    [],
+    [tabsData],
   );
 }
 

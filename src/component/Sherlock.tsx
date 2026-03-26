@@ -1,15 +1,7 @@
 import './Sherlock.scss';
 import logoMinimal from '/Sherlock_minimal.png';
 
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import {
-  NMRiumChangeCb,
-  NMRiumData,
-  NMRium,
-  NMRiumPreferences,
-  NMRiumState,
-} from 'nmrium';
+import { NMRiumChangeCb, NMRiumData, NMRiumState } from 'nmrium';
 import Panels from './panels/Panels';
 import { memo, useCallback, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
@@ -17,28 +9,19 @@ import { DataProvider } from '../context/DataContext';
 import { DataReducer, dispatcher, initialState } from '../context/Reducer';
 import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import HelpPanel from './panels/HelpPanel';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-('@fortawesome/react-fontawesome');
-import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+import Tabs from './elements/Tabs';
+import TabData from '../types/TabData';
+import NMRiumComponent from './elements/NMRiumComponent';
 
-const preferences: NMRiumPreferences = {
-  display: {
-    toolBarButtons: { import: true },
-    panels: {
-      spectraPanel: { display: true, visible: true },
-      rangesPanel: { display: true, visible: true },
-      zonesPanel: { display: true, visible: true },
-      summaryPanel: { display: true, visible: true },
-    },
-  },
-};
+const tabWidth = '100px';
+const tabHeight = '50px';
 
 function Sherlock() {
   const [state, dispatch] = useReducer(DataReducer, initialState);
 
   const dispatcherMemo = useMemo(() => dispatcher(dispatch), []);
 
-  const handleOnNMRiumChange: NMRiumChangeCb = useCallback(
+  const handleOnNMRiumChange = useCallback<NMRiumChangeCb>(
     function (nmriumState: NMRiumState) {
       const _nmriumData: NMRiumData = {
         spectra: nmriumState.data.spectra,
@@ -52,52 +35,56 @@ function Sherlock() {
     [dispatcherMemo],
   );
 
+  const tabsData: TabData[] = useMemo(
+    () => [
+      {
+        label: 'logo',
+        labelOnly: true,
+        elem: (
+          <img
+            src={logoMinimal}
+            style={{
+              width: '100%',
+              maxWidth: '300px',
+              display: 'flex',
+              justifyContent: 'center',
+              border: 'none',
+            }}
+          />
+        ),
+      },
+      {
+        label: 'Spectra',
+        elem: <NMRiumComponent onChange={handleOnNMRiumChange} />,
+      },
+      {
+        label: 'CASE',
+        elem: <Panels />,
+      },
+      {
+        label: 'Help',
+        elem: <HelpPanel />,
+      },
+    ],
+    [handleOnNMRiumChange],
+  );
+
   return useMemo(
     () => (
       <div className="sherlock">
         <DispatchProvider value={dispatcherMemo}>
           <DataProvider value={state}>
-            <Tabs defaultActiveKey="nmrium" className="nav-justified">
-              <Tab
-                eventKey="logo"
-                title={
-                  <img
-                    src={logoMinimal}
-                    style={{
-                      width: '100%',
-                      maxWidth: '300px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      border: 'none',
-                    }}
-                  />
-                }
-                disabled={true}
-              />
-              <Tab eventKey="nmrium" title="Spectra">
-                <div className="nmrium-container">
-                  <NMRium
-                    preferences={preferences}
-                    onChange={handleOnNMRiumChange}
-                  />
-                </div>
-              </Tab>
-
-              <Tab eventKey="case" title="CASE">
-                <Panels />
-              </Tab>
-              <Tab
-                eventKey="help"
-                title={<FontAwesomeIcon icon={faQuestion} title="Help" />}
-              >
-                <HelpPanel />
-              </Tab>
-            </Tabs>
+            <Tabs
+              tabsData={tabsData}
+              width={tabWidth}
+              height={tabHeight}
+              initialActiveTabIndex={1}
+            />
           </DataProvider>
         </DispatchProvider>
       </div>
     ),
-    [dispatcherMemo, handleOnNMRiumChange, state],
+    [dispatcherMemo, state, tabsData],
   );
 }
 export default memo(Sherlock);

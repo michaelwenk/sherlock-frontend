@@ -18,7 +18,6 @@ interface HighlightState {
 
 interface HighlightContextProps {
   highlight: HighlightState;
-  // eslint-disable-next-line no-unused-vars
   dispatch: (props: {
     type: HighlightActions;
     payload?: {

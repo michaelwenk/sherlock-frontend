@@ -119,7 +119,7 @@ function HybridizationsTableCell({
       handleOnDelete,
       hybridizations,
       label,
-      nmriumData?.correlations?.values ?? [],
+      nmriumData?.correlations?.values,
       show,
     ],
   );

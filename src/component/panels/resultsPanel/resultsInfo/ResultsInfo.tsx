@@ -6,10 +6,11 @@ import Button from '../../../elements/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileDownload, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import queryTypes from '../../../../constants/queryTypes';
+import ResultRecord from '../../../../types/sherlock/ResultRecord';
 
 type InputProps = {
-  onClickDownload: Function;
-  onClickDelete: Function;
+  onClickDownload: () => void;
+  onClickDelete: (resultRecord: ResultRecord | undefined) => void;
 };
 
 function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
@@ -53,9 +54,8 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
                 )}
                 <td>
                   <Button
-                    child={
-                      <FontAwesomeIcon icon={faFileDownload} title="Download" />
-                    }
+                    child={<FontAwesomeIcon icon={faFileDownload} />}
+                    title="Download"
                     onClick={handleOnClickDownload}
                     disabled={
                       resultData.resultRecord?.dataSetList &&
@@ -65,12 +65,8 @@ function ResultsInfo({ onClickDownload, onClickDelete }: InputProps) {
                     }
                   />
                   <Button
-                    child={
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        title="Delete result entry in database"
-                      />
-                    }
+                    child={<FontAwesomeIcon icon={faTrashAlt} />}
+                    title="Delete result entry in database"
                     onClick={handleOnClickDelete}
                     disabled={
                       resultData.resultRecord?.dataSetList &&

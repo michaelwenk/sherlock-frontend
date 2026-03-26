@@ -1,16 +1,19 @@
+$min-pane-width: 400px;
+
 .panels {
   width: 100%;
   height: calc(100% - 50px);
   position: fixed;
   border-top: solid 0.1px #eee;
 
-  .summary-panel {
-    width: 100%;
-    height: 100%;
+  .summary-split-pane {
+    max-width: calc(100% - $min-pane-width);
+    min-width: $min-pane-width;
   }
 
-  .query-and-result-panel {
-    width: 100%;
+  .query-and-result-split-pane {
+    max-width: calc(100% - $min-pane-width);
+    min-width: $min-pane-width;
     height: 100%;
 
     .collapsible {
@@ -51,30 +54,30 @@
       }
     }
   }
-}
 
-.SplitPane {
-  height: '100%';
-  width: '100%';
+  .SplitPane {
+    height: '100%';
+    width: '100%';
 
-  .Resizer.vertical {
-    width: 15px;
-    background-color: '#f7f7f7';
-    cursor: col-resize;
-    padding: 2px;
-    border: 0.55px solid lightgrey;
+    .SplitPane-Divider {
+      width: 15px;
+      background-color: '#f7f7f7';
+      cursor: col-resize;
+      padding: 2px;
+      border: 0.55px solid lightgrey;
 
-    &:hover {
-      background-color: lavender !important;
-    }
+      &:hover {
+        background-color: lavender !important;
+      }
 
-    &:after {
-      content: '\22EE';
-      top: 50%;
-      color: black;
-      position: absolute;
-      font-size: 15px;
-      font-weight: bold;
+      &:after {
+        content: '\22EE';
+        top: 50%;
+        color: black;
+        position: absolute;
+        font-size: 15px;
+        font-weight: bold;
+      }
     }
   }
 }

@@ -5,8 +5,8 @@ import { JSX } from 'react';
 interface InputProps {
   show: boolean;
   header: JSX.Element | string | undefined | null;
-  onCancel: Function;
-  onConfirm: Function;
+  onCancel: () => void;
+  onConfirm: () => void;
   body?: JSX.Element | string | undefined | null;
 }
 function ConfirmModal({ show, header, onCancel, onConfirm, body }: InputProps) {
