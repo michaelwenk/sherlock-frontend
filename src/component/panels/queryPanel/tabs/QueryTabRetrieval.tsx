@@ -3,7 +3,6 @@ import './QueryTabRetrieval.scss';
 import { useFormikContext } from 'formik';
 import { JSX, memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-('@fortawesome/react-fontawesome');
 import {
   faEye,
   faSyncAlt,
@@ -205,21 +204,19 @@ function QueryTabRetrieval() {
             <div className="pagination-container">
               {filteredRows.length > 0 && (
                 <CustomPagination
-                  data={retrievalData}
+                  nData={retrievalData.length}
                   selected={selectedIndex}
                   onSelect={handleOnSelectIndex}
-                  maxPages={3}
-                  showFirst={true}
-                  showLast={true}
                 />
               )}
             </div>
             <div className="button-container">
               <Button
+                title="Fetch database entries"
                 child={
                   <FontAwesomeIcon
                     icon={faSyncAlt}
-                    title="Fetch database entries"
+                    aria-label="Fetch database entries"
                   />
                 }
                 onClick={() => {
@@ -234,10 +231,11 @@ function QueryTabRetrieval() {
                 style={{ color: isRequesting ? 'grey' : 'inherit' }}
               />
               <Button
+                title="Delete all database entries"
                 child={
                   <FontAwesomeIcon
                     icon={faTrashAlt}
-                    title="Delete all database entries"
+                    aria-label="Delete all database entries"
                   />
                 }
                 onClick={() => {

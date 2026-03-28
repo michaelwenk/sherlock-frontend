@@ -25,7 +25,6 @@ const imageSizes: ImageSize[] = [
 
 type InputProps = {
   dataSets: DataSet[];
-  maxPages: number;
   pageLimits: number[];
   onClickDownload: () => void;
   onClickDelete: (resultRecord: ResultRecord | undefined) => void;
@@ -33,7 +32,6 @@ type InputProps = {
 
 function ResultsView({
   dataSets,
-  maxPages,
   pageLimits,
   onClickDownload,
   onClickDelete,
@@ -211,10 +209,9 @@ function ResultsView({
           </div>
           <div className="pagination">
             <CustomPagination
-              data={cardDeckData}
+              nData={cardDeckData.length}
               selected={selectedCardDeckIndex}
               onSelect={handleOnSelectCardIndex}
-              maxPages={maxPages}
             />
           </div>
           <div className="card-deck-container" onScroll={handleOnScroll}>
@@ -229,11 +226,10 @@ function ResultsView({
         <p className="no-results-text">No results</p>
       ),
     [
-      cardDeckData,
+      cardDeckData.length,
       cardDecks,
       handleOnScroll,
       handleOnSelectCardIndex,
-      maxPages,
       onClickDelete,
       onClickDownload,
       pageLimits,

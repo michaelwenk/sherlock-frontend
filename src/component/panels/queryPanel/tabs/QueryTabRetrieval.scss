@@ -31,20 +31,15 @@
       height: 30px;
       margin-left: 10px;
       display: flex;
+      justify-content: center;
       align-items: center;
 
       .pagination-container {
+        width: calc(100% - 80px);
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: calc(100% - 80px);
-
-        .CustomPagination {
-          height: 30px;
-          .Pagination {
-            font-size: 11px;
-          }
-        }
       }
 
       .button-container {

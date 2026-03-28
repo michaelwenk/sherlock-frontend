@@ -108,7 +108,6 @@ function ResultsPanel({ show }: InputProps) {
     () => (
       <ResultsView
         dataSets={dataSets}
-        maxPages={5}
         pageLimits={[10, 25, 50]}
         onClickDownload={handleOnClickDownload}
         onClickDelete={handleOnClickDelete}
