@@ -5,7 +5,7 @@ import { useData } from '../../../../../../context/DataContext';
 import SpectrumCompact from '../../../../../../types/sherlock/dataSet/SpectrumCompact';
 import queryTypes from '../../../../../../constants/queryTypes';
 import PredictionTableRow from './PredictionTableRow';
-import { useHighlightData } from '../../../../../highlight';
+import useHighlightData from '../../../../../highlight/useHighlightData';
 
 type InputProps = {
   dataSet: DataSet;

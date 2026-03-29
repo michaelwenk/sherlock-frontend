@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 type InputProps = {
   defaultValue: boolean;
-  onChange: Function;
+  onChange: (value: boolean) => void;
   label?: string;
   className?: string;
 };

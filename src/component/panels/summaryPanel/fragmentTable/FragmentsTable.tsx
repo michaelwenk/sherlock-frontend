@@ -11,7 +11,7 @@ import Button from '../../../elements/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import StructureEditorModal from '../../../elements/modal/StructureEditorModal';
-import { useHighlightData } from '../../../highlight';
+import useHighlightData from '../../../highlight/useHighlightData';
 
 function FragmentsTable() {
   const { resultData } = useData();

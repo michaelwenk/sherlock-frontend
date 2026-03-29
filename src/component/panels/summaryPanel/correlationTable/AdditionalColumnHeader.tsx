@@ -3,11 +3,11 @@ import {
   getCorrelationIndex,
   Link,
 } from 'nmr-correlation';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, MouseEvent, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
-import { useHighlight } from '../../../highlight';
 import { getGroupIndex, getLabelColor } from '../Utilities';
+import UseHighlight from '../../../highlight/UseHighlight';
 
 function AdditionalColumnHeader({ correlation }) {
   const { nmriumData, resultData } = useData();
@@ -20,17 +20,17 @@ function AdditionalColumnHeader({ correlation }) {
 
     return ids;
   }, [correlation]);
-  const highlightAdditionalColumn = useHighlight(highlightIDsAdditionalColumn);
+  const highlightAdditionalColumn = UseHighlight(highlightIDsAdditionalColumn);
 
   const mouseEnterHandler = useCallback(
-    (event) => {
+    (event: MouseEvent<HTMLTableCellElement>) => {
       event.currentTarget.focus();
       highlightAdditionalColumn.show();
     },
     [highlightAdditionalColumn],
   );
   const mouseLeaveHandler = useCallback(
-    (event) => {
+    (event: MouseEvent<HTMLTableCellElement>) => {
       event.currentTarget.blur();
       highlightAdditionalColumn.hide();
     },

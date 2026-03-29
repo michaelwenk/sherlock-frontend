@@ -22,8 +22,8 @@ function buildLabel(
 interface InputProps {
   fixedNeighborEntry: number[];
   correlations: Correlation[];
-  onDelete: Function;
-  onAdd: Function;
+  onDelete: (correlationIndex: number) => void;
+  onAdd: (correlationIndex: number) => void;
 }
 
 function EditFixedNeighbors({
@@ -102,11 +102,11 @@ function EditFixedNeighbors({
           <SelectBox
             key={`selectBox_correlation_new`}
             defaultValue={buildLabel(correlations, newFixedCorrelationIndex)}
-            onChange={(value: string) =>
+            onChange={(value: string | number) =>
               setNewFixedCorrelationIndex(
                 correlations.findIndex(
                   (correlation) =>
-                    correlation.label.origin === value.split(':')[0],
+                    correlation.label.origin === String(value).split(':')[0],
                 ),
               )
             }

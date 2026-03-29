@@ -10,7 +10,7 @@ import {
 
 type InputProps = {
   type: React.HTMLInputTypeAttribute;
-  onChange: Function;
+  onChange: (value: FileList | null | string) => void;
   defaultValue?: string | number;
   label?: string;
   min?: number;

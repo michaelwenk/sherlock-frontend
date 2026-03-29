@@ -7,8 +7,8 @@ import SelectBox from '../../../../elements/SelectBox';
 import sortOptions from '../../../../../constants/sortOptions';
 import ResultsInfo from '../../resultsInfo/ResultsInfo';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
-import { useHighlightData } from '../../../../highlight';
 import ResultRecord from '../../../../../types/sherlock/ResultRecord';
+import useHighlightData from '../../../../highlight/useHighlightData';
 
 interface ImageSize {
   width: number;

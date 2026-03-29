@@ -22,7 +22,7 @@ import {
   EDIT_SET_NEIGHBORS,
 } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
-import Highlight from '../../../../../types/Highlight';
+import Highlight from '../../../../../types/highlight/Highlight';
 import capitalize from '../../../../../utils/capitalize';
 import EditFixedNeighbors from './EditFixedNeighbors';
 import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEntry';

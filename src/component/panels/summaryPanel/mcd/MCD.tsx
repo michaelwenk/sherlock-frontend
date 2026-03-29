@@ -189,11 +189,7 @@ function MCD() {
     }
 
     return _graphData;
-  }, [
-    nmriumData?.correlations,
-    resultData?.resultRecord.correlations,
-    resultData?.resultRecord.detections,
-  ]);
+  }, [nmriumData?.correlations, resultData]);
 
   return useMemo(
     () => (

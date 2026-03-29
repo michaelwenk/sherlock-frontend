@@ -16,13 +16,13 @@ interface InputProps {
   mf: string;
   additionalColumnTypes: string[];
   showAdditionalColumns: boolean;
-  onChangeShowAdditionalColumns: Function;
-  onClickButtonShowFragments: Function;
+  onChangeShowAdditionalColumns: (value: boolean) => void;
+  onClickButtonShowFragments: (e: EventTarget) => void;
   selectedAdditionalColumnsAtomType: string;
-  onChangeSelectedAdditionalColumnsAtomType: Function;
+  onChangeSelectedAdditionalColumnsAtomType: (value: string | number) => void;
   showMCD: boolean;
   showFragments: boolean;
-  onClickButtonShowMCD: Function;
+  onClickButtonShowMCD: (e: EventTarget) => void;
 }
 
 function Overview({
@@ -75,11 +75,12 @@ function Overview({
             child={
               <FontAwesomeIcon
                 icon={faCircleNodes}
-                title={showFragments ? 'Hide fragments' : 'Show fragments'}
+                aria-label={showFragments ? 'Hide fragments' : 'Show fragments'}
                 width={20}
               />
             }
             onClick={onClickButtonShowFragments}
+            title={showFragments ? 'Hide fragments' : 'Show fragments'}
           />
         </div>
         <p className="formula">
@@ -90,7 +91,7 @@ function Overview({
             <span>
               <label>View:</label>
               <SelectBox
-                onChange={(selection: string) => {
+                onChange={(selection: string | number) => {
                   onChangeSelectedAdditionalColumnsAtomType(selection);
                 }}
                 values={additionalColumnTypes}

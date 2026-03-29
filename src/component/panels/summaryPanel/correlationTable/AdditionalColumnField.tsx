@@ -8,8 +8,8 @@ import {
 import { memo, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';
 
-import { useHighlight } from '../../../highlight';
 import { getAbbreviation, getGroupIndex } from '../Utilities';
+import UseHighlight from '../../../highlight/UseHighlight';
 
 interface InputProps {
   correlationDim1: Correlation;
@@ -64,7 +64,7 @@ function AdditionalColumnField({
     return ids;
   }, [commonLinks]);
 
-  const highlightCommonLinks = useHighlight(highlightIDsCommonLinks);
+  const highlightCommonLinks = UseHighlight(highlightIDsCommonLinks);
 
   const mouseEnterHandler = useCallback(
     (event) => {

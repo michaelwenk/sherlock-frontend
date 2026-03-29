@@ -11,13 +11,11 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import queryTypes from '../../constants/queryTypes';
 import Result from '../../types/Result';
 import Spinner from '../../component/elements/Spinner';
-import { HighlightProvider } from '../highlight';
 import QueryPanel from './queryPanel/QueryPanel';
 import ResultsPanel from './resultsPanel/ResultsPanel';
 import SummaryPanel from './summaryPanel/SummaryPanel';
 import { Pane, SplitPane } from 'react-split-pane';
 import { useData } from '../../context/DataContext';
-import { useDispatch } from '../../context/DispatchContext';
 import {
   SET_IS_REQUESTING,
   SET_RESULT_DATA,
@@ -27,6 +25,8 @@ import QueryOptions from '../../types/QueryOptions';
 import ResultRecord from '../../types/sherlock/ResultRecord';
 import retrievalActions from '../../constants/retrievalAction';
 import Button from '../elements/Button';
+import HighlightProvider from '../highlight/HighlightProvider';
+import { useDispatch } from '../../context/DispatchContext';
 
 export interface onSubmitProps {
   queryOptions: QueryOptions;

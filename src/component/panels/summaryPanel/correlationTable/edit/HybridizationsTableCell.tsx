@@ -10,7 +10,7 @@ import { useDispatch } from '../../../../../context/DispatchContext';
 import EditHybridizations from './EditHybridizations';
 import { EDIT_HYBRIDIZATIONS } from '../../../../../context/ActionTypes';
 import CustomModal from '../../../../elements/modal/CustomModal';
-import Highlight from '../../../../../types/Highlight';
+import Highlight from '../../../../../types/highlight/Highlight';
 
 interface InputProps {
   correlation: Correlation;

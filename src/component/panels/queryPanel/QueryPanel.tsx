@@ -1,15 +1,15 @@
 import './QueryPanel.scss';
 
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import validateQueryOptions from '../../../utils/queryOptionsValidation';
 import defaultQueryOptions from '../../../constants/defaultQueryOptions';
 import QueryOptions from '../../../types/QueryOptions';
 import { useData } from '../../../context/DataContext';
 
 type InputProps = {
-  onSubmit: Function;
+  onSubmit: (values: { queryOptions: QueryOptions }) => void;
   show: boolean;
 };
 
@@ -37,9 +37,16 @@ function QueryPanel({ onSubmit, show }: InputProps) {
         resultName: resultData?.resultRecord.name || '',
       },
     };
-    setReset(true);
 
     return _queryOptions;
+  }, [resultData]);
+
+  useEffect(() => {
+    function _setReset(value: boolean) {
+      setReset(value);
+    }
+
+    _setReset(true);
   }, [resultData]);
 
   return useMemo(
@@ -55,7 +62,10 @@ function QueryPanel({ onSubmit, show }: InputProps) {
         <Formik
           initialValues={queryOptions}
           validate={validateQueryOptions}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(
+            values: QueryOptions,
+            { setSubmitting }: FormikHelpers<QueryOptions>,
+          ) => {
             onSubmit({ queryOptions: values });
             setSubmitting(false);
           }}

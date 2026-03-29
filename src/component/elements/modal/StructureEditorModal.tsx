@@ -23,7 +23,6 @@ function StructureEditorModal({
   const [molfileToExport, setMolfileToExport] = useState<string | undefined>(
     initialMolfile,
   );
-  const [error, setError] = useState<string | undefined>();
 
   const handleOnChangeStructure = useCallback(
     (_molfile: string) => setMolfileToExport(_molfile),
@@ -31,19 +30,14 @@ function StructureEditorModal({
   );
 
   const molecule = useMemo(() => {
-    const molecule: Molecule = Molecule.fromMolfile(molfileToExport as string);
-    const atomCounts = getAtomCounts(molecule.getMolecularFormula().formula);
-    if (
-      Object.keys(atomCounts).length > 0 &&
-      !Object.keys(atomCounts).includes('R')
-    ) {
-      setError('Fragment should contain at least one R (open site)');
-    } else {
-      setError(undefined);
-    }
-
-    return molecule;
+    return Molecule.fromMolfile(molfileToExport as string);
   }, [molfileToExport]);
+
+  const atomCounts = getAtomCounts(molecule.getMolecularFormula().formula);
+  const error =
+    Object.keys(atomCounts).length > 0 && !Object.keys(atomCounts).includes('R')
+      ? 'Fragment should contain at least one R (open site)'
+      : undefined;
 
   const handleOnClose = useCallback(() => onClose(), [onClose]);
 
@@ -83,14 +77,8 @@ function StructureEditorModal({
         onChange={(e: CanvasEditorOnChangeMolecule) =>
           handleOnChangeStructure(e.getMolfile())
         }
-        key={Math.random()}
+        // key={Math.random()}
       />
-      // <StructureEditor
-      //   width={500}
-      //   onChange={handleOnChangeStructure}
-      //   initialMolfile={molfile}
-      //   key={Math.random()}
-      // />
     ),
     [handleOnChangeStructure, molfile],
   );

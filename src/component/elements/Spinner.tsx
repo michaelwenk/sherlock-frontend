@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { TailSpin } from 'react-loader-spinner';
 
 type InputProps = {
-  onClickCancel?: Function;
+  onClickCancel?: () => void;
   className?: string;
   classNameButton?: string;
   buttonText?: string;

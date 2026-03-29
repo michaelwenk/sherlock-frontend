@@ -1,10 +1,10 @@
 import { Molecule } from 'openchemlib';
-import { useCallback, useMemo } from 'react';
+import { MouseEvent, useCallback, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { MolfileSvgRenderer } from 'react-ocl';
 import DataSet from '../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../types/sherlock/dataSet/SpectrumCompact';
-import { useHighlightData } from '../highlight';
+import useHighlightData from '../highlight/useHighlightData';
 
 interface InputProps {
   dataSet: DataSet;
@@ -88,29 +88,41 @@ function StructureView({
   );
 
   const handleOnAtom = useCallback(
-    (atomIndex: number, action: 'enter' | 'leave') => {
+    (
+      atomIndex: number,
+      e: MouseEvent<SVGElement>,
+      action: 'enter' | 'leave',
+    ) => {
+      e.preventDefault();
+      e.stopPropagation();
+
       if (inView && querySpectrum) {
         const signalIndexInQuerySpectrum =
           getSignalIndexInQuerySpectrum(atomIndex);
         if (signalIndexInQuerySpectrum >= 0) {
-          highlightData.dispatch({
-            type: action === 'enter' ? 'SHOW' : 'HIDE',
-            payload: {
-              convertedHighlights: new Set([
-                querySpectrum.signals[signalIndexInQuerySpectrum].strings[3],
-              ]),
-            },
-          });
+          const signalID =
+            querySpectrum.signals[signalIndexInQuerySpectrum].strings[3];
+
+          if (action === 'enter') {
+            const isHighlighted =
+              highlightData.highlight.highlighted.has(signalID);
+            if (!isHighlighted) {
+              highlightData.dispatch({
+                type: 'SHOW',
+                payload: { convertedHighlights: new Set([signalID]) },
+              });
+            }
+          }
+          if (action === 'leave') {
+            highlightData.dispatch({
+              type: 'HIDE',
+              payload: { convertedHighlights: new Set([signalID]) },
+            });
+          }
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      getSignalIndexInQuerySpectrum,
-      highlightData.dispatch,
-      inView,
-      querySpectrum,
-    ],
+    [getSignalIndexInQuerySpectrum, highlightData, inView, querySpectrum],
   );
 
   const molfile = useMemo((): string => {
@@ -123,7 +135,7 @@ function StructureView({
   const atomHighlights = useMemo(() => {
     if (inView) {
       let ids: number[] = [];
-      for (let signalID in querySpectrumSignalToAtomIndexAssignment) {
+      for (const signalID in querySpectrumSignalToAtomIndexAssignment) {
         if (highlightData.highlight.highlighted.has(signalID)) {
           ids = ids.concat(querySpectrumSignalToAtomIndexAssignment[signalID]);
         }
@@ -148,8 +160,12 @@ function StructureView({
           atomHighlight={atomHighlights}
           atomHighlightColor="orange"
           atomHighlightOpacity={0.65}
-          onAtomEnter={(atomIndex) => handleOnAtom(atomIndex, 'enter')}
-          onAtomLeave={(atomIndex) => handleOnAtom(atomIndex, 'leave')}
+          onAtomEnter={(atomIndex: number, e: MouseEvent<SVGElement>) =>
+            handleOnAtom(atomIndex, e, 'enter')
+          }
+          onAtomLeave={(atomIndex: number, e: MouseEvent<SVGElement>) => {
+            handleOnAtom(atomIndex, e, 'leave');
+          }}
         />
       </div>
     ),

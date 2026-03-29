@@ -8,8 +8,8 @@ import SelectBox from '../../../../elements/SelectBox';
 
 interface InputProps {
   hybridizations: number[];
-  onDelete: Function;
-  onAdd: Function;
+  onDelete: (hybridization: number) => void;
+  onAdd: (hybridization: number) => void;
 }
 
 const possibleHybridizations = ['sp1', 'sp2', 'sp3'];
@@ -52,7 +52,9 @@ function EditHybridizations({ hybridizations, onDelete, onAdd }: InputProps) {
         <td>
           <SelectBox
             defaultValue={newHybridization}
-            onChange={(value: string) => setNewHybridization(value)}
+            onChange={(value: string | number) =>
+              setNewHybridization(String(value))
+            }
             values={possibleHybridizations}
           />
         </td>

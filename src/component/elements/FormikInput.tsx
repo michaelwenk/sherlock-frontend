@@ -1,4 +1,3 @@
-import './FormikInput.scss';
 import { useFormikContext } from 'formik';
 import { useCallback, useMemo } from 'react';
 import round from '../../utils/round';
@@ -75,10 +74,10 @@ function FormikInput({
             fieldMeta.value === ''
               ? ''
               : type === 'number'
-              ? inPercentage
-                ? round((fieldMeta.value as number) * 100, 3)
-                : (fieldMeta.value as number)
-              : (fieldMeta.value as string)
+                ? inPercentage
+                  ? round((fieldMeta.value as number) * 100, 3)
+                  : (fieldMeta.value as number)
+                : (fieldMeta.value as string)
           }
           onChange={onChange}
           {...props}

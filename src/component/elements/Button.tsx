@@ -3,7 +3,7 @@ import './Button.scss';
 import { CSSProperties, JSX, MouseEvent, useCallback, useMemo } from 'react';
 
 type InputProps = {
-  onClick: Function;
+  onClick: (value: EventTarget) => void;
   child: string | JSX.Element;
   className?: string;
   disabled?: boolean;

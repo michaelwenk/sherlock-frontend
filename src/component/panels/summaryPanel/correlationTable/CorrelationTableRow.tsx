@@ -12,12 +12,12 @@ import { useInView } from 'react-intersection-observer';
 import { useData } from '../../../../context/DataContext';
 import NMRiumData from '../../../../types/nmrium/NMRiumData';
 
-import { useHighlight } from '../../../highlight';
 import { getGroupIndex } from '../Utilities';
 
 import AdditionalColumnField from './AdditionalColumnField';
 import HybridizationsTableCell from './edit/HybridizationsTableCell';
 import NeighborsTableCell from './edit/NeighborsTableCell';
+import UseHighlight from '../../../highlight/UseHighlight';
 
 interface InputProps {
   additionalColumnData: Correlation[];
@@ -56,7 +56,7 @@ function CorrelationTableRow({
     return ids;
   }, [correlation.id, correlation.link, inView]);
 
-  const highlightRow = useHighlight(highlightIDsRow);
+  const highlightRow = UseHighlight(highlightIDsRow);
 
   const mouseEnterHandler = useCallback(
     (event: MouseEvent) => {

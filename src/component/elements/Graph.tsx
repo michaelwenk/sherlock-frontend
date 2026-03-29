@@ -7,9 +7,7 @@ import Cytoscape, {
 } from 'cytoscape';
 import CytoscapeComponent from 'react-cytoscapejs';
 import CoseBilkent from 'cytoscape-cose-bilkent';
-import { useHighlightData } from '../highlight';
-
-Cytoscape.use(CoseBilkent);
+import useHighlightData from '../highlight/useHighlightData';
 
 interface InputProps {
   graphData: ElementDefinition[];
@@ -21,6 +19,8 @@ function Graph({ graphData, styleSheet, source }: InputProps) {
   const highlightData = useHighlightData();
   const containerRef = useRef<CytoscapeComponent>(null);
   const [cy, setCY] = useState<Cytoscape.Core | undefined>(undefined);
+
+  Cytoscape.use(CoseBilkent);
 
   useEffect(() => {
     if (cy) {

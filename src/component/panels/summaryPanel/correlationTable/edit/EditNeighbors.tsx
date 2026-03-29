@@ -10,8 +10,12 @@ import NeighborsEntry from '../../../../../types/sherlock/detection/NeighborsEnt
 interface InputProps {
   neighbors: NeighborsEntry;
   possibleNeighbors: string[];
-  onDelete: Function;
-  onAdd: Function;
+  onDelete: (
+    atomType: string,
+    protonCount: number,
+    hybridization: number,
+  ) => void;
+  onAdd: (atomType: string, protonCount: number, hybridization: number) => void;
 }
 
 function EditNeighbors({
@@ -106,14 +110,14 @@ function EditNeighbors({
         <td>
           <SelectBox
             defaultValue={newAtomType}
-            onChange={(value: string) => setNewAtomType(value)}
+            onChange={(value: string | number) => setNewAtomType(String(value))}
             values={possibleNeighbors}
           />
         </td>
         <td>
           <SelectBox
             defaultValue={newProtonCount}
-            onChange={(value: string) =>
+            onChange={(value: string | number) =>
               setNewProtonCount(value === '\u2217' ? -1 : Number(value))
             }
             values={protonCounts}

@@ -1,10 +1,10 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, MouseEvent, useCallback, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useData } from '../../../../../../context/DataContext';
 import DataSet from '../../../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../../../types/sherlock/dataSet/SpectrumCompact';
 import convertMultiplicityStringToNumber from '../../../../../../utils/convertMultiplicityStringToNumber';
-import { useHighlight } from '../../../../../highlight';
+import UseHighlight from '../../../../../highlight/UseHighlight';
 
 interface InputProps {
   signalIndex: number;
@@ -30,14 +30,14 @@ function PredictionTableRow({
     [dataSet.attachment.spectralMatchAssignment, signalIndex],
   );
 
-  const highlightRow = useHighlight(
+  const highlightRow = UseHighlight(
     inView && signalIndexInQuerySpectrum >= 0
       ? [querySpectrum.signals[signalIndexInQuerySpectrum].strings[3]]
       : [],
   );
 
   const handleOnRow = useCallback(
-    (e: any, action: 'enter' | 'leave') => {
+    (e: MouseEvent<HTMLTableRowElement>, action: 'enter' | 'leave') => {
       e.preventDefault();
       e.stopPropagation();
       if (inView) {

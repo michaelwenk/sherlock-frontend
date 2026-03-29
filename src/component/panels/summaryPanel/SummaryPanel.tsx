@@ -6,6 +6,7 @@ import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
 import FragmentsTable from './fragmentTable/FragmentsTable';
 import { Correlation } from 'nmr-correlation';
+import NMRiumData from '../../../types/nmrium/NMRiumData';
 
 function SummaryPanel() {
   const { nmriumData } = useData();
@@ -24,21 +25,31 @@ function SummaryPanel() {
   const [showFragments, setShowFragments] = useState<boolean>(false);
 
   useEffect(() => {
+    function _setShowProtonsAsRows(atomType: string) {
+      setShowProtonsAsRows(atomType === 'H-H');
+    }
+
+    function _setAdditionalColumnData(
+      _nmriumData: NMRiumData | undefined,
+      _selectedAdditionalColumnsAtomType: string,
+    ) {
+      setAdditionalColumnData(
+        _nmriumData && _nmriumData.correlations
+          ? _nmriumData.correlations.values
+              .filter(
+                (correlation) =>
+                  correlation.atomType === _selectedAdditionalColumnsAtomType,
+              )
+              .reverse()
+          : [],
+      );
+    }
+
+    _setShowProtonsAsRows(selectedAdditionalColumnsAtomType);
+
     const _selectedAdditionalColumnsAtomType =
       selectedAdditionalColumnsAtomType.split('-')[0];
-
-    setShowProtonsAsRows(selectedAdditionalColumnsAtomType === 'H-H');
-
-    setAdditionalColumnData(
-      nmriumData && nmriumData.correlations
-        ? nmriumData.correlations.values
-            .filter(
-              (correlation) =>
-                correlation.atomType === _selectedAdditionalColumnsAtomType,
-            )
-            .reverse()
-        : [],
-    );
+    _setAdditionalColumnData(nmriumData, _selectedAdditionalColumnsAtomType);
   }, [nmriumData, selectedAdditionalColumnsAtomType]);
 
   const additionalColumnTypes = useMemo(() => {
@@ -77,9 +88,9 @@ function SummaryPanel() {
               selectedAdditionalColumnsAtomType={
                 selectedAdditionalColumnsAtomType
               }
-              onChangeSelectedAdditionalColumnsAtomType={(value: string) =>
-                setSelectedAdditionalColumnsAtomType(value)
-              }
+              onChangeSelectedAdditionalColumnsAtomType={(
+                value: string | number,
+              ) => setSelectedAdditionalColumnsAtomType(String(value))}
               showMCD={showMCD}
               onClickButtonShowMCD={() => setShowMCD(!showMCD)}
               showFragments={showFragments}

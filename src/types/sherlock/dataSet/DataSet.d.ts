@@ -6,7 +6,7 @@ import SpectrumCompact from './SpectrumCompact';
 export default interface DataSet {
   meta: Meta;
   attachment: Attachment;
-  structure?: any;
+  structure?: string;
   spectrum?: SpectrumCompact;
   assignment?: Assignment;
 }

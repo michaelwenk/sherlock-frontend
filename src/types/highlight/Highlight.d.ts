@@ -1,4 +1,4 @@
-export default interface Highlight {
+interface Highlight {
   isActive: boolean;
   onHover: {
     onMouseEnter: () => void;
@@ -9,3 +9,5 @@ export default interface Highlight {
   add: (id: string) => void;
   remove: (id: string) => void;
 }
+
+export default Highlight;

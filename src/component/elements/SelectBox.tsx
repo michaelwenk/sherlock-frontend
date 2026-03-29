@@ -1,10 +1,10 @@
 import './SelectBox.scss';
-import { CSSProperties, useCallback, useMemo } from 'react';
+import { ChangeEvent, CSSProperties, useCallback, useMemo } from 'react';
 
 type InputProps = {
   values: string[] | number[];
   defaultValue: string | number;
-  onChange: Function;
+  onChange: (value: string | number) => void;
   className?: string;
   style?: CSSProperties;
 };
@@ -17,7 +17,7 @@ function SelectBox({
   style,
 }: InputProps) {
   const handleOnChanged = useCallback(
-    (e) => {
+    (e: ChangeEvent<HTMLSelectElement>) => {
       onChange(e.target.value);
     },
     [onChange],

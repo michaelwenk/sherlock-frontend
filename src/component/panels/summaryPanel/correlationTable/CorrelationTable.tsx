@@ -6,7 +6,7 @@ import AdditionalColumnHeader from './AdditionalColumnHeader';
 import CorrelationTableRow from './CorrelationTableRow';
 import { Correlation } from 'nmr-correlation';
 import { useData } from '../../../../context/DataContext';
-import { useHighlightData } from '../../../highlight';
+import useHighlightData from '../../../highlight/useHighlightData';
 
 interface InputPros {
   additionalColumnData: Correlation[];
