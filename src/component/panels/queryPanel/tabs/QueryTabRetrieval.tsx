@@ -194,7 +194,9 @@ function QueryTabRetrieval() {
               <Input
                 type="text"
                 defaultValue=""
-                onChange={(value: string) => setSearchPattern(value.trim())}
+                onChange={(value: string | FileList | null) =>
+                  setSearchPattern((value as string).trim())
+                }
                 placeholder="Search by Name/ID ..."
                 inputWidth="100%"
               />

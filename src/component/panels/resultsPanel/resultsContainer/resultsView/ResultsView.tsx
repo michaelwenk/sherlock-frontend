@@ -169,8 +169,8 @@ function ResultsView({
                           (size) => `${size.width}x${size.height}`,
                         )}
                         defaultValue={`${selectedImageSize.width}x${selectedImageSize.height}`}
-                        onChange={(value: string) => {
-                          const split = value.split('x');
+                        onChange={(value: string | number) => {
+                          const split = (value as string).split('x');
                           setSelectedImageSize({
                             width: Number(split[0]),
                             height: Number(split[1]),
@@ -185,8 +185,8 @@ function ResultsView({
                       <SelectBox
                         values={pageLimits}
                         defaultValue={selectedPageLimit}
-                        onChange={(value: number) =>
-                          setSelectedPageLimit(value)
+                        onChange={(value: string | number) =>
+                          setSelectedPageLimit(Number(value))
                         }
                       />
                     </td>
@@ -199,7 +199,9 @@ function ResultsView({
                           (sortOption) => sortOptions[sortOption].label,
                         )}
                         defaultValue={sortByLabel}
-                        onChange={(label: string) => setSortByLabel(label)}
+                        onChange={(label: string | number) =>
+                          setSortByLabel(label as string)
+                        }
                       />
                     </td>
                   </tr>
