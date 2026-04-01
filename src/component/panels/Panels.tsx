@@ -64,12 +64,14 @@ function Panels() {
       cancelRequestRef.current('User has cancelled the request!!!');
   }, []);
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleOnFetch = useCallback(
     async (_showQueryPanel: boolean) => {
       let response: AxiosResponse | undefined;
       await axios({
         method: 'GET',
-        url: 'http://localhost:8080/result/getAllMeta',
+        url: backendUrl + '/result/getAllMeta',
         cancelToken: new axios.CancelToken(
           (cancel) => (cancelRequestRef.current = cancel),
         ),
@@ -121,7 +123,7 @@ function Panels() {
           if (axios.isCancel(err)) {
             setIsCanceling(true);
             if (queryType === queryTypes.elucidation) {
-              await axios.get('http://localhost:8080/cancel');
+              await axios.get(backendUrl + '/cancel');
             }
             setIsCanceling(false);
             setRequestWasCancelled(true);
@@ -185,7 +187,7 @@ function Panels() {
         const t0 = performance.now();
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
-          url: 'http://localhost:8080/core',
+          url: backendUrl + '/core',
           data: requestData,
           headers: {
             'Content-Type': 'application/json',
@@ -223,7 +225,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deleteAll) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8080/result/deleteAll',
+            url: backendUrl + '/result/deleteAll',
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
             ),
@@ -234,7 +236,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.deletion) {
           const requestConfig: AxiosRequestConfig = {
             method: 'DELETE',
-            url: 'http://localhost:8080/result/deleteById',
+            url: backendUrl + '/result/deleteById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),
@@ -246,7 +248,7 @@ function Panels() {
         } else if (retrievalOptions.action === retrievalActions.retrieve) {
           const requestConfig: AxiosRequestConfig = {
             method: 'GET',
-            url: 'http://localhost:8080/result/getById',
+            url: backendUrl + '/result/getById',
             params: { id: retrievalOptions.resultID },
             cancelToken: new axios.CancelToken(
               (cancel) => (cancelRequestRef.current = cancel),

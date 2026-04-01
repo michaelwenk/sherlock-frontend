@@ -41,16 +41,18 @@ function Sherlock() {
         label: 'logo',
         labelOnly: true,
         elem: (
-          <img
-            src={logoMinimal}
-            style={{
-              width: '100%',
-              maxWidth: '300px',
-              display: 'flex',
-              justifyContent: 'center',
-              border: 'none',
-            }}
-          />
+          <a href={import.meta.env.VITE_FRONTEND_URL} target="_self">
+            <img
+              src={logoMinimal}
+              style={{
+                width: '100%',
+                maxWidth: '300px',
+                display: 'flex',
+                justifyContent: 'center',
+                border: 'none',
+              }}
+            />
+          </a>
         ),
       },
       {

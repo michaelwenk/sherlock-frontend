@@ -68,10 +68,12 @@ function ResultsPanel({ show }: InputProps) {
     setShowDeleteModal(true);
   }, []);
 
+  const url = import.meta.env.VITE_URL
+
   const handleOnConfirmDelete = useCallback(async () => {
     await axios({
       method: 'DELETE',
-      url: 'http://localhost:8080/result/deleteById',
+      url: url + '/result/deleteById',
       params: { id: resultData?.resultRecord.id },
     })
       .then()
@@ -84,7 +86,7 @@ function ResultsPanel({ show }: InputProps) {
         dispatch({ type: CLEAR_RESULT_DATA });
         await axios({
           method: 'GET',
-          url: 'http://localhost:8080/result/getAllMeta',
+          url: url + '/result/getAllMeta',
         })
           .then((res: AxiosResponse) => {
             if (res && res.data) {

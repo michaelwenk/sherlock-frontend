@@ -2,9 +2,9 @@
   "name": "sherlock-frontend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite --host localhost --port 3001 --strictPort",
+    "dev": "vite --strictPort --mode development",
     "build": "rm -rf -- dist && tsc && vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 5000",
+    "start": "vite --strictPort --mode production",
     "compile": "tsc",
     "clean-install": "rm -f -- package-lock.json && rm -rf -- node_modules && npm install --legacy-peer-deps",
     "eslint": "eslint .",

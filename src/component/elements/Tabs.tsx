@@ -22,10 +22,7 @@ function Tabs({
   const handleTabClick = useCallback(
     (index: number) => {
       const tab: TabData = tabsData[index];
-      if (tab.labelOnly) {
-        // TODO: handle logo click, e.g., navigate to a homepage
-        console.log('Logo clicked');
-      } else {
+      if (!tab.labelOnly) { // ignore the tabs like the logo tab here
         setActiveTab(index);
       }
     },
