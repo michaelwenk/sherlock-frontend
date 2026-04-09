@@ -1,4 +1,4 @@
-import './PredictionTable.scss';
+import './PredictionTable.css';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
 import DataSet from '../../../../../../types/sherlock/dataSet/DataSet';
 import { useData } from '../../../../../../context/DataContext';

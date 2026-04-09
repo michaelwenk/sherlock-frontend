@@ -1,7 +1,7 @@
-import './QueryTabRetrieval.scss';
+import './QueryTabRetrieval.css';
 
 import { useFormikContext } from 'formik';
-import { JSX, memo, useCallback, useMemo, useState } from 'react';
+import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEye,
@@ -23,7 +23,7 @@ interface Row {
   id: string;
   name: string;
   date: Date;
-  rendered: JSX.Element;
+  rendered: ReactNode;
 }
 
 function QueryTabRetrieval() {
@@ -163,9 +163,9 @@ function QueryTabRetrieval() {
   }, []);
 
   const retrievalData = useMemo(() => {
-    const _retrievalData: JSX.Element[][] = [];
+    const _retrievalData: ReactNode[][] = [];
     let counter = 0;
-    let rows: JSX.Element[] = [];
+    let rows: ReactNode[] = [];
     const selectedPageLimit = 20;
 
     for (let i = 0; i < filteredRows.length; i++) {

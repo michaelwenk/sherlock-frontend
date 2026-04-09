@@ -1,4 +1,4 @@
-import './SummaryPanel.scss';
+import './SummaryPanel.css';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useData } from '../../../context/DataContext';
 import MCD from './mcd/MCD';

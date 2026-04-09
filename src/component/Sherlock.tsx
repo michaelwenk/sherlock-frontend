@@ -1,4 +1,4 @@
-import './Sherlock.scss';
+import './Sherlock.css';
 import logoMinimal from '/Sherlock_minimal.png';
 
 import { NMRiumChangeCb, NMRiumData, NMRiumState } from 'nmrium';
@@ -45,8 +45,8 @@ function Sherlock() {
             <img
               src={logoMinimal}
               style={{
-                width: '100%',
-                maxWidth: '300px',
+                minHeight: '50px',
+                maxHeight: '50px',
                 display: 'flex',
                 justifyContent: 'center',
                 border: 'none',
@@ -89,4 +89,5 @@ function Sherlock() {
     [dispatcherMemo, state, tabsData],
   );
 }
+
 export default memo(Sherlock);

@@ -1,4 +1,4 @@
-import './MCD.scss';
+import './MCD.css';
 
 import { Correlation, Link } from 'nmr-correlation';
 import { memo, useMemo } from 'react';

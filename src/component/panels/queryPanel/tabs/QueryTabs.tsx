@@ -1,4 +1,4 @@
-import './QueryTabs.scss';
+import './QueryTabs.css';
 
 import QueryTabDereplication from './QueryTabDereplication';
 import QueryTabRetrieval from './QueryTabRetrieval';

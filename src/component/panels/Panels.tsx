@@ -1,4 +1,4 @@
-import './Panels.scss';
+import './Panels.css';
 
 import axios, {
   AxiosError,
@@ -99,7 +99,7 @@ function Panels() {
         });
       }
     },
-    [dispatch, handleSetIsRequesting],
+    [backendUrl, dispatch, handleSetIsRequesting],
   );
 
   useEffect(() => {
@@ -136,7 +136,7 @@ function Panels() {
 
       return response;
     },
-    [handleSetIsRequesting],
+    [backendUrl, handleSetIsRequesting],
   );
 
   const handleOnSubmit = useCallback(
@@ -272,6 +272,7 @@ function Panels() {
       }
     },
     [
+      backendUrl,
       dispatch,
       handleOnFetch,
       handleSetIsRequesting,

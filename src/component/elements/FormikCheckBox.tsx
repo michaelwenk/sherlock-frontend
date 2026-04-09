@@ -1,4 +1,4 @@
-import './CheckBox.scss';
+import './CheckBox.css';
 import { useField } from 'formik';
 import { useMemo } from 'react';
 

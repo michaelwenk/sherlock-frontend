@@ -1,4 +1,4 @@
-import './QueryTabDereplication.scss';
+import './QueryTabDereplication.css';
 
 import { useFormikContext } from 'formik';
 import CheckBox from '../../../elements/CheckBox';

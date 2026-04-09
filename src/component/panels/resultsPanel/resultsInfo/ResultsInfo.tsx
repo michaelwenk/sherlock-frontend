@@ -1,4 +1,4 @@
-import './ResultsInfo.scss';
+import './ResultsInfo.css';
 
 import { memo, useCallback, useMemo } from 'react';
 import { useData } from '../../../../context/DataContext';

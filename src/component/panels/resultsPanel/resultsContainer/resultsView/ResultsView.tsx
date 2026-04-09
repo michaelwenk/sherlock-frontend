@@ -1,6 +1,6 @@
-import './ResultsView.scss';
+import './ResultsView.css';
 
-import { memo, useCallback, useMemo, useState } from 'react';
+import { CSSProperties, memo, useCallback, useMemo, useState } from 'react';
 import CustomPagination from '../../../../elements/CustomPagination';
 import ResultCard from '../resultCard/ResultCard';
 import SelectBox from '../../../../elements/SelectBox';
@@ -138,7 +138,7 @@ function ResultsView({
   ]);
 
   const handleOnScroll = useCallback(
-    (e) => {
+    (e: React.UIEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.stopPropagation();
       highlightData.remove();
@@ -218,7 +218,16 @@ function ResultsView({
           </div>
           <div className="card-deck-container" onScroll={handleOnScroll}>
             {cardDecks.length > 0 ? (
-              <div className="card-group">{cardDecks}</div>
+              <div
+                className="card-group"
+                style={
+                  {
+                    '--cardWidth': `${selectedImageSize.width + bufferImageWidth}px`,
+                  } as CSSProperties
+                }
+              >
+                {cardDecks}
+              </div>
             ) : (
               <p className="no-results-text">No results</p>
             )}

@@ -1,10 +1,16 @@
-import './Button.scss';
+import './Button.css';
 
-import { CSSProperties, JSX, MouseEvent, useCallback, useMemo } from 'react';
+import {
+  CSSProperties,
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
 
 type InputProps = {
   onClick: (value: EventTarget) => void;
-  child: string | JSX.Element;
+  child: ReactNode;
   className?: string;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';

@@ -1,7 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './CustomModal.scss';
+import './CustomModal.css';
 
-import { CSSProperties, JSX, useCallback, useRef } from 'react';
+import { CSSProperties, ReactNode, useCallback, useRef } from 'react';
 import Button from '../../elements/Button';
 import Modal from 'react-modal';
 import ReactModal from 'react-modal';
@@ -33,11 +32,11 @@ const defaultElementStyle: CSSProperties = {
 
 interface InputProps {
   show: boolean;
-  header?: JSX.Element | string | undefined | null;
+  header?: ReactNode | undefined | null;
   showCloseButton?: boolean;
   onClose?: () => void;
-  body?: JSX.Element | string | undefined | null;
-  footer?: JSX.Element | undefined | null;
+  body?: ReactNode | undefined | null;
+  footer?: ReactNode | undefined | null;
   modalStyle?: ReactModal.Styles;
   headerContainerStyle?: CSSProperties;
   bodyContainerStyle?: CSSProperties;

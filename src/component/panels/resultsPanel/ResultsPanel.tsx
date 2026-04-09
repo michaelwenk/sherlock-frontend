@@ -1,4 +1,4 @@
-import './ResultsPanel.scss';
+import './ResultsPanel.css';
 
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
@@ -68,7 +68,7 @@ function ResultsPanel({ show }: InputProps) {
     setShowDeleteModal(true);
   }, []);
 
-  const url = import.meta.env.VITE_URL
+  const url = import.meta.env.VITE_URL;
 
   const handleOnConfirmDelete = useCallback(async () => {
     await axios({
@@ -104,7 +104,7 @@ function ResultsPanel({ show }: InputProps) {
 
         setShowDeleteModal(false);
       });
-  }, [dispatch, resultData?.resultRecord]);
+  }, [dispatch, resultData?.resultRecord.id, url]);
 
   const resultsView = useMemo(
     () => (

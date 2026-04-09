@@ -45,7 +45,12 @@
   .pagination {
     font-size: 13px;
     height: 35px;
+    display: flex;
     justify-content: center;
+    align-items: center;
+
+    border: 1px solid grey;
+    border-radius: 0.2rem;
 
     .PaginationItem {
       white-space: nowrap;
@@ -61,6 +66,13 @@
 
     .card-group {
       justify-content: center;
+      align-items: center;
+
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--cardWidth), 1fr)); 
+      gap: 10px;
+      place-items: center;            
+      padding: 5px;
     }
   }
 }

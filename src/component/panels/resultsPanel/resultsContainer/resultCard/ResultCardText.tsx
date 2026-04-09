@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './ResultCardText.scss';
+import './ResultCardText.css';
+
 import { memo, useMemo } from 'react';
 import DataSet from '../../../../../types/sherlock/dataSet/DataSet';
 
@@ -15,10 +15,7 @@ function ResultCardText({ dataSet }: InputProps) {
 
   return useMemo(
     () => (
-      <div
-        className="result-card-text-container"
-        style={{ '--value-color': color } as React.CSSProperties}
-      >
+      <div className="result-card-text-container">
         <table>
           <tbody>
             <tr>
@@ -27,7 +24,7 @@ function ResultCardText({ dataSet }: InputProps) {
             </tr>
             <tr>
               <td className="td-name">Average Deviation</td>
-              <td className="td-value">
+              <td className="td-value" style={{ color }}>
                 {dataSet.attachment.averageDeviation
                   ? `${dataSet.attachment.averageDeviation.toFixed(2)} ppm`
                   : ''}
@@ -35,7 +32,7 @@ function ResultCardText({ dataSet }: InputProps) {
             </tr>
             <tr>
               <td className="td-name">RMSD</td>
-              <td className="td-value">
+              <td className="td-value" style={{ color }}>
                 {dataSet.attachment.rmsd
                   ? `${dataSet.attachment.rmsd.toFixed(2)} ppm`
                   : ''}
@@ -43,7 +40,7 @@ function ResultCardText({ dataSet }: InputProps) {
             </tr>
             <tr>
               <td className="td-name">Matching Signals</td>
-              <td className="td-value">
+              <td className="td-value" style={{ color }}>
                 {`${dataSet.attachment.setAssignmentsCount}/${dataSet.attachment.querySpectrumSignalCount}`}
               </td>
             </tr>

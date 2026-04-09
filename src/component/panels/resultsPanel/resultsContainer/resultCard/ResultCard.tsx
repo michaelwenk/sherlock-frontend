@@ -1,4 +1,4 @@
-import './ResultCard.scss';
+import './ResultCard.css';
 
 import ResultCardText from './ResultCardText';
 import { CSSProperties, memo, useEffect, useMemo, useState } from 'react';

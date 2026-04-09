@@ -1,0 +1,34 @@
+.custom-pagination {
+  width: 100%;
+  height: 35px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  nav {
+    width: 100%;
+    height: 35px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style-type: none;      
+    }
+
+    button {      
+      padding: 5px 10px;
+      margin-left: 2px;
+      margin-right: 2px;
+      border-radius: 0.5rem;
+
+      background-color: transparent;
+      border: 1px solid grey;
+    }
+  }
+}

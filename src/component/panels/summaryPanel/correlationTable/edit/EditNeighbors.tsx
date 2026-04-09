@@ -1,4 +1,4 @@
-import './EditNeighbors.scss';
+import './EditNeighbors.css';
 
 import { memo, useCallback, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

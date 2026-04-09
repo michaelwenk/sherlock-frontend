@@ -1,4 +1,4 @@
-import './Input.scss';
+import './Input.css';
 
 import {
   ChangeEvent,

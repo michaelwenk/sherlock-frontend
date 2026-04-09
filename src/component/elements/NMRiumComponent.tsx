@@ -1,18 +1,32 @@
-import 'react-science/styles/preflight.css';
+import './NMRiumComponent.css';
+
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
+import '@blueprintjs/select/lib/css/blueprint-select.css';
 
-import { useMemo } from 'react';
-import { NMRium, NMRiumChangeCb, NMRiumPreferences } from 'nmrium';
+import { useMemo, useRef } from 'react';
+import {
+  NMRium,
+  NMRiumChangeCb,
+  NMRiumPreferences,
+  NMRiumRefAPI,
+} from 'nmrium';
 
 const preferences: NMRiumPreferences = {
   display: {
-    toolBarButtons: { import: true },
+    toolBarButtons: {
+      import: true,
+      rangePicking: true,
+      zonePicking: true,
+      exportAs: true,
+    },
     panels: {
-      spectraPanel: { display: true, visible: true },
-      rangesPanel: { display: true, visible: true },
-      zonesPanel: { display: true, visible: true },
-      summaryPanel: { display: true, visible: true },
+      spectraPanel: { display: true, visible: true, open: true },
+      processingsPanel: { display: true, visible: true, open: false },
+      informationPanel: { display: false, visible: true, open: false },
+      rangesPanel: { display: true, visible: true, open: true },
+      zonesPanel: { display: true, visible: true, open: true },
+      summaryPanel: { display: true, visible: true, open: true },
     },
   },
 };
@@ -22,16 +36,12 @@ type InputProps = {
 };
 
 function NMRiumComponent({ onChange }: InputProps) {
+  const nmriumRef = useRef<NMRiumRefAPI>(null);
+
   return useMemo(
     () => (
-      <div
-        style={{
-          width: '100%',
-          height: 'calc(100% - 50px)',
-          position: 'absolute',
-        }}
-      >
-        <NMRium preferences={preferences} onChange={onChange} />
+      <div className="nmrium-component">
+        <NMRium ref={nmriumRef} preferences={preferences} onChange={onChange} />
       </div>
     ),
     [onChange],

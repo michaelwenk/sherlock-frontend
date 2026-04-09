@@ -1,4 +1,3 @@
-$min-pane-width: 400px;
 
 .panels {
   width: 100%;
@@ -7,13 +6,13 @@ $min-pane-width: 400px;
   border-top: solid 0.1px #eee;
 
   .summary-split-pane {
-    max-width: calc(100% - $min-pane-width);
-    min-width: $min-pane-width;
+    max-width: calc(100% - 400px);
+    min-width: 400px;
   }
 
   .query-and-result-split-pane {
-    max-width: calc(100% - $min-pane-width);
-    min-width: $min-pane-width;
+    max-width: calc(100% - 400px);
+    min-width: 400px;
     height: 100%;
 
     .collapsible {
@@ -23,11 +22,11 @@ $min-pane-width: 400px;
       width: 100%;
       text-align: center;
       font-size: 14px;
-      border-radius: 10px;
+      border-radius: 10px; 
+    }
 
-      &:hover {
-        background-color: #ccc;
-      }
+    .collapsible:hover {
+      background-color: #ccc;
     }
 
     .request-error {
@@ -65,19 +64,19 @@ $min-pane-width: 400px;
       cursor: col-resize;
       padding: 2px;
       border: 0.55px solid lightgrey;
+    }
 
-      &:hover {
-        background-color: lavender !important;
-      }
+    .SplitPane-Divider:hover {
+      background-color: lavender !important;
+    }
 
-      &:after {
-        content: '\22EE';
-        top: 50%;
-        color: black;
-        position: absolute;
-        font-size: 15px;
-        font-weight: bold;
-      }
+    .SplitPane-Divider:after {
+      content: '\22EE';
+      top: 50%;
+      color: black;
+      position: absolute;
+      font-size: 15px;
+      font-weight: bold;
     }
   }
 }

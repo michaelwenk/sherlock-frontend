@@ -1,4 +1,4 @@
-import './Tabs.scss';
+import './Tabs.css';
 
 import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import Tab from './Tab';
@@ -22,7 +22,8 @@ function Tabs({
   const handleTabClick = useCallback(
     (index: number) => {
       const tab: TabData = tabsData[index];
-      if (!tab.labelOnly) { // ignore the tabs like the logo tab here
+      if (!tab.labelOnly) {
+        // ignore the tabs like the logo tab here
         setActiveTab(index);
       }
     },
@@ -32,7 +33,7 @@ function Tabs({
   return useMemo(
     () => (
       <div className="tabs-container">
-        <div className="tabs">
+        <div className="tabs-container-tabs">
           {tabsData.map((tab: TabData, index: number) => {
             if (tab.labelOnly ?? false) {
               return (
@@ -63,7 +64,15 @@ function Tabs({
             );
           })}
         </div>
-        <div>{tabsData[activeTab]?.elem}</div>
+        {tabsData.map((tab: TabData, index: number) => (
+          <div
+            className="tab-element"
+            key={'tab_element_' + index}
+            style={{ display: index === activeTab ? 'block' : 'none' }}
+          >
+            {tab.elem}
+          </div>
+        ))}
       </div>
     ),
     [activeTab, handleTabClick, height, tabsData, width],

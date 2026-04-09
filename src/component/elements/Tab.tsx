@@ -1,4 +1,4 @@
-import './Tab.scss';
+import './Tab.css';
 
 import { CSSProperties } from 'react';
 import TabData from '../../types/TabData';
@@ -13,7 +13,7 @@ function Tab({ tabData, height, width }: InputProps) {
   const { label, isActive, onClick } = tabData;
   return (
     <div
-      className="Tab"
+      className="tab"
       style={{
         width: width,
         height: height,

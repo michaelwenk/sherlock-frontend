@@ -1,4 +1,4 @@
-import './CorrelationTable.scss';
+import './CorrelationTable.css';
 
 import { memo, useCallback, useMemo } from 'react';
 import { getLabelColor } from '../Utilities';

@@ -1,7 +1,7 @@
-import './FragmentsTable.scss';
+import './FragmentsTable.css';
 
 import { useData } from '../../../../context/DataContext';
-import { JSX, memo, useCallback, useMemo, useState } from 'react';
+import { memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import DataSet from '../../../../types/sherlock/dataSet/DataSet';
 import SpectrumCompact from '../../../../types/sherlock/dataSet/SpectrumCompact';
 import FragmentTableRow from './FragmentTableRow';
@@ -42,7 +42,7 @@ function FragmentsTable() {
   );
 
   const rows = useMemo(() => {
-    const _rows: JSX.Element[] = [];
+    const _rows: ReactNode[] = [];
     fragments.forEach((fragment: DataSet, i: number) => {
       _rows.push(
         <FragmentTableRow

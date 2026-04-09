@@ -1,4 +1,4 @@
-import './StructureEditorModal.scss';
+import './StructureEditorModal.css';
 
 import { useCallback, useMemo, useState } from 'react';
 import { CanvasEditorOnChangeMolecule, CanvasMoleculeEditor } from 'react-ocl';

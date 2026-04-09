@@ -1,6 +1,6 @@
-import './CustomPagination.scss';
+import './CustomPagination.css';
 
-import { JSX, MouseEvent, useMemo } from 'react';
+import { MouseEvent, ReactNode, useMemo } from 'react';
 
 const maxPages = 5;
 
@@ -12,7 +12,7 @@ type InputProps = {
 
 function CustomPagination({ nData, selected, onSelect }: InputProps) {
   const paginationItems = useMemo(() => {
-    const items: JSX.Element[] = [];
+    const items: ReactNode[] = [];
     for (let i = 0; i < nData; i++) {
       const isActive = selected === i;
       items.push(
@@ -28,7 +28,7 @@ function CustomPagination({ nData, selected, onSelect }: InputProps) {
                   color: 'blue',
                   fontWeight: 'bold',
                   fontSize: '1.2em',
-                  backgroundColor: '#e3e3e3',
+                  backgroundColor: 'rgb(230, 230, 230)',
                 }
               : {}
           }
@@ -43,8 +43,8 @@ function CustomPagination({ nData, selected, onSelect }: InputProps) {
   }, [nData, onSelect, selected]);
 
   const paginationItemLists = useMemo(() => {
-    const _paginationItemLists: JSX.Element[][] = [];
-    let paginationItemList: JSX.Element[] = [];
+    const _paginationItemLists: ReactNode[][] = [];
+    let paginationItemList: ReactNode[] = [];
     for (let i = 0; i < paginationItems.length; i++) {
       if (i > 0 && i % maxPages === 0) {
         _paginationItemLists.push(paginationItemList);

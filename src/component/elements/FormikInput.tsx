@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import { useCallback, useMemo } from 'react';
+import { CSSProperties, useCallback, useMemo } from 'react';
 import round from '../../utils/round';
 
 interface InputProps {
@@ -68,7 +68,7 @@ function FormikInput({
           style={
             {
               '--inputWidth': inputWidth,
-            } as React.CSSProperties
+            } as CSSProperties
           }
           value={
             fieldMeta.value === ''

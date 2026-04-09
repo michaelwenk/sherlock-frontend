@@ -1,13 +1,13 @@
 import CustomModal from './CustomModal';
 import Button from '../Button';
-import { JSX } from 'react';
+import { ReactNode } from 'react';
 
 interface InputProps {
   show: boolean;
-  header: JSX.Element | string | undefined | null;
+  header: ReactNode | undefined | null;
   onCancel: () => void;
   onConfirm: () => void;
-  body?: JSX.Element | string | undefined | null;
+  body?: ReactNode | undefined | null;
 }
 function ConfirmModal({ show, header, onCancel, onConfirm, body }: InputProps) {
   return (

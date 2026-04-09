@@ -1,4 +1,4 @@
-import './Overview.scss';
+import './Overview.css';
 
 import Button from '../../elements/Button';
 import SelectBox from '../../elements/SelectBox';

@@ -1,4 +1,4 @@
-import './CheckBox.scss';
+import './CheckBox.css';
 import { useCallback, useMemo, useState } from 'react';
 
 type InputProps = {

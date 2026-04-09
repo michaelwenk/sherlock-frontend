@@ -1,4 +1,4 @@
-import './SelectBox.scss';
+import './SelectBox.css';
 import { ChangeEvent, CSSProperties, useCallback, useMemo } from 'react';
 
 type InputProps = {

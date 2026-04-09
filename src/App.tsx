@@ -1,4 +1,4 @@
-import './App.scss';
+import './App.css';
 import Sherlock from './component/Sherlock';
 
 function App() {

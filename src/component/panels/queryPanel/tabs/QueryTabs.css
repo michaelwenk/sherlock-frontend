@@ -23,7 +23,7 @@
   .query-tab-elucidation,
   .query-tab-retrieval {
     width: 100%;
-    height: calc(100% - 40px - 5px); // - tabs container - margin-top
+    height: calc(100% - 40px - 5px);
     margin-top: 5px;
   }
   .query-tab-dereplication,

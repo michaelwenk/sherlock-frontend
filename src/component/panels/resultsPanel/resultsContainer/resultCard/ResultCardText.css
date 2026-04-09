@@ -1,5 +1,3 @@
-$value-color: var(--value-color);
-
 .result-card-text-container {
   font-size: 13px;
   width: 100%;
@@ -11,9 +9,6 @@ $value-color: var(--value-color);
     text-align: left;
     .td-name {
       font-weight: bold;
-    }
-    .td-value {
-      color: $value-color;
-    }
+    }   
   }
 }

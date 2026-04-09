@@ -1,4 +1,4 @@
-import './Spinner.scss';
+import './Spinner.css';
 import Button from './Button';
 import { useEffect, useMemo, useState } from 'react';
 import { TailSpin } from 'react-loader-spinner';

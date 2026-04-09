@@ -1,4 +1,4 @@
-import './QueryPanel.scss';
+import './QueryPanel.css';
 
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import QueryTabs from './tabs/QueryTabs';

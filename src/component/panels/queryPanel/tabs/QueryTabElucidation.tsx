@@ -1,4 +1,4 @@
-import './QueryTabElucidation.scss';
+import './QueryTabElucidation.css';
 
 import { useFormikContext } from 'formik';
 import Button from '../../../elements/Button';
