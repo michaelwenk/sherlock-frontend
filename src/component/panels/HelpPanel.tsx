@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 function HelpPanel() {
   return (
     <div
@@ -53,7 +55,7 @@ function HelpPanel() {
       </p>
 
       <iframe
-        src={import.meta.env.VITE_FRONTEND_BASE_URL + "/Sherlock_manual.pdf"}
+        src={import.meta.env.VITE_FRONTEND_BASE_URL + '/Sherlock_manual.pdf'}
         width="100%"
         height="1000px"
         style={{ marginTop: '30px' }}
@@ -62,4 +64,4 @@ function HelpPanel() {
   );
 }
 
-export default HelpPanel;
+export default memo(HelpPanel);

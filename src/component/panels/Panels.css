@@ -1,25 +1,31 @@
 
 .panels {
   width: 100%;
-  height: calc(100% - 50px);
-  position: fixed;
-  border-top: solid 0.1px #eee;
+  height: 100%;
+  user-select: none;
 
   .summary-split-pane {
-    max-width: calc(100% - 400px);
+    max-width: calc(100% - 450px);
     min-width: 400px;
+    height: 100%;
   }
 
   .query-and-result-split-pane {
-    max-width: calc(100% - 400px);
-    min-width: 400px;
+    max-width: calc(100% - 450px - 5px);
+    min-width: calc(450px - 5px);
     height: 100%;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     .collapsible {
-      height: 40px;
-      background-color: #eee;
-      padding: 5px;
       width: 100%;
+      height: 40px;
+
+      background-color: #eee;
+      padding: 5px;      
       text-align: center;
       font-size: 14px;
       border-radius: 10px; 
@@ -27,6 +33,8 @@
 
     .collapsible:hover {
       background-color: #ccc;
+      font-weight: bolder;
+      cursor: pointer;
     }
 
     .request-error {
@@ -55,14 +63,13 @@
   }
 
   .SplitPane {
-    height: '100%';
-    width: '100%';
+    height: 100%;
+    width: 100%;
 
     .SplitPane-Divider {
-      width: 15px;
-      background-color: '#f7f7f7';
+      width: 5px !important;
+      background-color: #f7f7f7;
       cursor: col-resize;
-      padding: 2px;
       border: 0.55px solid lightgrey;
     }
 
@@ -73,6 +80,8 @@
     .SplitPane-Divider:after {
       content: '\22EE';
       top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: black;
       position: absolute;
       font-size: 15px;

@@ -4,7 +4,7 @@ import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
 
-import { useMemo, useRef } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import {
   NMRium,
   NMRiumChangeCb,
@@ -48,4 +48,4 @@ function NMRiumComponent({ onChange }: InputProps) {
   );
 }
 
-export default NMRiumComponent;
+export default memo(NMRiumComponent);
