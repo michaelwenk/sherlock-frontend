@@ -6,10 +6,10 @@ import CorrelationTable from './correlationTable/CorrelationTable';
 import Overview from './Overview';
 import FragmentsTable from './fragmentTable/FragmentsTable';
 import { Correlation } from 'nmr-correlation';
-import NMRiumData from '../../../types/nmrium/NMRiumData';
+import { NMRiumState } from 'nmrium';
 
 function SummaryPanel() {
-  const { nmriumData } = useData();
+  const { nmriumState } = useData();
 
   const [additionalColumnData, setAdditionalColumnData] = useState<
     Correlation[]
@@ -30,12 +30,14 @@ function SummaryPanel() {
     }
 
     function _setAdditionalColumnData(
-      _nmriumData: NMRiumData | undefined,
+      _nmriumState: Partial<NMRiumState> | undefined,
       _selectedAdditionalColumnsAtomType: string,
     ) {
       setAdditionalColumnData(
-        _nmriumData && _nmriumData.correlations
-          ? _nmriumData.correlations.values
+        _nmriumState &&
+          _nmriumState.data?.correlations &&
+          _nmriumState.data.correlations.values
+          ? _nmriumState.data.correlations.values
               .filter(
                 (correlation) =>
                   correlation.atomType === _selectedAdditionalColumnsAtomType,
@@ -49,13 +51,15 @@ function SummaryPanel() {
 
     const _selectedAdditionalColumnsAtomType =
       selectedAdditionalColumnsAtomType.split('-')[0];
-    _setAdditionalColumnData(nmriumData, _selectedAdditionalColumnsAtomType);
-  }, [nmriumData, selectedAdditionalColumnsAtomType]);
+    _setAdditionalColumnData(nmriumState, _selectedAdditionalColumnsAtomType);
+  }, [nmriumState, selectedAdditionalColumnsAtomType]);
 
   const additionalColumnTypes = useMemo(() => {
     return ['H', 'H-H'].concat(
-      nmriumData && nmriumData.correlations
-        ? nmriumData.correlations.values
+      nmriumState &&
+        nmriumState.data?.correlations &&
+        nmriumState.data.correlations.values
+        ? nmriumState.data.correlations.values
             .map((correlation) => correlation.atomType)
             .filter(
               (atomType, i, array) =>
@@ -63,12 +67,14 @@ function SummaryPanel() {
             )
         : [],
     );
-  }, [nmriumData]);
+  }, [nmriumState]);
 
   return useMemo(
     () =>
-      nmriumData?.correlations?.values &&
-      nmriumData.correlations.values.length > 0 ? (
+      nmriumState &&
+      nmriumState.data?.correlations &&
+      nmriumState.data.correlations.values &&
+      nmriumState.data.correlations.values.length > 0 ? (
         <div className="summary-panel">
           <div
             className="overview-table-container"
@@ -79,7 +85,11 @@ function SummaryPanel() {
             }
           >
             <Overview
-              mf={nmriumData ? (nmriumData.correlations.options.mf ?? '') : ''}
+              mf={
+                nmriumState
+                  ? (nmriumState.data?.correlations?.options?.mf ?? '')
+                  : ''
+              }
               showAdditionalColumns={showAdditionalColumns}
               onChangeShowAdditionalColumns={(value: boolean) =>
                 setShowAdditionalColumns(value)
@@ -137,7 +147,7 @@ function SummaryPanel() {
     [
       additionalColumnData,
       additionalColumnTypes,
-      nmriumData,
+      nmriumState,
       selectedAdditionalColumnsAtomType,
       showAdditionalColumns,
       showFragments,

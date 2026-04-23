@@ -20,4 +20,5 @@ export default interface ResultRecord {
   elucidationOptions?: ElucidationOptions;
   grouping?: Grouping;
   querySpectrum?: SpectrumCompact;
+  nmriumState?: string | null;
 }

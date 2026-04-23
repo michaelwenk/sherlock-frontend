@@ -13,7 +13,7 @@ import {
   editIncludeFragment,
   editSetNeighbors,
   setIsRequesting,
-  setNmriumData,
+  setNmriumState,
   setResultData,
   setResultDBEntries,
 } from './Actions';
@@ -28,10 +28,11 @@ import {
   EDIT_INCLUDE_FRAGMENT,
   EDIT_SET_NEIGHBORS,
   SET_IS_REQUESTING,
-  SET_NMRIUM_DATA,
+  SET_NMRIUM_STATE,
   SET_RESULT_DATA,
   SET_RESULT_DB_ENTRIES,
 } from './ActionTypes';
+import initialNMRiumState from '../constants/initialNMRiumState';
 
 export const initialState: DataState = {
   resultData: {
@@ -39,6 +40,7 @@ export const initialState: DataState = {
     resultRecord: {},
   },
   isRequesting: false,
+  nmriumState: initialNMRiumState,
 };
 
 export function initState(state: DataState): DataState {
@@ -53,8 +55,8 @@ export function dispatcher(dispatch) {
 
 function dataReducer(draft: Draft<DataState>, action: Action) {
   switch (action.type) {
-    case SET_NMRIUM_DATA:
-      return setNmriumData(draft, action);
+    case SET_NMRIUM_STATE:
+      return setNmriumState(draft, action);
     case SET_RESULT_DATA:
       return setResultData(draft, action);
     case CLEAR_RESULT_DATA:

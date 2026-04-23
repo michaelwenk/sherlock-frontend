@@ -42,15 +42,18 @@ function NeighborsTableCell({
   mode,
   highlight,
 }: InputProps) {
-  const { nmriumData, resultData } = useData();
+  const { nmriumState, resultData } = useData();
   const dispatch = useDispatch();
 
   const [show, setShow] = useState<boolean>(false);
 
   const correlationIndex = useMemo(
     () =>
-      getCorrelationIndex(nmriumData?.correlations?.values ?? [], correlation),
-    [correlation, nmriumData?.correlations?.values],
+      getCorrelationIndex(
+        nmriumState?.data?.correlations?.values ?? [],
+        correlation,
+      ),
+    [correlation, nmriumState?.data?.correlations?.values],
   );
 
   const handleOnDelete = useCallback(
@@ -233,8 +236,8 @@ function NeighborsTableCell({
         correlationIndex
       ].forEach((neighborCorrelationIndex: number) => {
         values.push(
-          nmriumData?.correlations?.values[neighborCorrelationIndex].label
-            .origin ?? '',
+          nmriumState?.data?.correlations?.values[neighborCorrelationIndex]
+            .label.origin ?? '',
         );
       });
     }
@@ -244,18 +247,19 @@ function NeighborsTableCell({
     correlationIndex,
     mode,
     neighbors,
-    nmriumData?.correlations?.values,
+    nmriumState?.data?.correlations?.values,
     resultData?.resultRecord.detections?.fixedNeighbors,
   ]);
 
   const possibleNeighbors = useMemo(
     () =>
-      nmriumData?.correlations?.options && nmriumData?.correlations.options.mf
-        ? Object.keys(getAtomCounts(nmriumData.correlations.options.mf)).filter(
-            (elem) => elem !== 'H',
-          )
+      nmriumState?.data?.correlations?.options &&
+      nmriumState?.data?.correlations.options.mf
+        ? Object.keys(
+            getAtomCounts(nmriumState.data.correlations.options.mf),
+          ).filter((elem) => elem !== 'H')
         : [],
-    [nmriumData],
+    [nmriumState?.data?.correlations?.options],
   );
 
   useEffect(() => {
@@ -298,7 +302,7 @@ function NeighborsTableCell({
                   correlationIndex
                 ] ?? []
               }
-              correlations={nmriumData?.correlations?.values ?? []}
+              correlations={nmriumState?.data?.correlations?.values ?? []}
               onDelete={handleOnDeleteFixed}
               onAdd={handleOnAddFixed}
             />
@@ -315,7 +319,7 @@ function NeighborsTableCell({
       handleOnDelete,
       handleOnDeleteFixed,
       neighbors,
-      nmriumData?.correlations?.values,
+      nmriumState?.data?.correlations?.values,
       possibleNeighbors,
       resultData?.resultRecord.detections?.fixedNeighbors,
     ],

@@ -14,7 +14,7 @@ import { useData } from '../../../../context/DataContext';
 import { getAtomCounts } from 'nmr-correlation';
 
 function QueryTabElucidation() {
-  const { isRequesting, nmriumData, resultData } = useData();
+  const { isRequesting, nmriumState, resultData } = useData();
   const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
 
   const { setFieldValue, submitForm, values, errors } =
@@ -50,7 +50,7 @@ function QueryTabElucidation() {
   const allowUseHeteroHeteroBonds = useMemo((): boolean => {
     let sumHeteroAtoms = 0;
     Object.entries(
-      getAtomCounts(nmriumData?.correlations?.options?.mf || ''),
+      getAtomCounts(nmriumState?.data?.correlations?.options?.mf ?? ''),
     ).forEach(([atomType, count]) => {
       if (atomType !== 'C' && atomType !== 'H') {
         sumHeteroAtoms += count;
@@ -58,7 +58,7 @@ function QueryTabElucidation() {
     });
 
     return sumHeteroAtoms >= 2;
-  }, [nmriumData?.correlations?.options.mf]);
+  }, [nmriumState?.data?.correlations?.options?.mf]);
 
   return useMemo(
     () => (

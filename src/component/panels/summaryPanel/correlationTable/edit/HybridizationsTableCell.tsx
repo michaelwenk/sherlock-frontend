@@ -23,7 +23,7 @@ function HybridizationsTableCell({
   hybridizations,
   highlight,
 }: InputProps) {
-  const { nmriumData } = useData();
+  const { nmriumState } = useData();
   const dispatch = useDispatch();
 
   const [show, setShow] = useState<boolean>(false);
@@ -90,7 +90,7 @@ function HybridizationsTableCell({
             show={show}
             header={`Edit Hybridization: ${correlation.atomType}${
               getCorrelationIndex(
-                nmriumData?.correlations?.values ?? [],
+                nmriumState?.data?.correlations?.values ?? [],
                 correlation,
               ) + 1
             } (${
@@ -119,7 +119,7 @@ function HybridizationsTableCell({
       handleOnDelete,
       hybridizations,
       label,
-      nmriumData?.correlations?.values,
+      nmriumState?.data?.correlations?.values,
       show,
     ],
   );

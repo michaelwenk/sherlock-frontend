@@ -2,7 +2,6 @@ import { Draft } from 'immer';
 import { Correlation, getCorrelationIndex } from 'nmr-correlation';
 import queryTypes from '../constants/queryTypes';
 import DataState from '../types/DataState';
-import NMRiumData from '../types/nmrium/NMRiumData';
 import Result from '../types/Result';
 import Detections from '../types/sherlock/detection/Detections';
 import FixedNeighbors from '../types/sherlock/detection/FixedNeighbors';
@@ -11,6 +10,8 @@ import ResultRecord from '../types/sherlock/ResultRecord';
 import lodashCloneDeep from 'lodash/cloneDeep';
 import DataSet from '../types/sherlock/dataSet/DataSet';
 import generateID from '../utils/generateID';
+import { NMRiumState } from 'nmrium';
+import initialNMRiumState from '../constants/initialNMRiumState';
 
 const initialDetections: Detections = {
   detectedHybridizations: {},
@@ -28,7 +29,7 @@ export interface Action {
       | Correlation
       | FixedNeighbors
       | NeighborsEntry
-      | NMRiumData
+      | NMRiumState
       | Result
       | boolean
       | number
@@ -41,9 +42,9 @@ export function clearResultData(draft: Draft<DataState>) {
   delete draft.resultData;
 }
 
-function initNMRiumData(draft: Draft<DataState>) {
-  if (!draft.nmriumData) {
-    draft.nmriumData = { spectra: [] };
+function initNMRiumState(draft: Draft<DataState>) {
+  if (!draft.nmriumState) {
+    draft.nmriumState = initialNMRiumState;
   }
 }
 
@@ -63,16 +64,16 @@ function initDetections(draft: Draft<DataState>) {
   }
 }
 
-export function setNmriumData(draft: Draft<DataState>, action: Action) {
-  draft.nmriumData = action.payload.nmriumData as NMRiumData;
+export function setNmriumState(draft: Draft<DataState>, action: Action) {
+  draft.nmriumState = action.payload.nmriumState as NMRiumState;
 
   initResultData(draft);
   (draft.resultData as Result).resultRecord = {
     ...draft.resultData?.resultRecord,
-    correlations: draft.nmriumData.correlations,
+    correlations: draft.nmriumState?.data?.correlations,
   };
   initDetections(draft);
-  (draft.nmriumData as NMRiumData).correlations?.values.forEach(
+  (draft.nmriumState as NMRiumState).data.correlations?.values.forEach(
     (correlation: Correlation, i: number) => {
       const _detections = (draft.resultData as Result).resultRecord
         .detections as Detections;
@@ -90,12 +91,19 @@ export function setNmriumData(draft: Draft<DataState>, action: Action) {
 
 export function setResultData(draft: Draft<DataState>, action: Action) {
   const { resultData } = action.payload;
-  draft.resultData = resultData as Result;
+  const _resultData = resultData as Result;
 
-  initNMRiumData(draft);
-  (draft.nmriumData as NMRiumData).correlations = (
-    resultData as Result
-  ).resultRecord.correlations;
+  draft.resultData = {
+    ..._resultData,
+    resultRecord: { ..._resultData.resultRecord, nmriumState: undefined },
+  };
+
+  initNMRiumState(draft);
+  if (_resultData.resultRecord.nmriumState) {
+    draft.nmriumState = JSON.parse(
+      _resultData.resultRecord.nmriumState,
+    ) as Partial<NMRiumState>;
+  }
 }
 
 export function editForbiddenNeighbors(
@@ -106,7 +114,7 @@ export function editForbiddenNeighbors(
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations?.values ?? [],
+    draft.nmriumState?.data?.correlations?.values ?? [],
     correlation as Correlation,
   );
   (draft.resultData as Result).resultRecord.detections.forbiddenNeighbors[
@@ -119,7 +127,7 @@ export function editSetNeighbors(draft: Draft<DataState>, action: Action) {
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations?.values ?? [],
+    draft.nmriumState?.data?.correlations?.values ?? [],
     correlation as Correlation,
   );
   (draft.resultData as Result).resultRecord.detections.setNeighbors[
@@ -132,7 +140,7 @@ export function editHybridizations(draft: Draft<DataState>, action: Action) {
 
   initDetections(draft);
   const correlationIndex = getCorrelationIndex(
-    draft.nmriumData?.correlations?.values ?? [],
+    draft.nmriumState?.data?.correlations?.values ?? [],
     correlation as Correlation,
   );
   const tempDetections = lodashCloneDeep(
@@ -151,8 +159,8 @@ export function editHybridizations(draft: Draft<DataState>, action: Action) {
     draft.resultData.resultRecord.detections = tempDetections;
     draft.resultData.resultRecord.correlations = tempCorrelations;
   }
-  initNMRiumData(draft);
-  (draft.nmriumData as NMRiumData).correlations = tempCorrelations;
+  initNMRiumState(draft);
+  (draft.nmriumState as NMRiumState).data.correlations = tempCorrelations;
 }
 
 export function editFixedNeighbors(draft: Draft<DataState>, action: Action) {

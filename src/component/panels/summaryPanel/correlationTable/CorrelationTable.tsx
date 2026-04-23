@@ -19,13 +19,13 @@ function CorrelationTable({
   showAdditionalColumns,
   showProtonsAsRows,
 }: InputPros) {
-  const { nmriumData } = useData();
+  const { nmriumState } = useData();
   const highlightData = useHighlightData();
 
   const rows = useMemo(
     () =>
-      nmriumData && nmriumData.correlations
-        ? nmriumData.correlations.values
+      nmriumState?.data?.correlations
+        ? nmriumState.data.correlations.values
             .filter((correlation) =>
               showProtonsAsRows
                 ? correlation.atomType === 'H'
@@ -40,10 +40,11 @@ function CorrelationTable({
                 styleLabel={
                   correlation.atomType === 'H'
                     ? {
-                        color: getLabelColor(
-                          nmriumData.correlations,
-                          correlation,
-                        ),
+                        color:
+                          getLabelColor(
+                            nmriumState?.data?.correlations,
+                            correlation,
+                          ) ?? undefined,
                       }
                     : {}
                 }
@@ -53,7 +54,7 @@ function CorrelationTable({
         : [],
     [
       additionalColumnData,
-      nmriumData,
+      nmriumState?.data?.correlations,
       showAdditionalColumns,
       showProtonsAsRows,
     ],

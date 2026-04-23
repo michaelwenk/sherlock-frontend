@@ -9,13 +9,15 @@ import { ElementDefinition } from 'cytoscape';
 import styleSheet from './stylesheet';
 
 function MCD() {
-  const { nmriumData, resultData } = useData();
+  const { nmriumState, resultData } = useData();
 
   const graphData = useMemo(() => {
     const _graphData: ElementDefinition[] = [];
     const correlations =
-      resultData?.resultRecord.correlations ?? nmriumData?.correlations;
-    if (correlations) {
+      resultData && resultData.resultRecord.correlations
+        ? resultData.resultRecord.correlations
+        : nmriumState?.data?.correlations;
+    if (correlations && correlations.values) {
       correlations.values
         .filter((correlation: Correlation) => correlation.atomType !== 'H')
         .forEach((correlation: Correlation) => {
@@ -70,126 +72,137 @@ function MCD() {
               _graphData.push(newLink);
             });
           }
-          correlation.link.forEach((link: Link) => {
-            if (link.match && link.match.length === 1) {
-              if (
-                link.experimentType === 'hmbc' &&
-                correlation.atomType !== 'H'
-              ) {
-                const otherProtonCorrelation =
-                  correlations.values[link.match[0]];
-                const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                  (_link: Link) =>
-                    _link.experimentType === 'hsqc' ||
-                    _link.experimentType === 'hmqc',
-                );
-                if (hsqcLinksTarget.length === 1) {
-                  const targetIndex =
-                    otherProtonCorrelation.attachment[
-                      correlations.values[hsqcLinksTarget[0].match[0]].atomType
-                    ][0];
-                  _graphData
-                    .filter((elem) => elem.data.originalID === correlation.id)
-                    .forEach((elem) => {
-                      _graphData
-                        .filter(
-                          (elem2) =>
-                            elem2.data.originalID ===
-                            correlations.values[targetIndex].id,
-                        )
-                        .forEach((elem2) => {
-                          // avoid loops
-                          if (elem.data.id !== elem2.data.id) {
-                            const newLink: ElementDefinition = {
-                              data: {
-                                id:
-                                  elem.data.id +
-                                  '_' +
-                                  elem2.data.id +
-                                  '_' +
-                                  link.experimentType,
-                                originalID: link.id,
-                                source: elem.data.id,
-                                target: elem2.data.id,
-                              },
-                              classes: link.experimentType,
-                            };
-                            _graphData.push(newLink);
-                          }
-                        });
-                    });
-                }
-              } else if (
-                link.experimentType === 'cosy' &&
-                correlation.atomType === 'H'
-              ) {
-                const hsqcLinksSource = correlation.link.filter(
-                  (_link: Link) =>
-                    _link.experimentType === 'hsqc' ||
-                    _link.experimentType === 'hmqc',
-                );
-                const otherProtonCorrelation =
-                  correlations.values[link.match[0]];
-                const hsqcLinksTarget = otherProtonCorrelation.link.filter(
-                  (_link: Link) =>
-                    _link.experimentType === 'hsqc' ||
-                    _link.experimentType === 'hmqc',
-                );
+          if (correlation.link) {
+            correlation.link.forEach((link: Link) => {
+              if (link.match && link.match.length === 1) {
                 if (
-                  hsqcLinksSource.length === 1 &&
-                  hsqcLinksTarget.length === 1
+                  link.experimentType === 'hmbc' &&
+                  correlation.atomType !== 'H'
                 ) {
-                  const sourceIndex =
-                    correlation.attachment[
-                      correlations.values[hsqcLinksSource[0].match[0]].atomType
-                    ][0];
-                  const targetIndex =
-                    otherProtonCorrelation.attachment[
-                      correlations.values[hsqcLinksTarget[0].match[0]].atomType
-                    ][0];
-                  _graphData
-                    .filter(
-                      (elem) =>
-                        elem.data.originalID ===
-                        correlations.values[sourceIndex].id,
-                    )
-                    .forEach((elem) => {
-                      _graphData
-                        .filter(
-                          (elem2) =>
-                            elem2.data.originalID ===
-                            correlations.values[targetIndex].id,
+                  const otherProtonCorrelation =
+                    correlations.values[link.match[0]];
+                  const hsqcLinksTarget =
+                    otherProtonCorrelation && otherProtonCorrelation.link
+                      ? otherProtonCorrelation.link.filter(
+                          (_link: Link) =>
+                            _link.experimentType === 'hsqc' ||
+                            _link.experimentType === 'hmqc',
                         )
-                        .forEach((elem2) => {
-                          if (elem.data.id !== elem2.data.id) {
-                            const newLink: ElementDefinition = {
-                              data: {
-                                id:
-                                  elem.data.id +
-                                  '_' +
-                                  elem2.data.id +
-                                  '_' +
-                                  link.experimentType,
-                                originalID: link.id,
-                                source: elem.data.id,
-                                target: elem2.data.id,
-                              },
-                              classes: link.experimentType,
-                            };
-                            _graphData.push(newLink);
-                          }
-                        });
-                    });
+                      : [];
+                  if (hsqcLinksTarget.length === 1) {
+                    const targetIndex =
+                      otherProtonCorrelation.attachment[
+                        correlations.values[hsqcLinksTarget[0].match[0]]
+                          .atomType
+                      ][0];
+                    _graphData
+                      .filter((elem) => elem.data.originalID === correlation.id)
+                      .forEach((elem) => {
+                        _graphData
+                          .filter(
+                            (elem2) =>
+                              elem2.data.originalID ===
+                              correlations.values[targetIndex].id,
+                          )
+                          .forEach((elem2) => {
+                            // avoid loops
+                            if (elem.data.id !== elem2.data.id) {
+                              const newLink: ElementDefinition = {
+                                data: {
+                                  id:
+                                    elem.data.id +
+                                    '_' +
+                                    elem2.data.id +
+                                    '_' +
+                                    link.experimentType,
+                                  originalID: link.id,
+                                  source: elem.data.id,
+                                  target: elem2.data.id,
+                                },
+                                classes: link.experimentType,
+                              };
+                              _graphData.push(newLink);
+                            }
+                          });
+                      });
+                  }
+                } else if (
+                  link.experimentType === 'cosy' &&
+                  correlation.atomType === 'H'
+                ) {
+                  const hsqcLinksSource = correlation.link.filter(
+                    (_link: Link) =>
+                      _link.experimentType === 'hsqc' ||
+                      _link.experimentType === 'hmqc',
+                  );
+                  const otherProtonCorrelation =
+                    correlations.values[link.match[0]];
+                  const hsqcLinksTarget =
+                    otherProtonCorrelation && otherProtonCorrelation.link
+                      ? otherProtonCorrelation.link.filter(
+                          (_link: Link) =>
+                            _link.experimentType === 'hsqc' ||
+                            _link.experimentType === 'hmqc',
+                        )
+                      : [];
+                  if (
+                    hsqcLinksSource.length === 1 &&
+                    hsqcLinksTarget.length === 1
+                  ) {
+                    const sourceIndex =
+                      correlation.attachment[
+                        correlations.values[hsqcLinksSource[0].match[0]]
+                          .atomType
+                      ][0];
+                    const targetIndex =
+                      otherProtonCorrelation.attachment[
+                        correlations.values[hsqcLinksTarget[0].match[0]]
+                          .atomType
+                      ][0];
+                    _graphData
+                      .filter(
+                        (elem) =>
+                          elem.data.originalID ===
+                          correlations.values[sourceIndex].id,
+                      )
+                      .forEach((elem) => {
+                        _graphData
+                          .filter(
+                            (elem2) =>
+                              elem2.data.originalID ===
+                              correlations.values[targetIndex].id,
+                          )
+                          .forEach((elem2) => {
+                            if (elem.data.id !== elem2.data.id) {
+                              const newLink: ElementDefinition = {
+                                data: {
+                                  id:
+                                    elem.data.id +
+                                    '_' +
+                                    elem2.data.id +
+                                    '_' +
+                                    link.experimentType,
+                                  originalID: link.id,
+                                  source: elem.data.id,
+                                  target: elem2.data.id,
+                                },
+                                classes: link.experimentType,
+                              };
+                              _graphData.push(newLink);
+                            }
+                          });
+                      });
+                  }
                 }
               }
-            }
-          });
+            });
+          }
         },
       );
     }
 
     return _graphData;
-  }, [nmriumData?.correlations, resultData]);
+  }, [nmriumState?.data?.correlations, resultData]);
 
   return useMemo(
     () => (

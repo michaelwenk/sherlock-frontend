@@ -27,6 +27,10 @@ import retrievalActions from '../../constants/retrievalAction';
 import Button from '../elements/Button';
 import HighlightProvider from '../highlight/HighlightProvider';
 import { useDispatch } from '../../context/DispatchContext';
+import { NmriumState } from '@zakodium/nmrium-core';
+import init from '@zakodium/nmrium-core-plugins';
+
+const core = init();
 
 export interface onSubmitProps {
   queryOptions: QueryOptions;
@@ -34,7 +38,7 @@ export interface onSubmitProps {
 
 function Panels() {
   const dispatch = useDispatch();
-  const { nmriumData, resultData, isRequesting } = useData();
+  const { nmriumState, resultData, isRequesting } = useData();
 
   const [showQueryPanel, setShowQueryPanel] = useState<boolean>(true);
   const [requestError, setRequestError] = useState<AxiosError>();
@@ -153,24 +157,29 @@ function Panels() {
       } = queryOptions;
 
       if (queryType !== queryTypes.retrieval) {
-        const correlations = nmriumData
-          ? {
-              ...nmriumData.correlations,
-              values: nmriumData.correlations?.values.map(
-                (value: Correlation) => {
-                  return {
-                    ...value,
-                    hybridization:
-                      typeof value.hybridization == 'string' // @TODO remove the conversion at some point
-                        ? String(value.hybridization).trim().length === 0
-                          ? []
-                          : [String(value.hybridization)]
-                        : value.hybridization,
-                  };
-                },
-              ),
-            }
-          : {};
+        const correlations =
+          nmriumState && nmriumState.data
+            ? {
+                ...nmriumState.data?.correlations,
+                values: nmriumState.data?.correlations?.values.map(
+                  (value: Correlation) => {
+                    return {
+                      ...value,
+                      hybridization:
+                        typeof value.hybridization == 'string' // @TODO remove the conversion at some point
+                          ? String(value.hybridization).trim().length === 0
+                            ? []
+                            : [String(value.hybridization)]
+                          : value.hybridization,
+                    };
+                  },
+                ),
+              }
+            : {};
+
+        const serializedState = core.serializeNmriumState(
+          nmriumState as NmriumState,
+        );
         const requestData = {
           queryType,
           dereplicationOptions,
@@ -180,18 +189,30 @@ function Panels() {
             elucidationOptions,
             detectionOptions,
             name: retrievalOptions.resultName,
+            nmriumState:
+              queryType === queryTypes.elucidation
+                ? JSON.stringify(serializedState)
+                : null,
           } as ResultRecord,
         };
         console.log(requestData);
 
+        const formData = new FormData();
+        formData.append(
+          'data',
+          new Blob([JSON.stringify(requestData)], { type: 'application/json' }),
+        );
+
         const t0 = performance.now();
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
-          url: backendUrl + '/core',
-          data: requestData,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          url:
+            backendUrl +
+            (queryType === queryTypes.elucidation
+              ? '/elucidationMultipart'
+              : '/core'),
+          data: queryType === queryTypes.elucidation ? formData : requestData,
+
           cancelToken: new axios.CancelToken(
             (cancel) => (cancelRequestRef.current = cancel),
           ),
@@ -276,7 +297,7 @@ function Panels() {
       dispatch,
       handleOnFetch,
       handleSetIsRequesting,
-      nmriumData,
+      nmriumState,
       request,
       resultData?.resultRecord,
     ],
@@ -322,36 +343,34 @@ function Panels() {
                 ) : requestError ? (
                   <div className="request-error">
                     <p>Request failed:</p>
-                    <p>
-                      {axios.isAxiosError(requestError) ? (
+                    {axios.isAxiosError(requestError) ? (
+                      (
+                        requestError.response?.data as {
+                          errorMessage: string;
+                        }
+                      ).errorMessage ? (
                         (
                           requestError.response?.data as {
                             errorMessage: string;
                           }
-                        ).errorMessage ? (
-                          (
-                            requestError.response?.data as {
-                              errorMessage: string;
-                            }
-                          ).errorMessage
-                        ) : (
-                          <p>
-                            <label>
-                              Could not connect to Sherlock`s backend services:
-                            </label>
-                            <br />
-                            <label>
-                              {JSON.stringify(
-                                requestError.response?.data ??
-                                  requestError.message,
-                              )}
-                            </label>
-                          </p>
-                        )
+                        ).errorMessage
                       ) : (
-                        'Could not connect to Sherlock`s backend services'
-                      )}
-                    </p>
+                        <p>
+                          <label>
+                            Could not connect to Sherlock`s backend services:
+                          </label>
+                          <br />
+                          <label>
+                            {JSON.stringify(
+                              requestError.response?.data ??
+                                requestError.message,
+                            )}
+                          </label>
+                        </p>
+                      )
+                    ) : (
+                      <p>'Could not connect to Sherlock`s backend services' </p>
+                    )}
                   </div>
                 ) : requestWasCancelled ? (
                   <div className="request-cancelled">

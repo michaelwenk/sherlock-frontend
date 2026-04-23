@@ -10,7 +10,7 @@ import { getGroupIndex, getLabelColor } from '../Utilities';
 import UseHighlight from '../../../highlight/UseHighlight';
 
 function AdditionalColumnHeader({ correlation }) {
-  const { nmriumData, resultData } = useData();
+  const { nmriumState, resultData } = useData();
 
   const highlightIDsAdditionalColumn = useMemo(() => {
     const ids: string[] = [];
@@ -56,7 +56,8 @@ function AdditionalColumnHeader({ correlation }) {
       style: {
         ...{
           color:
-            getLabelColor(nmriumData?.correlations, correlation) ?? undefined,
+            getLabelColor(nmriumState?.data?.correlations, correlation) ??
+            undefined,
           borderRight:
             groupIndex !== -1 &&
             (resultData?.resultRecord.grouping?.groups[correlation.atomType]?.[
@@ -100,7 +101,7 @@ function AdditionalColumnHeader({ correlation }) {
     highlightAdditionalColumn.isActive,
     mouseEnterHandler,
     mouseLeaveHandler,
-    nmriumData?.correlations,
+    nmriumState?.data?.correlations,
     resultData?.resultRecord.grouping?.groups,
   ]);
 

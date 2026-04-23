@@ -7,10 +7,9 @@ import {
   Link,
   Signal2D,
 } from 'nmr-correlation';
-import { memo, MouseEvent, useCallback, useMemo } from 'react';
+import { CSSProperties, memo, MouseEvent, useCallback, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useData } from '../../../../context/DataContext';
-import NMRiumData from '../../../../types/nmrium/NMRiumData';
 
 import { getGroupIndex } from '../Utilities';
 
@@ -22,8 +21,8 @@ import UseHighlight from '../../../highlight/UseHighlight';
 interface InputProps {
   additionalColumnData: Correlation[];
   correlation: Correlation;
-  styleRow;
-  styleLabel;
+  styleRow: CSSProperties;
+  styleLabel: CSSProperties;
   showAdditionalColumns: boolean;
 }
 
@@ -34,13 +33,16 @@ function CorrelationTableRow({
   styleLabel,
   showAdditionalColumns,
 }: InputProps) {
-  const { nmriumData, resultData } = useData();
+  const { nmriumState, resultData } = useData();
   const { ref, inView } = useInView({ threshold: 0.5 });
 
   const correlationIndex = useMemo(
     () =>
-      getCorrelationIndex(nmriumData?.correlations?.values ?? [], correlation),
-    [correlation, nmriumData?.correlations?.values],
+      getCorrelationIndex(
+        nmriumState?.data?.correlations?.values ?? [],
+        correlation,
+      ),
+    [correlation, nmriumState?.data?.correlations?.values],
   );
 
   const highlightIDsRow = useMemo(() => {
@@ -188,10 +190,10 @@ function CorrelationTableRow({
           title={t}
           {...{
             ...otherTableDataProps,
-            style: { ...tableDataProps.style, styleLabel },
+            style: { ...tableDataProps.style, ...styleLabel },
           }}
         >
-          {getLabel(nmriumData?.correlations?.values ?? [], correlation)}
+          {getLabel(nmriumState?.data?.correlations?.values ?? [], correlation)}
         </td>
         <td title={t} {...otherTableDataProps}>
           {getCorrelationDelta(correlation)
@@ -233,7 +235,7 @@ function CorrelationTableRow({
                   hybridizations={Array.from(
                     new Set<number>(
                       (
-                        (nmriumData as NMRiumData).correlations?.values[
+                        nmriumState?.data?.correlations?.values[
                           correlationIndex
                         ].hybridization ?? []
                       ).concat(
@@ -306,7 +308,7 @@ function CorrelationTableRow({
       correlationIndex,
       equivalenceCellStyle,
       highlightRow,
-      nmriumData,
+      nmriumState?.data?.correlations?.values,
       otherTableDataProps,
       ref,
       resultData,

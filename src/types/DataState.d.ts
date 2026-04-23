@@ -1,9 +1,9 @@
-import NMRiumData from './nmrium/NMRiumData';
+import { NMRiumState } from 'nmrium';
 import Result from './Result';
 import ResultRecord from './sherlock/ResultRecord';
 
 export default interface DataState {
-  nmriumData?: NMRiumData;
+  nmriumState?: Partial<NMRiumState>;
   resultData?: Result;
   resultDataDB?: ResultRecord[];
   isRequesting: boolean;

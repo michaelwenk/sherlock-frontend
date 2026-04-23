@@ -35,7 +35,6 @@ function QueryTabs({ reset, setReset }: InputProps) {
           </div>
         ),
       },
-
       {
         label: capitalize(queryTypes.elucidation),
         elem: (

@@ -1,13 +1,11 @@
 import './Sherlock.css';
 import logoMinimal from '/Sherlock_minimal.png';
 
-import { NMRiumChangeCb, NMRiumData, NMRiumState } from 'nmrium';
 import Panels from './panels/Panels';
-import { memo, useCallback, useMemo, useReducer } from 'react';
+import { memo, useMemo, useReducer } from 'react';
 import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
 import { DataReducer, dispatcher, initialState } from '../context/Reducer';
-import { SET_NMRIUM_DATA } from '../context/ActionTypes';
 import HelpPanel from './panels/HelpPanel';
 import Tabs from './elements/Tabs';
 import TabData from '../types/TabData';
@@ -20,20 +18,6 @@ function Sherlock() {
   const [state, dispatch] = useReducer(DataReducer, initialState);
 
   const dispatcherMemo = useMemo(() => dispatcher(dispatch), []);
-
-  const handleOnNMRiumChange = useCallback<NMRiumChangeCb>(
-    function (nmriumState: NMRiumState) {
-      const _nmriumData: NMRiumData = {
-        spectra: nmriumState.data.spectra,
-        correlations: nmriumState.data.correlations,
-      };
-      dispatcherMemo({
-        type: SET_NMRIUM_DATA,
-        payload: { nmriumData: _nmriumData },
-      });
-    },
-    [dispatcherMemo],
-  );
 
   const tabsData: TabData[] = useMemo(
     () => [
@@ -57,7 +41,7 @@ function Sherlock() {
       },
       {
         label: 'Spectra',
-        elem: <NMRiumComponent onChange={handleOnNMRiumChange} />,
+        elem: <NMRiumComponent />,
       },
       {
         label: 'CASE',
@@ -68,7 +52,7 @@ function Sherlock() {
         elem: <HelpPanel />,
       },
     ],
-    [handleOnNMRiumChange],
+    [],
   );
 
   return useMemo(

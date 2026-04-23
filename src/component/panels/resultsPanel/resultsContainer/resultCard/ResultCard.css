@@ -22,9 +22,13 @@
   }
 
   .card-link {
-    color: blue;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: blue;    
     font-size: 14px;
-    text-align: center;
+    margin-top: 5px;
     margin-bottom: 5px;
   }
 
