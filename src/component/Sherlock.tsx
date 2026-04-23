@@ -7,71 +7,78 @@ import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
 import { DataReducer, dispatcher, initialState } from '../context/Reducer';
 import HelpPanel from './panels/HelpPanel';
-import Tabs from './elements/Tabs';
-import TabData from '../types/TabData';
 import NMRiumComponent from './elements/NMRiumComponent';
+import { Tab, Tabs } from '@blueprintjs/core';
+import styled from '@emotion/styled';
 
-const tabWidth = '100px';
-const tabHeight = '50px';
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+
+`;
+const StyledTabs = styled(Tabs)`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+[role="tabpanel"] {
+  flex:1
+}   
+`;
+interface TabData {
+  id: string;
+  title: React.ReactNode;
+  panel?: JSX.Element;
+  disabled?: boolean;
+}
+
+const LOGO_TAB: TabData = {
+  id: 'logo',
+  disabled: true,
+  title: (
+    <a href={import.meta.env.VITE_FRONTEND_URL} target="_self">
+      <img
+        src={logoMinimal}
+        style={{
+          minHeight: '50px',
+          maxHeight: '50px',
+          display: 'flex',
+          justifyContent: 'center',
+          border: 'none',
+        }}
+      />
+    </a>
+  ),
+};
+
+const TABS_DATA: TabData[] = [
+  LOGO_TAB,
+  { id: 'spectra', title: 'Spectra', panel: <NMRiumComponent /> },
+  { id: 'case', title: 'CASE', panel: <Panels /> },
+  { id: 'help', title: 'Help', panel: <HelpPanel /> },
+];
 
 function Sherlock() {
   const [state, dispatch] = useReducer(DataReducer, initialState);
-
   const dispatcherMemo = useMemo(() => dispatcher(dispatch), []);
 
-  const tabsData: TabData[] = useMemo(
-    () => [
-      {
-        label: 'logo',
-        labelOnly: true,
-        elem: (
-          <a href={import.meta.env.VITE_FRONTEND_URL} target="_self">
-            <img
-              src={logoMinimal}
-              style={{
-                minHeight: '50px',
-                maxHeight: '50px',
-                display: 'flex',
-                justifyContent: 'center',
-                border: 'none',
-              }}
-            />
-          </a>
-        ),
-      },
-      {
-        label: 'Spectra',
-        elem: <NMRiumComponent />,
-      },
-      {
-        label: 'CASE',
-        elem: <Panels />,
-      },
-      {
-        label: 'Help',
-        elem: <HelpPanel />,
-      },
-    ],
-    [],
-  );
+  return <DispatchProvider value={dispatcherMemo}>
+    <DataProvider value={state}>
+      <Container>
+        <StyledTabs
+          id="sherlock-tabs"
+          defaultSelectedTabId="spectra"
+          renderActiveTabPanelOnly
+        >
+          {TABS_DATA.map(({ id, title, panel, disabled }) => (
+            <Tab key={id} id={id} title={title} panel={panel} disabled={disabled} />
+          ))}
+        </StyledTabs>
+      </Container>
+    </DataProvider>
+  </DispatchProvider>
 
-  return useMemo(
-    () => (
-      <div className="sherlock">
-        <DispatchProvider value={dispatcherMemo}>
-          <DataProvider value={state}>
-            <Tabs
-              tabsData={tabsData}
-              width={tabWidth}
-              height={tabHeight}
-              initialActiveTabIndex={1}
-            />
-          </DataProvider>
-        </DispatchProvider>
-      </div>
-    ),
-    [dispatcherMemo, state, tabsData],
-  );
+
 }
 
 export default memo(Sherlock);
