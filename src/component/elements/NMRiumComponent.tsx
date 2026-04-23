@@ -4,7 +4,7 @@ import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '@blueprintjs/select/lib/css/blueprint-select.css';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NMRium, NMRiumState } from 'nmrium';
 import preferences from '../../constants/defaultNMRiumPreferences';
 
@@ -58,19 +58,13 @@ function NMRiumComponent() {
     });
   }, [nmriumState]);
 
-  return useMemo(
-    () => (
-      <div className="nmrium-component">
-        <NMRium
-          preferences={preferences}
-          state={coreRead?.state}
-          aggregator={coreRead?.aggregator}
-          // onChange={handleOnNMRiumChange}
-        />
-      </div>
-    ),
-    [coreRead?.aggregator, coreRead?.state],
-  );
+  return <NMRium
+    preferences={preferences}
+    state={coreRead?.state}
+    aggregator={coreRead?.aggregator}
+  // onChange={handleOnNMRiumChange}
+  />
+
 }
 
 export default NMRiumComponent;
