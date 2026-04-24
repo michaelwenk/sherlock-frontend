@@ -6,10 +6,9 @@
     0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
     0.3s box-shadow,
     0.3s -webkit-transform cubic-bezier(0.155, 1.105, 0.295, 1.12);
-  
+
   padding: 2px;
   border-radius: 0.3rem;
-
 
   .card-label {
     border-radius: 0.3rem;
@@ -26,7 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: blue;    
+    color: blue;
     font-size: 14px;
     margin-top: 5px;
     margin-bottom: 5px;

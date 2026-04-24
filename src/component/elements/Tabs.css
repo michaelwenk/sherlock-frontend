@@ -14,10 +14,8 @@
     border-bottom: 1px solid grey;
   }
 
-  .tab-element {    
+  .tab-element {
     width: 100%;
     height: calc(100% - 50px);
   }
 }
-
-
