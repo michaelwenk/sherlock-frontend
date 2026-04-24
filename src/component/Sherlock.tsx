@@ -7,23 +7,22 @@ import { DispatchProvider } from '../context/DispatchContext';
 import { DataProvider } from '../context/DataContext';
 import { DataReducer, dispatcher, initialState } from '../context/Reducer';
 import HelpPanel from './panels/HelpPanel';
-import NMRiumComponent from './elements/NMRiumComponent';
+import { NMRiumComponent } from './elements/NMRiumComponent';
 import { Tab, Tabs } from '@blueprintjs/core';
 import styled from '@emotion/styled';
 
 const Container = styled.div`
   height: 100vh;
   width: 100%;
-
 `;
 const StyledTabs = styled(Tabs)`
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
-[role="tabpanel"] {
-  flex:1
-}   
+  [role='tabpanel'] {
+    flex: 1;
+  }
 `;
 interface TabData {
   id: string;
@@ -62,23 +61,29 @@ function Sherlock() {
   const [state, dispatch] = useReducer(DataReducer, initialState);
   const dispatcherMemo = useMemo(() => dispatcher(dispatch), []);
 
-  return <DispatchProvider value={dispatcherMemo}>
-    <DataProvider value={state}>
-      <Container>
-        <StyledTabs
-          id="sherlock-tabs"
-          defaultSelectedTabId="spectra"
-          renderActiveTabPanelOnly
-        >
-          {TABS_DATA.map(({ id, title, panel, disabled }) => (
-            <Tab key={id} id={id} title={title} panel={panel} disabled={disabled} />
-          ))}
-        </StyledTabs>
-      </Container>
-    </DataProvider>
-  </DispatchProvider>
-
-
+  return (
+    <DispatchProvider value={dispatcherMemo}>
+      <DataProvider value={state}>
+        <Container>
+          <StyledTabs
+            id="sherlock-tabs"
+            defaultSelectedTabId="spectra"
+            renderActiveTabPanelOnly
+          >
+            {TABS_DATA.map(({ id, title, panel, disabled }) => (
+              <Tab
+                key={id}
+                id={id}
+                title={title}
+                panel={panel}
+                disabled={disabled}
+              />
+            ))}
+          </StyledTabs>
+        </Container>
+      </DataProvider>
+    </DispatchProvider>
+  );
 }
 
 export default memo(Sherlock);

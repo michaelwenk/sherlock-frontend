@@ -9,12 +9,42 @@ import { NMRium, NMRiumState } from 'nmrium';
 import preferences from '../../constants/defaultNMRiumPreferences';
 
 import plugins from '@zakodium/nmrium-core-plugins';
-import { CoreReadReturn } from '@zakodium/nmrium-core';
+import { CoreReadReturn, ParsingOptions } from '@zakodium/nmrium-core';
 import { useData } from '../../context/DataContext';
 
 const core = plugins();
 
-function NMRiumComponent() {
+const parsingOptions: ParsingOptions = {
+  onLoadProcessing: { autoProcessing: true },
+  experimentalFeatures: true,
+  selector: { general: { dataSelection: 'preferFT' } },
+};
+
+function useLoadNMRiumData() {
+  const { nmriumState } = useData();
+
+  const [parsedNmriumData, setParsedNmriumData] = useState<
+    CoreReadReturn | undefined
+  >(undefined);
+
+  useEffect(() => {
+    async function load() {
+      const serializedState = core.serializeNmriumState(
+        nmriumState as NMRiumState,
+      );
+      const parseResult = await core.readNMRiumObject(
+        serializedState,
+        parsingOptions,
+      );
+      setParsedNmriumData(parseResult);
+    }
+
+    void load();
+  }, [nmriumState]);
+
+  return parsedNmriumData;
+}
+export function NMRiumComponent() {
   // const dispatch = useDispatch();
 
   // const handleOnNMRiumChange = useCallback<NMRiumChangeCb>(
@@ -29,42 +59,14 @@ function NMRiumComponent() {
   //   },
   //   [],
   // );
+  const data = useLoadNMRiumData();
 
-  const { nmriumState } = useData();
-
-  const [coreRead, setCoreRead] = useState<CoreReadReturn | undefined>(
-    undefined,
+  return (
+    <NMRium
+      preferences={preferences}
+      state={data?.state}
+      aggregator={data?.aggregator}
+      // onChange={handleOnNMRiumChange}
+    />
   );
-
-  useEffect(() => {
-    const fetchData = async (_nmriumState: Partial<NMRiumState>) => {
-      const serializedNmriumState = core.serializeNmriumState(
-        _nmriumState as NMRiumState,
-      );
-      console.log(serializedNmriumState);
-      const _coreRead = await core.readNMRiumObject(serializedNmriumState, {
-        onLoadProcessing: { autoProcessing: true },
-        experimentalFeatures: true,
-        selector: { general: { dataSelection: 'preferFT' } },
-      });
-      console.log('containsNmrium:', _coreRead.containsNmrium);
-      console.log('state from file:', _coreRead.state);
-      console.log('aggregator from file:', _coreRead.aggregator);
-      setCoreRead(_coreRead);
-    };
-
-    fetchData({
-      ...nmriumState,
-    });
-  }, [nmriumState]);
-
-  return <NMRium
-    preferences={preferences}
-    state={coreRead?.state}
-    aggregator={coreRead?.aggregator}
-  // onChange={handleOnNMRiumChange}
-  />
-
 }
-
-export default NMRiumComponent;
